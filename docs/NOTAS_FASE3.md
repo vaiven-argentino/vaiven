@@ -110,9 +110,37 @@
   - Ningún pedido falló: en el plan gratuito, Cloudflare tolera que un pedido pase de 10 ms de vez en cuando, pero corta con el error 1102 si pasa seguido.
   - La mediana entra en el límite, pero una parte de los pedidos lo pasa. Todavía no se sabe cuáles son (el primero de cada isolate, `tools/list` o alguna herramienta en particular).
 
+## Precalentamiento al arrancar (decidido con Camilo)
+
+**Diagnóstico.** Medido en Node:
+- Con el isolate ya «caliente», cada pedido cuesta de 0,6 a 3,6 ms.
+- El exceso está en el primer pedido de cada isolate y en la primera llamada de cada herramienta, por la inicialización perezosa del SDK, de zod y del código propio.
+- Con poco tráfico, casi cada conexión de Claude cae en un isolate nuevo.
+
+**Medidas:**
+- `mcp/src/precalentar.ts`, llamado al cargar el módulo del Worker. El arranque tiene su propio límite de 1 s; cada pedido, 10 ms de CPU. Hace dos cosas:
+  - corre `preloadSchemas()` del SDK (lo recomienda para estos entornos);
+  - arma el JSON Schema de las herramientas y pasa una serie chica en memoria por las transformaciones y la cita.
+- Los esquemas de las herramientas se envuelven (`conJsonFijo` en `servidor.ts`): el JSON Schema se arma una vez por isolate y no en cada pedido, porque el SDK lo guarda por instancia del servidor y hay una instancia por pedido.
+
+**Límite.** Los primeros pedidos completos del protocolo no se pueden hacer al arrancar: el transporte del SDK usa `crypto.randomUUID` y temporizadores, y workerd los prohíbe al cargar el módulo (se probó y el Worker no arranca). Por eso el primer pedido de cada isolate sigue pagando la inicialización de esa parte.
+
+**Efecto medido en Node, en un proceso nuevo** (sin contar la carga de `undici`, que en workerd no existe):
+
+| Primer pedido | Sin precalentar | Con precalentar |
+|---|---|---|
+| `initialize` | ~28 ms | ~21–26 ms |
+| `tools/list` | ~7 ms | ~3–5 ms |
+| `buscar_series` | ~11–13 ms | ~7 ms |
+| `describir_serie` | ~9 ms | ~6,5 ms |
+| `obtener_serie` | ~5 ms | ~4 ms |
+| `citar` | ~4 ms | ~3 ms |
+
+**Riesgo que queda.** El primer pedido de cada isolate puede pasar de 10 ms. Cloudflare tolera excesos esporádicos por isolate y corta (error 1102) solo si se repiten. Como este exceso ocurre una vez por isolate, se espera que entre en esa tolerancia, pero hay que confirmarlo en producción.
+
 ## Pendientes
 
-1. **CPU por pedido de `/mcp` (a consultar):** la mediana es de 6–7 ms, pero el P90 es de 14 ms y el máximo de 50 ms (ver «Despliegue»). Hay que saber qué pedidos pasan de 10 ms y bajarlos antes de que el uso real los vuelva frecuentes.
+1. **CPU por pedido de `/mcp`:** después del precalentamiento (ver abajo), volver a mirar el gráfico «CPU Time» y los errores «Exceeded CPU» (1102) en Observabilidad, durante la prueba manual y con el uso real.
 2. **Prueba manual desde Claude, web y escritorio** (la hace Camilo): guion en `mcp/PRUEBA_MANUAL.md`. Es lo que cierra la fase según la SPEC (sección 11).
 3. **Ficha web:** mostrar «Uso en la bibliografía» con los datos que ya trae `catalogo.json` (pendiente de la fase 2, para la fase 4).
 4. **Distribución de la variante local por `npx`** (fase 5).

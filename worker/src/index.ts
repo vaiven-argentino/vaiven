@@ -1,6 +1,11 @@
-import { Repositorio, fuenteAssets, manejarMcp } from "@vaiven/mcp";
+import { Repositorio, fuenteAssets, manejarMcp, precalentar } from "@vaiven/mcp";
 import paquete from "../package.json";
 import { dispararActualizacion } from "./disparador";
+
+// Precalentamiento del MCP al cargar el isolate: el arranque tiene su propio límite (1 s), mientras que cada pedido tiene
+// 10 ms de CPU en el plan gratuito. Tiene que ser sincrónico: workerd no deja usar temporizadores ni números
+// aleatorios al cargar el módulo, así que el transporte HTTP del SDK se inicializa recién con el primer pedido.
+precalentar();
 
 // El export que lee el MCP sale de los mismos static assets (/datos/). Se guarda en memoria mientras vive el isolate:
 // cada actualización de datos redespliega, así que nunca queda un export viejo.
