@@ -208,3 +208,11 @@ describe("disponibles", () => {
       .toThrow(ErrorTransformacion);
   });
 });
+
+describe("moneda de cada época", () => {
+  it("solo ofrece el nivel: las variaciones cruzarían los cambios de signo monetario", () => {
+    const s = serie(mensual("1985-01", [1, 2, 3]), { moneda: "moneda_de_epoca" });
+    expect(disponibles(s)).toEqual({ transformaciones: ["nivel"], frecuencias: [], mediaMovil: false });
+    expect(() => transformar(s, { transformacion: "var_mensual" })).toThrow(ErrorTransformacion);
+  });
+});

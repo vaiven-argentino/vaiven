@@ -1,4 +1,4 @@
-// Tipos del export (esquema 1.1) que lee el MCP: catalogo.json, quiebres.json y el JSON de cada variante.
+// Tipos del export (esquemas 1.1 y 1.2) que lee el MCP: catalogo.json, quiebres.json y el JSON de cada variante.
 // El contrato completo está en tests/contrato/.
 import type { Advertencia, Excluido, SerieExportada, Tramo } from "@vaiven/transformaciones";
 

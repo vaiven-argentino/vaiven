@@ -35,6 +35,8 @@ export interface Disponibles {
 
 /** Qué se le puede ofrecer a una variante: lo que declaran sus metadatos, si su frecuencia lo permite. */
 export function disponibles(serie: SerieExportada): Disponibles {
+  // En moneda de cada época, las variaciones y los promedios cruzarían los cambios de signo monetario.
+  if (serie.moneda === "moneda_de_epoca") return { transformaciones: ["nivel"], frecuencias: [], mediaMovil: false };
   const declaradas = new Set(serie.transformaciones);
   const puntos = puntosDe(serie);
   const frecs = new Set(puntos.map((p) => p.f));
