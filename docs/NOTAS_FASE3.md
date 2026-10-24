@@ -25,7 +25,7 @@
   - Bundle de hasta 64 MiB sin comprimir (ya no hay límite comprimido). El nuestro pesa 1,26 MB (223 KB comprimido).
   - 50 subpedidos, 100.000 pedidos por día y 1 s de arranque.
   - Los pedidos a los assets son gratis e ilimitados, pero los de `run_worker_first` (`/salud` y `/mcp`) cuentan como pedidos al Worker.
-- **Límite por IP:** el binding de Rate Limiting es GA y no tiene costo aparte. La documentación no dice explícitamente que esté en el plan gratuito; en `wrangler dev` funciona. Las reglas de WAF no sirven, porque son por zona y `workers.dev` no es una zona propia.
+- **Límite por IP:** el binding de Rate Limiting es GA y no tiene costo aparte. La documentación no dice explícitamente que esté en el plan gratuito, pero el despliegue del 24/10/2026 lo aceptó (`env.LIMITE_MCP (120 requests/60s)`). Las reglas de WAF no sirven, porque son por zona y `workers.dev` no es una zona propia.
 
 ## Decisiones de diseño (revisables)
 
@@ -64,7 +64,7 @@
 
 ## Diferencias con la SPEC
 
-- **7.1, límite por IP:** es aproximado (se cuenta por ubicación de Cloudflare y con consistencia eventual). Si el plan gratuito no admitiera el binding, en `/mcp` quedaría solo el tope diario de la cuenta.
+- **7.1, límite por IP:** es aproximado (se cuenta por ubicación de Cloudflare y con consistencia eventual).
 - **7.1, variante local:** no se publica para `npx`; se corre desde una copia del repositorio (fase 5).
 - **7.1, SDK:** es `@modelcontextprotocol/server` (v2), no `@modelcontextprotocol/sdk`.
 - **7.2, `obtener_serie`:** no tiene `deflactor` ni `paises` (fase 4: necesitan las transformaciones con series auxiliares y la dimensión `pais`).
@@ -93,12 +93,21 @@
   - Fichas de desocupación (las dos variantes), IPC, reservas y tipo de cambio: el pico de 2002 queda a 11 px o más de los números de los quiebres.
   - `/agentes/`, `/datos/` y el inicio, en 390 y 1280 px, claro y oscuro: 0 problemas.
 
+## Despliegue (24/10/2026)
+
+- **PR y CI:** [vaiven-argentino/vaiven#4](https://github.com/vaiven-argentino/vaiven/pull/4), mergeado con commit de merge después de `Pruebas` en verde.
+- **`Publicar`:** desplegó con `wrangler deploy` (versión `6404363f-1b33-43ab-8a2c-5770a96f3e7b`).
+  - Cloudflare aceptó el binding `LIMITE_MCP` en el plan gratuito.
+  - El Worker arranca en 45 ms. El bundle pesa 1.259 KiB (223 KiB comprimido).
+- **Producción:** `mcp/scripts/probar-endpoint.mjs` pasó entero contra `https://vaiven.argentino.workers.dev`:
+  - `/mcp` en las dos eras, con las 4 herramientas;
+  - GET 405 y OPTIONS 204, con CORS y `no-store`;
+  - `/salud` con fase 3, `/datos/`, `/agentes/`, el 301 y el 404.
+  - El 429 no se forzó en producción.
+
 ## Pendientes
 
-1. **Push y despliegue (piden aprobación).** Después del despliegue hay que:
-   - correr `node mcp/scripts/probar-endpoint.mjs https://vaiven.argentino.workers.dev`;
-   - confirmar que el plan gratuito acepta el binding de Rate Limiting;
-   - mirar la CPU por pedido de `/mcp` en los registros del Worker.
+1. **CPU por pedido de `/mcp`:** se mira en el panel de Cloudflare (Workers → `vaiven` → Observabilidad), porque desde la sesión no hay credenciales. Hay que confirmar que queda por debajo de los 10 ms del plan gratuito.
 2. **Prueba manual desde Claude, web y escritorio** (la hace Camilo): guion en `mcp/PRUEBA_MANUAL.md`. Es lo que cierra la fase según la SPEC (sección 11).
 3. **Ficha web:** mostrar «Uso en la bibliografía» con los datos que ya trae `catalogo.json` (pendiente de la fase 2, para la fase 4).
 4. **Distribución de la variante local por `npx`** (fase 5).
