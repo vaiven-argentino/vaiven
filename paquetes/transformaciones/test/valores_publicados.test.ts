@@ -23,14 +23,14 @@ describe("IPC oficial contra los informes técnicos del INDEC", () => {
     ["2019", 53.8, "ipc_01_20578b3e8357.pdf"],
     ["2023", 211.4, "ipc_01_24DBD5D8158C.pdf"],
     ["2024", 117.8, "ipc_01_2517A7124C09.pdf"],
-  ] as const)("inflación dic.–dic. de %s: %s %% (%s)", (anio, publicado) => {
+  ] as const)("inflación dic.–dic. de %s: %s %% (%s)", (anio, publicado, _informe) => {
     redondeaA(dicDic[anio], publicado);
   });
 
   it.each([
     ["2023-12", 25.5, "ipc_01_24DBD5D8158C.pdf"],
     ["2024-04", 8.8, "ipc_05_24F9890B1583.pdf"],
-  ] as const)("variación mensual de %s: %s %% (%s)", (mes, publicado) => {
+  ] as const)("variación mensual de %s: %s %% (%s)", (mes, publicado, _informe) => {
     redondeaA(mensual[mes], publicado);
   });
 
