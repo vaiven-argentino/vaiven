@@ -142,7 +142,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
 
     <details class="tabla-datos">
       <summary>Tabla de datos <span class="secundario" id="tabla-cantidad">{r.datos.length} filas</span></summary>
-      <div class="tabla-marco">
+      <div class="tabla-marco" tabindex="0" role="region" aria-label="Tabla de datos (con desplazamiento)">
         <table>
           <caption class="visualmente-oculto">{titulo}: datos de la vista actual</caption>
           <thead><tr><th scope="col">Fecha</th><th scope="col" id="tabla-unidad">{r.unidad}</th></tr></thead>
@@ -216,7 +216,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
     <h2 id="titulo-metodo">Metodología</h2>
     <p class="lectura">{doc.metodo}</p>
     <p class="lectura secundario">{NOMBRE_EMPALME[doc.empalme]}</p>
-    <div class="tabla-marco">
+    <div class="tabla-marco" tabindex="0" role="region" aria-label="Tramos de la variante (con desplazamiento)">
       <table class="tabla-tramos">
         <caption class="visualmente-oculto">Tramos de la variante</caption>
         <thead><tr><th scope="col">Fuente</th><th scope="col">Desde</th><th scope="col">Hasta</th><th scope="col">Frecuencia</th></tr></thead>
@@ -225,8 +225,8 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
             const f = doc.fuentes.find((x) => x.id === t.fuente);
             return (
               <tr>
-                <td>{f ? `${f.organismo}: ${f.nombre}` : t.fuente}{t.rol === "puente" && <span class="secundario"> (puente)</span>}</td>
-                <td>{fechaCorta(t.desde)}</td><td>{fechaCorta(t.hasta)}</td><td>{t.frecuencia}</td>
+                <td data-etiqueta="Fuente"><span>{f ? `${f.organismo}: ${f.nombre}` : t.fuente}{t.rol === "puente" && <span class="secundario"> (puente)</span>}</span></td>
+                <td data-etiqueta="Desde"><span>{fechaCorta(t.desde)}</span></td><td data-etiqueta="Hasta"><span>{fechaCorta(t.hasta)}</span></td><td data-etiqueta="Frecuencia"><span>{t.frecuencia}</span></td>
               </tr>
             );
           })}
@@ -281,7 +281,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
 </script>
 
 <style>
-  .ficha { display: grid; gap: 40px; }
+  .ficha { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .cabeza { display: grid; gap: 12px; }
   .ruta { font-size: 0.9rem; color: var(--secundario); }
   .titulo-fila { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
@@ -364,6 +364,13 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
   .bloque { display: grid; gap: 14px; min-width: 0; }
   .lectura { max-width: 72ch; }
   .tabla-tramos td { white-space: normal; }
+  /* En el celular, cada tramo es una ficha: no hace falta scrollear de costado. */
+  @media (max-width: 560px) {
+    .tabla-tramos thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .tabla-tramos tr { display: block; padding: 8px 12px; border-bottom: 1px solid var(--linea); }
+    .tabla-tramos td { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 8px; padding: 2px 0; border: 0; }
+    .tabla-tramos td::before { content: attr(data-etiqueta); color: var(--secundario); font-size: 0.85rem; }
+  }
   .excluidos { display: grid; gap: 6px; }
   .quiebres { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
   .quiebres li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; }

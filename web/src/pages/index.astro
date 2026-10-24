@@ -54,7 +54,7 @@ const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
 </Base>
 
 <style>
-  .inicio { display: grid; gap: 56px; }
+  .inicio { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; }
   .presentacion { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px; align-items: center; }
   .texto { display: grid; gap: 16px; }
   .bajada { font-size: 1.15rem; max-width: 60ch; }

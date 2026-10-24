@@ -4,7 +4,7 @@ import { ErrorTransformacion, disponibles, transformar, type Opciones, type Resu
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, textoCita } from "../lib/cita";
 import { esVariacion, filasTabla, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
-import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
+import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
 import { especificacion, type Tema } from "./espec";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
@@ -134,9 +134,23 @@ function iniciar(): void {
     }
     for (const e of r.excluidos) lineas.push(`${fechaCorta(e.fecha)}: dato excluido hasta confirmarlo. ${e.motivo}`);
     for (const n of r.notas) lineas.push(n);
+    const pico = picoQueComprime(r);
+    if (pico) lineas.push(`El máximo (${pico}) comprime el resto del gráfico. Para ver mejor los otros años, elegí un período más corto (por ejemplo, «Desde 1991»)${cLog.disabled ? "" : " o la escala logarítmica"}.`);
     const caja = $("avisos")!;
     caja.replaceChildren(...lineas.map((l) => Object.assign(document.createElement("p"), { textContent: l })));
     caja.hidden = !lineas.length;
+  }
+
+  /** Si el máximo supera 15 veces el percentil 90 (en valor absoluto), la mayor parte de la serie queda aplastada. */
+  function picoQueComprime(r: Resultado): string | null {
+    if (cLog.checked && !cLog.disabled) return null;
+    const conDato = r.datos.map((d, k) => ({ f: d[0], v: d[1], k })).filter((d): d is { f: string; v: number; k: number } => d.v !== null);
+    if (conDato.length < 20) return null;
+    const abs = conDato.map((d) => Math.abs(d.v)).sort((a, b) => a - b);
+    const p90 = abs[Math.floor(abs.length * 0.9)];
+    const max = conDato.reduce((a, b) => (Math.abs(b.v) > Math.abs(a.v) ? b : a));
+    if (!p90 || Math.abs(max.v) < 15 * p90) return null;
+    return `${numero(max.v, esVariacion(cTransf.value))} en ${fechaLegible(max.f, r.frecuencias[max.k])}`;
   }
 
   function tabla(r: Resultado, variacion: boolean): void {

@@ -57,7 +57,7 @@ const pendientesLicencia = series.flatMap((s) => s.variantes.filter((v) => v.est
 </Base>
 
 <style>
-  .acerca { display: grid; gap: 36px; }
+  .acerca { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
   section { display: grid; gap: 12px; }
   .lectura { max-width: 72ch; }
   .lista { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }

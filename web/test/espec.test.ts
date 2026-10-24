@@ -78,3 +78,13 @@ describe("ubicarMarcadores", () => {
     expect(m.map((x) => x.y)).toEqual([10, 28, 10]);
   });
 });
+
+describe("escala logarítmica", () => {
+  it("rotula solo potencias de 10, a lo sumo 8", async () => {
+    const { potenciasDeDiez } = await import("../src/graficos/espec");
+    const v = potenciasDeDiez(3.5e-11, 1381);
+    expect(v.length).toBeLessThanOrEqual(8);
+    expect(v.every((x) => Number.isInteger(Math.log10(x)) || Math.abs(Math.log10(x) - Math.round(Math.log10(x))) < 1e-9)).toBe(true);
+    expect(v[0]).toBeLessThanOrEqual(3.5e-11);
+  });
+});

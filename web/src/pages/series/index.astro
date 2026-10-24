@@ -99,7 +99,7 @@ const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
 </script>
 
 <style>
-  .catalogo { display: grid; gap: 20px; }
+  .catalogo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .cabeza { display: grid; gap: 10px; }
   .lectura { max-width: 65ch; }
   .filtros { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: flex-end; padding: 14px; background: var(--superficie); border-radius: var(--radio); }

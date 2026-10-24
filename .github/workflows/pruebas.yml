@@ -1,4 +1,4 @@
-# Pruebas en cada push y en cada PR: pipeline (Python) y tipos del Worker (TypeScript).
+# Pruebas en cada push y en cada PR: pipeline (Python), transformaciones, web y Worker (TypeScript).
 name: Pruebas
 
 on:
@@ -8,6 +8,10 @@ on:
 
 permissions:
   contents: read
+
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+  WRANGLER_SEND_METRICS: "false"
 
 jobs:
   python:
@@ -20,17 +24,29 @@ jobs:
       - run: uv sync --frozen
       - run: uv run pytest -q
 
-  worker:
+  typescript:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: worker
     steps:
       - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v10.3.2
+        with:
+          enable-cache: true
+      # La web enlaza la descarga completa: se genera como al publicar.
+      - name: Descarga completa
+        run: |
+          uv sync --frozen --group descargas
+          uv run python -m pipeline descargas
       - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
-          cache-dependency-path: worker/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npx tsc --noEmit
+      - name: Vitest (transformaciones, contrato y gráficos)
+        run: npm test
+      - name: Tipos (transformaciones, astro check y Worker)
+        run: npm run verificar
+      - name: Armar el sitio y revisar los enlaces
+        run: |
+          npm run build -w @vaiven/web
+          npm run enlaces -w @vaiven/web

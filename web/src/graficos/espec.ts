@@ -40,6 +40,23 @@ export interface Fila {
   valor: string;
 }
 
+// En escala logarítmica con valores muy chicos (el tipo de cambio de 1970 en pesos actuales es 3,5 × 10⁻¹¹), los
+// rótulos menores que 1 van como potencias de 10 con superíndices («10⁻¹⁰»), y los demás con punto de miles.
+const SUPERINDICES: Array<[string, string]> = [["-", "⁻"], ["0", "⁰"], ["1", "¹"], ["2", "²"], ["3", "³"], ["4", "⁴"], ["5", "⁵"], ["6", "⁶"], ["7", "⁷"], ["8", "⁸"], ["9", "⁹"]];
+const exponente = SUPERINDICES.reduce((expr, [c, sup]) => `replace(${expr}, '${c}', '${sup}')`, "toString(round(log(datum.value) / LN10))");
+// replace() de Vega cambia solo la primera aparición: alcanza, porque cada dígito se repite a lo sumo dos veces
+// y se aplica dos pasadas.
+const ROTULO_POTENCIA = `datum.value >= 1 ? format(datum.value, ',~r') : '10' + ${SUPERINDICES.reduce((expr, [c, sup]) => `replace(${expr}, '${c}', '${sup}')`, exponente)}`;
+
+/** Potencias de 10 entre dos valores, de a una o de a varias para que no haya más de 8 rótulos. */
+export function potenciasDeDiez(min: number, max: number): number[] {
+  const desde = Math.floor(Math.log10(min)), hasta = Math.ceil(Math.log10(max));
+  const paso = Math.max(1, Math.ceil((hasta - desde + 1) / 8));
+  const salida: number[] = [];
+  for (let e = desde; e <= hasta; e += paso) salida.push(10 ** e);
+  return salida;
+}
+
 const iso = (indice: number) => `${Math.floor(indice / 12)}-${String((indice % 12) + 1).padStart(2, "0")}-01`;
 
 /** Índice del tramo que contiene cada fecha (−1 si ninguno). */
@@ -120,7 +137,8 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const y = {
     field: "v", type: "quantitative", title: null,
     scale: log ? { type: "log" } : { zero: e.esVariacion || filasLinea.every((f) => f.v >= 0) },
-    axis: { format: log && minimo < 0.001 ? ".0e" : ",~r", tickCount: 6 },
+    axis: log && minimo < 0.01 ? { labelExpr: ROTULO_POTENCIA, values: potenciasDeDiez(minimo, Math.max(...filasLinea.map((f) => f.v))) }
+      : { format: ",~r", tickCount: 6 },
   };
   const tooltip = [{ field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" }];
 

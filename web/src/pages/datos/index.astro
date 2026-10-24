@@ -37,7 +37,7 @@ const archivos = [
     <section aria-labelledby="titulo-api">
       <h2 id="titulo-api">Archivos de la API</h2>
       <p class="lectura">La base es <code>{URL_SITIO}/datos/</code>. Los archivos se pueden pedir desde el navegador (CORS abierto) y se guardan en caché una hora.</p>
-      <div class="tabla-marco">
+      <div class="tabla-marco" tabindex="0" role="region" aria-label="Archivos de la API (con desplazamiento)">
         <table>
           <thead><tr><th scope="col">Archivo</th><th scope="col">Qué tiene</th><th scope="col">Tamaño</th></tr></thead>
           <tbody>
@@ -77,9 +77,10 @@ const serie = await (await fetch("${URL_SITIO}/datos/series/ipc/oficial.json")).
 </Base>
 
 <style>
-  .datos { display: grid; gap: 36px; }
+  .datos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
   section, .cabeza { display: grid; gap: 12px; min-width: 0; }
   .lectura { max-width: 72ch; }
+  .lectura code { overflow-wrap: anywhere; }
   .lista { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
   .tabla-marco { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--radio); }
   table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
