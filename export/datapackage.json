@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-24T23:24:27Z",
-  "created": "2026-10-24T23:24:27Z",
+  "version": "2026-10-24T23:25:28Z",
+  "created": "2026-10-24T23:25:28Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -1110,6 +1110,102 @@
     },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "saldo-comercial.mensual",
+      "title": "Saldo comercial · Mensual (desde 1992)",
+      "path": "descargas/csv/saldo-comercial/mensual.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Exportaciones menos importaciones mensuales del Intercambio Comercial Argentino del INDEC (importaciones CIF).",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Intercambio Comercial Argentino. Exportaciones totales, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=74.3_IET_0_M_16"
+        },
+        {
+          "title": "INDEC: Intercambio Comercial Argentino. Importaciones totales, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=74.3_IIT_0_M_25"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "saldo-comercial.oficial",
+      "title": "Saldo comercial · Anual (desde 1970)",
+      "path": "descargas/csv/saldo-comercial/oficial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Exportaciones (EXT-01, variante oficial) menos importaciones (EXT-02, variante oficial). Hasta 1991, las importaciones son las del balance de pagos del BCRA (FOB); desde 1992, las de la ICA del INDEC (CIF).",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Intercambio Comercial Argentino. Exportaciones totales, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=74.1_IET_0_A_16"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Balance de pagos en millones de dólares, datos históricos. Importaciones de mercancías",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_CONES_IV__42"
+        },
+        {
+          "title": "INDEC: Importaciones CIF por uso económico. Importaciones, total general, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=76.1_ITG_0_A_17"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "tasa-pasiva.badlar",
       "title": "Tasa de interés pasiva · BADLAR, bancos privados (desde 1999)",
       "path": "descargas/csv/tasa-pasiva/badlar.csv",
@@ -1270,6 +1366,146 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tcr-bilateral.oficial",
+      "title": "Tipo de cambio real bilateral con EE.UU. · Con el IPC oficial del INDEC",
+      "path": "descargas/csv/tcr-bilateral/oficial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Tipo de cambio oficial en pesos actuales (CAM-01, valor de fin de mes) × IPC de Estados Unidos (OCDE) ÷ IPC argentino (PRE-01, variante oficial), llevado a diciembre de 2015 = 100. El tipo de cambio es el de fin de mes y los IPC, promedios del mes.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "índice dic. 2015 = 100"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        },
+        {
+          "title": "OCDE (con datos de la Oficina de Estadísticas Laborales de EE.UU., BLS): Índice de precios al consumidor de Estados Unidos, total, sin desestacionalizar, mensual",
+          "path": "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_PRICES%40DF_PRICES_ALL&df[ag]=OECD.SDD.TPS"
+        },
+        {
+          "title": "INDEC: IPC histórico (empalme de las bases 1943, 1960, 1974 y 1988, base 1999), nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base abril 2008 = 100, nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=97.2_ING_2008_M_17"
+        },
+        {
+          "title": "INDEC: IPC Nacional Urbano (IPCNu) base oct. 2013 – sep. 2014 = 100, nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=98.3_INNG_2013_0_20"
+        },
+        {
+          "title": "Instituto de Estadística y Censos de la Ciudad Autónoma de Buenos Aires: IPCBA base julio 2011 – junio 2012 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=193.1_NIVEL_GENERAL_JULI_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=101.1_I2NG_2016_M_22"
+        },
+        {
+          "title": "INDEC: IPC Nacional base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tcr-bilateral.provincias",
+      "title": "Tipo de cambio real bilateral con EE.UU. · Con el IPC de provincias en 2007–2016",
+      "path": "descargas/csv/tcr-bilateral/provincias.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Igual que la variante oficial, pero con el IPC argentino de la variante «provincias» (San Luis y Ciudad de Buenos Aires en 2007–2016).",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "índice dic. 2015 = 100"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        },
+        {
+          "title": "OCDE (con datos de la Oficina de Estadísticas Laborales de EE.UU., BLS): Índice de precios al consumidor de Estados Unidos, total, sin desestacionalizar, mensual",
+          "path": "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_PRICES%40DF_PRICES_ALL&df[ag]=OECD.SDD.TPS"
+        },
+        {
+          "title": "INDEC: IPC histórico (empalme de las bases 1943, 1960, 1974 y 1988, base 1999), nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base abril 2008 = 100, nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=97.2_ING_2008_M_17"
+        },
+        {
+          "title": "Dirección Provincial de Estadística y Censos de San Luis: IPC de la Provincia de San Luis base 2003 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=197.1_NIVEL_GENERAL_2014_0_13"
+        },
+        {
+          "title": "Instituto de Estadística y Censos de la Ciudad Autónoma de Buenos Aires: IPCBA base julio 2011 – junio 2012 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=193.1_NIVEL_GENERAL_JULI_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=101.1_I2NG_2016_M_22"
+        },
+        {
+          "title": "INDEC: IPC Nacional base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26"
         }
       ],
       "licenses": [

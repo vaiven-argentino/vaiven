@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-24T23:24:27Z",
+  "version_datos": "2026-10-24T23:25:28Z",
   "series": [
     {
       "id": "base-monetaria",
@@ -903,6 +903,125 @@
       ]
     },
     {
+      "id": "saldo-comercial",
+      "codigo": "EXT-03",
+      "nombre": "Saldo comercial",
+      "bloque": "Sector externo",
+      "prioridad": "A",
+      "definicion": "Exportaciones menos importaciones de bienes, en millones de dólares corrientes. Un valor negativo es un déficit.",
+      "unidad": "millones de US$ corrientes",
+      "tipo": "flujo",
+      "agregacion": "suma",
+      "transformaciones": [
+        "frecuencia",
+        "pct_pib",
+        "media_movil"
+      ],
+      "frecuencia": "anual",
+      "variante_por_defecto": "oficial",
+      "quiebres": [
+        "q.importaciones.fob-cif-1992"
+      ],
+      "variantes": [
+        {
+          "id": "oficial",
+          "nombre": "Anual (desde 1970)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "series/saldo-comercial/oficial.json"
+        },
+        {
+          "id": "mensual",
+          "nombre": "Mensual (desde 1992)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1992-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/saldo-comercial/mensual.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "SCH1998c2-C4",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 2 «El quiebre del modelo cerrado en los setenta»",
+          "pagina": "pdf 13 (libro 55)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la deuda total neta y sus causas (en millones de dólares corrientes)",
+          "periodo_cubierto": "1977 – I-1981"
+        },
+        {
+          "id": "SCH1998c2-C8",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 2 «El quiebre del modelo cerrado en los setenta»",
+          "pagina": "pdf 17 (libro 63)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución del comercio exterior 1975-81 (en pesos constantes de 1970 y en millones de dólares)",
+          "periodo_cubierto": "1975 – 1981"
+        },
+        {
+          "id": "DF1990-C1",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 64 (61)",
+          "tipo": "cuadro",
+          "titulo_original": "Indicadores macroeconómicos",
+          "periodo_cubierto": "1960 – 1989"
+        },
+        {
+          "id": "FF1990-C2",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 29 (28)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de los principales rubros de la balanza de pago (millones de dólares corrientes)",
+          "periodo_cubierto": "1970 – 1988"
+        },
+        {
+          "id": "DLB1993-C11",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 18 (69)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la balanza de pagos (1987-1992)",
+          "periodo_cubierto": "1987 – 1992"
+        },
+        {
+          "id": "DLB1993-C13",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 28 (89)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la balanza comercial (1988-1992)",
+          "periodo_cubierto": "1988 – 1992"
+        },
+        {
+          "id": "CENDA2010-G5",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 9 (27)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Exportaciones, importaciones y saldo de balanza comercial, 1990-2009. En millones de dólares corrientes",
+          "periodo_cubierto": "1990 – 2009"
+        },
+        {
+          "id": "SW2015-G2",
+          "referencia": "Schorr y Wainer (2015), «Algunos determinantes de la restricción externa en la Argentina», Márgenes 1, UNGS (no figura en el cronograma 2026)",
+          "pagina": "pdf 36 (35)",
+          "tipo": "gráfico",
+          "titulo_original": "Argentina. Evolución de los pagos por exportaciones e importaciones y el saldo comercial de mercancías, 2003-2014",
+          "periodo_cubierto": "2003 – 2014"
+        },
+        {
+          "id": "RZ2017-G2",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "13",
+          "tipo": "gráfico de barras y líneas",
+          "titulo_original": "Argentina. Fuga de capitales vs. saldo de la balanza comercial 2003-2016",
+          "periodo_cubierto": "2003 – 2016"
+        }
+      ]
+    },
+    {
       "id": "tasa-pasiva",
       "codigo": "MON-03",
       "nombre": "Tasa de interés pasiva",
@@ -1104,6 +1223,125 @@
         }
       ],
       "bibliografia": []
+    },
+    {
+      "id": "tcr-bilateral",
+      "codigo": "CAM-04",
+      "nombre": "Tipo de cambio real bilateral con EE.UU.",
+      "bloque": "Cambiario",
+      "prioridad": "A",
+      "definicion": "Tipo de cambio nominal oficial (pesos por dólar) multiplicado por el IPC de Estados Unidos y dividido por el IPC argentino, como índice con diciembre de 2015 = 100. Un aumento es una depreciación real del peso frente al dólar.",
+      "unidad": "índice dic. 2015 = 100",
+      "tipo": "precio",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "var_mensual",
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "media_movil"
+      ],
+      "frecuencia": "mensual",
+      "variante_por_defecto": "oficial",
+      "quiebres": [
+        "q.tcr-bilateral.fin-de-mes",
+        "q.tc.mercados-desdoblados",
+        "q.ipc.2007-2015",
+        "q.ipc.emergencia-2016",
+        "q.ipc.cobertura",
+        "q.ipc.provincias",
+        "q.ipc-eeuu.octubre-2025"
+      ],
+      "variantes": [
+        {
+          "id": "oficial",
+          "nombre": "Con el IPC oficial del INDEC",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/tcr-bilateral/oficial.json"
+        },
+        {
+          "id": "provincias",
+          "nombre": "Con el IPC de provincias en 2007–2016",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/tcr-bilateral/provincias.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "SCH1998c2-C1",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 2 «El quiebre del modelo cerrado en los setenta»",
+          "pagina": "pdf 10 (libro 48)",
+          "tipo": "cuadro",
+          "titulo_original": "Paridad real del tipo de cambio financiero o libre (Promedio 1968-74:100)",
+          "periodo_cubierto": "1976 – mar-1981"
+        },
+        {
+          "id": "DF1990-C4",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 66 (63)",
+          "tipo": "cuadro",
+          "titulo_original": "Tipo de cambio real y salario real (1980=100)",
+          "periodo_cubierto": "1971-75 – 1989"
+        },
+        {
+          "id": "FF1990-C5",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 32 (31)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la inflación y los precios relativos clave",
+          "periodo_cubierto": "1985 – 1989 (aprox.)"
+        },
+        {
+          "id": "FF1990-C8",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 42 (41)",
+          "tipo": "cuadro",
+          "titulo_original": "Precios relativos (índices sep-89=1,000)",
+          "periodo_cubierto": "ene-1988 – jul-1989"
+        },
+        {
+          "id": "DLB1993-A11",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 49 (130)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Evolución de los tipos de cambio real promedio",
+          "periodo_cubierto": "1980 – I-1993"
+        },
+        {
+          "id": "RAP2005-G3.5",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "15",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tipo de cambio nominal (TCN) y real (TCR) bilateral con Estados Unidos",
+          "periodo_cubierto": "2001 – 2004/05 (aprox.)"
+        },
+        {
+          "id": "DF2013-C1",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "33",
+          "tipo": "cuadro",
+          "titulo_original": "Principales variables macroeconómicas",
+          "periodo_cubierto": "2003–2012"
+        },
+        {
+          "id": "DF2013-G3",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "35",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución del tipo de cambio real bilateral (contra el dólar) y multilateral (Dic. 2001=100)",
+          "periodo_cubierto": "dic-2001 – abr-2013"
+        }
+      ]
     },
     {
       "id": "tcr-multilateral",

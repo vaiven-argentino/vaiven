@@ -1,0 +1,49 @@
+id: saldo-comercial
+codigo: EXT-03
+nombre: Saldo comercial
+bloque: Sector externo
+prioridad: A
+definicion: Exportaciones menos importaciones de bienes, en millones de dólares corrientes. Un valor negativo es un déficit.
+unidad: millones de US$ corrientes
+tipo: flujo
+agregacion: suma
+frecuencia: anual
+moneda: dolares
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: oficial
+variantes:
+  - id: oficial
+    nombre: Anual (desde 1970)
+    estado: publicada
+    empalme: derivar
+    operacion: resta
+    operandos: [exportaciones.oficial, importaciones.oficial]
+    metodo: >-
+      Exportaciones (EXT-01, variante oficial) menos importaciones (EXT-02, variante oficial). Hasta 1991, las
+      importaciones son las del balance de pagos del BCRA (FOB); desde 1992, las de la ICA del INDEC (CIF).
+    tramos:
+      - {fuente: f.indec.ica-exportaciones-anual, desde: 1970, rol: insumo}
+      - {fuente: f.bcra.bp-importaciones, desde: 1970, hasta: 1991, rol: insumo}
+      - {fuente: f.indec.ica-importaciones-anual, desde: 1992, rol: insumo}
+    advertencias: [q.importaciones.fob-cif-1992]
+  - id: mensual
+    nombre: Mensual (desde 1992)
+    estado: publicada
+    frecuencia: mensual
+    empalme: derivar
+    operacion: resta
+    operandos: [exportaciones.mensual, importaciones.mensual]
+    metodo: Exportaciones menos importaciones mensuales del Intercambio Comercial Argentino del INDEC (importaciones CIF).
+    tramos:
+      - {fuente: f.indec.ica-exportaciones-mensual, desde: 1992-01, rol: insumo}
+      - {fuente: f.indec.ica-importaciones-mensual, desde: 1992-01, rol: insumo}
+validacion:
+  min: -60000
+  max: 60000
+  umbral_revision_pct: 1
+quiebres: [q.importaciones.fob-cif-1992]
+# Sin variaciones ni base 100: el saldo cambia de signo.
+transformaciones: [frecuencia, pct_pib, media_movil]
+fuentes: [f.indec.ica-exportaciones-anual, f.bcra.bp-importaciones, f.indec.ica-importaciones-anual, f.indec.ica-exportaciones-mensual, f.indec.ica-importaciones-mensual]
+bibliografia: [SCH1998c2-C4, SCH1998c2-C8, DF1990-C1, FF1990-C2, DLB1993-C11, DLB1993-C13, CENDA2010-G5, SW2015-G2, RZ2017-G2]
+licencia_derivado: CC-BY-4.0

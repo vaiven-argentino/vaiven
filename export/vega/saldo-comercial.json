@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Saldo comercial",
+    "subtitle": "Variante: Anual (desde 1970) · millones de US$ corrientes"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/saldo-comercial/oficial.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de US$ corrientes"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "saldo-comercial",
+      "variante": "oficial",
+      "version_datos": "2026-10-24T23:25:28Z",
+      "cita": "Vaivén (2026). Saldo comercial, variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/saldo-comercial/"
+    }
+  }
+}

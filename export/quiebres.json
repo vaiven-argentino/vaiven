@@ -144,7 +144,8 @@
     "tipo": "metodologia",
     "descripcion": "Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2009, cuando hay datos de las dos fuentes, la del BCRA es entre 4,3 % y 7,2 % más baja. Los tramos se unen sin ajustar.",
     "afecta": [
-      "importaciones.oficial"
+      "importaciones.oficial",
+      "saldo-comercial.oficial"
     ],
     "fuente": "Comparación de 335.1_CUENTA_CONES_IV__42 con 76.1_ITG_0_A_17 en datos.gob.ar (24/10/2026)."
   },
@@ -155,7 +156,9 @@
     "tipo": "cobertura",
     "descripcion": "El BLS no relevó precios en octubre de 2025 por el cierre del gobierno federal, así que ese mes no tiene dato.",
     "afecta": [
-      "ipc-eeuu.ocde"
+      "ipc-eeuu.ocde",
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias"
     ],
     "fuente": "BLS, «2025 Federal Government Shutdown Impact on the Consumer Price Index»."
   },
@@ -166,7 +169,8 @@
     "tipo": "intervencion",
     "descripcion": "Intervención del INDEC. Desde 2016, el INDEC advierte que la información publicada para este período debe considerarse con reservas. Las mediciones provinciales y privadas de esos años registran inflaciones más altas.",
     "afecta": [
-      "ipc.oficial"
+      "ipc.oficial",
+      "tcr-bilateral.oficial"
     ],
     "fuente": "INDEC, advertencia incluida en sus publicaciones desde 2016."
   },
@@ -177,7 +181,8 @@
     "tipo": "cobertura",
     "descripcion": "Cambios de cobertura: Gran Buenos Aires hasta 2013, Nacional Urbano (IPCNu) en 2014–2015, Gran Buenos Aires otra vez entre mayo y diciembre de 2016 y Nacional desde enero de 2017.",
     "afecta": [
-      "ipc.oficial"
+      "ipc.oficial",
+      "tcr-bilateral.oficial"
     ],
     "fuente": "INDEC, metodologías del IPC-GBA (2008), IPCNu (2014) e IPC (2016)."
   },
@@ -189,7 +194,9 @@
     "descripcion": "Emergencia estadística (Decreto 55/2016): no hay IPC oficial entre noviembre de 2015 y abril de 2016. En la variante oficial, las tasas de esos meses salen del IPC de la Ciudad de Buenos Aires.",
     "afecta": [
       "ipc.oficial",
-      "ipc.provincias"
+      "ipc.provincias",
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias"
     ],
     "fuente": "Decreto 55/2016; series de datos.gob.ar."
   },
@@ -200,7 +207,8 @@
     "tipo": "metodologia",
     "descripcion": "En la variante «provincias», las tasas de 2007-01 a 2012-07 son las del IPC de San Luis y las de 2012-08 a 2016-04, las del IPC de la Ciudad de Buenos Aires: miden canastas y jurisdicciones distintas de las del INDEC.",
     "afecta": [
-      "ipc.provincias"
+      "ipc.provincias",
+      "tcr-bilateral.provincias"
     ],
     "fuente": "Dirección Provincial de Estadística y Censos de San Luis; Instituto de Estadística y Censos de la CABA."
   },
@@ -336,7 +344,10 @@
     "descripcion": "Mercados cambiarios desdoblados. En estos años hubo, por períodos, un mercado oficial o comercial y otro financiero o libre. La serie del BCRA no sigue siempre el mismo: comparada con las series diarias, coincide con el tipo único en 1970–1971 y 1982, con el financiero en septiembre de 1981, con el oficial en junio de 1987, y queda por encima del oficial en octubre de 1988 y enero de 1989 (15,11 y 17,51 australes, contra 12,36 y 13,94).",
     "afecta": [
       "tc-oficial.pesos-actuales",
-      "tc-oficial.moneda-de-epoca"
+      "tc-oficial.moneda-de-epoca",
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias",
+      "pib-dolares.anual"
     ],
     "fuente": "Comparación de 174.1_T_DE_CANTO_0_0_37 con las series diarias del dataset 175 de datos.gob.ar (24/10/2026)."
   },
@@ -350,6 +361,18 @@
       "tc-oficial.moneda-de-epoca"
     ],
     "fuente": "metadatos/signos_monetarios.yaml"
+  },
+  {
+    "id": "q.tcr-bilateral.fin-de-mes",
+    "desde": "1970-01",
+    "tipo": "metodologia",
+    "descripcion": "El tipo de cambio nominal es el valor de fin de mes de la serie del BCRA (CAM-01), y los IPC son promedios del mes. En los meses de devaluación (por ejemplo, diciembre de 2015 o abril de 2002), el índice refleja el tipo de cambio del último día y no el promedio del mes.",
+    "afecta": [
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias"
+    ],
+    "fuente": "Vaivén (método de la variante).",
+    "hasta": null
   },
   {
     "id": "q.tcr.base-1997",

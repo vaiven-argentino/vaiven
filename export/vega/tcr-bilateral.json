@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Tipo de cambio real bilateral con EE.UU.",
+    "subtitle": "Variante: Con el IPC oficial del INDEC · índice dic. 2015 = 100"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/tcr-bilateral/oficial.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "índice dic. 2015 = 100"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "tcr-bilateral",
+      "variante": "oficial",
+      "version_datos": "2026-10-24T23:25:28Z",
+      "cita": "Vaivén (2026). Tipo de cambio real bilateral con EE.UU., variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/tcr-bilateral/"
+    }
+  }
+}
