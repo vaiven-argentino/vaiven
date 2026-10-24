@@ -62,14 +62,8 @@ export function diaDeVersion(version: string): string {
   return `${d}/${m}/${a}`;
 }
 
-export const NOMBRE_TRANSFORMACION: Record<string, string> = {
-  nivel: "Nivel (valor publicado)",
-  var_mensual: "Variación mensual (%)",
-  var_interanual: "Variación interanual (%)",
-  var_dic_dic: "Variación diciembre–diciembre (%)",
-  acumulada_anio: "Variación acumulada en el año (%)",
-  base_100: "Índice base 100",
-};
+// Los nombres de las transformaciones viven con la cita, porque la cita los usa (web y MCP).
+export { NOMBRE_TRANSFORMACION } from "@vaiven/cita";
 
 export const NOMBRE_TIPO_QUIEBRE: Record<string, string> = {
   cambio_de_base: "Cambio de base",

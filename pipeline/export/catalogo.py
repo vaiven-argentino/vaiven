@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import csv
 import json
 from pathlib import Path
 
-from pipeline.comun import escribir_json
+from pipeline.comun import ErrorPipeline, escribir_json
 from pipeline.export.series import URL_SITIO
 
 PERFIL_DATAPACKAGE = "https://datapackage.org/profiles/2.0/datapackage.json"
@@ -14,7 +15,29 @@ PERFIL_TABLA = "https://datapackage.org/profiles/2.0/tableschema.json"
 VEGA_LITE = "https://vega.github.io/schema/vega-lite/v6.json"
 
 
-def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str) -> dict:
+CAMPOS_BIBLIOGRAFIA = {"referencia": "texto", "pagina": "pagina", "tipo": "tipo", "titulo_original": "titulo_original",
+                       "periodo_cubierto": "periodo_cubierto"}
+
+
+def leer_inventario(ruta: Path) -> dict[str, dict]:
+    """Fichas del inventario de la bibliografía, por id. Son referencias (autor, obra, página, título del cuadro)."""
+    with ruta.open(encoding="utf-8-sig", newline="") as f:
+        return {fila["id"]: fila for fila in csv.DictReader(f)}
+
+
+def bibliografia(ids: list[str], inventario: dict[str, dict], serie: str) -> list[dict]:
+    """Las fichas que usan la serie, con los datos de referencia del inventario."""
+    salida = []
+    for fid in ids:
+        if fid not in inventario:
+            raise ErrorPipeline(f"{serie}: la ficha de bibliografía «{fid}» no está en el inventario.")
+        fila = inventario[fid]
+        salida.append({"id": fid, **{campo: fila[columna].strip() for campo, columna in CAMPOS_BIBLIOGRAFIA.items()}})
+    return salida
+
+
+def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str,
+             inventario: dict[str, dict] | None = None) -> dict:
     """Una entrada por serie. Las variantes no publicadas figuran con su estado, sin datos."""
     entradas = []
     for s in series:
@@ -36,6 +59,7 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
             "tipo": s["tipo"], "agregacion": s["agregacion"], "transformaciones": list(s.get("transformaciones", [])),
             "frecuencia": s["frecuencia"], "variante_por_defecto": s["variante_por_defecto"],
             "quiebres": s.get("quiebres", []), "variantes": variantes,
+            "bibliografia": bibliografia(s.get("bibliografia", []), inventario or {}, s["id"]),
         })
     return {"version_datos": version_datos, "series": entradas}
 
@@ -112,8 +136,10 @@ def especificacion_vega(serie_meta: dict, doc: dict) -> dict:
 
 
 def escribir_generales(dir_export: Path, series: list[dict], documentos: dict, fuentes: dict, quiebres: dict,
-                       version_datos: str) -> None:
-    escribir_json(dir_export / "catalogo.json", catalogo(series, documentos, version_datos))
+                       version_datos: str, ruta_inventario: Path | None = None) -> None:
+    usa_bibliografia = any(s.get("bibliografia") for s in series)
+    inventario = leer_inventario(ruta_inventario) if usa_bibliografia and ruta_inventario else {}
+    escribir_json(dir_export / "catalogo.json", catalogo(series, documentos, version_datos, inventario))
     escribir_json(dir_export / "quiebres.json", quiebres_export(quiebres))
     escribir_json(dir_export / "datapackage.json", datapackage(documentos, fuentes, version_datos))
     for s in series:

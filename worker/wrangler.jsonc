@@ -8,12 +8,18 @@
   // Disparo diario del pipeline (SPEC 5.1): 21:23 UTC = 18:23 en Argentina, después de las publicaciones del INDEC.
   // El token va como secreto: `npx wrangler secret put GITHUB_TOKEN_DISPARO`.
   "triggers": { "crons": ["23 21 * * *"] },
+  // Límite de pedidos por IP en /mcp (SPEC 7.1): 120 cada 60 s. Es aproximado (se cuenta por ubicación de
+  // Cloudflare) y generoso, porque los pedidos de Claude salen de servidores que comparten IP.
+  "ratelimits": [{ "name": "LIMITE_MCP", "namespace_id": "1001", "simple": { "limit": 120, "period": 60 } }],
+  // Registros del Worker (gratis): sirven para ver la CPU por pedido de /mcp.
+  "observability": { "enabled": true },
   "assets": {
     // El build de Astro (npm run build -w @vaiven/web). Incluye el export en /datos/ y los esquemas en /esquemas/.
     "directory": "../web/dist",
     "binding": "ASSETS",
     // Solo estas rutas pasan por el código; el resto se sirve como archivo estático (sin costo de CPU).
-    "run_worker_first": ["/salud"],
+    // /mcp es el servidor MCP (SPEC 7.1); lee el export de estos mismos assets.
+    "run_worker_first": ["/salud", "/mcp"],
     // Las rutas que no existen devuelven web/dist/404.html con estado 404.
     "not_found_handling": "404-page"
   }

@@ -6,6 +6,7 @@
   "type": "module",
   "workspaces": [
     "paquetes/*",
+    "mcp",
     "web",
     "worker"
   ],

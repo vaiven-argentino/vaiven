@@ -33,3 +33,6 @@ web/public/esquemas/
 web/public/_redirects
 web/dist/
 web/.astro/
+
+# MCP: la variante local empaquetada (npm run empaquetar -w @vaiven/mcp)
+mcp/dist/

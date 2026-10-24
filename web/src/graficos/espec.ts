@@ -134,9 +134,11 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const positivos = filasLinea.every((f) => f.v > 0);
   const log = e.log && positivos;
   const minimo = Math.min(...filasLinea.map((f) => Math.abs(f.v)).filter((v) => v > 0));
+  const cero = e.esVariacion || filasLinea.every((f) => f.v >= 0);
+  const tope = topeY(filasLinea.map((f) => f.v), reservaSuperior(marcadores, barras.length > 0), e.alto, log, cero);
   const y = {
     field: "v", type: "quantitative", title: null,
-    scale: log ? { type: "log" } : { zero: e.esVariacion || filasLinea.every((f) => f.v >= 0) },
+    scale: { ...(log ? { type: "log" } : { zero: cero }), ...(tope === undefined ? {} : { domainMax: tope }) },
     axis: log && minimo < 0.01 ? { labelExpr: ROTULO_POTENCIA, values: potenciasDeDiez(minimo, Math.max(...filasLinea.map((f) => f.v))) }
       : { format: ",~r", tickCount: 6 },
   };
@@ -237,6 +239,32 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       text: { font: tema.fuente },
     },
   };
+}
+
+/**
+ * Píxeles que ocupan arriba del gráfico los números de los quiebres (círculos de unos 17 px centrados en
+ * 10 + fila × 18) y la línea punteada de los quiebres largos (de 19 a 29 px), más un margen que cubre el radio
+ * de los puntos de la serie (hasta 3 px) y deja unos 8 px libres.
+ */
+export function reservaSuperior(marcadores: Array<{ y: number }>, hayBarras: boolean): number {
+  const bordes = [...marcadores.map((m) => m.y + 9), ...(hayBarras ? [29] : [])];
+  return bordes.length ? Math.max(...bordes) + 12 : 0;
+}
+
+/**
+ * Máximo del eje Y que deja libres los `reserva` píxeles de arriba, para que la serie no toque los números de los
+ * quiebres (por ejemplo, el pico de desocupación de 2002). En escala logarítmica, la cuenta se hace en logaritmos.
+ */
+export function topeY(valores: number[], reserva: number, alto: number, log: boolean, cero: boolean): number | undefined {
+  if (!reserva || !valores.length || reserva >= alto / 2) return undefined;
+  const fraccion = reserva / (alto - reserva);
+  if (log) {
+    const lo = Math.log10(Math.min(...valores)), hi = Math.log10(Math.max(...valores));
+    return 10 ** (hi + Math.max(hi - lo, 1) * fraccion);
+  }
+  const hi = Math.max(...valores);
+  const lo = cero ? Math.min(0, ...valores) : Math.min(...valores);
+  return hi + (hi - lo || Math.abs(hi) || 1) * fraccion;
 }
 
 /**

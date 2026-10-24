@@ -2,7 +2,7 @@
 // cargado recién cuando hace falta); tabla, resumen, avisos, descargas de la vista y cita.
 import { ErrorTransformacion, disponibles, transformar, type Opciones, type Resultado, type Transformacion } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
-import { apa, bibtex, textoCita } from "../lib/cita";
+import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { esVariacion, filasTabla, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
 import { especificacion, type Tema } from "./espec";
@@ -166,14 +166,6 @@ function iniciar(): void {
     });
     cuerpo.replaceChildren(...filas);
     $("tabla-cantidad")!.textContent = `${r.datos.length} filas`;
-  }
-
-  function nombreTransformacion(o: Opciones): string | undefined {
-    const partes: string[] = [];
-    if (o.frecuencia) partes.push(`frecuencia ${o.frecuencia}`);
-    if (o.transformacion && o.transformacion !== "nivel") partes.push(NOMBRE_TRANSFORMACION[o.transformacion].toLowerCase());
-    if (o.mediaMovil) partes.push(`media móvil de ${o.mediaMovil} períodos`);
-    return partes.length ? partes.join(", ") : undefined;
   }
 
   function cita(o: Opciones): void {

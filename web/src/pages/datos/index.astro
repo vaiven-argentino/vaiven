@@ -69,6 +69,11 @@ ipc <- read.csv("${URL_SITIO}/datos/descargas/csv/ipc/oficial.csv")
 const serie = await (await fetch("${URL_SITIO}/datos/series/ipc/oficial.json")).json();`}</code></pre>
     </section>
 
+    <section aria-labelledby="titulo-mcp">
+      <h2 id="titulo-mcp">Para agentes de IA</h2>
+      <p class="lectura">Los mismos datos se pueden consultar desde un asistente como Claude con el servidor MCP de Vaivén, en <code>{URL_SITIO}/mcp</code>. Cómo conectarlo, en <a href="/agentes/">Para agentes de IA</a>.</p>
+    </section>
+
     <section aria-labelledby="titulo-licencia">
       <h2 id="titulo-licencia">Licencia</h2>
       <p class="lectura">Los datos derivados (las variantes y el export) se publican con licencia <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a>. Cada fuente conserva la suya, que figura en su ficha y en cada JSON. Las variantes que no se pueden redistribuir no tienen archivo.</p>

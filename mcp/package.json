@@ -1,0 +1,34 @@
+{
+  "name": "@vaiven/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Servidor MCP de Vaivén (SPEC, sección 7): el mismo código corre remoto en el Worker (/mcp) y local por stdio.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "bin": {
+    "vaiven-mcp": "./dist/vaiven-mcp.mjs"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "verificar": "tsc --noEmit",
+    "empaquetar": "esbuild src/stdio.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/vaiven-mcp.mjs \"--banner:js=#!/usr/bin/env node\" --log-level=warning",
+    "local": "npm run empaquetar && node dist/vaiven-mcp.mjs --export ../export",
+    "probar-endpoint": "node scripts/probar-endpoint.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "@vaiven/cita": "0.1.0",
+    "@vaiven/transformaciones": "0.1.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@types/node": "24.19.2",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}

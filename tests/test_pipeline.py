@@ -103,3 +103,33 @@ def test_revision_de_un_valor_publicado_queda_registrada(repo):
     revisiones = json.loads((repo.export / "revisiones.json").read_text(encoding="utf-8"))
     assert revisiones[0]["variante"] == "prueba.oficial"
     assert revisiones[0]["cambios"][0]["fecha"] == "2000-05"
+
+
+def test_catalogo_con_bibliografia_del_inventario(repo):
+    ruta = repo.inventario
+    ruta.parent.mkdir(parents=True)
+    ruta.write_text("﻿id,texto,pagina,tipo,titulo_original,periodo_cubierto,otra\n"
+                    "AB2000-G1,\"Autor (2000), Obra\",12,gráfico de líneas,Precios 1990-1999,1990 – 1999,x\n", encoding="utf-8")
+    meta = repo.metadatos / "series" / "prueba.yaml"
+    serie = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    serie["bibliografia"] = ["AB2000-G1"]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    assert catalogo["series"][0]["bibliografia"] == [{
+        "id": "AB2000-G1", "referencia": "Autor (2000), Obra", "pagina": "12", "tipo": "gráfico de líneas",
+        "titulo_original": "Precios 1990-1999", "periodo_cubierto": "1990 – 1999",
+    }]
+
+
+def test_ficha_de_bibliografia_inexistente_frena_el_export(repo):
+    ruta = repo.inventario
+    ruta.parent.mkdir(parents=True)
+    ruta.write_text("id,texto,pagina,tipo,titulo_original,periodo_cubierto\n", encoding="utf-8")
+    meta = repo.metadatos / "series" / "prueba.yaml"
+    serie = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    serie["bibliografia"] = ["NO-EXISTE"]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ErrorPipeline, match="NO-EXISTE"):
+        ejecutar(repo, con_red=False)
