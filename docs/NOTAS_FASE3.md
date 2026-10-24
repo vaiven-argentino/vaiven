@@ -104,10 +104,15 @@
   - GET 405 y OPTIONS 204, con CORS y `no-store`;
   - `/salud` con fase 3, `/datos/`, `/agentes/`, el 301 y el 404.
   - El 429 no se forzó en producción.
+- **CPU de `/mcp`** (panel de Cloudflare, 17 invocaciones de esa prueba, 20:49 UTC):
+  - Gráfico «CPU Time»: P50 5,94 ms, P90 14,42 ms, P99 y P999 50 ms.
+  - Query Builder: mediana de `$workers.cpuTimeMs` 7 ms, máximo 50 ms.
+  - Ningún pedido falló: en el plan gratuito, Cloudflare tolera que un pedido pase de 10 ms de vez en cuando, pero corta con el error 1102 si pasa seguido.
+  - La mediana entra en el límite, pero una parte de los pedidos lo pasa. Todavía no se sabe cuáles son (el primero de cada isolate, `tools/list` o alguna herramienta en particular).
 
 ## Pendientes
 
-1. **CPU por pedido de `/mcp`:** se mira en el panel de Cloudflare (Workers → `vaiven` → Observabilidad), porque desde la sesión no hay credenciales. Hay que confirmar que queda por debajo de los 10 ms del plan gratuito.
+1. **CPU por pedido de `/mcp` (a consultar):** la mediana es de 6–7 ms, pero el P90 es de 14 ms y el máximo de 50 ms (ver «Despliegue»). Hay que saber qué pedidos pasan de 10 ms y bajarlos antes de que el uso real los vuelva frecuentes.
 2. **Prueba manual desde Claude, web y escritorio** (la hace Camilo): guion en `mcp/PRUEBA_MANUAL.md`. Es lo que cierra la fase según la SPEC (sección 11).
 3. **Ficha web:** mostrar «Uso en la bibliografía» con los datos que ya trae `catalogo.json` (pendiente de la fase 2, para la fase 4).
 4. **Distribución de la variante local por `npx`** (fase 5).
