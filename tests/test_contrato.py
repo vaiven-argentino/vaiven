@@ -102,3 +102,20 @@ def test_catalogo_trae_la_bibliografia_de_los_metadatos():
         for b in s["bibliografia"]:
             assert set(b) == {"id", "referencia", "pagina", "tipo", "titulo_original", "periodo_cubierto"}
             assert b["referencia"], b
+
+
+def test_el_ejemplo_1_1_sigue_cumpliendo_su_esquema():
+    # Contrato anterior: un JSON de la 1.1 (fase 2) tiene que seguir validando contra su esquema publicado.
+    ejemplo = json.loads((RAIZ / "tests" / "contrato" / "ejemplos" / "serie-1.1.json").read_text(encoding="utf-8"))
+    assert ejemplo["esquema"] == "1.1"
+    jsonschema.validate(ejemplo, ESQUEMAS["1.1"])
+
+
+@pytest.mark.parametrize("ruta", ARCHIVOS, ids=lambda r: f"{r.parent.name}.{r.stem}")
+def test_los_insumos_apuntan_a_archivos_publicados(ruta):
+    doc = json.loads(ruta.read_text(encoding="utf-8"))
+    for medida, insumo in doc.get("insumos", {}).items():
+        ids = [o["id"] for o in insumo["opciones"]]
+        assert insumo["por_defecto"] in ids, (medida, insumo["por_defecto"])
+        for o in insumo["opciones"]:
+            assert (EXPORT / o["archivo"]).exists(), (medida, o["archivo"])
