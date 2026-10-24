@@ -240,7 +240,8 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
     version_general = momento
     if not hubo_cambios and ruta_catalogo.exists():
         version_general = json.loads(ruta_catalogo.read_text(encoding="utf-8"))["version_datos"]
-    export_generales.escribir_generales(rutas.export, meta.series, documentos, meta.fuentes, meta.quiebres, version_general)
+    export_generales.escribir_generales(rutas.export, meta.series, documentos, meta.fuentes, meta.quiebres, version_general,
+                                        rutas.inventario)
     export_generales.agregar_revisiones(rutas.export / "revisiones.json", entradas_revision)
     res.publicado = True
     return res

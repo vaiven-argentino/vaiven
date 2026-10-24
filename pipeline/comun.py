@@ -41,6 +41,11 @@ class Rutas:
     def export(self) -> Path:
         return self.raiz / "export"
 
+    @property
+    def inventario(self) -> Path:
+        """Inventario de cuadros y gráficos de la bibliografía (las fichas que cita `bibliografia` en cada serie)."""
+        return self.raiz / "docs" / "planificacion" / "inventario_graficos.csv"
+
 
 class ErrorPipeline(Exception):
     """Error que corta el pipeline con un mensaje para la persona que lo mantiene."""

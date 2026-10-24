@@ -91,3 +91,14 @@ def test_excluidos_no_figuran_en_los_datos():
             assert e["fecha"] not in fechas, (doc["id"], e["fecha"])
     reservas = json.loads((EXPORT / "series" / "reservas" / "brutas.json").read_text(encoding="utf-8"))
     assert [e["fecha"] for e in reservas["excluidos"]] == ["1979-03"]
+
+
+def test_catalogo_trae_la_bibliografia_de_los_metadatos():
+    import yaml
+    catalogo = json.loads((EXPORT / "catalogo.json").read_text(encoding="utf-8"))
+    for s in catalogo["series"]:
+        meta = yaml.safe_load((RAIZ / "metadatos" / "series" / f"{s['id']}.yaml").read_text(encoding="utf-8"))
+        assert [b["id"] for b in s["bibliografia"]] == meta.get("bibliografia", [])
+        for b in s["bibliografia"]:
+            assert set(b) == {"id", "referencia", "pagina", "tipo", "titulo_original", "periodo_cubierto"}
+            assert b["referencia"], b
