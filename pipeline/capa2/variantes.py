@@ -41,7 +41,11 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
     metodo = variante.get("empalme", "yuxtaponer")
     if metodo not in METODOS:
         raise ErrorPipeline(f"Método de empalme desconocido en {variante['id']}: {metodo}")
-    serie = METODOS[metodo](tramos(variante, capa1, fuentes))
+    partes = tramos(variante, capa1, fuentes)
+    if metodo == "encadenar_tasas":
+        serie = empalmes.encadenar_tasas(partes, enlace=variante.get("enlace", "periodo"))
+    else:
+        serie = METODOS[metodo](partes)
     excluir = [a_fecha(e["fecha"]) for e in variante.get("excluir", [])]
     if excluir:
         # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos.
