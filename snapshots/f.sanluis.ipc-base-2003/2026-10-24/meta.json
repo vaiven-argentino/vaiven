@@ -1,0 +1,15 @@
+{
+  "fuente": "f.sanluis.ipc-base-2003",
+  "descargado": "2026-10-24T04:59:03Z",
+  "sha256": "cba03c1c05fd28589684ab7aedb222aec95386cbf608fa60a423145806b89b5a",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=197.1_NIVEL_GENERAL_2014_0_13&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 9542,
+      "sha256": "da46dae13d4bf35e35e749d7da2b2db9d757cbcee0637efe57d95d3c47e8c4a6"
+    }
+  ]
+}

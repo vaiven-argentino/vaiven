@@ -1,0 +1,11 @@
+{
+  "fuente": "f.sanluis.ipc-base-2003",
+  "unidad": "índice 2003 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.sanluis.ipc-base-2003/2026-10-24",
+  "descargado": "2026-10-24T04:59:03Z",
+  "sha256": "cba03c1c05fd28589684ab7aedb222aec95386cbf608fa60a423145806b89b5a",
+  "observaciones": 249,
+  "desde": "2005-10-01",
+  "hasta": "2026-06-01"
+}

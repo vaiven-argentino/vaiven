@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ipc-gba-base-2008",
+  "unidad": "índice abr. 2008 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.indec.ipc-gba-base-2008/2026-10-24",
+  "descargado": "2026-10-24T04:58:57Z",
+  "sha256": "06a38d73b1013aa20ad02ee6c015e544bb2b384a9081f197db759e4abac85ee0",
+  "observaciones": 252,
+  "desde": "1993-01-01",
+  "hasta": "2013-12-01"
+}

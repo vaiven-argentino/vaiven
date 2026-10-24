@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ica-exportaciones-anual",
+  "unidad": "millones de US$",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.indec.ica-exportaciones-anual/2026-10-24",
+  "descargado": "2026-10-24T05:13:58Z",
+  "sha256": "98019a842e4f25e8c73eae92783bd89dd2cc6589af113ff728370dd07c28cd63",
+  "observaciones": 116,
+  "desde": "1910-01-01",
+  "hasta": "2025-01-01"
+}

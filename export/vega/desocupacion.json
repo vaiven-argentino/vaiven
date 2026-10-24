@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Tasa de desocupación",
+    "subtitle": "Variante: Total de aglomerados urbanos, sin empalmar · % de la población económicamente activa"
+  },
+  "data": {
+    "url": "descargas/csv/desocupacion/total-urbano.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "% de la población económicamente activa"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "desocupacion",
+      "variante": "total-urbano",
+      "version_datos": "2026-10-24T05:15:50Z",
+      "cita": "Vaivén (2026). Tasa de desocupación, variante «total-urbano». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/desocupacion/"
+    }
+  }
+}

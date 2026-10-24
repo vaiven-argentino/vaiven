@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.eph-puntual-gba",
+  "descargado": "2026-10-24T05:13:56Z",
+  "sha256": "f428281fb8a9afd881f3127f2ef3d04980e6306d7ee391b44e59ae29614041e6",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "distribucion.csv",
+      "url": "https://infra.datos.gob.ar/catalog/sspm/dataset/343/distribution/343.1/download/tasa-de-desocupacion-por-aglomerado-1974-2003.csv",
+      "bytes": 17609,
+      "sha256": "b99b246c6db5541199e13f6281acf361b66cb4baad225d3b5825cbf41349a523"
+    }
+  ]
+}

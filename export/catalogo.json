@@ -1,0 +1,234 @@
+{
+  "version_datos": "2026-10-24T05:15:50Z",
+  "series": [
+    {
+      "id": "desocupacion",
+      "codigo": "TRA-01",
+      "nombre": "Tasa de desocupación",
+      "bloque": "Trabajo e ingresos",
+      "prioridad": "A",
+      "definicion": "Personas desocupadas como porcentaje de la población económicamente activa, según la EPH del INDEC.",
+      "unidad": "% de la población económicamente activa",
+      "frecuencia": "semestral (1974–2003) y trimestral (2003–hoy)",
+      "variante_por_defecto": "total-urbano",
+      "quiebres": [
+        "q.desocupacion.eph-2003",
+        "q.desocupacion.aglomerados",
+        "q.desocupacion.planes-2002",
+        "q.desocupacion.emergencia-2016"
+      ],
+      "variantes": [
+        {
+          "id": "total-urbano",
+          "nombre": "Total de aglomerados urbanos, sin empalmar",
+          "estado": "publicada",
+          "frecuencia": "semestral (1974–2003) y trimestral (2003–hoy)",
+          "cobertura": {
+            "desde": "1974-05",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/desocupacion/total-urbano.json"
+        },
+        {
+          "id": "gba",
+          "nombre": "Gran Buenos Aires, sin empalmar",
+          "estado": "publicada",
+          "frecuencia": "semestral (1974–2003) y trimestral (2003–hoy)",
+          "cobertura": {
+            "desde": "1974-05",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/desocupacion/gba.json"
+        },
+        {
+          "id": "empalmada",
+          "nombre": "Total urbano empalmado",
+          "estado": "pendiente",
+          "frecuencia": "semestral (1974–2003) y trimestral (2003–hoy)",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente: no se ubicaron coeficientes oficiales de empalme entre la EPH puntual y la continua. Hay propuestas académicas (por ejemplo, Quartulli y Stefani, 2008) que se pueden evaluar."
+        }
+      ]
+    },
+    {
+      "id": "exportaciones",
+      "codigo": "EXT-01",
+      "nombre": "Exportaciones",
+      "bloque": "Sector externo",
+      "prioridad": "A",
+      "definicion": "Exportaciones de bienes FOB, según el Intercambio Comercial Argentino del INDEC.",
+      "unidad": "millones de US$ corrientes",
+      "frecuencia": "anual",
+      "variante_por_defecto": "oficial",
+      "quiebres": [],
+      "variantes": [
+        {
+          "id": "oficial",
+          "nombre": "Oficial INDEC, anual",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "series/exportaciones/oficial.json"
+        },
+        {
+          "id": "mensual",
+          "nombre": "Oficial INDEC, mensual (desde 1992)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1992-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/exportaciones/mensual.json"
+        },
+        {
+          "id": "dolares-constantes",
+          "nombre": "En dólares constantes",
+          "estado": "pendiente",
+          "frecuencia": "anual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente hasta ubicar un índice de precios de las exportaciones abierto (no está en la API de datos.gob.ar)."
+        }
+      ]
+    },
+    {
+      "id": "ipc",
+      "codigo": "PRE-01",
+      "nombre": "Inflación minorista (IPC)",
+      "bloque": "Precios",
+      "prioridad": "A",
+      "definicion": "Índice de precios al consumidor, nivel general.",
+      "unidad": "índice dic. 2016 = 100",
+      "frecuencia": "mensual",
+      "variante_por_defecto": "oficial",
+      "quiebres": [
+        "q.ipc.2007-2015",
+        "q.ipc.emergencia-2016",
+        "q.ipc.cobertura",
+        "q.ipc.provincias"
+      ],
+      "variantes": [
+        {
+          "id": "oficial",
+          "nombre": "Oficial INDEC, sin corregir",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/ipc/oficial.json"
+        },
+        {
+          "id": "provincias",
+          "nombre": "Provincias (San Luis y Ciudad de Buenos Aires) en 2007–2016",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/ipc/provincias.json"
+        },
+        {
+          "id": "cavallo-bertolotto",
+          "nombre": "Cavallo–Bertolotto (San Luis + PriceStats)",
+          "estado": "pendiente_licencia",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Se publica cuando los autores confirmen que se puede redistribuir con atribución."
+        }
+      ]
+    },
+    {
+      "id": "reservas",
+      "codigo": "EXT-06",
+      "nombre": "Reservas internacionales",
+      "bloque": "Sector externo",
+      "prioridad": "A",
+      "definicion": "Stock de reservas internacionales brutas del BCRA, saldo de fin de mes.",
+      "unidad": "millones de US$",
+      "frecuencia": "mensual",
+      "variante_por_defecto": "brutas",
+      "quiebres": [
+        "q.reservas.brutas"
+      ],
+      "variantes": [
+        {
+          "id": "brutas",
+          "nombre": "Reservas brutas",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/reservas/brutas.json"
+        },
+        {
+          "id": "netas",
+          "nombre": "Reservas netas",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente hasta acordar qué definición de reservas netas se publica (hay varias en uso)."
+        }
+      ]
+    },
+    {
+      "id": "tc-oficial",
+      "codigo": "CAM-01",
+      "nombre": "Tipo de cambio nominal oficial",
+      "bloque": "Cambiario",
+      "prioridad": "A",
+      "definicion": "Pesos por dólar estadounidense, valor de fin de mes, según la serie histórica del BCRA.",
+      "unidad": "pesos actuales por dólar",
+      "frecuencia": "mensual",
+      "variante_por_defecto": "pesos-actuales",
+      "quiebres": [
+        "q.tc.mercados-desdoblados",
+        "q.tc.signos-monetarios"
+      ],
+      "variantes": [
+        {
+          "id": "pesos-actuales",
+          "nombre": "En pesos actuales",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/tc-oficial/pesos-actuales.json"
+        },
+        {
+          "id": "moneda-de-epoca",
+          "nombre": "En la moneda de cada época",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/tc-oficial/moneda-de-epoca.json"
+        },
+        {
+          "id": "comercial",
+          "nombre": "Mercado oficial o comercial",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente: las series diarias del mercado oficial tienen huecos largos (faltan los datos de nov. 1976 a ene. 1987) y falta ubicar una fuente abierta para completarlos."
+        }
+      ]
+    }
+  ]
+}

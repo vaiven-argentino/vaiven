@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.eph-continua-gba",
+  "descargado": "2026-10-24T05:13:57Z",
+  "sha256": "8031510684c852083d2010213dbb2bd41f40fbacdfed61353c13f2f0bb49eff1",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=42.3_EPH_PUNTUAGBA_0_M_28&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6149,
+      "sha256": "02b1fec63f0b2c0d6c3ccfa1791fc89ca7c2c060368972eadaa0537223aa7d1c"
+    }
+  ]
+}

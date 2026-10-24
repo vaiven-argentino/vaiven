@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ipc-gba-base-2016",
+  "unidad": "índice dic. 2016 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.indec.ipc-gba-base-2016/2026-10-24",
+  "descargado": "2026-10-24T04:59:01Z",
+  "sha256": "1da5c472b173f5e7fdc363457a3524c10d5dc7c74d81dca22800d522ba14c7cb",
+  "observaciones": 125,
+  "desde": "2016-04-01",
+  "hasta": "2026-08-01"
+}

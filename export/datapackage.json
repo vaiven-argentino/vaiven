@@ -1,0 +1,452 @@
+{
+  "$schema": "https://datapackage.org/profiles/2.0/datapackage.json",
+  "name": "vaiven",
+  "title": "Vaivén: series económicas argentinas, 1970–hoy",
+  "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
+  "homepage": "https://vaiven.argentino.workers.dev",
+  "version": "2026-10-24T05:15:50Z",
+  "created": "2026-10-24T05:15:50Z",
+  "licenses": [
+    {
+      "name": "CC-BY-4.0",
+      "path": "https://creativecommons.org/licenses/by/4.0/",
+      "title": "Creative Commons Attribution 4.0"
+    }
+  ],
+  "contributors": [
+    {
+      "title": "Camilo Gómez Ortega von Zeschau",
+      "roles": [
+        "creator"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "desocupacion.gba",
+      "title": "Tasa de desocupación · Gran Buenos Aires, sin empalmar",
+      "path": "descargas/csv/desocupacion/gba.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Igual que la variante del total urbano, pero para el Gran Buenos Aires, que tiene la misma cobertura geográfica en todo el período. La fuente publica fracciones; se multiplican por 100.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (semestral (1974–2003) y trimestral (2003–hoy)): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "% de la población económicamente activa"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): EPH puntual. Tasa de desocupación, Gran Buenos Aires, 1974–2003",
+          "path": "https://datos.gob.ar/dataset/sspm-tasa-desocupacion-por-aglomerado-1974-2003"
+        },
+        {
+          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): EPH continua. Tasa de desocupación, Gran Buenos Aires, trimestral",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=42.3_EPH_PUNTUAGBA_0_M_28"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "desocupacion.total-urbano",
+      "title": "Tasa de desocupación · Total de aglomerados urbanos, sin empalmar",
+      "path": "descargas/csv/desocupacion/total-urbano.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "EPH puntual (ondas de mayo y octubre, 1974–2003) seguida de la EPH continua (trimestral, desde el tercer trimestre de 2003), sin coeficientes de empalme. La fuente publica fracciones; se multiplican por 100.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (semestral (1974–2003) y trimestral (2003–hoy)): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "% de la población económicamente activa"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): EPH puntual. Tasa de desocupación, total de aglomerados urbanos, 1974–2003",
+          "path": "https://datos.gob.ar/dataset/sspm-tasa-desocupacion-por-aglomerado-1974-2003"
+        },
+        {
+          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): EPH continua. Tasa de desocupación, total de aglomerados urbanos, trimestral",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=42.3_EPH_PUNTUATAL_0_M_30"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "exportaciones.mensual",
+      "title": "Exportaciones · Oficial INDEC, mensual (desde 1992)",
+      "path": "descargas/csv/exportaciones/mensual.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Serie mensual del Intercambio Comercial Argentino (INDEC), sin cambios. Empieza en enero de 1992.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Intercambio Comercial Argentino. Exportaciones totales, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=74.3_IET_0_M_16"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "exportaciones.oficial",
+      "title": "Exportaciones · Oficial INDEC, anual",
+      "path": "descargas/csv/exportaciones/oficial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Serie anual del Intercambio Comercial Argentino (INDEC), sin cambios.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Intercambio Comercial Argentino. Exportaciones totales, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=74.1_IET_0_A_16"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "ipc.oficial",
+      "title": "Inflación minorista (IPC) · Oficial INDEC, sin corregir",
+      "path": "descargas/csv/ipc/oficial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Encadenamiento de tasas de variación mensual entre los tramos oficiales del INDEC, retropolado desde el IPC Nacional base diciembre 2016. Desde febrero de 1993 se usa el IPC-GBA base 2008 en lugar del IPC histórico: dan las mismas tasas salvo en mayo y junio de 2004, donde el IPC-GBA coincide con lo publicado por el INDEC en su momento (0,7 % y 0,6 %). Entre noviembre de 2015 y abril de 2016, sin IPC oficial por la emergencia estadística, se usan las tasas del IPC de la Ciudad de Buenos Aires.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "índice dic. 2016 = 100"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: IPC histórico (empalme de las bases 1943, 1960, 1974 y 1988, base 1999), nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base abril 2008 = 100, nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=97.2_ING_2008_M_17"
+        },
+        {
+          "title": "INDEC: IPC Nacional Urbano (IPCNu) base oct. 2013 – sep. 2014 = 100, nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=98.3_INNG_2013_0_20"
+        },
+        {
+          "title": "Instituto de Estadística y Censos de la Ciudad Autónoma de Buenos Aires: IPCBA base julio 2011 – junio 2012 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=193.1_NIVEL_GENERAL_JULI_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=101.1_I2NG_2016_M_22"
+        },
+        {
+          "title": "INDEC: IPC Nacional base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "ipc.provincias",
+      "title": "Inflación minorista (IPC) · Provincias (San Luis y Ciudad de Buenos Aires) en 2007–2016",
+      "path": "descargas/csv/ipc/provincias.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Igual que la variante oficial, salvo entre enero de 2007 y abril de 2016: hasta julio de 2012 se usan las tasas del IPC de San Luis y desde agosto de 2012, las del IPC de la Ciudad de Buenos Aires.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "índice dic. 2016 = 100"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: IPC histórico (empalme de las bases 1943, 1960, 1974 y 1988, base 1999), nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base abril 2008 = 100, nivel general. Serie discontinuada",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=97.2_ING_2008_M_17"
+        },
+        {
+          "title": "Dirección Provincial de Estadística y Censos de San Luis: IPC de la Provincia de San Luis base 2003 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=197.1_NIVEL_GENERAL_2014_0_13"
+        },
+        {
+          "title": "Instituto de Estadística y Censos de la Ciudad Autónoma de Buenos Aires: IPCBA base julio 2011 – junio 2012 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=193.1_NIVEL_GENERAL_JULI_0_13"
+        },
+        {
+          "title": "INDEC: IPC-GBA base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=101.1_I2NG_2016_M_22"
+        },
+        {
+          "title": "INDEC: IPC Nacional base diciembre 2016 = 100, nivel general",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "reservas.brutas",
+      "title": "Reservas internacionales · Reservas brutas",
+      "path": "descargas/csv/reservas/brutas.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Reservas internacionales del BCRA, saldos",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tc-oficial.moneda-de-epoca",
+      "title": "Tipo de cambio nominal oficial · En la moneda de cada época",
+      "path": "descargas/csv/tc-oficial/moneda-de-epoca.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "La serie en pesos equivalentes del BCRA convertida a la moneda vigente el último día de cada mes, con las equivalencias de metadatos/signos_monetarios.yaml. No se usa la versión «moneda de cada momento» de la fuente porque cambia de unidad en fechas que no son las de los cambios de signo (ver fuentes.yaml).",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "moneda de cada época por dólar (peso ley 18.188, peso argentino, austral o peso)"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tc-oficial.pesos-actuales",
+      "title": "Tipo de cambio nominal oficial · En pesos actuales",
+      "path": "descargas/csv/tc-oficial/pesos-actuales.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188).",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "pesos actuales por dólar"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    }
+  ]
+}

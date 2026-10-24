@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ipc-nu-base-2013",
+  "unidad": "índice oct. 2013 – sep. 2014 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.indec.ipc-nu-base-2013/2026-10-24",
+  "descargado": "2026-10-24T04:58:58Z",
+  "sha256": "fc0b71eb09a931d0212a0213483520188462928fe19da9b0c4b7efde6b7f5ad0",
+  "observaciones": 23,
+  "desde": "2013-12-01",
+  "hasta": "2015-10-01"
+}
