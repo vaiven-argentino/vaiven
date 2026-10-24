@@ -29,7 +29,7 @@ function paginasPorDefecto() {
   const catalogo = JSON.parse(readFileSync(join(import.meta.dirname, "..", "..", "export", "catalogo.json"), "utf-8"));
   const fichas = catalogo.series.flatMap((s) => s.variantes.filter((v) => v.estado === "publicada")
     .map((v) => (v.id === s.variante_por_defecto ? `/series/${s.id}/` : `/series/${s.id}/${v.id}/`)));
-  return ["/", "/series/", ...fichas, "/datos/", "/acerca/", "/no-existe/"];
+  return ["/", "/series/", ...fichas, "/datos/", "/agentes/", "/acerca/", "/no-existe/"];
 }
 const paginas = args.paginas ? args.paginas.split(",") : paginasPorDefecto();
 const anchos = (args.anchos ?? "390,1280").split(",").map(Number);
