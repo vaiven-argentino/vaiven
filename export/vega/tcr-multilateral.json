@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Tipo de cambio real multilateral",
+    "subtitle": "Variante: BCRA (desde 1991) · índice 17-12-2015 = 100"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/tcr-multilateral/bcra.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "índice 17-12-2015 = 100"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "tcr-multilateral",
+      "variante": "bcra",
+      "version_datos": "2026-10-24T23:19:43Z",
+      "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/tcr-multilateral/"
+    }
+  }
+}

@@ -315,5 +315,39 @@
       "tc-oficial.moneda-de-epoca"
     ],
     "fuente": "metadatos/signos_monetarios.yaml"
+  },
+  {
+    "id": "q.tcr.base-1997",
+    "desde": "1997-02",
+    "hasta": "1997-02",
+    "tipo": "cambio_de_base",
+    "descripcion": "Cambio de base y de ponderadores: hasta enero de 1997, las tasas son las del índice base diciembre 2001; desde febrero de 1997, las del índice base 17-12-2015. Donde se superponen (1997–2014), sus tasas mensuales difieren 0,8 puntos en promedio, con un máximo de 3,4 puntos (mayo de 2002).",
+    "afecta": [
+      "tcr-multilateral.bcra"
+    ],
+    "fuente": "Comparación de 115.3_TCRM_0_M_29 con 116.3_TCRMA_0_M_36 en datos.gob.ar (24/10/2026)."
+  },
+  {
+    "id": "q.tcr.bruegel",
+    "desde": "1970-01",
+    "tipo": "metodologia",
+    "descripcion": "Índice de Bruegel (Darvas): otra canasta (51 socios), otros ponderadores y otros IPC que el del BCRA, dado vuelta para que un aumento sea depreciación. No se empalma con el del BCRA. En 1997–2024 sus tasas anuales siguen de cerca a las del BCRA (correlación de 0,98), pero en algunos años difieren mucho: en 1999 da +2,1 % y el BCRA, −11,0 %.",
+    "afecta": [
+      "tcr-multilateral.bruegel"
+    ],
+    "fuente": "Comparación de REER_51_AR (Bruegel, versión del 11/10/2026) con 116.3_TCRMA_0_M_36 (24/10/2026).",
+    "hasta": null
+  },
+  {
+    "id": "q.tcr.ipc-2007-2015",
+    "desde": "2007-01",
+    "hasta": "2015-12",
+    "tipo": "intervencion",
+    "descripcion": "Entre 2007 y 2015, el índice depende de qué inflación argentina se use para deflactar, y la oficial del INDEC de esos años está en duda (ver el IPC). La variante recalculada con un IPC alternativo queda pendiente.",
+    "afecta": [
+      "tcr-multilateral.bcra",
+      "tcr-multilateral.bruegel"
+    ],
+    "fuente": "INDEC, advertencia sobre el IPC 2007–2015."
   }
 ]

@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.itcrm-base-2001",
+  "descargado": "2026-10-24T23:19:30Z",
+  "sha256": "b478074eba156d1ac740030b94ba33fcd54cac8642caaeb4339cb56a2ee717c1",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "distribucion.csv",
+      "url": "https://infra.datos.gob.ar/catalog/sspm/dataset/115/distribution/115.3/download/indice-tipo-cambio-real-multilateral-mensual-base-2001.csv",
+      "bytes": 8789,
+      "sha256": "837b9b945f1e18663a3ae0db91f13fd858398d42fc62c1f22b695238de52ff12"
+    }
+  ]
+}

@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-24T23:16:48Z",
-  "created": "2026-10-24T23:16:48Z",
+  "version": "2026-10-24T23:19:43Z",
+  "created": "2026-10-24T23:19:43Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -986,6 +986,94 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tcr-multilateral.bcra",
+      "title": "Tipo de cambio real multilateral · BCRA (desde 1991)",
+      "path": "descargas/csv/tcr-multilateral/bcra.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "ITCRM del BCRA: las tasas de variación mensual de la serie base diciembre 2001 entre 1991 y enero de 1997, encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. La copia de datos.gob.ar llega hasta diciembre de 2024. Antes de 1991 el BCRA no publica el índice.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "índice 17-12-2015 = 100"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Índice de tipo de cambio real multilateral, base diciembre 2001 = 100, mensual. Serie discontinuada",
+          "path": "https://datos.gob.ar/dataset/sspm-indice-tipo-cambio-real-multilateral-base-diciembre-2001-100-serie-discontinuada"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, promedio mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=116.3_TCRMA_0_M_36"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tcr-multilateral.bruegel",
+      "title": "Tipo de cambio real multilateral · Bruegel, 51 socios (desde 1970), sin empalmar",
+      "path": "descargas/csv/tcr-multilateral/bruegel.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Tipo de cambio real efectivo de Bruegel (Darvas), con IPC y una canasta de 51 socios, mensual, dado vuelta (100 ÷ valor) para que un aumento sea una depreciación real del peso, como en el índice del BCRA. Es otra metodología y no se empalma con la serie del BCRA. Fuente: Darvas, Z. (2012), «Real effective exchange rates for 178 countries: a new database», Bruegel Working Paper 2012/06, versión actualizada.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "índice (100 ÷ REER de Bruegel; base sin declarar)"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Bruegel (Zsolt Darvas): Real effective exchange rates for 178 countries. REER mensual con IPC, canasta de 51 socios, Argentina",
+          "path": "https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database"
         }
       ],
       "licenses": [

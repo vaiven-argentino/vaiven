@@ -518,3 +518,57 @@
   unidad: millones de pesos
   cobertura: {desde: 2015-01, hasta: hoy}
   verificado: 2026-10-24
+
+# ── Tipo de cambio real multilateral (CAM-03) ──────────────────────────────────
+- id: f.bcra.itcrm-base-2001
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Índice de tipo de cambio real multilateral, base diciembre 2001 = 100, mensual. Serie discontinuada
+  api: datos.gob.ar-csv
+  id_api: 115.3_TCRM_0_M_29
+  url_descarga: https://infra.datos.gob.ar/catalog/sspm/dataset/115/distribution/115.3/download/indice-tipo-cambio-real-multilateral-mensual-base-2001.csv
+  columna: tipo_cambio_real_multilateral
+  url: https://datos.gob.ar/dataset/sspm-indice-tipo-cambio-real-multilateral-base-diciembre-2001-100-serie-discontinuada
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice dic. 2001 = 100
+  cobertura: {desde: 1991-01, hasta: 2015-12}
+  verificado: 2026-10-24
+  nota: >-
+    La API devuelve 0 filas para esta serie; se usa el CSV de su distribución. Tiene un salto de nivel de +166 % en
+    enero de 2015 que la serie nueva no tiene; queda fuera del tramo que usa Vaivén (1991–1997).
+
+- id: f.bcra.itcrm-base-2015
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, promedio mensual
+  api: datos.gob.ar
+  id_api: 116.3_TCRMA_0_M_36
+  url: https://apis.datos.gob.ar/series/api/series/?ids=116.3_TCRMA_0_M_36
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice 17-12-2015 = 100
+  cobertura: {desde: 1997-01, hasta: hoy}
+  verificado: 2026-10-24
+  nota: >-
+    En datos.gob.ar llega hasta diciembre de 2024 (24/10/2026); la diaria (116.4_TCRZE_2015_D_36_4) llega a enero de
+    2026, pero su promedio mensual difiere de esta serie hasta 0,9 %, así que no se usa para completarla.
+
+- id: f.bruegel.reer-51-ar
+  organismo: Bruegel (Zsolt Darvas)
+  nombre: Real effective exchange rates for 178 countries. REER mensual con IPC, canasta de 51 socios, Argentina
+  api: bruegel
+  id_api: REER_MONTHLY_51/REER_51_AR
+  url_pagina: https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database
+  hoja: REER_MONTHLY_51
+  columna: REER_51_AR
+  url: https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database
+  licencia: Bruegel, uso libre con atribución
+  frecuencia: mensual
+  unidad: índice (un aumento es apreciación)
+  cobertura: {desde: 1962-05, hasta: hoy}
+  verificado: 2026-10-24
+  nota: >-
+    Términos (24/10/2026): «Users can freely use our data in its unchanged form or after any transformation for any
+    purpose and can freely distribute it, provided that proper attribution is made to the source, but not in any way
+    that suggests that Bruegel endorses the user or their use of the data.» No es una licencia Creative Commons.
+    Cita: Darvas, Z. (2012), «Real effective exchange rates for 178 countries: a new database», Bruegel Working
+    Paper 2012/06, actualizada; doi:10.64153/SZCG6180. El README no dice cuál es el período base.

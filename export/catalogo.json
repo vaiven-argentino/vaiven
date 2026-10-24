@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-24T23:16:48Z",
+  "version_datos": "2026-10-24T23:19:43Z",
   "series": [
     {
       "id": "base-monetaria",
@@ -1104,6 +1104,123 @@
         }
       ],
       "bibliografia": []
+    },
+    {
+      "id": "tcr-multilateral",
+      "codigo": "CAM-03",
+      "nombre": "Tipo de cambio real multilateral",
+      "bloque": "Cambiario",
+      "prioridad": "A",
+      "definicion": "Índice de tipo de cambio real multilateral: el peso contra una canasta de monedas de los socios comerciales, ajustado por los precios de cada país. Un aumento es una depreciación real del peso.",
+      "unidad": "índice 17-12-2015 = 100",
+      "tipo": "precio",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "var_mensual",
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "media_movil"
+      ],
+      "frecuencia": "mensual",
+      "variante_por_defecto": "bcra",
+      "quiebres": [
+        "q.tcr.base-1997",
+        "q.tcr.ipc-2007-2015",
+        "q.tcr.bruegel"
+      ],
+      "variantes": [
+        {
+          "id": "bcra",
+          "nombre": "BCRA (desde 1991)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1991-01",
+            "hasta": "2024-12"
+          },
+          "archivo": "series/tcr-multilateral/bcra.json"
+        },
+        {
+          "id": "bruegel",
+          "nombre": "Bruegel, 51 socios (desde 1970), sin empalmar",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-09"
+          },
+          "archivo": "series/tcr-multilateral/bruegel.json"
+        },
+        {
+          "id": "ipc-alternativo",
+          "nombre": "BCRA con IPC alternativo en 2007–2015",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente. Recalcular el índice con otro IPC es una reconstrucción propia y falta acordar el método."
+        },
+        {
+          "id": "reconstruccion",
+          "nombre": "Reconstrucción 1970–1990 con los socios principales",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente. No hay una serie abierta del BCRA antes de 1991 y la reconstrucción propia falta acordarla."
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "DLB1993-A11",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 49 (130)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Evolución de los tipos de cambio real promedio",
+          "periodo_cubierto": "1980 – I-1993"
+        },
+        {
+          "id": "RL2023-G1",
+          "referencia": "Remes Lenicov (2023), 115 días para desarmar la bomba, Ariel (pp. 21-61)",
+          "pagina": "pdf 40",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Después de la sobrerreacción inicial, el tipo de cambio baja y se estabiliza",
+          "periodo_cubierto": "sep-2001 – dic-2004"
+        },
+        {
+          "id": "CENDA2010-G10",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 12 (33)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tipo de Cambio Real Multilateral, 1991-2009. En número índice base enero 1999 = 100",
+          "periodo_cubierto": "1991 – 2009"
+        },
+        {
+          "id": "DF2013-C1",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "33",
+          "tipo": "cuadro",
+          "titulo_original": "Principales variables macroeconómicas",
+          "periodo_cubierto": "2003–2012"
+        },
+        {
+          "id": "DF2013-G3",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "35",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución del tipo de cambio real bilateral (contra el dólar) y multilateral (Dic. 2001=100)",
+          "periodo_cubierto": "dic-2001 – abr-2013"
+        },
+        {
+          "id": "DF2013-C2",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "36",
+          "tipo": "cuadro",
+          "titulo_original": "Descomposición de las variaciones del costo salarial unitario (CSU) medido en moneda extranjera",
+          "periodo_cubierto": "2002; 2003–2007; 2008–2012"
+        }
+      ]
     }
   ]
 }
