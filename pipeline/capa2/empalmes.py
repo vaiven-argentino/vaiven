@@ -128,3 +128,24 @@ def comparar_superposicion(a: pd.Series, b: pd.Series, en: str = "tasas") -> pd.
     df = pd.DataFrame({"a": a.loc[comun], "b": b.loc[comun]}).dropna()
     df["diferencia"] = df["b"] - df["a"]
     return df
+
+
+SUBPERIODOS = {"mensual": 12, "trimestral": 4, "semestral": 2}
+
+
+def agregar_anual(serie: pd.Series, frecuencia: str, con: str = "suma") -> pd.Series:
+    """Pasa una serie mensual, trimestral o semestral a anual, solo con los años completos.
+
+    Un año al que le falta un subperíodo (por ejemplo, el año en curso) queda afuera: no se estima.
+    """
+    if frecuencia not in SUBPERIODOS:
+        raise ErrorPipeline(f"No se puede agregar a anual una serie {frecuencia}.")
+    if con not in ("suma", "promedio", "fin_de_periodo"):
+        raise ErrorPipeline(f"Agregación desconocida: {con}")
+    grupos = serie.dropna().groupby(serie.dropna().index.year)
+    completos = grupos.filter(lambda g: len(g) == SUBPERIODOS[frecuencia])
+    por_anio = completos.groupby(completos.index.year)
+    r = por_anio.sum() if con == "suma" else por_anio.mean() if con == "promedio" else por_anio.last()
+    r.index = pd.DatetimeIndex([pd.Timestamp(year=int(a), month=1, day=1) for a in r.index], name="fecha")
+    r.name = "valor"
+    return r

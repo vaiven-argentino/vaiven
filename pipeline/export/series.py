@@ -80,7 +80,8 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         **({"vista_inicial": vista} if (vista := variante.get("vista_inicial", serie_meta.get("vista_inicial"))) else {}),
         "tramos": [
             {"fuente": t["fuente"], "desde": str(t["desde"]), "hasta": str(t.get("hasta", "hoy")),
-             "frecuencia": fuentes[t["fuente"]]["frecuencia"], **({"rol": t["rol"]} if "rol" in t else {})}
+             "frecuencia": t.get("agregar", {}).get("a", fuentes[t["fuente"]]["frecuencia"]),
+             **({"rol": t["rol"]} if "rol" in t else {})}
             for t in variante["tramos"]
         ],
         "cobertura": {"desde": etiqueta_fecha(serie.index[0], frecuencia), "hasta": etiqueta_fecha(serie.index[-1], frecuencia)},
