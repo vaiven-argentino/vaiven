@@ -1,0 +1,3 @@
+# Copiá este archivo como .dev.vars para probar el disparador en local (`npx wrangler dev --test-scheduled`).
+# .dev.vars está en .gitignore: nunca subas un token real.
+GITHUB_TOKEN_DISPARO=token-de-prueba
