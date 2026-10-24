@@ -37,6 +37,9 @@ variantes:
     tramos:
       - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01}
     advertencias: [q.tc.mercados-desdoblados, q.tc.signos-monetarios]
+    # Solo el nivel: las variaciones y los promedios cruzarían los cambios de signo monetario.
+    # Para calcularlos está la variante en pesos actuales.
+    transformaciones: []
     validacion:
       var_min: -100     # los cambios de signo monetario dividen el valor por 10.000 o 1.000
   - id: comercial

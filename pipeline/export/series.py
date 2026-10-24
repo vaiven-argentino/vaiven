@@ -72,7 +72,7 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         "frecuencia": frecuencia,
         "metodo": variante["metodo"],
         "empalme": variante.get("empalme", "yuxtaponer"),
-        "transformaciones": list(serie_meta.get("transformaciones", [])),
+        "transformaciones": list(variante.get("transformaciones", serie_meta.get("transformaciones", []))),
         "tramos": [
             {"fuente": t["fuente"], "desde": str(t["desde"]), "hasta": str(t.get("hasta", "hoy")),
              "frecuencia": fuentes[t["fuente"]]["frecuencia"], **({"rol": t["rol"]} if "rol" in t else {})}
