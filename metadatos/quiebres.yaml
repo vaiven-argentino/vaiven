@@ -258,3 +258,43 @@
     ajusta ni recorta la serie.
   afecta: [base-monetaria.promedio-mensual]
   fuente: datos.gob.ar, 90.1_BMT_0_0_20 (24/10/2026).
+
+# ── Resultado fiscal ───────────────────────────────────────────────────────────
+- id: q.fiscal.cobertura-spn
+  desde: 1993-01
+  tipo: cobertura
+  descripcion: >-
+    Cubre el Sector Público Nacional (administración nacional, empresas y fondos fiduciarios y otros entes): no
+    incluye a las provincias ni a los municipios, ni el resultado del BCRA (cuasifiscal).
+  afecta: [resultado-fiscal.primario, resultado-fiscal.financiero]
+  fuente: Secretaría de Hacienda, esquema Ahorro-Inversión-Financiamiento del Sector Público Nacional.
+
+- id: q.fiscal.sin-privatizaciones
+  desde: 1993-01
+  hasta: 2006-12
+  tipo: metodologia
+  descripcion: >-
+    En 1993–2006, el resultado financiero no incluye los ingresos por privatizaciones: la serie que los incluye
+    figura en la API de datos.gob.ar, pero no devuelve datos.
+  afecta: [resultado-fiscal.financiero]
+  fuente: datos.gob.ar, 379.7_RESULTADO_006__43_20 y 379.7_RESULTADO_006__23_14 (24/10/2026).
+
+- id: q.fiscal.metodologia-2007
+  desde: 2007-01
+  hasta: 2007-01
+  tipo: metodologia
+  descripcion: >-
+    Cambio de metodología: desde 2007, Hacienda publica el esquema con la metodología 2007–2014, en una serie
+    distinta de la de 1993–2006. Los bloques se unen sin ajustar y no son estrictamente comparables.
+  afecta: [resultado-fiscal.primario, resultado-fiscal.financiero]
+  fuente: Secretaría de Hacienda (datos.gob.ar, dataset 379).
+
+- id: q.fiscal.metodologia-2015
+  desde: 2015-01
+  hasta: 2015-01
+  tipo: metodologia
+  descripcion: >-
+    Cambio de metodología: desde 2015, la serie sigue la metodología de 2017, que Hacienda aplicó hacia atrás
+    hasta 2015. Se une sin ajustar con el bloque 2007–2014.
+  afecta: [resultado-fiscal.primario, resultado-fiscal.financiero]
+  fuente: Secretaría de Hacienda (datos.gob.ar, dataset 379).

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Resultado primario y financiero",
+    "subtitle": "Variante: Resultado primario, base caja (desde 1993) · millones de pesos corrientes"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/resultado-fiscal/primario.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de pesos corrientes"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "resultado-fiscal",
+      "variante": "primario",
+      "version_datos": "2026-10-24T23:16:48Z",
+      "cita": "Vaivén (2026). Resultado primario y financiero, variante «primario». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/resultado-fiscal/"
+    }
+  }
+}

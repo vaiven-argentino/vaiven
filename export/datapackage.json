@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-24T23:15:18Z",
-  "created": "2026-10-24T23:15:18Z",
+  "version": "2026-10-24T23:16:48Z",
+  "created": "2026-10-24T23:16:48Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -714,6 +714,106 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Reservas internacionales del BCRA, saldos",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "resultado-fiscal.financiero",
+      "title": "Resultado primario y financiero · Resultado financiero, base caja (desde 1993)",
+      "path": "descargas/csv/resultado-fiscal/financiero.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Resultado financiero del Sector Público Nacional en base caja, según el esquema Ahorro-Inversión- Financiamiento de la Secretaría de Hacienda, mensual, con los mismos tres bloques metodológicos que el primario. En 1993–2006 es el resultado sin los ingresos por privatizaciones: el que los incluye figura en la API, pero no tiene datos.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Resultado financiero sin privatizaciones, metodología 1993–2006, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.7_RESULTADO_006__43_20"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Resultado financiero, metodología 2007–2014, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.8_RESULTADO_014__23_17"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Resultado financiero, metodología 2017, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.9_RESULTADO_017__18_38"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "resultado-fiscal.primario",
+      "title": "Resultado primario y financiero · Resultado primario, base caja (desde 1993)",
+      "path": "descargas/csv/resultado-fiscal/primario.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Superávit primario del Sector Público Nacional en base caja, según el esquema Ahorro-Inversión-Financiamiento de la Secretaría de Hacienda, mensual. Une sin ajustar los tres bloques que publica Hacienda: metodología 1993–2006, 2007–2014 y la de 2017, aplicada desde 2015.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 1993–2006, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.7_SUPERAVIT_006__28_65"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 2007–2014, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.8_SUPERAVIT_014__28_7"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 2017, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.9_SUPERAVIT_017__23_94"
         }
       ],
       "licenses": [

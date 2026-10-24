@@ -1,0 +1,60 @@
+id: resultado-fiscal
+codigo: FIS-01
+nombre: Resultado primario y financiero
+bloque: Fiscal
+prioridad: A
+definicion: >-
+  Resultado del Sector Público Nacional en base caja, en millones de pesos: el primario no incluye los intereses
+  de la deuda; el financiero, sí. Un valor negativo es un déficit.
+unidad: millones de pesos corrientes
+tipo: flujo
+agregacion: suma
+frecuencia: mensual
+moneda: pesos_actuales
+cobertura: {desde: 1993-01, hasta: hoy}
+variante_por_defecto: primario
+unidades_medida: {real: 'millones de pesos de {base}', en_dolares: millones de US$}
+variantes:
+  - id: primario
+    nombre: Resultado primario, base caja (desde 1993)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Superávit primario del Sector Público Nacional en base caja, según el esquema Ahorro-Inversión-Financiamiento
+      de la Secretaría de Hacienda, mensual. Une sin ajustar los tres bloques que publica Hacienda: metodología
+      1993–2006, 2007–2014 y la de 2017, aplicada desde 2015.
+    tramos:
+      - {fuente: f.hacienda.spn-primario-1993-2006, desde: 1993-01, hasta: 2006-12}
+      - {fuente: f.hacienda.spn-primario-2007-2014, desde: 2007-01, hasta: 2014-12}
+      - {fuente: f.hacienda.spn-primario-2017, desde: 2015-01}
+    advertencias: [q.fiscal.cobertura-spn, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
+  - id: financiero
+    nombre: Resultado financiero, base caja (desde 1993)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Resultado financiero del Sector Público Nacional en base caja, según el esquema Ahorro-Inversión-
+      Financiamiento de la Secretaría de Hacienda, mensual, con los mismos tres bloques metodológicos que el
+      primario. En 1993–2006 es el resultado sin los ingresos por privatizaciones: el que los incluye figura en
+      la API, pero no tiene datos.
+    tramos:
+      - {fuente: f.hacienda.spn-financiero-1993-2006, desde: 1993-01, hasta: 2006-12}
+      - {fuente: f.hacienda.spn-financiero-2007-2014, desde: 2007-01, hasta: 2014-12}
+      - {fuente: f.hacienda.spn-financiero-2017, desde: 2015-01}
+    advertencias: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
+validacion:
+  min: -100000000
+  max: 100000000
+  umbral_revision_pct: 1
+quiebres: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
+# Sin variaciones ni base 100: el resultado cambia de signo.
+transformaciones: [frecuencia, media_movil, real, en_dolares, pct_pib]
+fuentes:
+  - f.hacienda.spn-primario-1993-2006
+  - f.hacienda.spn-primario-2007-2014
+  - f.hacienda.spn-primario-2017
+  - f.hacienda.spn-financiero-1993-2006
+  - f.hacienda.spn-financiero-2007-2014
+  - f.hacienda.spn-financiero-2017
+bibliografia: [ARO2003-C6, HN1989-C1, HN1989-C2, DF1990-C3, DF1990-C7, FF1990-C4, OS2006-G1, DLB1993-C7, DLB1993-C9, DLB1993-C10, RAP2005-C5.1, CENDA2010-G6, DF2013-C1]
+licencia_derivado: CC-BY-4.0

@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-24T23:15:18Z",
+  "version_datos": "2026-10-24T23:16:48Z",
   "series": [
     {
       "id": "base-monetaria",
@@ -743,6 +743,162 @@
           "tipo": "gráfico de líneas",
           "titulo_original": "Reservas Internacionales del Banco Central de la República Argentina, 1996-2010. En millones de dólares corrientes",
           "periodo_cubierto": "ene-1996 – ene-2010"
+        }
+      ]
+    },
+    {
+      "id": "resultado-fiscal",
+      "codigo": "FIS-01",
+      "nombre": "Resultado primario y financiero",
+      "bloque": "Fiscal",
+      "prioridad": "A",
+      "definicion": "Resultado del Sector Público Nacional en base caja, en millones de pesos: el primario no incluye los intereses de la deuda; el financiero, sí. Un valor negativo es un déficit.",
+      "unidad": "millones de pesos corrientes",
+      "tipo": "flujo",
+      "agregacion": "suma",
+      "transformaciones": [
+        "frecuencia",
+        "media_movil",
+        "real",
+        "en_dolares",
+        "pct_pib"
+      ],
+      "frecuencia": "mensual",
+      "variante_por_defecto": "primario",
+      "quiebres": [
+        "q.fiscal.cobertura-spn",
+        "q.fiscal.sin-privatizaciones",
+        "q.fiscal.metodologia-2007",
+        "q.fiscal.metodologia-2015"
+      ],
+      "variantes": [
+        {
+          "id": "primario",
+          "nombre": "Resultado primario, base caja (desde 1993)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/resultado-fiscal/primario.json"
+        },
+        {
+          "id": "financiero",
+          "nombre": "Resultado financiero, base caja (desde 1993)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/resultado-fiscal/financiero.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "ARO2003-C6",
+          "referencia": "Aronskind (2003), «El país del desarrollo posible», cap. II de Nueva historia argentina, t. IX, Sudamericana; datos de edición a verificar (no figura en el cronograma 2026)",
+          "pagina": "pdf 17 (94)",
+          "tipo": "cuadro",
+          "titulo_original": "Déficit de Tesorería como porcentaje del PBI",
+          "periodo_cubierto": "1958 – 1975"
+        },
+        {
+          "id": "HN1989-C1",
+          "referencia": "Heymann y Navajas (1989), «Conflicto distributivo y déficit fiscal. Notas sobre la experiencia argentina, 1970-1987», Desarrollo Económico 115",
+          "pagina": "pdf 7 (rev. 314)",
+          "tipo": "cuadro",
+          "titulo_original": "Recursos, erogaciones y necesidad de financiamiento del sector público no financiero: período 1970-1987",
+          "periodo_cubierto": "1970 – 1987"
+        },
+        {
+          "id": "HN1989-C2",
+          "referencia": "Heymann y Navajas (1989), «Conflicto distributivo y déficit fiscal. Notas sobre la experiencia argentina, 1970-1987», Desarrollo Económico 115",
+          "pagina": "pdf 8 (rev. 315)",
+          "tipo": "cuadro",
+          "titulo_original": "Contribuciones a la variación de la necesidad de financiamiento del sector público entre 1970 y años seleccionados",
+          "periodo_cubierto": "1975; 1977; 1980; 1983; 1987 (respecto de 1970)"
+        },
+        {
+          "id": "DF1990-C3",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 66 (63)",
+          "tipo": "cuadro",
+          "titulo_original": "Ahorro externo, déficit fiscal y superávit privado (% del pbi)",
+          "periodo_cubierto": "1961-65 – 1987-88"
+        },
+        {
+          "id": "DF1990-C7",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 68 (65)",
+          "tipo": "cuadro",
+          "titulo_original": "Sector público. Ahorro, inversión y financiamiento (% del pbi)",
+          "periodo_cubierto": "1980 – 1988"
+        },
+        {
+          "id": "FF1990-C4",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 31 (30)",
+          "tipo": "cuadro",
+          "titulo_original": "Déficit del sector público no financiero (porcentaje del PBI)",
+          "periodo_cubierto": "1971-75 – 1988"
+        },
+        {
+          "id": "OS2006-G1",
+          "referencia": "Ortiz y Schorr (2006), «La economía política del gobierno de Alfonsín…», en Pucciarelli (coord.), Siglo XXI",
+          "pagina": "16",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Argentina. Evolución del déficit fiscal. 1980-1989 (porcentajes del PBI)",
+          "periodo_cubierto": "1980 – 1989"
+        },
+        {
+          "id": "DLB1993-C7",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 7 (47)",
+          "tipo": "cuadro",
+          "titulo_original": "Indicadores de performance económica (1973-1990)",
+          "periodo_cubierto": "1973/76; 1977/79; 1980/83; 1984/88; 1989/90"
+        },
+        {
+          "id": "DLB1993-C9",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 14 (61)",
+          "tipo": "cuadro",
+          "titulo_original": "Indicadores de performance económica (1989-1992)",
+          "periodo_cubierto": "1989 – 1992"
+        },
+        {
+          "id": "DLB1993-C10",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 17 (67)",
+          "tipo": "cuadro",
+          "titulo_original": "Performance fiscal sector público no financiero consolidado",
+          "periodo_cubierto": "1987 – 1992"
+        },
+        {
+          "id": "RAP2005-C5.1",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "29",
+          "tipo": "cuadro",
+          "titulo_original": "Ajuste fiscal: resultado del Sector Público Consolidado (SPC) (en porcentaje del PIB)",
+          "periodo_cubierto": "1998; 2001; 2004 (aprox.)"
+        },
+        {
+          "id": "CENDA2010-G6",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 10 (28)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Resultado Fiscal del Sector Público Nacional, 1991-2009. En porcentaje del PIB",
+          "periodo_cubierto": "1991 – 2009"
+        },
+        {
+          "id": "DF2013-C1",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "33",
+          "tipo": "cuadro",
+          "titulo_original": "Principales variables macroeconómicas",
+          "periodo_cubierto": "2003–2012"
         }
       ]
     },

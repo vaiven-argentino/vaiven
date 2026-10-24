@@ -442,3 +442,79 @@
   unidad: '% nominal anual'
   cobertura: {desde: 1999-01, hasta: hoy}
   verificado: 2026-10-24
+
+# ── Fiscal: resultado del Sector Público Nacional, base caja (FIS-01) ─────────
+- id: f.hacienda.spn-primario-1993-2006
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 1993–2006, mensual
+  api: datos.gob.ar
+  id_api: 379.7_SUPERAVIT_006__28_65
+  url: https://apis.datos.gob.ar/series/api/series/?ids=379.7_SUPERAVIT_006__28_65
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 1993-01, hasta: 2006-12}
+  verificado: 2026-10-24
+
+- id: f.hacienda.spn-primario-2007-2014
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 2007–2014, mensual
+  api: datos.gob.ar
+  id_api: 379.8_SUPERAVIT_014__28_7
+  url: https://apis.datos.gob.ar/series/api/series/?ids=379.8_SUPERAVIT_014__28_7
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 2007-01, hasta: 2014-12}
+  verificado: 2026-10-24
+
+- id: f.hacienda.spn-primario-2017
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 2017, mensual
+  api: datos.gob.ar
+  id_api: 379.9_SUPERAVIT_017__23_94
+  url: https://apis.datos.gob.ar/series/api/series/?ids=379.9_SUPERAVIT_017__23_94
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 2015-01, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.hacienda.spn-financiero-1993-2006
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Resultado financiero sin privatizaciones, metodología 1993–2006, mensual
+  api: datos.gob.ar
+  id_api: 379.7_RESULTADO_006__43_20
+  url: https://apis.datos.gob.ar/series/api/series/?ids=379.7_RESULTADO_006__43_20
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 1993-01, hasta: 2006-12}
+  verificado: 2026-10-24
+  nota: >-
+    El resultado financiero sin quitar las privatizaciones (379.7_RESULTADO_006__23_14) figura en la API, pero no
+    devuelve datos (24/10/2026).
+
+- id: f.hacienda.spn-financiero-2007-2014
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Resultado financiero, metodología 2007–2014, mensual
+  api: datos.gob.ar
+  id_api: 379.8_RESULTADO_014__23_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=379.8_RESULTADO_014__23_17
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 2007-01, hasta: 2014-12}
+  verificado: 2026-10-24
+
+- id: f.hacienda.spn-financiero-2017
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Resultado financiero, metodología 2017, mensual
+  api: datos.gob.ar
+  id_api: 379.9_RESULTADO_017__18_38
+  url: https://apis.datos.gob.ar/series/api/series/?ids=379.9_RESULTADO_017__18_38
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 2015-01, hasta: hoy}
+  verificado: 2026-10-24
