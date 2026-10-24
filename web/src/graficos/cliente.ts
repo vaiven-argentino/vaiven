@@ -231,7 +231,7 @@ function iniciar(): void {
       impreso: {
         titulo: `${doc.nombre} · ${doc.nombre_variante}`,
         subtitulo: r.unidad,
-        pie: [`Fuentes: ${fuentes}. Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}.`, location.href],
+        pie: [`Fuentes: ${fuentes}.`, `Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. Licencia CC BY 4.0.`, location.href],
       },
     });
     // Vega exporta `locale` (de vega-format), aunque sus tipos no lo declaren.

@@ -112,8 +112,8 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
 
   const ids = new Set(e.resultado.advertencias.map((a) => a.id));
   const visibles = e.quiebres.filter((q) => ids.has(q.advertencia.id) && q.forma !== "general");
-  // Un quiebre largo (más de un tercio de lo visible) no se sombrea: taparía la serie. Se marca con una barra
-  // fina arriba del gráfico, que muestra su rango.
+  // Un quiebre largo (más de un tercio de lo visible) no se sombrea: taparía la serie. Se marca arriba del
+  // gráfico con una línea punteada que muestra su rango.
   const largo = (a: number, b: number) => b - a > (fin - ini) / 3;
   const rangos = visibles.filter((q) => q.forma === "banda").map((q) => {
     const a = Math.max(indiceMes(q.advertencia.desde!), ini);
@@ -155,9 +155,15 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   if (barras.length) {
+    // Línea punteada con topes en los extremos: se lee como anotación y no se confunde con la serie.
     capas.push({
-      data: { values: barras }, mark: { type: "rect", color: tema.secundario, opacity: 0.55, clip: true },
-      encoding: { x: x("desde"), x2: { field: "hasta" }, y: { value: 26 }, y2: { value: 30 } },
+      data: { values: barras }, mark: { type: "rule", color: tema.secundario, strokeWidth: 1.5, strokeDash: [2, 3], clip: true },
+      encoding: { x: x("desde"), x2: { field: "hasta" }, y: { value: 24 } },
+    });
+    capas.push({
+      data: { values: barras.flatMap((b) => [{ t: b.desde }, { t: b.hasta }]) },
+      mark: { type: "rule", color: tema.secundario, strokeWidth: 1.5, clip: true },
+      encoding: { x: x("t"), y: { value: 19 }, y2: { value: 29 } },
     });
   }
   if (reglas.length) {
