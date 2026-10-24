@@ -52,3 +52,11 @@ def test_continuidad_informa_valores_literales():
     probs = reglas.continuidad("x", a, b, "a vs b", 0.1)
     assert probs[0].severidad == "error"
     assert probs[0].valores[0].startswith("2000-03-01: a=")
+
+
+def test_variaciones_exceptuadas_no_frenan_la_publicacion():
+    import pandas as pd
+    from pipeline.validacion import reglas
+    s = pd.Series([1.0, 1.1, 5.0, 5.2], index=pd.date_range("1982-05-01", periods=4, freq="MS"))
+    assert reglas.rangos("x", s, {"var_max": 50})
+    assert not reglas.rangos("x", s, {"var_max": 50, "var_excepciones": ["1982-07"]})

@@ -93,6 +93,9 @@ def rangos(nombre: str, serie: pd.Series, reglas: dict | None) -> list[Problema]
     if "var_min" in reglas or "var_max" in reglas:
         lo, hi = reglas.get("var_min", -np.inf), reglas.get("var_max", np.inf)
         r = (tasas(serie) * 100).dropna()
+        # Saltos reales y documentados (por ejemplo, la reforma financiera de julio de 1982 en la base monetaria).
+        excepciones = [pd.Timestamp(str(f) + ("-01" if len(str(f)) == 7 else "")) for f in reglas.get("var_excepciones", [])]
+        r = r.drop(index=excepciones, errors="ignore")
         fuera = r[(r < lo) | (r > hi)]
         if not fuera.empty:
             problemas.append(
