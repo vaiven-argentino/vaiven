@@ -1,0 +1,33 @@
+{
+  "name": "@vaiven/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sitio de Vaivén (Astro): catálogo, fichas de serie y datos abiertos.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "datos": "node scripts/copiar-datos.mjs",
+    "dev": "npm run datos && astro dev",
+    "build": "npm run datos && astro build",
+    "preview": "astro preview",
+    "verificar": "npm run datos && astro check",
+    "test": "vitest run",
+    "enlaces": "node scripts/revisar-enlaces.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.3.0",
+    "@vaiven/transformaciones": "0.1.0",
+    "astro": "7.4.2",
+    "vega": "6.4.0",
+    "vega-embed": "7.3.0",
+    "vega-lite": "6.5.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@types/node": "24.19.2",
+    "ajv": "8.20.0",
+    "axe-core": "4.14.0",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
+  }
+}

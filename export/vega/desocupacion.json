@@ -5,7 +5,7 @@
     "subtitle": "Variante: Total de aglomerados urbanos, sin empalmar · % de la población económicamente activa"
   },
   "data": {
-    "url": "descargas/csv/desocupacion/total-urbano.csv",
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/desocupacion/total-urbano.csv",
     "format": {
       "type": "csv"
     }
@@ -30,7 +30,7 @@
     "vaiven": {
       "serie": "desocupacion",
       "variante": "total-urbano",
-      "version_datos": "2026-10-24T05:15:50Z",
+      "version_datos": "2026-10-24T07:40:29Z",
       "cita": "Vaivén (2026). Tasa de desocupación, variante «total-urbano». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/desocupacion/"
     }
   }

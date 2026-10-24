@@ -8,7 +8,11 @@ import pytest
 from pipeline.comun import RAIZ
 
 EXPORT = RAIZ / "export"
-ESQUEMA = json.loads((RAIZ / "tests" / "contrato" / "serie.schema.json").read_text(encoding="utf-8"))
+# Un esquema por versión: `contrato/serie-<versión>.schema.json`. Si el export usa una versión sin esquema, falla.
+ESQUEMAS = {
+    ruta.name.removeprefix("serie-").removesuffix(".schema.json"): json.loads(ruta.read_text(encoding="utf-8"))
+    for ruta in (RAIZ / "tests" / "contrato").glob("serie-*.schema.json")
+}
 ARCHIVOS = sorted((EXPORT / "series").glob("*/*.json"))
 
 
@@ -19,7 +23,8 @@ def test_hay_series_exportadas():
 @pytest.mark.parametrize("ruta", ARCHIVOS, ids=lambda r: f"{r.parent.name}.{r.stem}")
 def test_serie_cumple_el_esquema(ruta):
     doc = json.loads(ruta.read_text(encoding="utf-8"))
-    jsonschema.validate(doc, ESQUEMA)
+    assert doc.get("esquema") in ESQUEMAS, f"versión de esquema sin contrato: {doc.get('esquema')!r}"
+    jsonschema.validate(doc, ESQUEMAS[doc["esquema"]])
     fechas = [f for f, _ in doc["datos"]]
     assert fechas == sorted(fechas) and len(set(fechas)) == len(fechas)
     assert doc["cobertura"] == {"desde": fechas[0], "hasta": fechas[-1]}
@@ -45,3 +50,44 @@ def test_catalogo_y_datapackage_apuntan_a_archivos_existentes():
 def test_variantes_no_redistribuibles_no_se_publican():
     assert not (EXPORT / "series" / "ipc" / "cavallo-bertolotto.json").exists()
     assert not (RAIZ / "snapshots" / "f.cavallo-bertolotto.ipc").exists()
+
+
+def test_esquemas_declaran_su_version():
+    for version, esquema in ESQUEMAS.items():
+        assert esquema["properties"]["esquema"] == {"const": version}
+        assert esquema["$id"].endswith(f"/esquemas/serie-{version}.json")
+
+
+def test_export_usa_la_version_vigente():
+    from pipeline.export.series import VERSION_ESQUEMA
+    assert VERSION_ESQUEMA in ESQUEMAS
+    versiones = {json.loads(r.read_text(encoding="utf-8"))["esquema"] for r in ARCHIVOS}
+    assert versiones == {VERSION_ESQUEMA}
+
+
+def test_cita_apunta_a_la_ficha_de_la_variante():
+    catalogo = json.loads((EXPORT / "catalogo.json").read_text(encoding="utf-8"))
+    for s in catalogo["series"]:
+        for v in s["variantes"]:
+            if v["estado"] != "publicada":
+                continue
+            doc = json.loads((EXPORT / v["archivo"]).read_text(encoding="utf-8"))
+            sufijo = f"/series/{s['id']}/" if v["id"] == s["variante_por_defecto"] else f"/series/{s['id']}/{v['id']}/"
+            assert doc["cita"].endswith(sufijo), doc["cita"]
+
+
+def test_especificaciones_vega_usan_url_absoluta():
+    for ruta in sorted((EXPORT / "vega").glob("*.json")):
+        url = json.loads(ruta.read_text(encoding="utf-8"))["data"]["url"]
+        assert url.startswith("https://vaiven.argentino.workers.dev/datos/descargas/csv/"), url
+        assert (EXPORT / url.split("/datos/", 1)[1]).exists(), url
+
+
+def test_excluidos_no_figuran_en_los_datos():
+    for ruta in ARCHIVOS:
+        doc = json.loads(ruta.read_text(encoding="utf-8"))
+        fechas = {f for f, _ in doc["datos"]}
+        for e in doc["excluidos"]:
+            assert e["fecha"] not in fechas, (doc["id"], e["fecha"])
+    reservas = json.loads((EXPORT / "series" / "reservas" / "brutas.json").read_text(encoding="utf-8"))
+    assert [e["fecha"] for e in reservas["excluidos"]] == ["1979-03"]

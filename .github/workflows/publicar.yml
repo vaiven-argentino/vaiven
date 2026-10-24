@@ -1,11 +1,25 @@
-# Despliega el Worker (`wrangler deploy`), que sirve el sitio y tiene el Cron Trigger del disparo diario.
+# Arma el sitio (Astro, con el export y la descarga completa) y despliega el Worker (`wrangler deploy`), que sirve
+# el sitio y tiene el Cron Trigger del disparo diario.
 # Necesita los secretos del repositorio CLOUDFLARE_API_TOKEN (permiso Workers Scripts: Edit) y CLOUDFLARE_ACCOUNT_ID.
 name: Publicar
 
 on:
   push:
     branches: [main]
-    paths: ["worker/**"]
+    paths:
+      - "worker/**"
+      - "web/**"
+      - "paquetes/**"
+      - "export/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/publicar.yml"
+  # El commit de datos de «Actualizar datos» lo hace GITHUB_TOKEN, y esos push no disparan otros workflows:
+  # por eso se redespliega cuando termina la actualización.
+  workflow_run:
+    workflows: ["Actualizar datos"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -15,22 +29,65 @@ concurrency:
   group: publicar
   cancel-in-progress: false
 
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+  WRANGLER_SEND_METRICS: "false"
+
 jobs:
   desplegar:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: worker
+    timeout-minutes: 20
     steps:
+      # En workflow_run, head_sha es el commit en el que arrancó la actualización (antes del commit de datos):
+      # hay que tomar main.
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.sha }}
+
+      - name: ¿La actualización publicó datos?
+        id: cambios
+        env:
+          EVENTO: ${{ github.event_name }}
+          INICIO: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if [ "$EVENTO" = "workflow_run" ] && [ "$(git rev-parse HEAD)" = "$INICIO" ]; then
+            echo "La actualización no hizo commit de datos: no hace falta desplegar."
+            echo "desplegar=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "desplegar=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: astral-sh/setup-uv@v10.3.2
+        if: steps.cambios.outputs.desplegar == 'true'
+        with:
+          enable-cache: true
+
+      - name: Descarga completa (Parquet y ZIP)
+        if: steps.cambios.outputs.desplegar == 'true'
+        run: |
+          uv sync --frozen --group descargas
+          uv run python -m pipeline descargas
+
+      - uses: actions/setup-node@v5
+        if: steps.cambios.outputs.desplegar == 'true'
+        with:
+          node-version: 24
           cache: npm
-          cache-dependency-path: worker/package-lock.json
-      - run: npm ci
-      - run: npx tsc --noEmit
+          cache-dependency-path: package-lock.json
+
+      - name: Instalar, probar y armar el sitio
+        if: steps.cambios.outputs.desplegar == 'true'
+        run: |
+          npm ci
+          npm test
+          npm run verificar
+          npm run build -w @vaiven/web
+          npm run enlaces -w @vaiven/web
+
       - name: Desplegar
+        if: steps.cambios.outputs.desplegar == 'true'
+        working-directory: worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

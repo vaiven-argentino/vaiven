@@ -1,0 +1,21 @@
+{
+  "name": "vaiven",
+  "private": true,
+  "description": "Vaivén: series económicas argentinas, 1970–hoy. Raíz de los paquetes de TypeScript (web, Worker y librerías).",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "paquetes/*",
+    "web",
+    "worker"
+  ],
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "verificar": "npm run verificar --workspaces --if-present",
+    "build": "npm run build -w web",
+    "deploy": "npm run build && npm run deploy -w worker"
+  }
+}

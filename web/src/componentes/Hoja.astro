@@ -1,0 +1,34 @@
+---
+// Isotipo de Vaivén (SPEC 6.3): la hoja de álamo dorada, a 35° por debajo de la horizontal, con la estela
+// punteada de su caída. Los colores salen de los tokens (--hoja, --nervio, --secundario).
+interface Props {
+  ancho?: number;
+  estela?: boolean;
+  clase?: string;
+}
+const { ancho = 100, estela = true, clase = "" } = Astro.props;
+// Geometría fija: la hoja está centrada en (76, 30), rotada 125° (punta hacia la derecha y abajo) y escalada 1,38.
+// La estela termina en el pecíolo.
+const caminoEstela = "M5,10 C16,3 25,13 21,21 S22,36 34,32 S51.2,11.9 60.2,18.9";
+const hoja = "M0,-13 C2.4,-8.6 7.6,-2.6 8.8,1.8 C9.6,5.6 5.4,9.4 0,10 C-5.4,9.4 -9.6,5.6 -8.8,1.8 C-7.6,-2.6 -2.4,-8.6 0,-13 Z";
+const viewBox = estela ? "0 0 100 58" : "52 6 48 48";
+const alto = estela ? Math.round((ancho * 58) / 100) : ancho;
+---
+<svg class={`hoja ${clase}`} viewBox={viewBox} width={ancho} height={alto} aria-hidden="true" focusable="false">
+  {estela && <path class="hoja-estela" d={caminoEstela} />}
+  <g class="hoja-cuerpo" transform="translate(76 30) rotate(125) scale(1.38)">
+    <path class="hoja-lamina" d={hoja} />
+    <path class="hoja-nervio" d="M0,-10 L0,10" />
+    <path class="hoja-nervio fino" d="M0,5.6 Q2.4,3.6 4.4,0.6 M0,5.6 Q-2.4,3.6 -4.4,0.6" />
+    <path class="hoja-peciolo" d="M0,10 L0,14" />
+  </g>
+</svg>
+
+<style>
+  .hoja { display: block; flex: none; overflow: visible; }
+  .hoja-estela { fill: none; stroke: var(--secundario); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 0.1 5.2; }
+  .hoja-lamina { fill: var(--hoja); }
+  .hoja-nervio { fill: none; stroke: var(--nervio); stroke-width: 1.2; stroke-linecap: round; }
+  .hoja-nervio.fino { stroke-width: 0.85; }
+  .hoja-peciolo { fill: none; stroke: var(--hoja); stroke-width: 1.6; stroke-linecap: round; }
+</style>

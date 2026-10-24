@@ -1,5 +1,5 @@
 {
-  "esquema": "1.0",
+  "esquema": "1.1",
   "id": "exportaciones.mensual",
   "serie": "exportaciones",
   "codigo": "EXT-01",
@@ -12,11 +12,19 @@
   "agregacion": "suma",
   "frecuencia": "mensual",
   "metodo": "Serie mensual del Intercambio Comercial Argentino (INDEC), sin cambios. Empieza en enero de 1992.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "var_interanual",
+    "base_100",
+    "frecuencia",
+    "pct_pib"
+  ],
   "tramos": [
     {
       "fuente": "f.indec.ica-exportaciones-mensual",
       "desde": "1992-01",
-      "hasta": "hoy"
+      "hasta": "hoy",
+      "frecuencia": "mensual"
     }
   ],
   "cobertura": {
@@ -24,6 +32,7 @@
     "hasta": "2026-08"
   },
   "advertencias": [],
+  "excluidos": [],
   "fuentes": [
     {
       "id": "f.indec.ica-exportaciones-mensual",
@@ -35,8 +44,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Exportaciones, variante «mensual». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/exportaciones/",
-  "version_datos": "2026-10-24T05:15:50Z",
+  "cita": "Vaivén (2026). Exportaciones, variante «mensual». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/exportaciones/mensual/",
+  "version_datos": "2026-10-24T07:40:29Z",
   "desactualizada_desde": null,
   "datos": [
     ["1992-01", 725.798174],

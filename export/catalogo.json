@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-24T05:15:50Z",
+  "version_datos": "2026-10-24T07:42:26Z",
   "series": [
     {
       "id": "desocupacion",
@@ -9,6 +9,13 @@
       "prioridad": "A",
       "definicion": "Personas desocupadas como porcentaje de la población económicamente activa, según la EPH del INDEC.",
       "unidad": "% de la población económicamente activa",
+      "tipo": "tasa",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "base_100",
+        "frecuencia",
+        "media_movil"
+      ],
       "frecuencia": "semestral (1974–2003) y trimestral (2003–hoy)",
       "variante_por_defecto": "total-urbano",
       "quiebres": [
@@ -59,6 +66,14 @@
       "prioridad": "A",
       "definicion": "Exportaciones de bienes FOB, según el Intercambio Comercial Argentino del INDEC.",
       "unidad": "millones de US$ corrientes",
+      "tipo": "flujo",
+      "agregacion": "suma",
+      "transformaciones": [
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "pct_pib"
+      ],
       "frecuencia": "anual",
       "variante_por_defecto": "oficial",
       "quiebres": [],
@@ -104,6 +119,16 @@
       "prioridad": "A",
       "definicion": "Índice de precios al consumidor, nivel general.",
       "unidad": "índice dic. 2016 = 100",
+      "tipo": "precio",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "var_mensual",
+        "var_interanual",
+        "var_dic_dic",
+        "acumulada_anio",
+        "base_100",
+        "frecuencia"
+      ],
       "frecuencia": "mensual",
       "variante_por_defecto": "oficial",
       "quiebres": [
@@ -154,6 +179,15 @@
       "prioridad": "A",
       "definicion": "Stock de reservas internacionales brutas del BCRA, saldo de fin de mes.",
       "unidad": "millones de US$",
+      "tipo": "stock",
+      "agregacion": "fin_de_periodo",
+      "transformaciones": [
+        "var_mensual",
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "pct_pib"
+      ],
       "frecuencia": "mensual",
       "variante_por_defecto": "brutas",
       "quiebres": [
@@ -190,6 +224,15 @@
       "prioridad": "A",
       "definicion": "Pesos por dólar estadounidense, valor de fin de mes, según la serie histórica del BCRA.",
       "unidad": "pesos actuales por dólar",
+      "tipo": "precio",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "var_mensual",
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "pesos_actuales"
+      ],
       "frecuencia": "mensual",
       "variante_por_defecto": "pesos-actuales",
       "quiebres": [

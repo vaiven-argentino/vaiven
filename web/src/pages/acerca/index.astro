@@ -1,0 +1,66 @@
+---
+import Base from "../../layouts/Base.astro";
+import { catalogo, documento } from "../../lib/export";
+
+const { series } = catalogo();
+const fuentes = new Map<string, { organismo: string; licencias: Set<string> }>();
+for (const s of series) {
+  for (const v of s.variantes.filter((x) => x.estado === "publicada")) {
+    for (const f of documento(v.archivo!).fuentes) {
+      const e = fuentes.get(f.organismo) ?? { organismo: f.organismo, licencias: new Set<string>() };
+      e.licencias.add(f.licencia.replace("CC-BY-4.0", "CC BY 4.0"));
+      fuentes.set(f.organismo, e);
+    }
+  }
+}
+const pendientesLicencia = series.flatMap((s) => s.variantes.filter((v) => v.estado === "pendiente_licencia").map((v) => ({ serie: s.nombre, ...v })));
+---
+<Base titulo="Acerca, cita y licencias" descripcion="Qué es Vaivén, cómo citarlo y con qué licencias se publican los datos y el código." seccion="acerca">
+  <div class="contenedor acerca">
+    <h1>Acerca, cita y licencias</h1>
+
+    <section aria-labelledby="titulo-que">
+      <h2 id="titulo-que">Qué es Vaivén</h2>
+      <p class="lectura">Vaivén es una base histórica curada de series económicas argentinas desde 1970, pensada para estudiar las políticas económicas del período democrático. No compite con los agregadores generales: los usa como fuentes y les suma curaduría histórica y metodológica, con variantes de empalme explícitas, quiebres documentados y una forma clara de citar cada serie.</p>
+      <p class="lectura">El nombre y la hoja que cae vienen de la misma idea: la economía argentina como un movimiento de ida y vuelta, que también es la línea de una serie temporal.</p>
+    </section>
+
+    <section aria-labelledby="titulo-citar">
+      <h2 id="titulo-citar">Cómo citar</h2>
+      <p class="lectura">Para una serie, usá la cita de su ficha: lleva el nombre, la variante, la versión de datos y la URL. Si transformaste los datos en el sitio (por ejemplo, a variación interanual), la cita de la ficha lo agrega.</p>
+      <p class="lectura">Para Vaivén en general:</p>
+      <pre tabindex="0">Gómez Ortega von Zeschau, C. (2026). Vaivén: series económicas argentinas, 1970–hoy [Conjunto de datos]. https://vaiven.argentino.workers.dev</pre>
+      <p class="secundario">El DOI se asigna con la primera release archivada en Zenodo. El repositorio tiene un <a href="https://github.com/vaiven-argentino/vaiven/blob/main/CITATION.cff">CITATION.cff</a>.</p>
+    </section>
+
+    <section aria-labelledby="titulo-licencias">
+      <h2 id="titulo-licencias">Licencias</h2>
+      <ul class="lista">
+        <li><strong>Datos derivados</strong> (variantes y export): <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a>.</li>
+        <li><strong>Código</strong>: <a href="https://github.com/vaiven-argentino/vaiven/blob/main/LICENSE">MIT</a>.</li>
+        <li><strong>Fuentes</strong>: cada una conserva su licencia.
+          <ul>
+            {[...fuentes.values()].map((f) => <li>{f.organismo}: {[...f.licencias].join(", ")}.</li>)}
+          </ul>
+        </li>
+      </ul>
+      {pendientesLicencia.length > 0 && (
+        <p class="lectura">Sin publicar por licencia: {pendientesLicencia.map((v) => `${v.serie}, variante «${v.nombre}»`).join("; ")}. Se suman cuando sus autores confirmen que se pueden redistribuir con atribución.</p>
+      )}
+    </section>
+
+    <section aria-labelledby="titulo-creditos">
+      <h2 id="titulo-creditos">Créditos</h2>
+      <p class="lectura">Datos de los organismos citados en cada ficha. Curaduría, empalmes y desarrollo: Camilo Gómez Ortega von Zeschau.</p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .acerca { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  section { display: grid; gap: 12px; }
+  .lectura { max-width: 72ch; }
+  .lista { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+  .lista ul { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 4px; }
+  pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--superficie); padding: 14px; border-radius: var(--radio); font-size: 0.9rem; }
+</style>

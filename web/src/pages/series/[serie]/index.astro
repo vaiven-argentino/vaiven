@@ -1,0 +1,17 @@
+---
+// /series/<slug>/: la variante por defecto. Es la URL que lleva la cita publicada.
+import Base from "../../../layouts/Base.astro";
+import Ficha from "../../../componentes/Ficha.astro";
+import { catalogo, documento } from "../../../lib/export";
+
+export function getStaticPaths() {
+  return catalogo().series.map((serie) => {
+    const v = serie.variantes.find((x) => x.id === serie.variante_por_defecto)!;
+    return { params: { serie: serie.id }, props: { serie, doc: documento(v.archivo!) } };
+  });
+}
+const { serie, doc } = Astro.props;
+---
+<Base titulo={doc.nombre} descripcion={`${doc.nombre} (${doc.codigo}): ${serie.definicion} Gráfico, variantes, quiebres, descargas y cita.`} seccion="catalogo">
+  <Ficha serie={serie} doc={doc} />
+</Base>

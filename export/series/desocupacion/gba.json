@@ -1,5 +1,5 @@
 {
-  "esquema": "1.0",
+  "esquema": "1.1",
   "id": "desocupacion.gba",
   "serie": "desocupacion",
   "codigo": "TRA-01",
@@ -12,16 +12,24 @@
   "agregacion": "promedio",
   "frecuencia": "semestral (1974–2003) y trimestral (2003–hoy)",
   "metodo": "Igual que la variante del total urbano, pero para el Gran Buenos Aires, que tiene la misma cobertura geográfica en todo el período. La fuente publica fracciones; se multiplican por 100.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "base_100",
+    "frecuencia",
+    "media_movil"
+  ],
   "tramos": [
     {
       "fuente": "f.indec.eph-puntual-gba",
       "desde": "1974-05",
-      "hasta": "2003-05"
+      "hasta": "2003-05",
+      "frecuencia": "semestral"
     },
     {
       "fuente": "f.indec.eph-continua-gba",
       "desde": "2003-07",
-      "hasta": "hoy"
+      "hasta": "hoy",
+      "frecuencia": "trimestral"
     }
   ],
   "cobertura": {
@@ -51,6 +59,7 @@
       "descripcion": "Emergencia estadística: el INDEC no publicó la EPH del cuarto trimestre de 2015 ni la del primero de 2016."
     }
   ],
+  "excluidos": [],
   "fuentes": [
     {
       "id": "f.indec.eph-puntual-gba",
@@ -70,8 +79,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tasa de desocupación, variante «gba». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/desocupacion/",
-  "version_datos": "2026-10-24T05:15:50Z",
+  "cita": "Vaivén (2026). Tasa de desocupación, variante «gba». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/desocupacion/gba/",
+  "version_datos": "2026-10-24T07:40:29Z",
   "desactualizada_desde": null,
   "datos": [
     ["1974-05", 4.2],

@@ -1,0 +1,14 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base titulo="Página no encontrada" descripcion="La página que buscás no existe en Vaivén.">
+  <div class="contenedor no-encontrada">
+    <p class="etiqueta">Error 404</p>
+    <h1>No encontramos esta página</h1>
+    <p>Puede que la dirección esté mal escrita o que la página se haya movido. Las series están en el <a href="/series/">catálogo</a> y los archivos de datos, en <a href="/datos/">datos abiertos</a>.</p>
+  </div>
+</Base>
+
+<style>
+  .no-encontrada { display: grid; gap: 14px; max-width: 60ch; }
+</style>

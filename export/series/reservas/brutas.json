@@ -1,5 +1,5 @@
 {
-  "esquema": "1.0",
+  "esquema": "1.1",
   "id": "reservas.brutas",
   "serie": "reservas",
   "codigo": "EXT-06",
@@ -12,11 +12,20 @@
   "agregacion": "fin_de_periodo",
   "frecuencia": "mensual",
   "metodo": "Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "var_mensual",
+    "var_interanual",
+    "base_100",
+    "frecuencia",
+    "pct_pib"
+  ],
   "tramos": [
     {
       "fuente": "f.bcra.reservas-mensual",
       "desde": "1970-01",
-      "hasta": "hoy"
+      "hasta": "hoy",
+      "frecuencia": "mensual"
     }
   ],
   "cobertura": {
@@ -32,6 +41,12 @@
       "descripcion": "Son reservas brutas: incluyen activos que no son de libre disponibilidad, como los encajes de los depósitos en dólares, los swaps de monedas con otros bancos centrales y los préstamos de organismos. No hay una definición oficial única de reservas netas."
     }
   ],
+  "excluidos": [
+    {
+      "fecha": "1979-03",
+      "motivo": "La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia."
+    }
+  ],
   "fuentes": [
     {
       "id": "f.bcra.reservas-mensual",
@@ -44,7 +59,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/reservas/",
-  "version_datos": "2026-10-24T05:15:50Z",
+  "version_datos": "2026-10-24T07:40:29Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 589.5],

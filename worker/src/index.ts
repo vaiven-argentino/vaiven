@@ -7,7 +7,7 @@ export default {
 
     if (url.pathname === "/salud") {
       return Response.json(
-        { estado: "ok", version: paquete.version, fase: 1 },
+        { estado: "ok", version: paquete.version, fase: 2 },
         { headers: { "cache-control": "no-store" } },
       );
     }
