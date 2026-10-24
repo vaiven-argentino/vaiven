@@ -4,4 +4,6 @@ Lo que consumen la web y el MCP, y que funciona además como API pública de sol
 
 Se regenera completo en cada actualización. No se edita a mano.
 
-**Se llena en:** fase 1.
+Las descargas completas (`descargas/vaiven_<versión>.zip` y `.parquet`) se generan con `python -m pipeline descargas` y no se versionan.
+
+**Se llenó en:** fase 1 (5 series piloto).

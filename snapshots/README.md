@@ -4,4 +4,4 @@ Archivos crudos tal como los devolvió cada fuente, en `<fuente>/<fecha>/`, con 
 
 Solo se guardan fuentes cuya licencia permita redistribuirlas. El riesgo país no se guarda.
 
-**Se llena en:** fase 1, automáticamente desde el pipeline.
+**Se llena desde:** la fase 1, automáticamente desde el pipeline.
