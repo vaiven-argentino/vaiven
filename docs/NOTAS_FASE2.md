@@ -28,6 +28,7 @@
   - Uno largo (más de un tercio de lo visible) es una línea punteada arriba del gráfico, para no tapar la serie.
   - Uno que cubre toda la serie (por ejemplo, el de reservas brutas) no se dibuja y va en la lista como general.
   - Los números se escalonan cuando quedarían a menos de 20 px.
+  - El eje Y deja aire arriba para que la serie no toque los números ni la línea de los quiebres largos (por ejemplo, el pico de desocupación de 2002). Se agregó al comienzo de la fase 3.
 - **Dato excluido (reservas, marzo de 1979).** La línea se corta, hay una «×» sobre el eje con el motivo y la fila de la tabla dice «Excluido». Las variaciones que lo usan dan hueco. No se interpola.
 - **Celular.** El panel de opciones del gráfico arranca cerrado. Los tramos de la metodología se muestran como fichas.
 - **Descargas.** Hay CSV y JSON de la variante, y CSV, PNG, SVG y cita en `.txt` de la vista. La descarga completa se sirve solo en su versión vigente, con nombres fijos (`/datos/descargas/vaiven.zip` y `.parquet`, que mandan 302 a la vigente). Las anteriores van a quedar en Zenodo (fase 5). El XLSX queda para la fase 4, con el explorador.
@@ -55,7 +56,7 @@
 
 ## Pendientes
 
-1. **Primer despliegue (pide aprobación).** Después, hay que confirmar en producción que `_headers` y `_redirects` se aplican igual que en `wrangler dev`.
+1. ~~**Primer despliegue (pide aprobación).**~~ **Hecho.** El sitio está desplegado y `_headers` y `_redirects` quedaron verificados en producción (se aplican igual que en `wrangler dev`).
 2. **Vulnerabilidades de `undici`** (npm audit: 1 alta y 2 moderadas). Llegan por miniflare, que es dependencia de desarrollo de wrangler y no se despliega. Se resuelve cuando wrangler actualice miniflare; no conviene `npm audit fix --force`, porque baja wrangler a la 4.35.
 3. **npm 11 y `allowScripts`.** npm avisa que no corrió los scripts de instalación de `esbuild` y `workerd`. Funcionan igual, porque los binarios vienen en dependencias opcionales. Si en CI fallara, hay que habilitarlos explícitamente.
 4. **Íconos e imagen para redes.** No hay `apple-touch-icon` (PNG) ni `og:image`. Hoy solo está el favicon en SVG.

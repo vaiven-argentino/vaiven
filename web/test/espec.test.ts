@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { transformar } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
-import { especificacion, filas, ubicarMarcadores, type Tema } from "../src/graficos/espec";
+import { especificacion, filas, reservaSuperior, topeY, ubicarMarcadores, type Tema } from "../src/graficos/espec";
 import type { DocumentoSerie } from "../src/lib/export";
 import { numerarQuiebres } from "../src/lib/ficha";
 
@@ -69,6 +69,28 @@ describe("reservas: dato excluido", () => {
   });
   it("el quiebre que cubre toda la serie no se dibuja", () => {
     expect(capas(doc).filter((c) => c.mark.type === "rect" || c.mark.type === "rule")).toHaveLength(0);
+  });
+});
+
+describe("aire arriba del eje Y", () => {
+  it("el pico de desocupación de 2002 queda debajo de los números de los quiebres", () => {
+    const doc = leer("desocupacion", "total-urbano");
+    const layer = capas(doc) as never as Array<{ mark: { type: string }; encoding?: { y?: { scale?: { domainMax?: number } } }; data: { values: Array<Record<string, unknown>> } }>;
+    const linea = layer.find((c) => c.mark.type === "line")!;
+    const tope = linea.encoding!.y!.scale!.domainMax!;
+    const pico = Math.max(...doc.datos.map(([, v]) => v));
+    expect(pico).toBeGreaterThan(20); // mayo de 2002
+    const textos = layer.find((c) => c.mark.type === "text" && !(c.mark as { text?: string }).text)!.data.values;
+    const reserva = reservaSuperior(textos as Array<{ y: number }>, true);
+    const yPico = 300 * (1 - pico / tope); // escala lineal desde cero, en píxeles desde arriba
+    expect(yPico).toBeGreaterThanOrEqual(reserva - 0.5);
+  });
+  it("sin marcas arriba no cambia el eje", () => {
+    expect(topeY([1, 2, 3], 0, 300, false, true)).toBeUndefined();
+  });
+  it("en escala logarítmica reserva en logaritmos", () => {
+    const tope = topeY([1, 1000], 60, 300, true, false)!;
+    expect(Math.log10(tope)).toBeCloseTo(3 + 3 * (60 / 240));
   });
 });
 
