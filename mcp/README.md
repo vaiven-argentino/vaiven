@@ -15,7 +15,7 @@ Servidor MCP de Vaivén (SPEC, sección 7), en TypeScript con el SDK oficial v2 
 | `citar` | `id`, `variante?`, `formato?`, `transformacion?`, `frecuencia?` | Cita en texto, APA y BibTeX (o el formato pedido), con la versión de datos y la URL de la variante. |
 
 - `id` acepta el id de la serie (`ipc`), su código (`PRE-01`) o el de una variante (`ipc.provincias`).
-- Las respuestas van como JSON en un bloque de texto y en `structuredContent`. Los errores (variante pendiente, transformación que no corresponde, más de 10.000 observaciones) salen con `isError` y un mensaje en español que dice cómo seguir.
+- Las respuestas van como JSON en un bloque de texto (sin `structuredContent`, para no duplicarlas). Los errores (variante pendiente, transformación que no corresponde, más de 10.000 observaciones) salen con `isError` y un mensaje en español que dice cómo seguir.
 - Las descripciones que lee el modelo están en `src/textos.ts`.
 
 ## Estructura

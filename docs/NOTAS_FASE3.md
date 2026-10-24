@@ -37,7 +37,7 @@
   - `src/http.ts`: CORS, OPTIONS, 405, Host y límite.
   - `src/stdio.ts`: la variante local.
 - **Una instancia del servidor por pedido**, como pide el SDK sin estado. Los esquemas de zod se arman al cargar el módulo.
-- **Respuestas:** JSON en un bloque de texto y el mismo objeto en `structuredContent` (sin `outputSchema`). Los errores esperables (serie o variante inexistente, variante pendiente, transformación no admitida, base mal escrita, período invertido, más de 10.000 observaciones) salen con `isError` y un mensaje en español que dice cómo seguir.
+- **Respuestas:** JSON en un bloque de texto, sin `outputSchema`. Al principio el mismo objeto iba también en `structuredContent`; se sacó después del despliegue (ver «CPU de `/mcp` por método»). Los errores esperables (serie o variante inexistente, variante pendiente, transformación no admitida, base mal escrita, período invertido, más de 10.000 observaciones) salen con `isError` y un mensaje en español que dice cómo seguir.
 - **`obtener_serie`:**
   - **Valores:** los transformados se redondean a 6 cifras significativas (el nivel va tal cual se publica).
   - **Quiebres:** `advertencias` trae los que cruza el rango del resultado (`cruzadas()` de la librería).
@@ -138,9 +138,32 @@
 
 **Riesgo que queda.** El primer pedido de cada isolate puede pasar de 10 ms. Cloudflare tolera excesos esporádicos por isolate y corta (error 1102) solo si se repiten. Como este exceso ocurre una vez por isolate, se espera que entre en esa tolerancia, pero hay que confirmarlo en producción.
 
+**Resultado en producción.** No hubo un cambio medible:
+- antes: mediana de 7 ms y máximo de 50 ms;
+- después: mediana de 8 ms y máximo de 40 ms;
+- con 17 invocaciones en cada caso, la diferencia está dentro del ruido.
+
+## CPU de `/mcp` por método (decidido con Camilo)
+
+**Medición.** Cada POST a `/mcp` deja un registro `{ mcp: { metodo, herramienta, protocolo, estado } }` ([vaiven-argentino/vaiven#6](https://github.com/vaiven-argentino/vaiven/pull/6)), y Observabilidad lo muestra junto a la CPU de la invocación. Resultado de la prueba del 24/10/2026, 21:38 UTC (versión `ee7017d8`):
+
+| Pedido | CPU |
+|---|---|
+| Apertura de la conexión (`server/discover` o `initialize`) | 18–23 ms |
+| Primera llamada de cada herramienta en un isolate (lee y parsea el export) | 10–16 ms |
+| `tools/list` | 8 ms |
+| Llamadas siguientes | 4–5 ms |
+| GET y OPTIONS de `/mcp`, `/salud` | 0 ms |
+
+En total, 6 de 22 POST pasaron de 10 ms, 2 quedaron justo en 10 y ninguno fue cortado. Los tiempos de reloj de 46–61 ms son la lectura de `/datos/` desde los assets: es espera, no CPU.
+
+**Medida: sin `structuredContent`.** Cada resultado iba dos veces: como texto y como `structuredContent`. Ahora va solo como texto, y las respuestas pesan la mitad (IPC completo: de 34 a 18 KB). En Node la CPU no cambió de forma medible (las diferencias son ruido). Queda por ver en producción. Además, si el cliente le pasa al modelo los dos bloques, se ahorran tokens.
+
+**Lo que no se tocó.** La apertura de la conexión (18–23 ms) es del SDK y solo bajaría con un manejador propio sin el SDK. Eso se aparta de la SPEC 7.1 y quedó descartado por ahora.
+
 ## Pendientes
 
-1. **CPU por pedido de `/mcp`:** después del precalentamiento (ver abajo), volver a mirar el gráfico «CPU Time» y los errores «Exceeded CPU» (1102) en Observabilidad, durante la prueba manual y con el uso real.
+1. **CPU por pedido de `/mcp`:** medir de nuevo por método después de sacar `structuredContent`. Durante la prueba manual y en las primeras semanas, revisar si aparecen errores «Exceeded CPU» (1102) en Observabilidad. Si aparecen, evaluar el manejador propio (diferencia con la SPEC 7.1).
 2. **Prueba manual desde Claude, web y escritorio** (la hace Camilo): guion en `mcp/PRUEBA_MANUAL.md`. Es lo que cierra la fase según la SPEC (sección 11).
 3. **Ficha web:** mostrar «Uso en la bibliografía» con los datos que ya trae `catalogo.json` (pendiente de la fase 2, para la fase 4).
 4. **Distribución de la variante local por `npx`** (fase 5).

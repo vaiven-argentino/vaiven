@@ -38,13 +38,13 @@ describe.each([
     }
     expect(c.getInstructions()).toContain("buscar_series");
   });
-  it("llama a las herramientas y devuelve JSON en texto y structuredContent", async () => {
+  it("llama a las herramientas y devuelve el JSON en un bloque de texto", async () => {
     const c = await conectar(modo);
     const r = await c.callTool({ name: "obtener_serie", arguments: { id: "reservas", desde: "1979-02", hasta: "1979-04" } });
     expect(r.isError).toBeFalsy();
     const datos = json(r as never);
     expect(datos.datos).toEqual([["1979-02", 6282.9], ["1979-03", null], ["1979-04", 7270.3]]);
-    expect(r.structuredContent).toEqual(datos);
+    expect(r.structuredContent).toBeUndefined();
   });
   it("los errores salen como isError, en español", async () => {
     const c = await conectar(modo);
