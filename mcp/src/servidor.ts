@@ -66,11 +66,15 @@ export const ESQUEMAS = {
 // Solo leen datos públicos: no cambian nada y dan lo mismo si se repiten.
 const ANOTACIONES = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 
-/** El resultado va como JSON en texto (lo lee cualquier cliente) y como `structuredContent`. */
+/**
+ * El resultado va como JSON en un bloque de texto, que lee cualquier cliente. No se repite en `structuredContent`:
+ * duplicaba la respuesta (hasta 34 KB en el IPC completo) y su serialización, y en el plan gratuito de Workers cada
+ * milisegundo de CPU cuenta. Las herramientas no declaran `outputSchema`, así que el protocolo no lo exige.
+ */
 async function responder(f: () => Promise<Record<string, unknown>>): Promise<CallToolResult> {
   try {
     const r = await f();
-    return { content: [{ type: "text", text: JSON.stringify(r) }], structuredContent: r };
+    return { content: [{ type: "text", text: JSON.stringify(r) }] };
   } catch (e) {
     if (e instanceof ErrorHerramienta) return { isError: true, content: [{ type: "text", text: e.message }] };
     console.error(e);
