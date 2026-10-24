@@ -1,4 +1,7 @@
-"""Punto de entrada: `uv run python -m pipeline actualizar [--series ipc,reservas] [--sin-red] [--informe RUTA]`.
+"""Punto de entrada.
+
+- `uv run python -m pipeline actualizar [--series ipc,reservas] [--sin-red] [--informe RUTA]`
+- `uv run --group descargas python -m pipeline descargas`
 
 Sale con código 0 si publicó (con o sin cambios), 1 si la validación falló y 2 ante un error del pipeline.
 """
@@ -21,7 +24,17 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--sin-red", action="store_true", help="Usa los últimos snapshots, sin descargar.")
     a.add_argument("--informe", type=Path, help="Archivo donde escribir el informe en Markdown.")
     a.add_argument("--raiz", type=Path, default=Rutas().raiz, help="Raíz del repositorio (para pruebas).")
+    d = sub.add_parser("descargas", help="Genera el Parquet y el ZIP de descarga completa en export/descargas/.")
+    d.add_argument("--sin-parquet", action="store_true", help="Solo el ZIP (no necesita pyarrow).")
+    d.add_argument("--raiz", type=Path, default=Rutas().raiz, help="Raíz del repositorio (para pruebas).")
     args = p.parse_args(argv)
+
+    if args.comando == "descargas":
+        from pipeline.export.descargas import generar
+
+        for ruta in generar(Rutas(args.raiz).export, parquet=not args.sin_parquet):
+            print(ruta)
+        return 0
 
     solo = [s.strip() for s in args.series.split(",")] if args.series else None
     try:
