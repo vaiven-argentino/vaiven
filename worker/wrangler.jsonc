@@ -9,10 +9,12 @@
   // El token va como secreto: `npx wrangler secret put GITHUB_TOKEN_DISPARO`.
   "triggers": { "crons": ["23 21 * * *"] },
   "assets": {
-    // En la fase 2 pasa a ser el build de Astro (../web/dist).
-    "directory": "./public",
+    // El build de Astro (npm run build -w @vaiven/web). Incluye el export en /datos/ y los esquemas en /esquemas/.
+    "directory": "../web/dist",
     "binding": "ASSETS",
     // Solo estas rutas pasan por el código; el resto se sirve como archivo estático (sin costo de CPU).
-    "run_worker_first": ["/salud"]
+    "run_worker_first": ["/salud"],
+    // Las rutas que no existen devuelven web/dist/404.html con estado 404.
+    "not_found_handling": "404-page"
   }
 }
