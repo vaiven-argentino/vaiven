@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.pib-base-1960",
+  "unidad": "millones de pesos de 1960",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.bcra.pib-base-1960/2026-10-24",
+  "descargado": "2026-10-24T23:10:53Z",
+  "sha256": "18b2d771ea5752227a050579315db464d7249523280fa5e7ccb2b04272a85c06",
+  "observaciones": 44,
+  "desde": "1970-01-01",
+  "hasta": "1980-10-01"
+}

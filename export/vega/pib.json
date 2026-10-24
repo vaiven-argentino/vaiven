@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "PIB real",
+    "subtitle": "Variante: Retropolada desde la base 2004 (tasas de variación) · millones de pesos de 2004, a ritmo anual"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/pib/retropolada.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de pesos de 2004, a ritmo anual"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "pib",
+      "variante": "retropolada",
+      "version_datos": "2026-10-24T23:12:21Z",
+      "cita": "Vaivén (2026). PIB real, variante «retropolada». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/pib/"
+    }
+  }
+}

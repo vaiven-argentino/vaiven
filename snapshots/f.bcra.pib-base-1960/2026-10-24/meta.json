@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.pib-base-1960",
+  "descargado": "2026-10-24T23:10:53Z",
+  "sha256": "18b2d771ea5752227a050579315db464d7249523280fa5e7ccb2b04272a85c06",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=200.1_PTOTAL_60_0_0_15&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4421,
+      "sha256": "162c63ba0f7daf9317ee275b88c1230836060e19eb09a4dbb6dc6ce742399532"
+    }
+  ]
+}

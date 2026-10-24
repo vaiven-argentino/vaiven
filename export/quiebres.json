@@ -73,7 +73,7 @@
     "desde": "1992",
     "hasta": "1992",
     "tipo": "metodologia",
-    "descripcion": "Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2000, cuando hay datos de las dos fuentes, la del BCRA es entre 5,5 % y 7,2 % más baja. Los tramos se unen sin ajustar.",
+    "descripcion": "Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2009, cuando hay datos de las dos fuentes, la del BCRA es entre 4,3 % y 7,2 % más baja. Los tramos se unen sin ajustar.",
     "afecta": [
       "importaciones.oficial"
     ],
@@ -123,6 +123,61 @@
       "ipc.provincias"
     ],
     "fuente": "Dirección Provincial de Estadística y Censos de San Luis; Instituto de Estadística y Censos de la CABA."
+  },
+  {
+    "id": "q.pib.base-1960",
+    "desde": "1970-01",
+    "hasta": "1979-10",
+    "tipo": "cambio_de_base",
+    "descripcion": "Entre 1970 y 1980 (el crecimiento de 1980 incluido), las tasas salen de las cuentas nacionales del BCRA a precios de 1960. La serie a precios de 1970 figura en la API de datos.gob.ar, pero no devuelve datos.",
+    "afecta": [
+      "pib.retropolada"
+    ],
+    "fuente": "BCRA, cuentas nacionales 1970–1980 (datos.gob.ar, 200.1_PTOTAL_60_0_0_15)."
+  },
+  {
+    "id": "q.pib.base-1986",
+    "desde": "1980-01",
+    "hasta": "1980-01",
+    "tipo": "cambio_de_base",
+    "descripcion": "Cambio de base: desde 1980, los trimestres son los de las cuentas nacionales del BCRA a precios de 1986 (el crecimiento de 1980 es el de la base 1960; el de 1981, el de la base 1986). En los años en que se superpone con la base 1970 (1981–1990), las tasas anuales difieren hasta 2,6 puntos.",
+    "afecta": [
+      "pib.retropolada"
+    ],
+    "fuente": "Comparación de 201.1_PTOTAL_LES_1970_0_22 con 255.1_PTOTAL_PM_1986_0_12 en datos.gob.ar (24/10/2026)."
+  },
+  {
+    "id": "q.pib.base-1993",
+    "desde": "1993-01",
+    "hasta": "1993-01",
+    "tipo": "cambio_de_base",
+    "descripcion": "Cambio de base: desde 1993, los trimestres son los de las cuentas nacionales del INDEC a precios de 1993 (el crecimiento de 1993 es el de la base 1986). En 1994–1996, las tasas anuales difieren de las de la base 1986 hasta 2,2 puntos.",
+    "afecta": [
+      "pib.retropolada"
+    ],
+    "fuente": "INDEC, Oferta y demanda globales base 1993; BCRA, cuentas nacionales base 1986."
+  },
+  {
+    "id": "q.pib.base-2004",
+    "desde": "2004-01",
+    "hasta": "2004-01",
+    "tipo": "cambio_de_base",
+    "descripcion": "Cambio de base: desde 2004, la serie es la de las cuentas nacionales del INDEC a precios de 2004, que da el nivel de toda la serie (el crecimiento de 2004 es el de la base 1993).",
+    "afecta": [
+      "pib.retropolada"
+    ],
+    "fuente": "INDEC, Oferta y demanda globales base 2004."
+  },
+  {
+    "id": "q.pib.revision-2008-2013",
+    "desde": "2008-01",
+    "hasta": "2013-10",
+    "tipo": "metodologia",
+    "descripcion": "La base 2004, que reemplazó a la base 1993 en 2014, corrige el crecimiento de 2008–2013 que daba la base 1993: por ejemplo, 2009 pasa de +0,9 % a −5,9 %. La serie usa la base 2004 desde 2004.",
+    "afecta": [
+      "pib.retropolada"
+    ],
+    "fuente": "Comparación de las series anuales 2.1_OGP_1993_A_17 y 4.1_OGP_2004_A_17 en datos.gob.ar (24/10/2026)."
   },
   {
     "id": "q.reservas.brutas",

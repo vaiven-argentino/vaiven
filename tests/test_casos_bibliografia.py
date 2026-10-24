@@ -52,6 +52,16 @@ def test_DF1990_C1_hiperinflacion_de_1989_y_austral():
     assert dd.loc[1986] < dd.loc[1985] < dd.loc[1984]   # el Plan Austral baja la inflación
 
 
+def test_DF1990_C1_estancamiento_y_viraje_al_superavit_comercial():
+    pib = serie("pib", "retropolada")
+    pib = pib.groupby(pib.index.year).mean()
+    crecimiento = (pib / pib.shift(1) - 1) * 100
+    assert pib.loc[1989] < pib.loc[1980]                         # la década perdida
+    assert (crecimiento.loc[1981:1982] < 0).all() and (crecimiento.loc[1988:1989] < 0).all()
+    saldo = anual("exportaciones", "oficial") - anual("importaciones", "oficial")
+    assert saldo.loc[1981] < saldo.loc[1982] and (saldo.loc[1982:1989] > 0).all()
+
+
 def test_OS2006_G3_deterioro_del_mercado_de_trabajo_en_los_ochenta():
     anual = promedio_anual(serie("desocupacion", "total-urbano"))
     assert anual.loc[1989] > 2 * anual.loc[1980]
