@@ -1,0 +1,21 @@
+# Material con derechos de autor: nunca se sube (repositorio público)
+capturas/
+_versiones/
+
+# Node y Wrangler
+node_modules/
+.wrangler/
+.dev.vars*
+!.dev.vars.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Sistema y editores
+.DS_Store
+.idea/
+.vscode/
+*.log

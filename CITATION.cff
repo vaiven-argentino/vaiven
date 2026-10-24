@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "Si usás Vaivén, citalo con estos datos. Para una serie puntual, usá la cita sugerida en su ficha."
+title: "Vaivén: series económicas argentinas, 1970–hoy"
+abstract: "Base histórica curada de series económicas argentinas desde 1970, con variantes de empalme, quiebres metodológicos, períodos de política económica y forma de citar."
+type: dataset
+authors:
+  - given-names: Camilo
+    family-names: Gómez Ortega von Zeschau
+    orcid: "https://orcid.org/0009-0008-7874-5164"
+repository-code: "https://github.com/vaiven-argentino/vaiven"
+url: "https://vaiven.argentino.workers.dev"
+license:
+  - MIT
+  - CC-BY-4.0
+keywords:
+  - Argentina
+  - series de tiempo
+  - historia económica
+  - política económica
+  - datos abiertos
