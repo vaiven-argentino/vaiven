@@ -1,10 +1,14 @@
 # worker/
 
-Punto de entrada del Worker de Cloudflare `vaiven` (https://vaiven.argentino.workers.dev): sirve los assets estáticos y, más adelante, el servidor MCP en `/mcp` (SPEC, 5.4 y 7.1).
+Punto de entrada del Worker de Cloudflare `vaiven` (https://vaiven.argentino.workers.dev): sirve los assets estáticos y el servidor MCP en `/mcp` (SPEC, 5.4 y 7.1).
 
-## Fase 2 (ahora)
+## Qué hace
 - `assets.directory` apunta al build de Astro (`../web/dist`): el sitio, el export en `/datos/` y los esquemas en `/esquemas/`. Antes de `wrangler dev` o `wrangler deploy` hay que armar la web (`npm run build -w @vaiven/web`).
-- `src/index.ts`: `/salud` devuelve `{"estado": "ok", "version": …, "fase": 2}`; es la única ruta que pasa por el código (`run_worker_first`). El resto lo sirve `env.ASSETS` sin costo de CPU.
+- `src/index.ts`: solo dos rutas pasan por el código (`run_worker_first`); el resto lo sirve `env.ASSETS` sin costo de CPU.
+  - `/salud` devuelve `{"estado": "ok", "version": …, "fase": 3}`.
+  - `/mcp` es el servidor MCP (fase 3): llama a `manejarMcp` de `@vaiven/mcp`, que lee el export de los mismos assets (`/datos/`) y lo guarda en memoria mientras vive el isolate. Ver [`mcp/README.md`](../mcp/README.md).
+- `ratelimits` (`LIMITE_MCP`): límite por IP en `/mcp`, 120 pedidos cada 60 s. Es aproximado (se cuenta por ubicación de Cloudflare) y no tiene costo aparte.
+- `observability`: registros del Worker (gratis), para ver la CPU por pedido de `/mcp` en el panel de Cloudflare.
 - `not_found_handling: "404-page"`: las rutas que no existen devuelven `web/dist/404.html` con estado 404.
 - `_headers` y `_redirects` vienen de `web/public/` (CORS y caché en `/datos/*`; 301 de la variante por defecto; 302 a la descarga completa vigente).
 - `src/disparador.ts`: el Cron Trigger diario (`triggers.crons` en `wrangler.jsonc`, 21:23 UTC) dispara el workflow `actualizar.yml` por `workflow_dispatch` (SPEC 5.1, paso 1).
@@ -27,5 +31,9 @@ npm run verificar    # genera los tipos y chequea TypeScript
 npm run deploy       # despliega (pide confirmación en el flujo de trabajo)
 ```
 
-## Próximas fases
-- **Fase 3:** se agrega `/mcp` a `run_worker_first` y el manejador del paquete `mcp/`.
+## Probar `/mcp` en local
+```bash
+npm run build -w @vaiven/web
+cd worker && npx wrangler dev --test-scheduled      # en otra terminal:
+node mcp/scripts/probar-endpoint.mjs                  # desde la raíz
+```

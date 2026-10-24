@@ -4,11 +4,11 @@
 
 Vaivén es una base histórica *curada* de series económicas argentinas desde 1970, pensada para estudiar las políticas económicas del período democrático. Cada serie viene con su contexto: de dónde sale, qué quiebres tiene, qué alternativas existen para empalmarla y cómo citarla.
 
-No compite con los agregadores generales (datos.gob.ar, ArgenData, Almanac, El Tablero): los usa como fuentes y les suma curaduría histórica y metodológica. Los datos se van a poder consultar desde una web en español y desde un servidor MCP para agentes de IA.
+No compite con los agregadores generales (datos.gob.ar, ArgenData, Almanac, El Tablero): los usa como fuentes y les suma curaduría histórica y metodológica. Los datos se consultan desde una web en español y desde un servidor MCP para agentes de IA.
 
 ## Estado
 
-🚧 **En construcción: fase 2 (web mínima).** Se actualizan y validan 5 series piloto (IPC, tipo de cambio oficial, reservas, exportaciones y desocupación), en [`export/`](export/). La web, en <https://vaiven.argentino.workers.dev>, tiene el catálogo y una ficha por serie y variante con gráfico, quiebres, descargas y cita. Los archivos de datos se pueden leer directamente en `/datos/` (API de solo lectura).
+🚧 **En construcción: fase 3 (MCP remoto).** Se actualizan y validan 5 series piloto (IPC, tipo de cambio oficial, reservas, exportaciones y desocupación), en [`export/`](export/). La web, en <https://vaiven.argentino.workers.dev>, tiene el catálogo y una ficha por serie y variante con gráfico, quiebres, descargas y cita. Los archivos de datos se pueden leer directamente en `/datos/` (API de solo lectura). El servidor MCP, en `https://vaiven.argentino.workers.dev/mcp`, permite que un asistente como Claude busque, describa, obtenga y cite las series ([cómo conectarlo](https://vaiven.argentino.workers.dev/agentes/); código en [`mcp/`](mcp/)).
 
 | Fase | Contenido |
 |---|---|
@@ -28,6 +28,7 @@ En [`docs/`](docs/):
 - [`DECISIONES_v0.md`](docs/DECISIONES_v0.md): decisiones de alcance y hallazgos de la planificación.
 - [`NOTAS_FASE1.md`](docs/NOTAS_FASE1.md): decisiones, diferencias con la SPEC y pendientes de la fase 1.
 - [`NOTAS_FASE2.md`](docs/NOTAS_FASE2.md): lo mismo para la fase 2 (web mínima).
+- [`NOTAS_FASE3.md`](docs/NOTAS_FASE3.md): lo mismo para la fase 3 (MCP remoto).
 - [`planificacion/`](docs/planificacion/): catálogo del MVP, inventario de gráficos de la bibliografía y resumen de variables.
 
 ## Licencias

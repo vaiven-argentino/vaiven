@@ -8,6 +8,8 @@ Pruebas del pipeline (SPEC, sección 10). Se corren con `uv run pytest`.
 - `test_casos_bibliografia.py` y `casos_bibliografia/`: casos de la bibliografía (forma y valores; ver su README).
 - `test_descargas.py`: el ZIP de descarga completa.
 
-Las pruebas de TypeScript (transformaciones, MCP) llegan en las fases 2 y 3.
+- `test_contrato.py` revisa también que `catalogo.json` traiga la bibliografía de los metadatos (fase 3).
+
+Las pruebas de TypeScript están en cada paquete (`paquetes/transformaciones/test`, `paquetes/cita/test`, `mcp/test` y `web/test`) y se corren con `npm test` desde la raíz.
 
 **Se llenó en:** fase 1; crece en cada fase.

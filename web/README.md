@@ -11,9 +11,10 @@ Sitio de Vaivén en Astro (estático, sin adaptador), con gráficos de Vega-Lite
 | `/series/<serie>/<variante>/` | Ficha de otra variante publicada. `/series/<serie>/<variante-por-defecto>/` manda 301 a `/series/<serie>/`. |
 | `/datos/` | Datos abiertos. Debajo está el export tal cual (API de solo lectura) y la descarga completa. |
 | `/esquemas/serie-<versión>.json` | El contrato del export. |
+| `/agentes/` | Para agentes de IA: cómo conectar el servidor MCP (`/mcp`) en Claude u otro asistente, herramientas, límites y variante local. |
 | `/acerca/` | Qué es, cómo citar, licencias y créditos. |
 
-La ficha funciona sin JavaScript (texto, tabla, descargas, cita y metodología están en el HTML). Con JavaScript se suman el gráfico, las transformaciones (`@vaiven/transformaciones`), el período, la escala logarítmica y las descargas de la vista (CSV, PNG, SVG y la cita en `.txt`). El estado queda en la URL (`?t=var_interanual&desde=1991`).
+La ficha funciona sin JavaScript (texto, tabla, descargas, cita y metodología están en el HTML). La cita (texto, APA y BibTeX) sale de `@vaiven/cita`, el mismo paquete que usa la herramienta `citar` del MCP. Con JavaScript se suman el gráfico, las transformaciones (`@vaiven/transformaciones`), el período, la escala logarítmica y las descargas de la vista (CSV, PNG, SVG y la cita en `.txt`). El estado queda en la URL (`?t=var_interanual&desde=1991`).
 
 ## Cómo se arma
 - `scripts/copiar-datos.mjs` corre antes de `dev`, `build` y `verificar`. Copia `export/` a `public/datos/` y los esquemas de `tests/contrato/` a `public/esquemas/`, y genera `public/_redirects`. Los tres están en `.gitignore`.
