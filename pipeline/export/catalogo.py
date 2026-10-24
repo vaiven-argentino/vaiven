@@ -33,6 +33,7 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
         entradas.append({
             "id": s["id"], "codigo": s["codigo"], "nombre": s["nombre"], "bloque": s["bloque"],
             "prioridad": s["prioridad"], "definicion": s["definicion"], "unidad": s["unidad"],
+            "tipo": s["tipo"], "agregacion": s["agregacion"], "transformaciones": list(s.get("transformaciones", [])),
             "frecuencia": s["frecuencia"], "variante_por_defecto": s["variante_por_defecto"],
             "quiebres": s.get("quiebres", []), "variantes": variantes,
         })
@@ -90,12 +91,15 @@ def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_d
 
 
 def especificacion_vega(serie_meta: dict, doc: dict) -> dict:
-    """Gráfico de líneas por defecto de la variante por defecto. Las rutas son relativas a `export/`."""
+    """Gráfico de líneas por defecto de la variante por defecto.
+
+    La URL de los datos es absoluta para que la especificación funcione fuera del sitio (el export se sirve en /datos/).
+    """
     tipo_fecha = "temporal"
     return {
         "$schema": VEGA_LITE,
         "title": {"text": doc["nombre"], "subtitle": f"Variante: {doc['nombre_variante']} · {doc['unidad']}"},
-        "data": {"url": f"descargas/csv/{doc['serie']}/{doc['variante']}.csv", "format": {"type": "csv"}},
+        "data": {"url": f"{URL_SITIO}/datos/descargas/csv/{doc['serie']}/{doc['variante']}.csv", "format": {"type": "csv"}},
         "mark": {"type": "line", "interpolate": "linear"},
         "encoding": {
             "x": {"field": "fecha", "type": tipo_fecha, "title": None},

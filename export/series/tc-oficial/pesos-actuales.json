@@ -1,5 +1,5 @@
 {
-  "esquema": "1.0",
+  "esquema": "1.1",
   "id": "tc-oficial.pesos-actuales",
   "serie": "tc-oficial",
   "codigo": "CAM-01",
@@ -12,11 +12,20 @@
   "agregacion": "promedio",
   "frecuencia": "mensual",
   "metodo": "Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188).",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "var_mensual",
+    "var_interanual",
+    "base_100",
+    "frecuencia",
+    "pesos_actuales"
+  ],
   "tramos": [
     {
       "fuente": "f.bcra.tc-historico-mensual",
       "desde": "1970-01",
-      "hasta": "hoy"
+      "hasta": "hoy",
+      "frecuencia": "mensual"
     }
   ],
   "cobertura": {
@@ -32,6 +41,7 @@
       "descripcion": "Mercados cambiarios desdoblados. En estos años hubo, por períodos, un mercado oficial o comercial y otro financiero o libre. La serie del BCRA no sigue siempre el mismo: comparada con las series diarias, coincide con el tipo único en 1970–1971 y 1982, con el financiero en septiembre de 1981, con el oficial en junio de 1987, y queda por encima del oficial en octubre de 1988 y enero de 1989 (15,11 y 17,51 australes, contra 12,36 y 13,94)."
     }
   ],
+  "excluidos": [],
   "fuentes": [
     {
       "id": "f.bcra.tc-historico-mensual",
@@ -44,7 +54,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tipo de cambio nominal oficial, variante «pesos-actuales». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/tc-oficial/",
-  "version_datos": "2026-10-24T05:15:50Z",
+  "version_datos": "2026-10-24T07:40:29Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 3.5e-11],

@@ -10,7 +10,13 @@ import pandas as pd
 from pipeline.comun import etiqueta_fecha, redondear
 
 URL_SITIO = "https://vaiven.argentino.workers.dev"
-VERSION_ESQUEMA = "1.0"
+VERSION_ESQUEMA = "1.1"
+
+
+def url_ficha(serie_meta: dict, variante: dict) -> str:
+    """La variante por defecto vive en /series/<slug>/; las demás, en /series/<slug>/<variante>/."""
+    base = f"{URL_SITIO}/series/{serie_meta['id']}/"
+    return base if variante["id"] == serie_meta["variante_por_defecto"] else f"{base}{variante['id']}/"
 
 
 def cita(serie_meta: dict, variante: dict, version_datos: str) -> str:
@@ -18,7 +24,7 @@ def cita(serie_meta: dict, variante: dict, version_datos: str) -> str:
     dia = version_datos[:10]
     return (
         f"Vaivén ({anio}). {serie_meta['nombre']}, variante «{variante['id']}». "
-        f"Versión de datos {dia}. {URL_SITIO}/series/{serie_meta['id']}/"
+        f"Versión de datos {dia}. {url_ficha(serie_meta, variante)}"
     )
 
 
@@ -65,13 +71,18 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         "agregacion": serie_meta["agregacion"],
         "frecuencia": frecuencia,
         "metodo": variante["metodo"],
+        "empalme": variante.get("empalme", "yuxtaponer"),
+        "transformaciones": list(serie_meta.get("transformaciones", [])),
         "tramos": [
             {"fuente": t["fuente"], "desde": str(t["desde"]), "hasta": str(t.get("hasta", "hoy")),
-             **({"rol": t["rol"]} if "rol" in t else {})}
+             "frecuencia": fuentes[t["fuente"]]["frecuencia"], **({"rol": t["rol"]} if "rol" in t else {})}
             for t in variante["tramos"]
         ],
         "cobertura": {"desde": etiqueta_fecha(serie.index[0], frecuencia), "hasta": etiqueta_fecha(serie.index[-1], frecuencia)},
         "advertencias": _advertencias(variante, quiebres, serie),
+        # Observaciones de la fuente que se quitaron a propósito (no son huecos): la web y el MCP las muestran.
+        "excluidos": [{"fecha": str(e["fecha"]), "motivo": " ".join(str(e["motivo"]).split())}
+                      for e in variante.get("excluir", [])],
         "fuentes": _fuentes(variante, fuentes),
         "licencia": serie_meta.get("licencia_derivado", "CC-BY-4.0"),
         "cita": cita(serie_meta, variante, version_datos),
