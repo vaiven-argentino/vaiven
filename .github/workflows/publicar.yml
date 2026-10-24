@@ -1,5 +1,5 @@
 # Arma el sitio (Astro, con el export y la descarga completa) y despliega el Worker (`wrangler deploy`), que sirve
-# el sitio y tiene el Cron Trigger del disparo diario.
+# el sitio y el servidor MCP (/mcp) y tiene el Cron Trigger del disparo diario.
 # Necesita los secretos del repositorio CLOUDFLARE_API_TOKEN (permiso Workers Scripts: Edit) y CLOUDFLARE_ACCOUNT_ID.
 name: Publicar
 
@@ -10,6 +10,7 @@ on:
       - "worker/**"
       - "web/**"
       - "paquetes/**"
+      - "mcp/**"
       - "export/**"
       - "package.json"
       - "package-lock.json"

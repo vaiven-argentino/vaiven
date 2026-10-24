@@ -1,4 +1,4 @@
-# Pruebas en cada push y en cada PR: pipeline (Python), transformaciones, web y Worker (TypeScript).
+# Pruebas en cada push y en cada PR: pipeline (Python), transformaciones, cita, MCP, web y Worker (TypeScript).
 name: Pruebas
 
 on:
@@ -42,9 +42,9 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci
-      - name: Vitest (transformaciones, contrato y gráficos)
+      - name: Vitest (transformaciones, cita, MCP, contrato y gráficos)
         run: npm test
-      - name: Tipos (transformaciones, astro check y Worker)
+      - name: Tipos (transformaciones, cita, MCP, astro check y Worker)
         run: npm run verificar
       - name: Armar el sitio y revisar los enlaces
         run: |
