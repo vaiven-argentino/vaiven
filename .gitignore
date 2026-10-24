@@ -19,3 +19,6 @@ __pycache__/
 .idea/
 .vscode/
 *.log
+
+# Pipeline: crudos de fuentes no redistribuibles (solo se versiona su meta.json)
+.crudos/
