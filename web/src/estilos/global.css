@@ -1,0 +1,108 @@
+/* Identidad de Vaivén (SPEC 6.3): hoja de álamo dorada, paleta otoñal para la interfaz y una paleta
+   aparte para los gráficos (Okabe–Ito, oscurecida en modo claro). Contrastes contra el fondo, WCAG 2.1:
+   texto 15,2:1, secundario 7,4:1, acento 6,1:1, bordes de controles ≥ 3,9:1 (claro) / ≥ 4,0:1 (oscuro). */
+
+:root {
+  --fondo: #FAF7F0;
+  --superficie: #F2ECDF;
+  --texto: #22201B;
+  --secundario: #575045;
+  --acento: #9A4422;
+  --sobre-acento: #FAF7F0;
+  --hoja: #A8740C;
+  --nervio: #22201B;
+  --ocre: #8A5B12;
+  --oliva: #4E6B3A;
+  --banda: #E7E0D1;
+  --borde: #7D7466;
+  --linea: #DDD5C4;
+  --graf-1: #0B5FA5;
+  --graf-2: #B84A00;
+  --graf-3: #00785A;
+  --graf-4: #A8497F;
+  --graf-5: #8F6400;
+
+  --sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ancho: 72rem;
+  --radio: 6px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fondo: #17140F; --superficie: #221D17; --texto: #EFE9DE; --secundario: #BDB3A3; --acento: #EE9A7A;
+    --sobre-acento: #17140F; --hoja: #E8B23A; --nervio: #17140F; --ocre: #E0B062; --oliva: #A9C48C;
+    --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
+    --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fondo: #17140F; --superficie: #221D17; --texto: #EFE9DE; --secundario: #BDB3A3; --acento: #EE9A7A;
+  --sobre-acento: #17140F; --hoja: #E8B23A; --nervio: #17140F; --ocre: #E0B062; --oliva: #A9C48C;
+  --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
+  --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--fondo); color: var(--texto); font-family: var(--sans);
+  font-size: 1rem; line-height: 1.6; font-feature-settings: "cv11" 1;
+}
+img, svg { max-width: 100%; }
+h1, h2, h3 { line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem); letter-spacing: -0.02em; font-weight: 700; }
+h2 { font-size: 1.4rem; letter-spacing: -0.01em; font-weight: 650; }
+h3 { font-size: 1.05rem; font-weight: 650; }
+p { margin: 0; }
+a { color: var(--acento); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 2px; }
+code { font-family: var(--mono); font-size: 0.9em; }
+.tabular, table { font-variant-numeric: tabular-nums; }
+.secundario { color: var(--secundario); }
+.visualmente-oculto {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+.contenedor {
+  width: 100%; max-width: var(--ancho); margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.saltar {
+  position: absolute; left: 8px; top: -48px; background: var(--acento); color: var(--sobre-acento);
+  padding: 8px 12px; border-radius: var(--radio); z-index: 10; text-decoration: none; font-weight: 600;
+}
+.saltar:focus { top: 8px; }
+
+/* Etiquetas y controles */
+.etiqueta {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--secundario);
+}
+.codigo {
+  display: inline-block; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em; padding: 1px 8px;
+  border-radius: 4px; background: var(--superficie); color: var(--secundario); font-variant-numeric: tabular-nums;
+}
+.boton {
+  display: inline-flex; align-items: center; gap: 6px; font: inherit; font-weight: 600; font-size: 0.95rem;
+  border: 1px solid var(--acento); background: var(--acento); color: var(--sobre-acento); border-radius: var(--radio);
+  padding: 8px 14px; cursor: pointer; text-decoration: none; min-height: 44px;
+}
+.boton.secundario-btn { background: transparent; color: var(--acento); }
+.boton:hover { filter: brightness(1.06); }
+input, select, button { font: inherit; color: inherit; }
+input[type="text"], input[type="search"], input[type="number"], select {
+  background: var(--fondo); border: 1px solid var(--borde); border-radius: var(--radio); padding: 8px 10px;
+  min-height: 44px; max-width: 100%;
+}
+label { font-size: 0.9rem; }
+.separador { border: 0; border-top: 1px solid var(--linea); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

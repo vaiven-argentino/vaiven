@@ -212,7 +212,7 @@ function base100(puntos: Punto[], base: Base, notas: string[]): [Punto[], string
     if (validos.length < enRango.length) notas.push(`El promedio base deja afuera ${enRango.length - validos.length} períodos sin dato.`);
     referencia = validos.reduce((s, x) => s + x, 0) / validos.length;
     if (referencia === 0) throw new ErrorTransformacion("El promedio base da cero: elegí otro período.");
-    descripcion = `promedio ${base.desde}–${base.hasta}`;
+    descripcion = base.desde === base.hasta ? `promedio ${base.desde}` : `promedio ${base.desde}–${base.hasta}`;
   }
   return [puntos.map((p) => ({ ...p, v: p.v === null ? null : (p.v / referencia) * 100 })), descripcion];
 }

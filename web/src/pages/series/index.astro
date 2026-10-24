@@ -1,0 +1,120 @@
+---
+// Catálogo (SPEC 6.1): las series publicadas, con búsqueda sin distinguir acentos y filtros por bloque y frecuencia.
+// Sin JavaScript se ven todas.
+import Base from "../../layouts/Base.astro";
+import { catalogo, urlFicha } from "../../lib/export";
+import { fechaCorta } from "../../lib/formato";
+
+const { series } = catalogo();
+const FRECUENCIAS = ["mensual", "trimestral", "semestral", "anual"];
+const frecuenciasDe = (s: (typeof series)[number]) =>
+  FRECUENCIAS.filter((f) => s.variantes.some((v) => v.estado === "publicada" && v.frecuencia.includes(f)));
+const bloques = [...new Set(series.map((s) => s.bloque))].sort((a, b) => a.localeCompare(b, "es"));
+const frecuencias = FRECUENCIAS.filter((f) => series.some((s) => frecuenciasDe(s).includes(f)));
+const normalizar = (t: string) => t.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
+---
+<Base titulo="Catálogo" descripcion="Catálogo de series económicas argentinas de Vaivén: buscá por nombre, código, bloque o frecuencia." seccion="catalogo">
+  <div class="contenedor catalogo">
+    <header class="cabeza">
+      <h1>Catálogo</h1>
+      <p class="lectura">Estas son las series publicadas. El catálogo completo va a tener 39 series y se completa por fases: hoy están las cinco del piloto.</p>
+    </header>
+
+    <form class="filtros" id="filtros" role="search" aria-label="Buscar y filtrar series" hidden>
+      <div class="campo busqueda">
+        <label for="f-texto">Buscar</label>
+        <input id="f-texto" type="search" autocomplete="off" placeholder="Por ejemplo: inflación, reservas, EXT-06" />
+      </div>
+      <div class="campo">
+        <label for="f-bloque">Bloque</label>
+        <select id="f-bloque">
+          <option value="">Todos</option>
+          {bloques.map((b) => <option value={b}>{b}</option>)}
+        </select>
+      </div>
+      <div class="campo">
+        <label for="f-frecuencia">Frecuencia</label>
+        <select id="f-frecuencia">
+          <option value="">Todas</option>
+          {frecuencias.map((f) => <option value={f}>{f[0].toUpperCase() + f.slice(1)}</option>)}
+        </select>
+      </div>
+    </form>
+    <p id="resultado" class="secundario" role="status" aria-live="polite">{series.length} series.</p>
+
+    <ul class="series" id="lista-series">
+      {ordenadas.map((s) => {
+        const defecto = s.variantes.find((v) => v.id === s.variante_por_defecto)!;
+        const publicadas = s.variantes.filter((v) => v.estado === "publicada").length;
+        const pendientes = s.variantes.length - publicadas;
+        const busqueda = normalizar([s.codigo, s.nombre, s.definicion, s.bloque, s.unidad, ...s.variantes.map((v) => v.nombre)].join(" "));
+        return (
+          <li data-busqueda={busqueda} data-bloque={s.bloque} data-frecuencias={frecuenciasDe(s).join(" ")}>
+            <article class="tarjeta">
+              <p class="meta"><span class="codigo">{s.codigo}</span> <span class="secundario">{s.bloque}</span></p>
+              <h2><a href={urlFicha(s.id, defecto.id, true)}>{s.nombre}</a></h2>
+              <p>{s.definicion}</p>
+              <dl class="datos">
+                <div><dt>Frecuencia</dt><dd>{s.frecuencia}</dd></div>
+                <div><dt>Cobertura</dt><dd>{defecto.cobertura ? `${fechaCorta(defecto.cobertura.desde)} – ${fechaCorta(defecto.cobertura.hasta)}` : "—"}</dd></div>
+                <div><dt>Variantes</dt><dd>{publicadas} publicada{publicadas === 1 ? "" : "s"}{pendientes > 0 && `, ${pendientes} pendiente${pendientes === 1 ? "" : "s"}`}</dd></div>
+              </dl>
+            </article>
+          </li>
+        );
+      })}
+    </ul>
+    <p id="sin-resultados" class="secundario" hidden>No hay series que coincidan. Probá con otra palabra o sacá un filtro.</p>
+  </div>
+</Base>
+
+<script>
+  const form = document.getElementById("filtros") as HTMLFormElement;
+  const texto = document.getElementById("f-texto") as HTMLInputElement;
+  const bloque = document.getElementById("f-bloque") as HTMLSelectElement;
+  const frecuencia = document.getElementById("f-frecuencia") as HTMLSelectElement;
+  const items = [...document.querySelectorAll<HTMLLIElement>("#lista-series > li")];
+  const resultado = document.getElementById("resultado") as HTMLParagraphElement;
+  const vacio = document.getElementById("sin-resultados") as HTMLParagraphElement;
+  const normalizar = (t: string) => t.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
+
+  function filtrar(): void {
+    const palabras = normalizar(texto.value).split(/\s+/).filter(Boolean);
+    let visibles = 0;
+    for (const li of items) {
+      const ok = palabras.every((p) => li.dataset.busqueda!.includes(p))
+        && (!bloque.value || li.dataset.bloque === bloque.value)
+        && (!frecuencia.value || li.dataset.frecuencias!.split(" ").includes(frecuencia.value));
+      li.hidden = !ok;
+      if (ok) visibles += 1;
+    }
+    resultado.textContent = visibles === items.length ? `${items.length} series.` : `${visibles} de ${items.length} series.`;
+    vacio.hidden = visibles > 0;
+  }
+  form.hidden = false;
+  form.addEventListener("submit", (e) => e.preventDefault());
+  form.addEventListener("input", filtrar);
+  form.addEventListener("change", filtrar);
+</script>
+
+<style>
+  .catalogo { display: grid; gap: 20px; }
+  .cabeza { display: grid; gap: 10px; }
+  .lectura { max-width: 65ch; }
+  .filtros { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: flex-end; padding: 14px; background: var(--superficie); border-radius: var(--radio); }
+  .campo { display: grid; gap: 4px; min-width: 0; }
+  .busqueda { flex: 1 1 18rem; }
+  .busqueda input { width: 100%; }
+  .series { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr)); gap: 16px; }
+  .tarjeta { display: grid; gap: 8px; align-content: start; height: 100%; padding: 18px; border: 1px solid var(--linea); border-radius: var(--radio); }
+  .tarjeta:hover { border-color: var(--borde); }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 0.85rem; }
+  .tarjeta h2 { font-size: 1.2rem; }
+  .tarjeta h2 a { color: var(--texto); text-decoration-color: var(--acento); }
+  .tarjeta h2 a:hover { color: var(--acento); }
+  .datos { display: grid; gap: 4px; margin: 4px 0 0; font-size: 0.9rem; }
+  .datos div { display: grid; grid-template-columns: 7rem 1fr; gap: 8px; }
+  .datos dt { color: var(--secundario); }
+  .datos dd { margin: 0; }
+</style>

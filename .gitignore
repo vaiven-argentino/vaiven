@@ -26,3 +26,10 @@ __pycache__/
 # Descargas completas: se generan al publicar (no se versionan)
 export/descargas/*.zip
 export/descargas/*.parquet
+
+# Web: copias del export y archivos generados antes de cada build
+web/public/datos/
+web/public/esquemas/
+web/public/_redirects
+web/dist/
+web/.astro/

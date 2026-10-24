@@ -1,0 +1,17 @@
+---
+// /series/<slug>/<variante>/: las variantes publicadas que no son la de por defecto.
+import Base from "../../../../layouts/Base.astro";
+import Ficha from "../../../../componentes/Ficha.astro";
+import { catalogo, documento } from "../../../../lib/export";
+
+export function getStaticPaths() {
+  return catalogo().series.flatMap((serie) =>
+    serie.variantes
+      .filter((v) => v.estado === "publicada" && v.id !== serie.variante_por_defecto)
+      .map((v) => ({ params: { serie: serie.id, variante: v.id }, props: { serie, doc: documento(v.archivo!) } })));
+}
+const { serie, doc } = Astro.props;
+---
+<Base titulo={`${doc.nombre} · ${doc.nombre_variante}`} descripcion={`${doc.nombre}, variante «${doc.nombre_variante}» (${doc.codigo}). Gráfico, quiebres, descargas y cita.`} seccion="catalogo">
+  <Ficha serie={serie} doc={doc} />
+</Base>

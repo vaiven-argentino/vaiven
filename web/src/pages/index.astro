@@ -1,0 +1,91 @@
+---
+import Base from "../layouts/Base.astro";
+import Hoja from "../componentes/Hoja.astro";
+import { catalogo, urlFicha } from "../lib/export";
+import { diaDeVersion, fechaCorta } from "../lib/formato";
+
+const { series, version_datos } = catalogo();
+const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
+---
+<Base titulo="Inicio" descripcion="Vaivén: base histórica curada de series económicas argentinas desde 1970, con variantes de empalme, quiebres documentados, descargas y cita." seccion="inicio">
+  <div class="contenedor inicio">
+    <section class="presentacion">
+      <div class="texto">
+        <p class="etiqueta">Series económicas argentinas, 1970–hoy</p>
+        <h1>Las series largas de la economía argentina, con su historia a la vista</h1>
+        <p class="bajada">Vaivén reúne series económicas desde 1970 para estudiar las políticas del período democrático. Cada serie dice de dónde sale, qué quiebres tiene, qué alternativas hay para empalmarla y cómo citarla.</p>
+        <p class="acciones"><a class="boton" href="/series/">Ver el catálogo</a> <a class="boton secundario-btn" href="/datos/">Datos abiertos</a></p>
+      </div>
+      <div class="ilustracion" aria-hidden="true"><Hoja ancho={260} clase="hoja-inicio" /></div>
+    </section>
+
+    <section class="destacadas" aria-labelledby="titulo-series">
+      <div class="fila-titulo">
+        <h2 id="titulo-series">Series publicadas</h2>
+        <p class="secundario">Última actualización: <time datetime={version_datos}>{diaDeVersion(version_datos)}</time></p>
+      </div>
+      <ul>
+        {ordenadas.map((s) => {
+          const v = s.variantes.find((x) => x.id === s.variante_por_defecto)!;
+          return (
+            <li>
+              <a href={urlFicha(s.id, v.id, true)}>
+                <span class="codigo">{s.codigo}</span>
+                <span class="nombre-serie">{s.nombre}</span>
+                <span class="secundario cobertura">{v.cobertura ? `${fechaCorta(v.cobertura.desde)} – ${fechaCorta(v.cobertura.hasta)}` : ""} · {s.frecuencia}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+      <p class="secundario">Son las cinco series del piloto. El catálogo completo va a tener 39.</p>
+    </section>
+
+    <section class="principios" aria-labelledby="titulo-principios">
+      <h2 id="titulo-principios">Qué tiene cada serie</h2>
+      <dl>
+        <div><dt>Variantes</dt><dd>Los empalmes posibles, cada uno con nombre propio y su método. La oficial no es la única forma de leer una serie.</dd></div>
+        <div><dt>Quiebres</dt><dd>Cambios de base, de cobertura, de metodología o de signo monetario, y la intervención del INDEC, marcados en el gráfico.</dd></div>
+        <div><dt>Fuentes y licencias</dt><dd>De qué organismo sale cada tramo, con su ID en la API y su licencia.</dd></div>
+        <div><dt>Descarga y cita</dt><dd>CSV, JSON, el gráfico en PNG o SVG y la cita lista en texto, APA y BibTeX, con la versión de datos.</dd></div>
+      </dl>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .inicio { display: grid; gap: 56px; }
+  .presentacion { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+  .texto { display: grid; gap: 16px; }
+  .bajada { font-size: 1.15rem; max-width: 60ch; }
+  .acciones { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ilustracion { display: grid; place-items: center; }
+  .ilustracion :global(.hoja-inicio) { width: 100%; max-width: 260px; height: auto; animation: vaiven-caida 2.6s cubic-bezier(.3,.6,.4,1) 1 both; }
+  @keyframes vaiven-caida {
+    0% { transform: translate(-14px, -22px) rotate(-10deg); opacity: 0.35; }
+    45% { transform: translate(6px, -6px) rotate(6deg); opacity: 1; }
+    75% { transform: translate(-3px, -1px) rotate(-2deg); }
+    100% { transform: none; }
+  }
+  .destacadas { display: grid; gap: 14px; }
+  .fila-titulo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+  .destacadas ul { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--linea); }
+  .destacadas li a {
+    display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) auto; gap: 4px 14px; align-items: baseline;
+    padding: 14px 4px; border-bottom: 1px solid var(--linea); color: var(--texto); text-decoration: none;
+  }
+  .destacadas li a:hover .nombre-serie { color: var(--acento); text-decoration: underline; }
+  .nombre-serie { font-weight: 600; font-size: 1.05rem; }
+  .cobertura { font-size: 0.9rem; text-align: right; }
+  .principios { display: grid; gap: 16px; }
+  .principios dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 20px 28px; margin: 0; }
+  .principios dt { font-weight: 650; margin-bottom: 4px; }
+  .principios dd { margin: 0; color: var(--secundario); }
+  @media (max-width: 700px) {
+    .presentacion { grid-template-columns: 1fr; }
+    .ilustracion { order: -1; justify-items: start; }
+    .ilustracion :global(.hoja-inicio) { max-width: 150px; }
+    .destacadas li a { grid-template-columns: 1fr; }
+    .cobertura { text-align: left; }
+  }
+</style>

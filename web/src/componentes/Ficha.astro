@@ -1,0 +1,386 @@
+---
+// Ficha de serie (SPEC 6.1): todo lo que se lee está en el HTML del build. El gráfico y las transformaciones se
+// suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
+import { disponibles, transformar } from "@vaiven/transformaciones";
+import { apa, bibtex, textoCita } from "../lib/cita";
+import { descargaCompleta, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
+import { aniosDe, esVariacion, filasTabla, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
+import { NOMBRE_ESTADO, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
+
+interface Props {
+  serie: SerieCatalogo;
+  doc: DocumentoSerie;
+}
+const { serie, doc } = Astro.props;
+const disp = disponibles(doc);
+const inicial = transformacionInicial(doc);
+const r = transformar(doc, { transformacion: inicial });
+const variacion = esVariacion(inicial);
+const numerados = numerarQuiebres(doc);
+const registro = leerQuiebres();
+const [primerAnio, ultimoAnio] = aniosDe(doc);
+const atajos = [1983, 1991, 2003].filter((a) => a > primerAnio && a < ultimoAnio);
+const zip = descargaCompleta("zip");
+const parquet = descargaCompleta("parquet");
+const csv = `descargas/csv/${doc.serie}/${doc.variante}.csv`;
+const json = `series/${doc.serie}/${doc.variante}.json`;
+const licencias = [...new Map(doc.fuentes.map((f) => [`${f.organismo}|${f.licencia}`, f])).values()];
+const NOMBRE_EMPALME: Record<string, string> = {
+  encadenar_tasas: "Tramos encadenados por sus tasas de variación: la serie es continua y el nivel sale del tramo más reciente.",
+  yuxtaponer: "Tramos yuxtapuestos, sin empalmar: cada tramo conserva los valores de su fuente.",
+};
+const datosCliente = JSON.stringify(doc).replace(/</g, "\\u003c");
+const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
+---
+<article class="ficha contenedor">
+  <header class="cabeza">
+    <p class="ruta"><a href="/series/">Catálogo</a> <span aria-hidden="true">›</span> {serie.bloque}</p>
+    <div class="titulo-fila">
+      <span class="codigo">{doc.codigo}</span>
+      <h1>{doc.nombre}</h1>
+    </div>
+    <p class="definicion">{serie.definicion}</p>
+    <dl class="datos-clave">
+      <div><dt>Unidad</dt><dd>{doc.unidad}</dd></div>
+      <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
+      <div><dt>Cobertura</dt><dd>{fechaCorta(doc.cobertura.desde)} – {fechaCorta(doc.cobertura.hasta)}</dd></div>
+      <div><dt>Versión de datos</dt><dd><time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time></dd></div>
+    </dl>
+    {doc.desactualizada_desde && (
+      <p class="alerta">La fuente no responde: la serie está desactualizada desde el {fechaCorta(doc.desactualizada_desde)}.</p>
+    )}
+  </header>
+
+  <nav class="variantes" aria-labelledby="titulo-variantes">
+    <h2 id="titulo-variantes" class="etiqueta">Variantes</h2>
+    <ul>
+      {serie.variantes.map((v) => (
+        <li class={v.estado === "publicada" ? "publicada" : "pendiente"}>
+          {v.estado === "publicada" ? (
+            <a href={urlFicha(serie.id, v.id, v.id === serie.variante_por_defecto)} aria-current={v.id === doc.variante ? "page" : undefined}>
+              <span class="v-nombre">{v.nombre}</span>
+              {v.id === serie.variante_por_defecto && <span class="v-marca">por defecto</span>}
+            </a>
+          ) : (
+            <div class="v-pendiente">
+              <span class="v-nombre">{v.nombre}</span>
+              <span class="v-estado">{NOMBRE_ESTADO[v.estado]}</span>
+              {v.nota && <p class="v-nota">{v.nota}</p>}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <section class="vista" aria-labelledby="titulo-grafico">
+    <div class="vista-cabeza">
+      <h2 id="titulo-grafico">{doc.es_variante_por_defecto ? "Gráfico" : `Gráfico · ${doc.nombre_variante}`}</h2>
+      <p class="unidad" id="unidad-grafico">{r.unidad}</p>
+    </div>
+
+    <details class="panel-opciones" id="panel-opciones" open data-requiere-js hidden>
+    <summary><span class="po-titulo">Opciones del gráfico</span> <span class="po-resumen secundario" id="resumen-opciones"></span></summary>
+    <form id="controles" class="controles" aria-label="Opciones del gráfico">
+      <div class="campo">
+        <label for="c-transformacion">Transformación</label>
+        <select id="c-transformacion">
+          {disp.transformaciones.map((t) => <option value={t} selected={t === inicial}>{NOMBRE_TRANSFORMACION[t]}</option>)}
+        </select>
+      </div>
+      {disp.transformaciones.includes("base_100") && (
+        <div class="campo" id="campo-base" hidden>
+          <label for="c-base">Base = 100 (AAAA o AAAA-MM)</label>
+          <input id="c-base" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" value={String(primerAnio)} />
+        </div>
+      )}
+      {disp.frecuencias.length > 0 && (
+        <div class="campo">
+          <label for="c-frecuencia">Frecuencia</label>
+          <select id="c-frecuencia">
+            <option value="">Original</option>
+            {disp.frecuencias.map((f) => <option value={f}>{f === "anual" ? "Anual" : "Trimestral"}</option>)}
+          </select>
+        </div>
+      )}
+      {disp.mediaMovil && (
+        <div class="campo">
+          <label for="c-media">Media móvil</label>
+          <select id="c-media">
+            <option value="">Sin media móvil</option>
+            {[2, 3, 4, 6, 12].map((n) => <option value={n}>{n} períodos</option>)}
+          </select>
+        </div>
+      )}
+      <fieldset class="periodo">
+        <legend>Período</legend>
+        <div class="periodo-campos">
+          <label for="c-desde">Desde</label>
+          <input id="c-desde" type="number" inputmode="numeric" min={primerAnio} max={ultimoAnio} placeholder={String(primerAnio)} />
+          <label for="c-hasta">Hasta</label>
+          <input id="c-hasta" type="number" inputmode="numeric" min={primerAnio} max={ultimoAnio} placeholder={String(ultimoAnio)} />
+        </div>
+        <div class="atajos">
+          <button type="button" class="atajo" data-desde="">Toda la serie</button>
+          {atajos.map((a) => <button type="button" class="atajo" data-desde={String(a)}>Desde {a}</button>)}
+        </div>
+      </fieldset>
+      <label class="casilla" id="campo-log"><input type="checkbox" id="c-log" /> Escala logarítmica</label>
+    </form>
+    </details>
+
+    <p id="estado-grafico" class="estado" role="status" aria-live="polite"></p>
+    <div id="avisos" class="avisos" role="status" aria-live="polite" hidden></div>
+
+    <figure class="figura">
+      <div id="grafico" class="grafico" aria-hidden="true"></div>
+      <noscript><p class="sin-js">El gráfico y las transformaciones necesitan JavaScript. La tabla, las descargas y la cita funcionan igual.</p></noscript>
+      <figcaption>
+        <span class="visualmente-oculto">Resumen del gráfico: </span><span id="resumen-grafico">{resumen(r, r.unidad, variacion, numerados)}</span>
+      </figcaption>
+    </figure>
+
+    <details class="tabla-datos">
+      <summary>Tabla de datos <span class="secundario" id="tabla-cantidad">{r.datos.length} filas</span></summary>
+      <div class="tabla-marco">
+        <table>
+          <caption class="visualmente-oculto">{titulo}: datos de la vista actual</caption>
+          <thead><tr><th scope="col">Fecha</th><th scope="col" id="tabla-unidad">{r.unidad}</th></tr></thead>
+          <tbody id="tabla-cuerpo">
+            {filasTabla(r, variacion).map((f) => (
+              <tr class={f.excluido ? "excluido" : undefined}><th scope="row">{f.etiqueta}</th><td>{f.valor}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <div class="columnas">
+    <section aria-labelledby="titulo-descargas">
+      <h2 id="titulo-descargas">Descargas</h2>
+      <div class="grupo">
+        <h3>Esta variante</h3>
+        <ul class="lista-descargas">
+          <li><a href={`/datos/${csv}`} download={`vaiven_${doc.serie}_${doc.variante}.csv`}>CSV</a> <span class="secundario">{tamano(csv)} · fecha y valor</span></li>
+          <li><a href={`/datos/${json}`} download={`vaiven_${doc.serie}_${doc.variante}.json`}>JSON</a> <span class="secundario">{tamano(json)} · con metadatos, quiebres y fuentes</span></li>
+        </ul>
+      </div>
+      <div class="grupo" data-requiere-js hidden>
+        <h3>Lo que ves</h3>
+        <p class="secundario">Con la transformación y el período elegidos.</p>
+        <div class="botones">
+          <button type="button" class="boton secundario-btn" id="bajar-csv">CSV de la vista</button>
+          <button type="button" class="boton secundario-btn" id="bajar-png">Gráfico PNG</button>
+          <button type="button" class="boton secundario-btn" id="bajar-svg">Gráfico SVG</button>
+          <button type="button" class="boton secundario-btn" id="bajar-cita">Cita (.txt)</button>
+        </div>
+      </div>
+      <div class="grupo">
+        <h3>Todo Vaivén</h3>
+        <ul class="lista-descargas">
+          {zip && <li><a href="/datos/descargas/vaiven.zip" download={zip.archivo}>ZIP</a> <span class="secundario">{zip.tamano} · un CSV por variante, catálogo, quiebres y licencia</span></li>}
+          {parquet && <li><a href="/datos/descargas/vaiven.parquet" download={parquet.archivo}>Parquet</a> <span class="secundario">{parquet.tamano} · todas las series en una tabla larga</span></li>}
+          <li><a href="/datos/">Datos abiertos</a> <span class="secundario">· la API de solo lectura</span></li>
+        </ul>
+      </div>
+      <div class="grupo">
+        <h3>Licencias</h3>
+        <ul class="lista-simple">
+          <li>Esta variante (dato derivado): <a href="https://creativecommons.org/licenses/by/4.0/deed.es">{doc.licencia.replace("CC-BY-4.0", "CC BY 4.0")}</a>.</li>
+          {licencias.map((f) => <li>{f.organismo}: {f.licencia.replace("CC-BY-4.0", "CC BY 4.0")}.</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="titulo-cita" class="cita">
+      <h2 id="titulo-cita">Cómo citar</h2>
+      {[
+        { id: "cita-texto", nombre: "Texto", contenido: textoCita(doc) },
+        { id: "cita-apa", nombre: "APA", contenido: apa(doc) },
+        { id: "cita-bibtex", nombre: "BibTeX", contenido: bibtex(doc) },
+      ].map((c) => (
+        <div class="formato-cita">
+          <div class="formato-cabeza">
+            <h3>{c.nombre}</h3>
+            <span class="acciones-cita" data-requiere-js hidden><button type="button" class="copiar" data-copiar={c.id}>Copiar</button><span class="copiado" role="status"></span></span>
+          </div>
+          <pre id={c.id} class="texto-cita" tabindex="0">{c.contenido}</pre>
+        </div>
+      ))}
+      <p class="secundario">El DOI se asigna con la primera release archivada en Zenodo.</p>
+    </section>
+  </div>
+
+  <section aria-labelledby="titulo-metodo" class="bloque">
+    <h2 id="titulo-metodo">Metodología</h2>
+    <p class="lectura">{doc.metodo}</p>
+    <p class="lectura secundario">{NOMBRE_EMPALME[doc.empalme]}</p>
+    <div class="tabla-marco">
+      <table class="tabla-tramos">
+        <caption class="visualmente-oculto">Tramos de la variante</caption>
+        <thead><tr><th scope="col">Fuente</th><th scope="col">Desde</th><th scope="col">Hasta</th><th scope="col">Frecuencia</th></tr></thead>
+        <tbody>
+          {doc.tramos.map((t) => {
+            const f = doc.fuentes.find((x) => x.id === t.fuente);
+            return (
+              <tr>
+                <td>{f ? `${f.organismo}: ${f.nombre}` : t.fuente}{t.rol === "puente" && <span class="secundario"> (puente)</span>}</td>
+                <td>{fechaCorta(t.desde)}</td><td>{fechaCorta(t.hasta)}</td><td>{t.frecuencia}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+    {doc.excluidos.length > 0 && (
+      <div class="excluidos">
+        <h3>Datos excluidos</h3>
+        <ul class="lista-simple">
+          {doc.excluidos.map((e) => <li><strong>{fechaCorta(e.fecha)}:</strong> {e.motivo}</li>)}
+        </ul>
+      </div>
+    )}
+  </section>
+
+  <section aria-labelledby="titulo-quiebres" class="bloque">
+    <h2 id="titulo-quiebres">Quiebres</h2>
+    {numerados.length === 0 ? <p class="secundario">Esta variante no tiene quiebres registrados.</p> : (
+      <ol class="quiebres">
+        {numerados.map((q) => (
+          <li id={q.advertencia.id}>
+            <span class="q-numero" aria-hidden="true">{q.n}</span>
+            <div>
+              <p class="q-cabeza"><span class="q-tipo">{NOMBRE_TIPO_QUIEBRE[q.advertencia.tipo] ?? q.advertencia.tipo}</span> · {rangoQuiebre(q.advertencia)}{q.forma === "general" && " · vale para toda la serie"}</p>
+              <p class="lectura">{q.advertencia.descripcion}</p>
+              {registro.get(q.advertencia.id)?.fuente && <p class="secundario q-fuente">Fuente: {registro.get(q.advertencia.id)!.fuente}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+
+  <section aria-labelledby="titulo-fuentes" class="bloque">
+    <h2 id="titulo-fuentes">Fuentes</h2>
+    <ul class="fuentes">
+      {doc.fuentes.map((f) => (
+        <li>
+          <p><strong>{f.organismo}</strong>: {f.nombre}.</p>
+          <p class="secundario">Licencia {f.licencia.replace("CC-BY-4.0", "CC BY 4.0")}{f.id_api && <> · ID <code>{f.id_api}</code></>} · <a href={f.url}>consultar en la fuente</a></p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <script type="application/json" id="datos-ficha" set:html={datosCliente}></script>
+</article>
+
+<script>
+  import "../graficos/cliente";
+</script>
+
+<style>
+  .ficha { display: grid; gap: 40px; }
+  .cabeza { display: grid; gap: 12px; }
+  .ruta { font-size: 0.9rem; color: var(--secundario); }
+  .titulo-fila { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .definicion { font-size: 1.1rem; max-width: 65ch; }
+  .datos-clave { display: flex; flex-wrap: wrap; gap: 8px 32px; margin: 0; }
+  .datos-clave div { display: grid; gap: 0; }
+  .datos-clave dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--secundario); font-weight: 600; }
+  .datos-clave dd { margin: 0; }
+  .alerta { border: 1px solid var(--ocre); border-radius: var(--radio); padding: 10px 14px; background: var(--superficie); }
+
+  .variantes { display: grid; gap: 10px; }
+  .variantes ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .variantes li { min-width: 0; }
+  .variantes a, .v-pendiente {
+    display: grid; gap: 2px; padding: 10px 14px; border-radius: var(--radio); border: 1px solid var(--borde);
+    text-decoration: none; color: var(--texto); min-height: 44px; max-width: 34rem;
+  }
+  .variantes a:hover { border-color: var(--acento); }
+  .variantes a[aria-current="page"] { border: 2px solid var(--acento); padding: 9px 13px; background: var(--superficie); }
+  .v-nombre { font-weight: 600; }
+  .v-marca { font-size: 0.8rem; color: var(--secundario); }
+  .v-pendiente { border-style: dashed; color: var(--secundario); }
+  .v-pendiente .v-nombre { color: var(--texto); font-weight: 500; }
+  .v-estado { font-size: 0.8rem; font-weight: 600; color: var(--ocre); }
+  .v-nota { font-size: 0.85rem; max-width: 60ch; }
+
+  .vista { display: grid; gap: 14px; min-width: 0; }
+  .vista-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+  .unidad { color: var(--secundario); }
+  .panel-opciones { border-radius: var(--radio); background: var(--superficie); }
+  .panel-opciones > summary { cursor: pointer; padding: 10px 14px; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .po-titulo { font-weight: 600; }
+  .po-resumen { font-size: 0.88rem; }
+  .controles { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: flex-end; padding: 4px 14px 14px; }
+  .campo { display: grid; gap: 4px; min-width: 0; }
+  .campo select, .campo input { width: 100%; }
+  .periodo { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; min-width: 0; }
+  .periodo legend { font-size: 0.9rem; padding: 0; margin-bottom: 4px; }
+  .periodo-campos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+  .periodo-campos input { width: 6.5rem; }
+  .atajos { display: flex; flex-wrap: wrap; gap: 6px; }
+  .atajo { background: var(--fondo); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; min-height: 36px; cursor: pointer; font-size: 0.85rem; }
+  .atajo:hover { border-color: var(--acento); }
+  .casilla { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+  .casilla input { width: 20px; height: 20px; accent-color: var(--acento); }
+  .casilla.deshabilitado { color: var(--secundario); }
+  .estado:empty { display: none; }
+  .estado[data-tipo="error"] { color: var(--acento); font-weight: 600; }
+  .avisos { display: grid; gap: 6px; border: 1px solid var(--ocre); border-radius: var(--radio); padding: 12px 14px; font-size: 0.92rem; }
+  .figura { margin: 0; display: grid; gap: 10px; min-width: 0; }
+  .grafico { width: 100%; min-height: 260px; }
+  .grafico :global(svg) { max-width: 100%; }
+  figcaption { font-size: 0.92rem; color: var(--secundario); max-width: 75ch; }
+  .sin-js { padding: 12px; background: var(--superficie); border-radius: var(--radio); }
+
+  .tabla-datos summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; gap: 10px; }
+  .tabla-datos summary span { font-weight: 400; font-size: 0.9rem; }
+  .tabla-marco { overflow-x: auto; max-height: 28rem; overflow-y: auto; border: 1px solid var(--linea); border-radius: var(--radio); }
+  .tabla-datos .tabla-marco { margin-top: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 6px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+  thead th { position: sticky; top: 0; background: var(--superficie); font-size: 0.8rem; font-weight: 600; color: var(--secundario); }
+  tbody th { font-weight: 400; white-space: nowrap; }
+  .tabla-datos td { text-align: right; white-space: nowrap; }
+  tr.excluido td { color: var(--acento); font-weight: 600; }
+
+  .columnas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 40px; }
+  .columnas > section { display: grid; gap: 18px; align-content: start; min-width: 0; }
+  .grupo { display: grid; gap: 8px; }
+  .lista-descargas, .lista-simple { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+  .lista-descargas a { font-weight: 600; }
+  .botones { display: flex; flex-wrap: wrap; gap: 8px; }
+  .formato-cita { display: grid; gap: 6px; min-width: 0; }
+  .formato-cabeza { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .copiar { background: transparent; border: 1px solid var(--borde); border-radius: var(--radio); padding: 4px 12px; min-height: 36px; cursor: pointer; font-size: 0.85rem; }
+  .copiar:hover { border-color: var(--acento); }
+  .copiado { font-size: 0.85rem; color: var(--secundario); margin-left: 8px; }
+  .texto-cita { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--mono); font-size: 0.85rem; background: var(--superficie); padding: 12px; border-radius: var(--radio); }
+
+  .bloque { display: grid; gap: 14px; min-width: 0; }
+  .lectura { max-width: 72ch; }
+  .tabla-tramos td { white-space: normal; }
+  .excluidos { display: grid; gap: 6px; }
+  .quiebres { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+  .quiebres li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; }
+  .q-numero { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--secundario); display: grid; place-items: center; font-size: 0.8rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .q-cabeza { font-size: 0.9rem; color: var(--secundario); margin-bottom: 4px; }
+  .q-tipo { font-weight: 600; color: var(--texto); }
+  .q-fuente { font-size: 0.85rem; margin-top: 4px; }
+  .fuentes { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .fuentes li { display: grid; gap: 2px; max-width: 80ch; }
+  .fuentes code { overflow-wrap: anywhere; }
+</style>
+
+<style is:global>
+  /* Tooltip de Vega con los colores del sitio. */
+  #vg-tooltip-element.vg-tooltip.custom-theme {
+    background: var(--superficie); color: var(--texto); border: 1px solid var(--borde); border-radius: var(--radio);
+    font-family: var(--sans); font-size: 0.85rem; box-shadow: none; padding: 6px 10px;
+  }
+  #vg-tooltip-element.custom-theme td.key { color: var(--secundario); }
+</style>

@@ -1,0 +1,123 @@
+---
+import "@fontsource-variable/inter";
+import "../estilos/global.css";
+import Hoja from "../componentes/Hoja.astro";
+import { catalogo } from "../lib/export";
+import { diaDeVersion } from "../lib/formato";
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  seccion?: "inicio" | "catalogo" | "datos" | "acerca";
+}
+const { titulo, descripcion, seccion } = Astro.props;
+const tituloCompleto = seccion === "inicio" ? "Vaivén · Series económicas argentinas, 1970–hoy" : `${titulo} · Vaivén`;
+const version = catalogo().version_datos;
+const enlaces = [
+  { href: "/series/", texto: "Catálogo", id: "catalogo" },
+  { href: "/datos/", texto: "Datos abiertos", id: "datos" },
+  { href: "/acerca/", texto: "Acerca y cita", id: "acerca" },
+];
+const canonica = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#FAF7F0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#17140F" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:locale" content="es_AR" />
+    <script is:inline>
+      // Antes de pintar: el modo elegido a mano (si lo hay) gana sobre el del sistema.
+      try {
+        const tema = localStorage.getItem("vaiven-tema");
+        if (tema === "light" || tema === "dark") document.documentElement.dataset.theme = tema;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <header class="encabezado">
+      <div class="contenedor barra">
+        <a class="marca" href="/" aria-label="Vaivén, inicio">
+          <Hoja ancho={64} />
+          <span class="nombre">Vaivén</span>
+        </a>
+        <nav aria-label="Principal">
+          <ul>
+            {enlaces.map((e) => (
+              <li><a href={e.href} aria-current={seccion === e.id ? "page" : undefined}>{e.texto}</a></li>
+            ))}
+          </ul>
+        </nav>
+        <button class="tema" type="button" id="boton-tema" aria-pressed="false">
+          <span class="tema-texto">Modo oscuro</span>
+        </button>
+      </div>
+    </header>
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="pie">
+      <div class="contenedor pie-interior">
+        <p>Datos: <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a>, salvo que la fuente diga otra cosa. Código: <a href="https://github.com/vaiven-argentino/vaiven/blob/main/LICENSE">MIT</a>.</p>
+        <p>Versión de datos: <time datetime={version}>{diaDeVersion(version)}</time>. <a href="https://github.com/vaiven-argentino/vaiven">Repositorio en GitHub</a>.</p>
+      </div>
+    </footer>
+    <script>
+      // Botón de modo claro u oscuro. La preferencia se guarda en este navegador; si falla, igual cambia.
+      const boton = document.getElementById("boton-tema") as HTMLButtonElement;
+      const texto = boton.querySelector(".tema-texto") as HTMLSpanElement;
+      const raiz = document.documentElement;
+      const oscuroDelSistema = window.matchMedia("(prefers-color-scheme: dark)");
+      const esOscuro = () => raiz.dataset.theme === "dark" || (raiz.dataset.theme !== "light" && oscuroDelSistema.matches);
+      const pintar = () => {
+        const oscuro = esOscuro();
+        texto.textContent = oscuro ? "Modo claro" : "Modo oscuro";
+        boton.setAttribute("aria-pressed", String(oscuro));
+        boton.setAttribute("aria-label", oscuro ? "Pasar a modo claro" : "Pasar a modo oscuro");
+      };
+      boton.addEventListener("click", () => {
+        const tema = esOscuro() ? "light" : "dark";
+        raiz.dataset.theme = tema;
+        try { localStorage.setItem("vaiven-tema", tema); } catch {}
+        pintar();
+        document.dispatchEvent(new CustomEvent("vaiven:tema"));
+      });
+      oscuroDelSistema.addEventListener("change", () => { pintar(); document.dispatchEvent(new CustomEvent("vaiven:tema")); });
+      pintar();
+    </script>
+  </body>
+</html>
+
+<style>
+  .encabezado { border-bottom: 1px solid var(--linea); }
+  .barra { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; padding-block: 10px; }
+  .marca { display: inline-flex; align-items: center; gap: 10px; color: var(--texto); text-decoration: none; margin-right: auto; }
+  .nombre { font-size: 1.45rem; font-weight: 650; letter-spacing: -0.025em; }
+  nav ul { display: flex; flex-wrap: wrap; gap: 4px 20px; list-style: none; margin: 0; padding: 0; }
+  nav a { display: inline-block; padding: 10px 0; color: var(--texto); text-decoration: none; font-weight: 500; }
+  nav a:hover { color: var(--acento); }
+  nav a[aria-current="page"] { color: var(--acento); text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+  .tema {
+    background: transparent; border: 1px solid var(--borde); border-radius: var(--radio); padding: 6px 12px;
+    min-height: 44px; cursor: pointer; font-size: 0.9rem; color: var(--texto);
+  }
+  .tema:hover { border-color: var(--acento); }
+  main { display: block; padding-block: 32px 64px; }
+  main:focus { outline: none; }
+  .pie { border-top: 1px solid var(--linea); font-size: 0.9rem; color: var(--secundario); }
+  .pie-interior { display: grid; gap: 6px; padding-block: 24px 32px; }
+  @media (max-width: 560px) {
+    .barra { gap: 4px 16px; }
+    nav { order: 3; width: 100%; }
+    nav ul { gap: 0 18px; }
+  }
+</style>
