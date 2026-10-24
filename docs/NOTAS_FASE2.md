@@ -11,6 +11,7 @@
 | Transformaciones | La librería `paquetes/transformaciones` (TypeScript, Vitest) arranca en esta fase, con 8: nivel, variación mensual, interanual, dic.–dic. y acumulada en el año, base 100, frecuencia y media móvil. Las que necesitan series auxiliares (`real`, `en_dolares`, `pct_pib`, `pesos_actuales`) quedan para la fase 4. |
 | Redespliegue | `publicar.yml` escucha a «Actualizar datos» (`workflow_run`) y despliega solo si esa corrida hizo commit de datos. El Parquet y el ZIP se generan en ese mismo workflow y no se versionan. |
 | Catálogo | Muestra las 5 series publicadas, con una línea que avisa que el catálogo completo va a tener 39. |
+| Autoría de la cita por serie | Queda «Vaivén (2026)» como autor en texto, APA y BibTeX, igual que la cita del export. `CITATION.cff` sigue nombrando a Camilo como autor de Vaivén en general. |
 | Identidad visual | Opción A, variante A4: hoja de álamo dorada, a 35° por debajo de la horizontal, con nervaduras casi negras y la estela punteada en gris. Paleta otoñal para la interfaz: fondo `#FAF7F0`, texto `#22201B`, acento terracota `#9A4422`; en oscuro, fondo `#17140F`, acento `#EE9A7A`. Para los gráficos, una paleta aparte basada en Okabe–Ito. |
 
 ## Decisiones de diseño (revisables)
@@ -54,9 +55,8 @@
 
 ## Pendientes
 
-1. **A consultar: autoría de la cita.** La cita del export dice «Vaivén (2026)», y la web arma APA y BibTeX con el mismo autor institucional. `CITATION.cff` nombra a Camilo como autor. ¿Las citas por serie siguen con «Vaivén» o pasan a «Gómez Ortega von Zeschau, C.»?
-2. **Primer despliegue (pide aprobación).** Después, hay que confirmar en producción que `_headers` y `_redirects` se aplican igual que en `wrangler dev`.
-3. **Vulnerabilidades de `undici`** (npm audit: 1 alta y 2 moderadas). Llegan por miniflare, que es dependencia de desarrollo de wrangler y no se despliega. Se resuelve cuando wrangler actualice miniflare; no conviene `npm audit fix --force`, porque baja wrangler a la 4.35.
-4. **npm 11 y `allowScripts`.** npm avisa que no corrió los scripts de instalación de `esbuild` y `workerd`. Funcionan igual, porque los binarios vienen en dependencias opcionales. Si en CI fallara, hay que habilitarlos explícitamente.
-5. **Íconos e imagen para redes.** No hay `apple-touch-icon` (PNG) ni `og:image`. Hoy solo está el favicon en SVG.
-6. **Bandas de quiebres.** El relleno es decorativo (1,2:1 contra el fondo). Lo que se tiene que distinguir son los bordes y los números, que superan 7:1. Si se quiere que la banda sola se distinga, hay que oscurecerla.
+1. **Primer despliegue (pide aprobación).** Después, hay que confirmar en producción que `_headers` y `_redirects` se aplican igual que en `wrangler dev`.
+2. **Vulnerabilidades de `undici`** (npm audit: 1 alta y 2 moderadas). Llegan por miniflare, que es dependencia de desarrollo de wrangler y no se despliega. Se resuelve cuando wrangler actualice miniflare; no conviene `npm audit fix --force`, porque baja wrangler a la 4.35.
+3. **npm 11 y `allowScripts`.** npm avisa que no corrió los scripts de instalación de `esbuild` y `workerd`. Funcionan igual, porque los binarios vienen en dependencias opcionales. Si en CI fallara, hay que habilitarlos explícitamente.
+4. **Íconos e imagen para redes.** No hay `apple-touch-icon` (PNG) ni `og:image`. Hoy solo está el favicon en SVG.
+5. **Bandas de quiebres.** El relleno es decorativo (1,2:1 contra el fondo). Lo que se tiene que distinguir son los bordes y los números, que superan 7:1. Si se quiere que la banda sola se distinga, hay que oscurecerla.
