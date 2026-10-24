@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.pib-nominal-base-1993-trimestral",
+  "unidad": "millones de pesos corrientes, a ritmo anual",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.indec.pib-nominal-base-1993-trimestral/2026-10-24",
+  "descargado": "2026-10-24T23:23:35Z",
+  "sha256": "82bc90469106531174fc6067519ff6faccaa4c7680cd4859ed861e72d86f05a9",
+  "observaciones": 83,
+  "desde": "1993-01-01",
+  "hasta": "2013-07-01"
+}

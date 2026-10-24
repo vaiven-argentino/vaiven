@@ -13,7 +13,7 @@ ESQUEMAS = {
     ruta.name.removeprefix("serie-").removesuffix(".schema.json"): json.loads(ruta.read_text(encoding="utf-8"))
     for ruta in (RAIZ / "tests" / "contrato").glob("serie-*.schema.json")
 }
-ARCHIVOS = sorted((EXPORT / "series").glob("*/*.json"))
+ARCHIVOS = sorted((EXPORT / "series").glob("*/*.json")) + sorted((EXPORT / "auxiliares").glob("*/*.json"))
 
 
 def test_hay_series_exportadas():
@@ -28,7 +28,9 @@ def test_serie_cumple_el_esquema(ruta):
     fechas = [f for f, _ in doc["datos"]]
     assert fechas == sorted(fechas) and len(set(fechas)) == len(fechas)
     assert doc["cobertura"] == {"desde": fechas[0], "hasta": fechas[-1]}
-    assert (EXPORT / "descargas" / "csv" / doc["serie"] / f"{doc['variante']}.csv").exists()
+    carpeta = EXPORT / "descargas" / "csv" / ("auxiliares" if doc.get("auxiliar") else "")
+    assert (carpeta / doc["serie"] / f"{doc['variante']}.csv").exists()
+    assert doc.get("auxiliar", False) == (ruta.parent.parent.name == "auxiliares")
 
 
 def test_catalogo_y_datapackage_apuntan_a_archivos_existentes():
@@ -119,3 +121,17 @@ def test_los_insumos_apuntan_a_archivos_publicados(ruta):
         assert insumo["por_defecto"] in ids, (medida, insumo["por_defecto"])
         for o in insumo["opciones"]:
             assert (EXPORT / o["archivo"]).exists(), (medida, o["archivo"])
+
+
+def test_indice_de_auxiliares_y_signos_monetarios():
+    indice = json.loads((EXPORT / "auxiliares.json").read_text(encoding="utf-8"))
+    catalogo = {s["id"] for s in json.loads((EXPORT / "catalogo.json").read_text(encoding="utf-8"))["series"]}
+    for a in indice["auxiliares"]:
+        assert a["id"] not in catalogo, f"{a['id']} es auxiliar: no va en el catálogo"
+        for v in a.get("variantes", []):
+            if v["estado"] == "publicada":
+                assert (EXPORT / v["archivo"]).exists(), v["archivo"]
+    signos = json.loads((EXPORT / "auxiliares" / "signos-monetarios.json").read_text(encoding="utf-8"))["signos"]
+    por_id = {s["id"]: s["unidades_por_peso_actual"] for s in signos}
+    # 1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188 = 10¹³ pesos moneda nacional (SPEC 4).
+    assert por_id == {"peso": 1, "austral": 1e4, "peso-argentino": 1e7, "peso-ley-18188": 1e11, "peso-moneda-nacional": 1e13}

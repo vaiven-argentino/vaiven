@@ -38,9 +38,11 @@ def bibliografia(ids: list[str], inventario: dict[str, dict], serie: str) -> lis
 
 def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str,
              inventario: dict[str, dict] | None = None) -> dict:
-    """Una entrada por serie. Las variantes no publicadas figuran con su estado, sin datos."""
+    """Una entrada por serie. Las variantes no publicadas figuran con su estado, sin datos. Sin las auxiliares."""
     entradas = []
     for s in series:
+        if s.get("auxiliar"):
+            continue
         variantes = []
         for v in s["variantes"]:
             doc = documentos.get(f"{s['id']}.{v['id']}")
@@ -62,6 +64,52 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
             "bibliografia": bibliografia(s.get("bibliografia", []), inventario or {}, s["id"]),
         })
     return {"version_datos": version_datos, "series": entradas}
+
+
+def auxiliares(series: list[dict], documentos: dict[str, dict], version_datos: str) -> dict:
+    """Índice de las series auxiliares (SPEC 2.6): dónde está cada variante y qué series la usan."""
+    usos: dict[str, set[str]] = {}
+    for vid, doc in documentos.items():
+        for insumo in doc.get("insumos", {}).values():
+            for o in insumo["opciones"]:
+                usos.setdefault(o["id"], set()).add(vid)
+    salida = []
+    for s in series:
+        if not s.get("auxiliar"):
+            continue
+        variantes = []
+        for v in s["variantes"]:
+            doc = documentos.get(f"{s['id']}.{v['id']}")
+            variantes.append({"id": v["id"], "nombre": v["nombre"], "estado": v.get("estado", "publicada"),
+                              "frecuencia": v.get("frecuencia", s["frecuencia"]),
+                              "cobertura": doc["cobertura"] if doc else None,
+                              "archivo": f"auxiliares/{s['id']}/{v['id']}.json" if doc else None,
+                              "usada_por": sorted(usos.get(f"{s['id']}.{v['id']}", []))})
+        salida.append({"id": s["id"], "codigo": s["codigo"], "nombre": s["nombre"], "definicion": s["definicion"],
+                       "unidad": s["unidad"], "variantes": variantes})
+    salida.append({"id": "signos-monetarios", "codigo": "AUX-05", "nombre": "Signos monetarios",
+                   "definicion": "Equivalencias entre los signos monetarios argentinos desde 1970 (SPEC 4).",
+                   "unidad": "unidades del signo por peso actual", "archivo": "auxiliares/signos-monetarios.json",
+                   "usada_por": sorted(usos.get("signos-monetarios", []))})
+    return {"version_datos": version_datos, "auxiliares": salida}
+
+
+def signos_monetarios(signos: list[dict], version_datos: str) -> dict:
+    """Los signos monetarios con su factor acumulado: cuántas unidades de cada uno equivalen a un peso actual."""
+    from pipeline.capa2.signos_monetarios import factor_a_pesos_actuales
+
+    return {
+        "id": "signos-monetarios",
+        "nombre": "Signos monetarios argentinos",
+        "descripcion": ("Para pasar un valor en la moneda de su época a pesos actuales, se divide por "
+                        "`unidades_por_peso_actual` del signo vigente al último día del período."),
+        "fuente": "metadatos/signos_monetarios.yaml",
+        "version_datos": version_datos,
+        "signos": [{"id": s["id"], "nombre": s["nombre"], "desde": s["desde"].strftime("%Y-%m-%d"),
+                    "equivale_al_anterior": s["equivale"],
+                    "unidades_por_peso_actual": factor_a_pesos_actuales(s["desde"], signos), "fuente": s["fuente"]}
+                   for s in signos],
+    }
 
 
 def quiebres_export(quiebres: dict[str, dict]) -> list[dict]:
@@ -136,15 +184,18 @@ def especificacion_vega(serie_meta: dict, doc: dict) -> dict:
 
 
 def escribir_generales(dir_export: Path, series: list[dict], documentos: dict, fuentes: dict, quiebres: dict,
-                       version_datos: str, ruta_inventario: Path | None = None) -> None:
+                       version_datos: str, ruta_inventario: Path | None = None, signos: list[dict] | None = None) -> None:
     usa_bibliografia = any(s.get("bibliografia") for s in series)
     inventario = leer_inventario(ruta_inventario) if usa_bibliografia and ruta_inventario else {}
     escribir_json(dir_export / "catalogo.json", catalogo(series, documentos, version_datos, inventario))
+    escribir_json(dir_export / "auxiliares.json", auxiliares(series, documentos, version_datos))
     escribir_json(dir_export / "quiebres.json", quiebres_export(quiebres))
+    if signos is not None:
+        escribir_json(dir_export / "auxiliares" / "signos-monetarios.json", signos_monetarios(signos, version_datos))
     escribir_json(dir_export / "datapackage.json", datapackage(documentos, fuentes, version_datos))
     for s in series:
         doc = documentos.get(f"{s['id']}.{s['variante_por_defecto']}")
-        if doc:
+        if doc and not s.get("auxiliar"):
             escribir_json(dir_export / "vega" / f"{s['id']}.json", especificacion_vega(s, doc))
 
 

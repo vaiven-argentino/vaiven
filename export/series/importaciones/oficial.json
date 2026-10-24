@@ -20,7 +20,26 @@
     "frecuencia",
     "pct_pib"
   ],
-  "insumos": {},
+  "insumos": {
+    "pct_pib": {
+      "opciones": [
+        {
+          "id": "pib-dolares.anual",
+          "archivo": "auxiliares/pib-dolares/anual.json",
+          "nombre": "Anual",
+          "frecuencia": "anual"
+        },
+        {
+          "id": "pib-dolares.trimestral",
+          "archivo": "auxiliares/pib-dolares/trimestral.json",
+          "nombre": "Trimestral (desde 1993)",
+          "frecuencia": "trimestral"
+        }
+      ],
+      "por_defecto": "pib-dolares.anual",
+      "unidad": "% del PIB"
+    }
+  },
   "auxiliar": false,
   "tramos": [
     {
@@ -46,7 +65,7 @@
       "desde": "1992",
       "hasta": "1992",
       "tipo": "metodologia",
-      "descripcion": "Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2000, cuando hay datos de las dos fuentes, la del BCRA es entre 5,5 % y 7,2 % más baja. Los tramos se unen sin ajustar."
+      "descripcion": "Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2009, cuando hay datos de las dos fuentes, la del BCRA es entre 4,3 % y 7,2 % más baja. Los tramos se unen sin ajustar."
     }
   ],
   "excluidos": [],
@@ -70,7 +89,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Importaciones, variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/importaciones/",
-  "version_datos": "2026-10-24T23:07:12Z",
+  "version_datos": "2026-10-24T23:24:27Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 1560.0],

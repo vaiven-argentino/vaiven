@@ -1,0 +1,30 @@
+id: poblacion
+codigo: AUX-03
+nombre: Población
+bloque: Auxiliares
+prioridad: auxiliar
+definicion: Población total de la Argentina a mitad de año, según el Banco Mundial.
+unidad: personas
+tipo: stock
+agregacion: fin_de_periodo
+frecuencia: anual
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: banco-mundial
+variantes:
+  - id: banco-mundial
+    nombre: Banco Mundial
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: Población total (SP.POP.TOTL) de los Indicadores del Desarrollo Mundial del Banco Mundial, sin cambios.
+    tramos:
+      - {fuente: f.bm.poblacion, desde: 1970}
+validacion:
+  min: 20000000
+  max: 60000000
+  var_min: 0
+  var_max: 3
+  umbral_revision_pct: 1
+quiebres: []
+transformaciones: []
+fuentes: [f.bm.poblacion]
+licencia_derivado: CC-BY-4.0

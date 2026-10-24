@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bm.pib-nominal",
+  "unidad": "pesos actuales",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.bm.pib-nominal/2026-10-24",
+  "descargado": "2026-10-24T23:23:29Z",
+  "sha256": "567593a25f4086e7bafa6f38a893960ab7506a261f7533cf643290e2ab5a3d19",
+  "observaciones": 66,
+  "desde": "1960-01-01",
+  "hasta": "2025-01-01"
+}

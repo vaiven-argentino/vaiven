@@ -149,6 +149,17 @@
     "fuente": "Comparación de 335.1_CUENTA_CONES_IV__42 con 76.1_ITG_0_A_17 en datos.gob.ar (24/10/2026)."
   },
   {
+    "id": "q.ipc-eeuu.octubre-2025",
+    "desde": "2025-10",
+    "hasta": "2025-10",
+    "tipo": "cobertura",
+    "descripcion": "El BLS no relevó precios en octubre de 2025 por el cierre del gobierno federal, así que ese mes no tiene dato.",
+    "afecta": [
+      "ipc-eeuu.ocde"
+    ],
+    "fuente": "BLS, «2025 Federal Government Shutdown Impact on the Consumer Price Index»."
+  },
+  {
     "id": "q.ipc.2007-2015",
     "desde": "2007-01",
     "hasta": "2015-12",
@@ -192,6 +203,30 @@
       "ipc.provincias"
     ],
     "fuente": "Dirección Provincial de Estadística y Censos de San Luis; Instituto de Estadística y Censos de la CABA."
+  },
+  {
+    "id": "q.pib-dolares.tipo-de-cambio",
+    "desde": "1970",
+    "tipo": "metodologia",
+    "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use.",
+    "afecta": [
+      "pib-dolares.anual",
+      "pib-dolares.trimestral"
+    ],
+    "fuente": "Vaivén (método de la variante).",
+    "hasta": null
+  },
+  {
+    "id": "q.pib-nominal.retropolado",
+    "desde": "1970",
+    "hasta": "2004",
+    "tipo": "cambio_de_base",
+    "descripcion": "Hasta 2004, el nivel del PIB nominal está retropolado desde la base 2004 con las tasas de la base 1993 y, antes de 1994, con las del Banco Mundial. No coincide con el PIB nominal publicado en cada base: la base 2004 da, en 2004, un PIB 8 % mayor que la base 1993, y la diferencia llega a 22 % en 2012.",
+    "afecta": [
+      "pib-nominal.anual",
+      "pib-nominal.trimestral"
+    ],
+    "fuente": "Comparación de 2.3_OGP_1993_A_17 con 4.3_OGP_2004_A_17 en datos.gob.ar (24/10/2026)."
   },
   {
     "id": "q.pib.base-1960",

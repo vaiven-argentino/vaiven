@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-24T23:19:43Z",
-  "created": "2026-10-24T23:19:43Z",
+  "version": "2026-10-24T23:24:27Z",
+  "created": "2026-10-24T23:24:27Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -506,6 +506,48 @@
     },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "ipc-eeuu.ocde",
+      "title": "IPC de Estados Unidos · OCDE (dato de origen del BLS)",
+      "path": "descargas/csv/auxiliares/ipc-eeuu/ocde.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Índice de precios al consumidor de Estados Unidos de la base de precios de la OCDE, sin cambios.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "índice 2015 = 100"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "OCDE (con datos de la Oficina de Estadísticas Laborales de EE.UU., BLS): Índice de precios al consumidor de Estados Unidos, total, sin desestacionalizar, mensual",
+          "path": "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_PRICES%40DF_PRICES_ALL&df[ag]=OECD.SDD.TPS"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "ipc.oficial",
       "title": "Inflación minorista (IPC) · Oficial INDEC, sin corregir",
       "path": "descargas/csv/ipc/oficial.csv",
@@ -630,6 +672,206 @@
     },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "pib-dolares.anual",
+      "title": "PIB en dólares · Anual",
+      "path": "descargas/csv/auxiliares/pib-dolares/anual.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "PIB nominal anual (pesos actuales) dividido por el promedio de los doce valores de fin de mes del tipo de cambio oficial (CAM-01, en pesos actuales). Solo hay dato en los años con los doce meses del tipo de cambio.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Banco Mundial (Indicadores del Desarrollo Mundial): PIB en moneda local a precios corrientes (NY.GDP.MKTP.CN), Argentina",
+          "path": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CN?locations=AR"
+        },
+        {
+          "title": "INDEC: Oferta y demanda globales, base 1993. PIB a precios corrientes, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=2.3_OGP_1993_A_17"
+        },
+        {
+          "title": "INDEC: Oferta y demanda globales, base 2004. PIB a precios corrientes, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=4.3_OGP_2004_A_17"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "pib-dolares.trimestral",
+      "title": "PIB en dólares · Trimestral (desde 1993)",
+      "path": "descargas/csv/auxiliares/pib-dolares/trimestral.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "PIB nominal trimestral (el de cada trimestre, no a ritmo anual) dividido por el promedio de los tres valores de fin de mes del tipo de cambio oficial (CAM-01).",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (trimestral): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Oferta y demanda globales, base 1993. PIB a precios corrientes, trimestral (a ritmo anual)",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=2.4_OGP_1993_T_17"
+        },
+        {
+          "title": "INDEC: Oferta y demanda globales, base 2004. PIB a precios corrientes, trimestral (a ritmo anual)",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=4.4_OGP_2004_T_17"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "pib-nominal.anual",
+      "title": "PIB nominal en pesos · Anual, retropolado desde la base 2004",
+      "path": "descargas/csv/auxiliares/pib-nominal/anual.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Base 2004 del INDEC desde 2004; hacia atrás, las tasas de variación de la base 1993 (1994–2004) y del PIB nominal del Banco Mundial (1971–1993), encadenadas. Así el % del PIB no salta en el cambio de base: la base 2004 da, en 2004, un PIB 8 % mayor que la base 1993.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Banco Mundial (Indicadores del Desarrollo Mundial): PIB en moneda local a precios corrientes (NY.GDP.MKTP.CN), Argentina",
+          "path": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CN?locations=AR"
+        },
+        {
+          "title": "INDEC: Oferta y demanda globales, base 1993. PIB a precios corrientes, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=2.3_OGP_1993_A_17"
+        },
+        {
+          "title": "INDEC: Oferta y demanda globales, base 2004. PIB a precios corrientes, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=4.3_OGP_2004_A_17"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "pib-nominal.trimestral",
+      "title": "PIB nominal en pesos · Trimestral (desde 1993), retropolado desde la base 2004",
+      "path": "descargas/csv/auxiliares/pib-nominal/trimestral.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Base 2004 del INDEC desde 2004 y base 1993 en 1993–2003, encadenadas con el enlace en 2004 (el tramo viejo se reescala con el cociente de los totales de 2004). El INDEC publica los trimestres a ritmo anual: se dividen por 4, para que cada trimestre sea el PIB de ese trimestre.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (trimestral): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Oferta y demanda globales, base 1993. PIB a precios corrientes, trimestral (a ritmo anual)",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=2.4_OGP_1993_T_17"
+        },
+        {
+          "title": "INDEC: Oferta y demanda globales, base 2004. PIB a precios corrientes, trimestral (a ritmo anual)",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=4.4_OGP_2004_T_17"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "pib.retropolada",
       "title": "PIB real · Retropolada desde la base 2004 (tasas de variación)",
       "path": "descargas/csv/pib/retropolada.csv",
@@ -672,6 +914,48 @@
         {
           "title": "INDEC: Oferta y demanda globales, base 2004. PIB a precios de comprador, en millones de pesos de 2004, trimestral",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=4.2_OGP_2004_T_17"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "poblacion.banco-mundial",
+      "title": "Población · Banco Mundial",
+      "path": "descargas/csv/auxiliares/poblacion/banco-mundial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Población total (SP.POP.TOTL) de los Indicadores del Desarrollo Mundial del Banco Mundial, sin cambios.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "personas"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Banco Mundial (Indicadores del Desarrollo Mundial): Población total (SP.POP.TOTL), Argentina",
+          "path": "https://data.worldbank.org/indicator/SP.POP.TOTL?locations=AR"
         }
       ],
       "licenses": [

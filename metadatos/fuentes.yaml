@@ -572,3 +572,102 @@
     that suggests that Bruegel endorses the user or their use of the data.» No es una licencia Creative Commons.
     Cita: Darvas, Z. (2012), «Real effective exchange rates for 178 countries: a new database», Bruegel Working
     Paper 2012/06, actualizada; doi:10.64153/SZCG6180. El README no dice cuál es el período base.
+
+# ── Auxiliares (SPEC 2.6): PIB nominal, población e IPC de EE.UU. ─────────────
+- id: f.bm.pib-nominal
+  organismo: Banco Mundial (Indicadores del Desarrollo Mundial)
+  nombre: PIB en moneda local a precios corrientes (NY.GDP.MKTP.CN), Argentina
+  api: banco-mundial
+  id_api: NY.GDP.MKTP.CN
+  pais: ARG
+  url: https://data.worldbank.org/indicator/NY.GDP.MKTP.CN?locations=AR
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: pesos actuales
+  cobertura: {desde: 1960, hasta: hoy}
+  verificado: 2026-10-24
+  nota: >-
+    Los valores anteriores a 1992 están en pesos actuales (1970: 1,2 pesos). En 1993–2003 coinciden con la base 1993
+    del INDEC y desde 2004, con la base 2004 (verificado el 24/10/2026), así que Vaivén usa solo sus tasas de 1971–1993.
+
+- id: f.indec.pib-nominal-base-1993-anual
+  organismo: INDEC
+  nombre: Oferta y demanda globales, base 1993. PIB a precios corrientes, anual
+  api: datos.gob.ar
+  id_api: 2.3_OGP_1993_A_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=2.3_OGP_1993_A_17
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de pesos corrientes
+  cobertura: {desde: 1993, hasta: 2012}
+  verificado: 2026-10-24
+
+- id: f.indec.pib-nominal-base-2004-anual
+  organismo: INDEC
+  nombre: Oferta y demanda globales, base 2004. PIB a precios corrientes, anual
+  api: datos.gob.ar
+  id_api: 4.3_OGP_2004_A_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=4.3_OGP_2004_A_17
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de pesos corrientes
+  cobertura: {desde: 2004, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.indec.pib-nominal-base-1993-trimestral
+  organismo: INDEC
+  nombre: Oferta y demanda globales, base 1993. PIB a precios corrientes, trimestral (a ritmo anual)
+  api: datos.gob.ar
+  id_api: 2.4_OGP_1993_T_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=2.4_OGP_1993_T_17
+  licencia: CC-BY-4.0
+  frecuencia: trimestral
+  unidad: millones de pesos corrientes, a ritmo anual
+  cobertura: {desde: 1993-01, hasta: 2013-07}
+  verificado: 2026-10-24
+  nota: Los cuatro trimestres de cada año suman 4 veces el PIB anual (verificado en 1993–1996).
+
+- id: f.indec.pib-nominal-base-2004-trimestral
+  organismo: INDEC
+  nombre: Oferta y demanda globales, base 2004. PIB a precios corrientes, trimestral (a ritmo anual)
+  api: datos.gob.ar
+  id_api: 4.4_OGP_2004_T_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=4.4_OGP_2004_T_17
+  licencia: CC-BY-4.0
+  frecuencia: trimestral
+  unidad: millones de pesos corrientes, a ritmo anual
+  cobertura: {desde: 2004-01, hasta: hoy}
+  verificado: 2026-10-24
+  nota: Los cuatro trimestres de cada año suman 4 veces el PIB anual (verificado en 2004–2008).
+
+- id: f.bm.poblacion
+  organismo: Banco Mundial (Indicadores del Desarrollo Mundial)
+  nombre: Población total (SP.POP.TOTL), Argentina
+  api: banco-mundial
+  id_api: SP.POP.TOTL
+  pais: ARG
+  url: https://data.worldbank.org/indicator/SP.POP.TOTL?locations=AR
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: personas
+  cobertura: {desde: 1960, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.ocde.ipc-eeuu
+  organismo: OCDE (con datos de la Oficina de Estadísticas Laborales de EE.UU., BLS)
+  nombre: Índice de precios al consumidor de Estados Unidos, total, sin desestacionalizar, mensual
+  api: ocde
+  id_api: OECD.SDD.TPS,DSD_PRICES@DF_PRICES_ALL,1.0/USA.M.N.CPI.IX._T.N._Z
+  url_descarga: https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,DSD_PRICES@DF_PRICES_ALL,1.0/USA.M.N.CPI.IX._T.N._Z?startPeriod=1960-01&format=csvfilewithlabels
+  url: https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_PRICES%40DF_PRICES_ALL&df[ag]=OECD.SDD.TPS
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice 2015 = 100
+  cobertura: {desde: 1960-01, hasta: hoy}
+  huecos_permitidos:
+    - {desde: 2025-10, hasta: 2025-10}   # el BLS no relevó precios en octubre de 2025
+  verificado: 2026-10-24
+  nota: >-
+    La OCDE publica sus datos con licencia CC BY 4.0 desde el 1/7/2024; el dato de origen es el CPI-U del BLS
+    (dominio público), que bloquea las descargas automáticas. Se descartó la copia de FRED, cuyos términos no
+    permiten redistribuir.

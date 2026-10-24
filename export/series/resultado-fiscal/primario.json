@@ -48,6 +48,24 @@
       ],
       "por_defecto": "tc-oficial.pesos-actuales",
       "unidad": "millones de US$"
+    },
+    "pct_pib": {
+      "opciones": [
+        {
+          "id": "pib-nominal.anual",
+          "archivo": "auxiliares/pib-nominal/anual.json",
+          "nombre": "Anual, retropolado desde la base 2004",
+          "frecuencia": "anual"
+        },
+        {
+          "id": "pib-nominal.trimestral",
+          "archivo": "auxiliares/pib-nominal/trimestral.json",
+          "nombre": "Trimestral (desde 1993), retropolado desde la base 2004",
+          "frecuencia": "trimestral"
+        }
+      ],
+      "por_defecto": "pib-nominal.anual",
+      "unidad": "% del PIB"
     }
   },
   "auxiliar": false,
@@ -127,7 +145,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Resultado primario y financiero, variante «primario». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/resultado-fiscal/",
-  "version_datos": "2026-10-24T23:16:48Z",
+  "version_datos": "2026-10-24T23:24:27Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 643.5],

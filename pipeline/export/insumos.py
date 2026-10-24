@@ -85,7 +85,7 @@ def insumos(doc: dict, unidades: dict, publicadas: Publicadas) -> dict:
         if opciones:
             salida["pct_pib"] = {"opciones": opciones, "por_defecto": opciones[0]["id"], "unidad": "% del PIB"}
     if "pesos_actuales" in declaradas and moneda == "moneda_de_epoca":
-        if SIGNOS in publicadas.documentos or (publicadas.dir_export / ARCHIVO_SIGNOS).exists():
-            salida["pesos_actuales"] = {"opciones": [{"id": SIGNOS, "archivo": ARCHIVO_SIGNOS}], "por_defecto": SIGNOS,
-                                        "unidad": unidad("pesos_actuales")}
+        # Los signos monetarios se exportan siempre (export/auxiliares/signos-monetarios.json).
+        salida["pesos_actuales"] = {"opciones": [{"id": SIGNOS, "archivo": ARCHIVO_SIGNOS}], "por_defecto": SIGNOS,
+                                    "unidad": unidad("pesos_actuales")}
     return salida
