@@ -116,3 +116,38 @@
     Emergencia estadística: el INDEC no publicó la EPH del cuarto trimestre de 2015 ni la del primero de 2016.
   afecta: [desocupacion.total-urbano, desocupacion.gba]
   fuente: Decreto 55/2016; series de datos.gob.ar.
+
+# ── Importaciones y cuenta corriente ───────────────────────────────────────────
+- id: q.importaciones.fob-cif-1992
+  desde: 1992
+  hasta: 1992
+  tipo: metodologia
+  descripcion: >-
+    Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el
+    criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial
+    Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2009, cuando hay datos de las dos
+    fuentes, la del BCRA es entre 4,3 % y 7,2 % más baja. Los tramos se unen sin ajustar.
+  afecta: [importaciones.oficial]
+  fuente: Comparación de 335.1_CUENTA_CONES_IV__42 con 76.1_ITG_0_A_17 en datos.gob.ar (24/10/2026).
+
+- id: q.cuenta-corriente.fuente-1992
+  desde: 1992
+  hasta: 1992
+  tipo: metodologia
+  descripcion: >-
+    Cambio de fuente: hasta 1991, el balance de pagos histórico del BCRA; desde 1992, el balance de pagos del
+    INDEC según el quinto manual del FMI (MBP5). Las dos fuentes coinciden en 1994–2001 (diferencias de hasta
+    0,5 millones). Los tramos se unen sin ajustar.
+  afecta: [cuenta-corriente.larga]
+  fuente: Comparación de 335.1_CUENTA_COTAL__23 con 84.1_CT_0_A_8 en datos.gob.ar (24/10/2026).
+
+- id: q.cuenta-corriente.mbp6-2006
+  desde: 2006
+  hasta: 2006
+  tipo: metodologia
+  descripcion: >-
+    Cambio de manual: desde 2006, el balance de pagos del INDEC sigue el sexto manual del FMI (MBP6). En 2006–2016,
+    cuando se publican los dos, el saldo según el MBP5 es entre 81 y 1.215 millones de dólares por año más alto
+    (menos deficitario) que según el MBP6. Los tramos se unen sin ajustar.
+  afecta: [cuenta-corriente.larga]
+  fuente: Comparación de 84.1_CT_0_A_8 con 160.2_TL_CUENNTE_0_T_22 en datos.gob.ar (24/10/2026).

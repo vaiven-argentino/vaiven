@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.bp-cuenta-corriente",
+  "unidad": "millones de US$",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.bcra.bp-cuenta-corriente/2026-10-24",
+  "descargado": "2026-10-24T23:07:13Z",
+  "sha256": "902f675485b107100db4c32ef4dfff4da99f7eaf00c584dea38e65489c2f3e86",
+  "observaciones": 129,
+  "desde": "1881-01-01",
+  "hasta": "2009-01-01"
+}

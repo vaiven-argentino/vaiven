@@ -180,11 +180,77 @@
   unidad: millones de US$
   cobertura: {desde: 1992-01, hasta: hoy}
   verificado: 2026-10-24
-  auxiliar: true
-  para: [exportaciones]
   nota: >-
-    Serie auxiliar (SPEC 2.6): por ahora solo la usa el caso de la bibliografía CENDA2010-G5 (saldo comercial).
-    Las importaciones anuales largas (74.1_IIT_0_A_25) figuran en el catálogo pero la API no devuelve datos.
+    La suma de los meses coincide con la serie anual 76.1_ITG_0_A_17 en 1992–2025. Las importaciones anuales largas
+    de la ICA (74.1_IIT_0_A_25) figuran en la API, pero no devuelven datos (verificado el 24/10/2026).
+
+- id: f.indec.ica-importaciones-anual
+  organismo: INDEC
+  nombre: Importaciones CIF por uso económico. Importaciones, total general, anual
+  api: datos.gob.ar
+  id_api: 76.1_ITG_0_A_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=76.1_ITG_0_A_17
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$ CIF
+  cobertura: {desde: 1992, hasta: hoy}
+  verificado: 2026-10-24
+
+# ── Balance de pagos: importaciones (EXT-02) y cuenta corriente (EXT-04) ───────
+- id: f.bcra.bp-importaciones
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Balance de pagos en millones de dólares, datos históricos. Importaciones de mercancías
+  api: datos.gob.ar
+  id_api: 335.1_CUENTA_CONES_IV__42
+  url: https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_CONES_IV__42
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1881, hasta: 2009}
+  verificado: 2026-10-24
+  nota: >-
+    La metadata no dice cómo se valúan las importaciones. En 1992–2009 quedan entre 4,3 % y 7,2 % por debajo de la
+    ICA del INDEC (CIF), lo que es coherente con una valuación FOB, el criterio del balance de pagos.
+
+- id: f.bcra.bp-cuenta-corriente
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Balance de pagos en millones de dólares, datos históricos. Total de la cuenta corriente
+  api: datos.gob.ar
+  id_api: 335.1_CUENTA_COTAL__23
+  url: https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_COTAL__23
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1881, hasta: 2009}
+  verificado: 2026-10-24
+
+- id: f.indec.bp-mbp5-cuenta-corriente
+  organismo: INDEC
+  nombre: Balance de pagos (MBP5). Total de la cuenta corriente, anual
+  api: datos.gob.ar
+  id_api: 84.1_CT_0_A_8
+  url: https://apis.datos.gob.ar/series/api/series/?ids=84.1_CT_0_A_8
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1992, hasta: 2016}
+  verificado: 2026-10-24
+  nota: La trimestral de la misma familia (84.2_CT_0_T_8) figura en la API, pero no devuelve datos (24/10/2026).
+
+- id: f.indec.bp-mbp6-cuenta-corriente
+  organismo: INDEC
+  nombre: Balance de pagos (MBP6). Total de la cuenta corriente, trimestral
+  api: datos.gob.ar
+  id_api: 160.2_TL_CUENNTE_0_T_22
+  url: https://apis.datos.gob.ar/series/api/series/?ids=160.2_TL_CUENNTE_0_T_22
+  licencia: CC-BY-4.0
+  frecuencia: trimestral
+  unidad: millones de US$
+  cobertura: {desde: 2006-01, hasta: hoy}
+  verificado: 2026-10-24
+  nota: >-
+    Se usa la trimestral y no la anual (160.1_TL_CUENNTE_0_A_22), porque la anual trae el año en curso incompleto
+    (2026, con dos trimestres) y un 0 de relleno en 2027. Los años completos de la trimestral suman lo mismo que la anual.
 
 # ── Desocupación (TRA-01) ──────────────────────────────────────────────────────
 # La EPH puntual 1974–2003 no está en la API (devuelve 0 filas), pero sí en el CSV de su distribución.

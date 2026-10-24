@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ica-importaciones-anual",
+  "unidad": "millones de US$ CIF",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.indec.ica-importaciones-anual/2026-10-24",
+  "descargado": "2026-10-24T23:07:18Z",
+  "sha256": "12d18c5986d75427a2ce748eeecbe632ef9451f7fbf537871e2d28762249f288",
+  "observaciones": 34,
+  "desde": "1992-01-01",
+  "hasta": "2025-01-01"
+}

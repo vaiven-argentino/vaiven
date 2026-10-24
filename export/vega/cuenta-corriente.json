@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Cuenta corriente",
+    "subtitle": "Variante: Serie larga, anual (BCRA, MBP5 y MBP6) · millones de US$ corrientes"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/cuenta-corriente/larga.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de US$ corrientes"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "cuenta-corriente",
+      "variante": "larga",
+      "version_datos": "2026-10-24T23:07:12Z",
+      "cita": "Vaivén (2026). Cuenta corriente, variante «larga». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/cuenta-corriente/"
+    }
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "esquema": "1.2",
+  "id": "cuenta-corriente.larga",
+  "serie": "cuenta-corriente",
+  "codigo": "EXT-04",
+  "nombre": "Cuenta corriente",
+  "variante": "larga",
+  "nombre_variante": "Serie larga, anual (BCRA, MBP5 y MBP6)",
+  "es_variante_por_defecto": true,
+  "unidad": "millones de US$ corrientes",
+  "tipo": "flujo",
+  "agregacion": "suma",
+  "frecuencia": "anual",
+  "moneda": "dolares",
+  "metodo": "Balance de pagos histórico del BCRA entre 1970 y 1991, balance de pagos del INDEC según el quinto manual del FMI (MBP5) entre 1992 y 2005, y según el sexto manual (MBP6) desde 2006, unidos sin ajustar. El tramo MBP6 es la suma de los cuatro trimestres de cada año completo: el año en curso no entra hasta que se publique su cuarto trimestre.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "frecuencia",
+    "pct_pib",
+    "media_movil"
+  ],
+  "insumos": {},
+  "auxiliar": false,
+  "tramos": [
+    {
+      "fuente": "f.bcra.bp-cuenta-corriente",
+      "desde": "1970",
+      "hasta": "1991",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.indec.bp-mbp5-cuenta-corriente",
+      "desde": "1992",
+      "hasta": "2005",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.indec.bp-mbp6-cuenta-corriente",
+      "desde": "2006",
+      "hasta": "hoy",
+      "frecuencia": "anual"
+    }
+  ],
+  "cobertura": {
+    "desde": "1970",
+    "hasta": "2025"
+  },
+  "advertencias": [
+    {
+      "id": "q.cuenta-corriente.fuente-1992",
+      "desde": "1992",
+      "hasta": "1992",
+      "tipo": "metodologia",
+      "descripcion": "Cambio de fuente: hasta 1991, el balance de pagos histórico del BCRA; desde 1992, el balance de pagos del INDEC según el quinto manual del FMI (MBP5). Las dos fuentes coinciden en 1994–2001 (diferencias de hasta 0,5 millones). Los tramos se unen sin ajustar."
+    },
+    {
+      "id": "q.cuenta-corriente.mbp6-2006",
+      "desde": "2006",
+      "hasta": "2006",
+      "tipo": "metodologia",
+      "descripcion": "Cambio de manual: desde 2006, el balance de pagos del INDEC sigue el sexto manual del FMI (MBP6). En 2006–2016, cuando se publican los dos, el saldo según el MBP5 es entre 81 y 1.215 millones de dólares por año más alto (menos deficitario) que según el MBP6. Los tramos se unen sin ajustar."
+    }
+  ],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.bcra.bp-cuenta-corriente",
+      "organismo": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Balance de pagos en millones de dólares, datos históricos. Total de la cuenta corriente",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_COTAL__23",
+      "licencia": "CC-BY-4.0",
+      "id_api": "335.1_CUENTA_COTAL__23"
+    },
+    {
+      "id": "f.indec.bp-mbp5-cuenta-corriente",
+      "organismo": "INDEC",
+      "nombre": "Balance de pagos (MBP5). Total de la cuenta corriente, anual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=84.1_CT_0_A_8",
+      "licencia": "CC-BY-4.0",
+      "id_api": "84.1_CT_0_A_8"
+    },
+    {
+      "id": "f.indec.bp-mbp6-cuenta-corriente",
+      "organismo": "INDEC",
+      "nombre": "Balance de pagos (MBP6). Total de la cuenta corriente, trimestral",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=160.2_TL_CUENNTE_0_T_22",
+      "licencia": "CC-BY-4.0",
+      "id_api": "160.2_TL_CUENNTE_0_T_22"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). Cuenta corriente, variante «larga». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/cuenta-corriente/",
+  "version_datos": "2026-10-24T23:07:12Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1970", -159.0],
+    ["1971", -389.0],
+    ["1972", -223.0],
+    ["1973", 721.0],
+    ["1974", 127.0],
+    ["1975", -1285.0],
+    ["1976", 650.0],
+    ["1977", 1290.0],
+    ["1978", 1834.0],
+    ["1979", -536.0],
+    ["1980", -4768.0],
+    ["1981", -4714.0],
+    ["1982", -2358.0],
+    ["1983", -2461.0],
+    ["1984", -2391.0],
+    ["1985", -953.0],
+    ["1986", -2859.0],
+    ["1987", -4238.0],
+    ["1988", -1572.0],
+    ["1989", -1305.0],
+    ["1990", 4552.0],
+    ["1991", -672.0],
+    ["1992", -5557.754559],
+    ["1993", -8205.88994],
+    ["1994", -10981.45297],
+    ["1995", -5104.172254],
+    ["1996", -6755.412694],
+    ["1997", -12115.53396],
+    ["1998", -14464.59804],
+    ["1999", -11909.64461],
+    ["2000", -8954.517893],
+    ["2001", -3780.435241],
+    ["2002", 8701.653553],
+    ["2003", 8073.070842],
+    ["2004", 3076.451472],
+    ["2005", 5054.984621],
+    ["2006", 6498.80252],
+    ["2007", 6048.537893],
+    ["2008", 5421.206329],
+    ["2009", 7254.115684],
+    ["2010", -1622.995871],
+    ["2011", -5340.181192],
+    ["2012", -2138.04036],
+    ["2013", -13124.37379],
+    ["2014", -9179.026267],
+    ["2015", -17621.98517],
+    ["2016", -15104.78652],
+    ["2017", -31151.35175],
+    ["2018", -27083.60645],
+    ["2019", -3492.479581],
+    ["2020", 2688.362006],
+    ["2021", 6624.785192],
+    ["2022", -3964.074915],
+    ["2023", -22354.68729],
+    ["2024", 5891.404782],
+    ["2025", -7788.125559]
+  ]
+}

@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-24T23:04:00Z",
-  "created": "2026-10-24T23:04:00Z",
+  "version": "2026-10-24T23:07:12Z",
+  "created": "2026-10-24T23:07:12Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -22,6 +22,140 @@
     }
   ],
   "resources": [
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "cuenta-corriente.larga",
+      "title": "Cuenta corriente · Serie larga, anual (BCRA, MBP5 y MBP6)",
+      "path": "descargas/csv/cuenta-corriente/larga.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Balance de pagos histórico del BCRA entre 1970 y 1991, balance de pagos del INDEC según el quinto manual del FMI (MBP5) entre 1992 y 2005, y según el sexto manual (MBP6) desde 2006, unidos sin ajustar. El tramo MBP6 es la suma de los cuatro trimestres de cada año completo: el año en curso no entra hasta que se publique su cuarto trimestre.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Balance de pagos en millones de dólares, datos históricos. Total de la cuenta corriente",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_COTAL__23"
+        },
+        {
+          "title": "INDEC: Balance de pagos (MBP5). Total de la cuenta corriente, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=84.1_CT_0_A_8"
+        },
+        {
+          "title": "INDEC: Balance de pagos (MBP6). Total de la cuenta corriente, trimestral",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=160.2_TL_CUENNTE_0_T_22"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "cuenta-corriente.mbp5",
+      "title": "Cuenta corriente · INDEC, quinto manual (MBP5), anual 1992–2016",
+      "path": "descargas/csv/cuenta-corriente/mbp5.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Balance de pagos del INDEC según el quinto manual del FMI (MBP5), sin cambios. Se discontinuó en 2016.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Balance de pagos (MBP5). Total de la cuenta corriente, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=84.1_CT_0_A_8"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "cuenta-corriente.mbp6",
+      "title": "Cuenta corriente · INDEC, sexto manual (MBP6), trimestral desde 2006",
+      "path": "descargas/csv/cuenta-corriente/mbp6.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Balance de pagos del INDEC según el sexto manual del FMI (MBP6), trimestral, sin cambios.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (trimestral): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Balance de pagos (MBP6). Total de la cuenta corriente, trimestral",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=160.2_TL_CUENNTE_0_T_22"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "desocupacion.gba",
@@ -188,6 +322,94 @@
         {
           "title": "INDEC: Intercambio Comercial Argentino. Exportaciones totales, anual",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=74.1_IET_0_A_16"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "importaciones.mensual",
+      "title": "Importaciones · Oficial INDEC, mensual (desde 1992)",
+      "path": "descargas/csv/importaciones/mensual.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Serie mensual del Intercambio Comercial Argentino (INDEC), valor CIF, sin cambios. Empieza en enero de 1992.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "INDEC: Intercambio Comercial Argentino. Importaciones totales, mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=74.3_IIT_0_M_25"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "importaciones.oficial",
+      "title": "Importaciones · Oficial, anual (BCRA hasta 1991 e INDEC desde 1992)",
+      "path": "descargas/csv/importaciones/oficial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Importaciones de mercancías del balance de pagos histórico del BCRA entre 1970 y 1991, y total anual del Intercambio Comercial Argentino del INDEC (valor CIF) desde 1992, unidos sin ajustar. La ICA anual de largo plazo figura en la API de datos.gob.ar, pero no devuelve datos, así que antes de 1992 no hay una serie del INDEC abierta.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de US$ corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Balance de pagos en millones de dólares, datos históricos. Importaciones de mercancías",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_CONES_IV__42"
+        },
+        {
+          "title": "INDEC: Importaciones CIF por uso económico. Importaciones, total general, anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=76.1_ITG_0_A_17"
         }
       ],
       "licenses": [

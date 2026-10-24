@@ -1,6 +1,121 @@
 {
-  "version_datos": "2026-10-24T23:04:00Z",
+  "version_datos": "2026-10-24T23:07:12Z",
   "series": [
+    {
+      "id": "cuenta-corriente",
+      "codigo": "EXT-04",
+      "nombre": "Cuenta corriente",
+      "bloque": "Sector externo",
+      "prioridad": "A",
+      "definicion": "Saldo de la cuenta corriente del balance de pagos (bienes, servicios, rentas y transferencias), en millones de dólares corrientes. Un valor negativo es un déficit.",
+      "unidad": "millones de US$ corrientes",
+      "tipo": "flujo",
+      "agregacion": "suma",
+      "transformaciones": [
+        "frecuencia",
+        "pct_pib",
+        "media_movil"
+      ],
+      "frecuencia": "anual",
+      "variante_por_defecto": "larga",
+      "quiebres": [
+        "q.cuenta-corriente.fuente-1992",
+        "q.cuenta-corriente.mbp6-2006"
+      ],
+      "variantes": [
+        {
+          "id": "larga",
+          "nombre": "Serie larga, anual (BCRA, MBP5 y MBP6)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "series/cuenta-corriente/larga.json"
+        },
+        {
+          "id": "mbp5",
+          "nombre": "INDEC, quinto manual (MBP5), anual 1992–2016",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1992",
+            "hasta": "2016"
+          },
+          "archivo": "series/cuenta-corriente/mbp5.json"
+        },
+        {
+          "id": "mbp6",
+          "nombre": "INDEC, sexto manual (MBP6), trimestral desde 2006",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "2006-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/cuenta-corriente/mbp6.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "CB2019-C1",
+          "referencia": "Cátedra (2019/2021), Conceptos básicos de macroeconomía. Documento de trabajo",
+          "pagina": "16",
+          "tipo": "cuadro",
+          "titulo_original": "Resumen balanza de pagos por componentes y categoría funcional (en millones de dólares)",
+          "periodo_cubierto": "2016 – 2018"
+        },
+        {
+          "id": "DF1990-C1",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 64 (61)",
+          "tipo": "cuadro",
+          "titulo_original": "Indicadores macroeconómicos",
+          "periodo_cubierto": "1960 – 1989"
+        },
+        {
+          "id": "FF1990-C2",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 29 (28)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de los principales rubros de la balanza de pago (millones de dólares corrientes)",
+          "periodo_cubierto": "1970 – 1988"
+        },
+        {
+          "id": "DLB1993-C11",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 18 (69)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la balanza de pagos (1987-1992)",
+          "periodo_cubierto": "1987 – 1992"
+        },
+        {
+          "id": "RAP2005-C5.2",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "30",
+          "tipo": "cuadro",
+          "titulo_original": "Ajuste externo: saldo de cuenta corriente en base devengado (en millones de dólares corrientes)",
+          "periodo_cubierto": "1998 – 2005 (aprox.)"
+        },
+        {
+          "id": "DF2013-C1",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "33",
+          "tipo": "cuadro",
+          "titulo_original": "Principales variables macroeconómicas",
+          "periodo_cubierto": "2003–2012"
+        },
+        {
+          "id": "SW2015-G1",
+          "referencia": "Schorr y Wainer (2015), «Algunos determinantes de la restricción externa en la Argentina», Márgenes 1, UNGS (no figura en el cronograma 2026)",
+          "pagina": "pdf 35 (34)",
+          "tipo": "gráfico",
+          "titulo_original": "Argentina. Evolución del resultado de los principales componentes de la balanza de pagos, 2003-2014",
+          "periodo_cubierto": "2003 – 2014"
+        }
+      ]
+    },
     {
       "id": "desocupacion",
       "codigo": "TRA-01",
@@ -128,6 +243,118 @@
           "tipo": "gráfico de líneas",
           "titulo_original": "Exportaciones, importaciones y saldo de balanza comercial, 1990-2009. En millones de dólares corrientes",
           "periodo_cubierto": "1990 – 2009"
+        }
+      ]
+    },
+    {
+      "id": "importaciones",
+      "codigo": "EXT-02",
+      "nombre": "Importaciones",
+      "bloque": "Sector externo",
+      "prioridad": "A",
+      "definicion": "Importaciones de bienes, en millones de dólares corrientes: las del balance de pagos del BCRA hasta 1991 y las del Intercambio Comercial Argentino del INDEC (valor CIF) desde 1992.",
+      "unidad": "millones de US$ corrientes",
+      "tipo": "flujo",
+      "agregacion": "suma",
+      "transformaciones": [
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "pct_pib"
+      ],
+      "frecuencia": "anual",
+      "variante_por_defecto": "oficial",
+      "quiebres": [
+        "q.importaciones.fob-cif-1992"
+      ],
+      "variantes": [
+        {
+          "id": "oficial",
+          "nombre": "Oficial, anual (BCRA hasta 1991 e INDEC desde 1992)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "series/importaciones/oficial.json"
+        },
+        {
+          "id": "mensual",
+          "nombre": "Oficial INDEC, mensual (desde 1992)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1992-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/importaciones/mensual.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "SCH1998c2-C8",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 2 «El quiebre del modelo cerrado en los setenta»",
+          "pagina": "pdf 17 (libro 63)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución del comercio exterior 1975-81 (en pesos constantes de 1970 y en millones de dólares)",
+          "periodo_cubierto": "1975 – 1981"
+        },
+        {
+          "id": "DF1990-C2",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 65 (62)",
+          "tipo": "cuadro",
+          "titulo_original": "Ingreso nacional, ahorro e inversión (% del pbi)",
+          "periodo_cubierto": "1961-65 – 1989 (1.er semestre)"
+        },
+        {
+          "id": "DLB1993-C13",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 28 (89)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la balanza comercial (1988-1992)",
+          "periodo_cubierto": "1988 – 1992"
+        },
+        {
+          "id": "DLB1993-A5",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 46 (124)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Comercio exterior argentino",
+          "periodo_cubierto": "1950; 1960; 1970; 1980 – 1992"
+        },
+        {
+          "id": "SCH1998c4-C3",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 4 «La reorganización forzosa de la economía en los noventa»",
+          "pagina": "pdf 31 (180)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución y estructura de las importaciones (en miles de millones de dólares)",
+          "periodo_cubierto": "1986 – 1994"
+        },
+        {
+          "id": "RAP2005-C3.1",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "37 (apéndice)",
+          "tipo": "cuadro",
+          "titulo_original": "PIB y componentes de la demanda: tasas de variación y contribución al crecimiento del PIB",
+          "periodo_cubierto": "2002 – 2005 (por fases)"
+        },
+        {
+          "id": "CENDA2010-G5",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 9 (27)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Exportaciones, importaciones y saldo de balanza comercial, 1990-2009. En millones de dólares corrientes",
+          "periodo_cubierto": "1990 – 2009"
+        },
+        {
+          "id": "SW2015-G2",
+          "referencia": "Schorr y Wainer (2015), «Algunos determinantes de la restricción externa en la Argentina», Márgenes 1, UNGS (no figura en el cronograma 2026)",
+          "pagina": "pdf 36 (35)",
+          "tipo": "gráfico",
+          "titulo_original": "Argentina. Evolución de los pagos por exportaciones e importaciones y el saldo comercial de mercancías, 2003-2014",
+          "periodo_cubierto": "2003 – 2014"
         }
       ]
     },

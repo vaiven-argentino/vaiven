@@ -1,0 +1,54 @@
+id: importaciones
+codigo: EXT-02
+nombre: Importaciones
+bloque: Sector externo
+prioridad: A
+definicion: >-
+  Importaciones de bienes, en millones de dólares corrientes: las del balance de pagos del BCRA hasta 1991 y las
+  del Intercambio Comercial Argentino del INDEC (valor CIF) desde 1992.
+unidad: millones de US$ corrientes
+tipo: flujo
+agregacion: suma
+frecuencia: anual
+moneda: dolares
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: oficial
+variantes:
+  - id: oficial
+    nombre: Oficial, anual (BCRA hasta 1991 e INDEC desde 1992)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Importaciones de mercancías del balance de pagos histórico del BCRA entre 1970 y 1991, y total anual del
+      Intercambio Comercial Argentino del INDEC (valor CIF) desde 1992, unidos sin ajustar. La ICA anual de largo
+      plazo figura en la API de datos.gob.ar, pero no devuelve datos, así que antes de 1992 no hay una serie del
+      INDEC abierta.
+    tramos:
+      - {fuente: f.bcra.bp-importaciones, desde: 1970, hasta: 1991}
+      - {fuente: f.indec.ica-importaciones-anual, desde: 1992}
+    advertencias: [q.importaciones.fob-cif-1992]
+    coherencia:
+      # La suma de los meses tiene que dar el total anual publicado.
+      - {mensual: f.indec.ica-importaciones-mensual, anual: f.indec.ica-importaciones-anual, agregacion: suma, tolerancia_pct: 0.01}
+  - id: mensual
+    nombre: Oficial INDEC, mensual (desde 1992)
+    estado: publicada
+    frecuencia: mensual
+    empalme: yuxtaponer
+    metodo: Serie mensual del Intercambio Comercial Argentino (INDEC), valor CIF, sin cambios. Empieza en enero de 1992.
+    tramos:
+      - {fuente: f.indec.ica-importaciones-mensual, desde: 1992-01}
+    validacion:
+      var_min: -70
+      var_max: 150
+validacion:
+  min: 0
+  max: 300000
+  var_min: -60
+  var_max: 150
+  umbral_revision_pct: 0.5
+quiebres: [q.importaciones.fob-cif-1992]
+transformaciones: [var_interanual, base_100, frecuencia, pct_pib]
+fuentes: [f.bcra.bp-importaciones, f.indec.ica-importaciones-anual, f.indec.ica-importaciones-mensual]
+bibliografia: [SCH1998c2-C8, DF1990-C2, DLB1993-C13, DLB1993-A5, SCH1998c4-C3, RAP2005-C3.1, CENDA2010-G5, SW2015-G2]
+licencia_derivado: CC-BY-4.0

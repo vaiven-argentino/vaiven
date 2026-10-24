@@ -1,0 +1,133 @@
+{
+  "esquema": "1.2",
+  "id": "importaciones.oficial",
+  "serie": "importaciones",
+  "codigo": "EXT-02",
+  "nombre": "Importaciones",
+  "variante": "oficial",
+  "nombre_variante": "Oficial, anual (BCRA hasta 1991 e INDEC desde 1992)",
+  "es_variante_por_defecto": true,
+  "unidad": "millones de US$ corrientes",
+  "tipo": "flujo",
+  "agregacion": "suma",
+  "frecuencia": "anual",
+  "moneda": "dolares",
+  "metodo": "Importaciones de mercancías del balance de pagos histórico del BCRA entre 1970 y 1991, y total anual del Intercambio Comercial Argentino del INDEC (valor CIF) desde 1992, unidos sin ajustar. La ICA anual de largo plazo figura en la API de datos.gob.ar, pero no devuelve datos, así que antes de 1992 no hay una serie del INDEC abierta.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "var_interanual",
+    "base_100",
+    "frecuencia",
+    "pct_pib"
+  ],
+  "insumos": {},
+  "auxiliar": false,
+  "tramos": [
+    {
+      "fuente": "f.bcra.bp-importaciones",
+      "desde": "1970",
+      "hasta": "1991",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.indec.ica-importaciones-anual",
+      "desde": "1992",
+      "hasta": "hoy",
+      "frecuencia": "anual"
+    }
+  ],
+  "cobertura": {
+    "desde": "1970",
+    "hasta": "2025"
+  },
+  "advertencias": [
+    {
+      "id": "q.importaciones.fob-cif-1992",
+      "desde": "1992",
+      "hasta": "1992",
+      "tipo": "metodologia",
+      "descripcion": "Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2000, cuando hay datos de las dos fuentes, la del BCRA es entre 5,5 % y 7,2 % más baja. Los tramos se unen sin ajustar."
+    }
+  ],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.bcra.bp-importaciones",
+      "organismo": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Balance de pagos en millones de dólares, datos históricos. Importaciones de mercancías",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_CONES_IV__42",
+      "licencia": "CC-BY-4.0",
+      "id_api": "335.1_CUENTA_CONES_IV__42"
+    },
+    {
+      "id": "f.indec.ica-importaciones-anual",
+      "organismo": "INDEC",
+      "nombre": "Importaciones CIF por uso económico. Importaciones, total general, anual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=76.1_ITG_0_A_17",
+      "licencia": "CC-BY-4.0",
+      "id_api": "76.1_ITG_0_A_17"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). Importaciones, variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/importaciones/",
+  "version_datos": "2026-10-24T23:07:12Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1970", 1560.0],
+    ["1971", 1720.0],
+    ["1972", 1754.0],
+    ["1973", 2053.0],
+    ["1974", 3347.0],
+    ["1975", 3634.0],
+    ["1976", 2793.0],
+    ["1977", 3832.0],
+    ["1978", 3530.0],
+    ["1979", 6169.0],
+    ["1980", 9705.0],
+    ["1981", 8682.0],
+    ["1982", 4914.0],
+    ["1983", 4148.0],
+    ["1984", 4221.0],
+    ["1985", 3512.0],
+    ["1986", 4349.0],
+    ["1987", 5359.0],
+    ["1988", 4902.0],
+    ["1989", 3866.0],
+    ["1990", 3756.0],
+    ["1991", 7619.0],
+    ["1992", 14871.75417],
+    ["1993", 16783.51293],
+    ["1994", 21590.25538],
+    ["1995", 20121.68249],
+    ["1996", 23761.80889],
+    ["1997", 30450.18396],
+    ["1998", 31377.36027],
+    ["1999", 25508.15738],
+    ["2000", 25280.48521],
+    ["2001", 20319.57918],
+    ["2002", 8989.545353],
+    ["2003", 13850.77414],
+    ["2004", 22445.2814],
+    ["2005", 28686.89344],
+    ["2006", 34153.68251],
+    ["2007", 44707.4634],
+    ["2008", 57462.45236],
+    ["2009", 38786.26934],
+    ["2010", 56792.57807],
+    ["2011", 73960.67571],
+    ["2012", 67974.21453],
+    ["2013", 74441.80009],
+    ["2014", 65735.0],
+    ["2015", 60205.0],
+    ["2016", 55911.0],
+    ["2017", 66930.0],
+    ["2018", 65482.0],
+    ["2019", 49124.0],
+    ["2020", 42354.0],
+    ["2021", 63185.0],
+    ["2022", 81522.0],
+    ["2023", 73713.61677],
+    ["2024", 60775.57157],
+    ["2025", 75791.11923]
+  ]
+}

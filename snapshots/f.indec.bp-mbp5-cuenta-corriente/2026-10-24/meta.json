@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.bp-mbp5-cuenta-corriente",
+  "descargado": "2026-10-24T23:07:14Z",
+  "sha256": "a0b85740f2f4bb843e07eaf10e348b6622ae6a640bc1bb1c473b32f582a6f988",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=84.1_CT_0_A_8&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4119,
+      "sha256": "6221396b82264b4f2a5f5dfdf5c2b83efd954926d68de93939c278626702c3d8"
+    }
+  ]
+}

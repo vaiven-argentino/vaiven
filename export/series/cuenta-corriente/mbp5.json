@@ -1,0 +1,79 @@
+{
+  "esquema": "1.2",
+  "id": "cuenta-corriente.mbp5",
+  "serie": "cuenta-corriente",
+  "codigo": "EXT-04",
+  "nombre": "Cuenta corriente",
+  "variante": "mbp5",
+  "nombre_variante": "INDEC, quinto manual (MBP5), anual 1992–2016",
+  "es_variante_por_defecto": false,
+  "unidad": "millones de US$ corrientes",
+  "tipo": "flujo",
+  "agregacion": "suma",
+  "frecuencia": "anual",
+  "moneda": "dolares",
+  "metodo": "Balance de pagos del INDEC según el quinto manual del FMI (MBP5), sin cambios. Se discontinuó en 2016.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "frecuencia",
+    "pct_pib",
+    "media_movil"
+  ],
+  "insumos": {},
+  "auxiliar": false,
+  "tramos": [
+    {
+      "fuente": "f.indec.bp-mbp5-cuenta-corriente",
+      "desde": "1992",
+      "hasta": "hoy",
+      "frecuencia": "anual"
+    }
+  ],
+  "cobertura": {
+    "desde": "1992",
+    "hasta": "2016"
+  },
+  "advertencias": [],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.indec.bp-mbp5-cuenta-corriente",
+      "organismo": "INDEC",
+      "nombre": "Balance de pagos (MBP5). Total de la cuenta corriente, anual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=84.1_CT_0_A_8",
+      "licencia": "CC-BY-4.0",
+      "id_api": "84.1_CT_0_A_8"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). Cuenta corriente, variante «mbp5». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/cuenta-corriente/mbp5/",
+  "version_datos": "2026-10-24T23:07:12Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1992", -5557.754559],
+    ["1993", -8205.88994],
+    ["1994", -10981.45297],
+    ["1995", -5104.172254],
+    ["1996", -6755.412694],
+    ["1997", -12115.53396],
+    ["1998", -14464.59804],
+    ["1999", -11909.64461],
+    ["2000", -8954.517893],
+    ["2001", -3780.435241],
+    ["2002", 8701.653553],
+    ["2003", 8073.070842],
+    ["2004", 3076.451472],
+    ["2005", 5054.984621],
+    ["2006", 7588.169367],
+    ["2007", 7199.533677],
+    ["2008", 6636.502086],
+    ["2009", 8206.802826],
+    ["2010", -1516.500503],
+    ["2011", -4471.215939],
+    ["2012", -1439.788797],
+    ["2013", -12142.75947],
+    ["2014", -8031.0],
+    ["2015", -16806.0],
+    ["2016", -15024.0]
+  ]
+}
