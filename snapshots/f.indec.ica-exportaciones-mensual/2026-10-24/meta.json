@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ica-exportaciones-mensual",
+  "descargado": "2026-10-24T05:13:59Z",
+  "sha256": "a8c14cf5a38c0d28a627127b1e65f85305e9a2303fb1233abe30b108d426ad76",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=74.3_IET_0_M_16&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 15355,
+      "sha256": "1407486280a34a692e2c015edf8c9de1d109aa9935c628a98b00ea1035952833"
+    }
+  ]
+}

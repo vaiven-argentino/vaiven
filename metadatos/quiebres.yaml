@@ -1,0 +1,118 @@
+# Quiebres de las series (SPEC 2.4). Tipos: cambio_de_base, cobertura, intervencion, metodologia, signo_monetario.
+# `afecta` lista las variantes (<serie>.<variante>) que muestran la advertencia cuando el rango la cruza.
+
+# ── IPC ────────────────────────────────────────────────────────────────────────
+- id: q.ipc.2007-2015
+  desde: 2007-01
+  hasta: 2015-12
+  tipo: intervencion
+  descripcion: >-
+    Intervención del INDEC. Desde 2016, el INDEC advierte que la información publicada para este período debe
+    considerarse con reservas. Las mediciones provinciales y privadas de esos años registran inflaciones más altas.
+  afecta: [ipc.oficial]
+  fuente: INDEC, advertencia incluida en sus publicaciones desde 2016.
+
+- id: q.ipc.emergencia-2016
+  desde: 2015-11
+  hasta: 2016-04
+  tipo: intervencion
+  descripcion: >-
+    Emergencia estadística (Decreto 55/2016): no hay IPC oficial entre noviembre de 2015 y abril de 2016.
+    En la variante oficial, las tasas de esos meses salen del IPC de la Ciudad de Buenos Aires.
+  afecta: [ipc.oficial, ipc.provincias]
+  fuente: Decreto 55/2016; series de datos.gob.ar.
+
+- id: q.ipc.cobertura
+  desde: 2014-01
+  hasta: 2017-01
+  tipo: cobertura
+  descripcion: >-
+    Cambios de cobertura: Gran Buenos Aires hasta 2013, Nacional Urbano (IPCNu) en 2014–2015, Gran Buenos Aires
+    otra vez entre mayo y diciembre de 2016 y Nacional desde enero de 2017.
+  afecta: [ipc.oficial]
+  fuente: INDEC, metodologías del IPC-GBA (2008), IPCNu (2014) e IPC (2016).
+
+- id: q.ipc.provincias
+  desde: 2007-01
+  hasta: 2016-04
+  tipo: metodologia
+  descripcion: >-
+    En la variante «provincias», las tasas de 2007-01 a 2012-07 son las del IPC de San Luis y las de 2012-08 a 2016-04,
+    las del IPC de la Ciudad de Buenos Aires: miden canastas y jurisdicciones distintas de las del INDEC.
+  afecta: [ipc.provincias]
+  fuente: Dirección Provincial de Estadística y Censos de San Luis; Instituto de Estadística y Censos de la CABA.
+
+# ── Tipo de cambio ─────────────────────────────────────────────────────────────
+- id: q.tc.mercados-desdoblados
+  desde: 1971-09
+  hasta: 1989-12
+  tipo: metodologia
+  descripcion: >-
+    Mercados cambiarios desdoblados. En estos años hubo, por períodos, un mercado oficial o comercial y otro
+    financiero o libre. La serie del BCRA no sigue siempre el mismo: comparada con las series diarias, coincide
+    con el tipo único en 1970–1971 y 1982, con el financiero en septiembre de 1981, con el oficial en junio de 1987,
+    y queda por encima del oficial en octubre de 1988 y enero de 1989 (15,11 y 17,51 australes, contra 12,36 y 13,94).
+  afecta: [tc-oficial.pesos-actuales, tc-oficial.moneda-de-epoca]
+  fuente: Comparación de 174.1_T_DE_CANTO_0_0_37 con las series diarias del dataset 175 de datos.gob.ar (24/10/2026).
+
+- id: q.tc.signos-monetarios
+  desde: 1983-06
+  hasta: 1992-01
+  tipo: signo_monetario
+  descripcion: >-
+    Cambios de signo monetario: peso argentino (1/6/1983, 1 = 10.000 pesos ley 18.188), austral (15/6/1985,
+    1 = 1.000 pesos argentinos) y peso (1/1/1992, 1 = 10.000 australes). En la variante en moneda de cada época
+    la serie salta en esas fechas.
+  afecta: [tc-oficial.moneda-de-epoca]
+  fuente: metadatos/signos_monetarios.yaml
+
+# ── Reservas ───────────────────────────────────────────────────────────────────
+- id: q.reservas.brutas
+  desde: 1970-01
+  tipo: metodologia
+  descripcion: >-
+    Son reservas brutas: incluyen activos que no son de libre disponibilidad, como los encajes de los depósitos
+    en dólares, los swaps de monedas con otros bancos centrales y los préstamos de organismos. No hay una
+    definición oficial única de reservas netas.
+  afecta: [reservas.brutas]
+  fuente: BCRA, series históricas de estadísticas monetarias.
+
+# ── Desocupación ───────────────────────────────────────────────────────────────
+- id: q.desocupacion.eph-2003
+  desde: 2003-05
+  hasta: 2003-07
+  tipo: metodologia
+  descripcion: >-
+    Cambio de encuesta: la EPH puntual (dos ondas por año, en mayo y octubre; la fuente las fecha en mayo y
+    noviembre) se reemplazó por la EPH continua (resultados trimestrales) desde el tercer trimestre de 2003.
+    Las tasas no son directamente comparables y en estas variantes no se aplican coeficientes de empalme.
+  afecta: [desocupacion.total-urbano, desocupacion.gba]
+  fuente: INDEC (2003), «La reformulación de la Encuesta Permanente de Hogares (EPH) de Argentina».
+
+- id: q.desocupacion.aglomerados
+  desde: 1974-05
+  hasta: 2003-05
+  tipo: cobertura
+  descripcion: >-
+    La cantidad de aglomerados relevados por la EPH puntual creció a lo largo del período, así que el «total de
+    aglomerados urbanos» no tiene la misma cobertura en todos los años. La EPH continua cubre hoy 31 aglomerados.
+  afecta: [desocupacion.total-urbano]
+  fuente: INDEC, EPH.
+
+- id: q.desocupacion.planes-2002
+  desde: 2002-05
+  tipo: metodologia
+  descripcion: >-
+    Desde 2002, las personas que reciben planes de empleo con contraprestación laboral (como el Plan Jefes y Jefas
+    de Hogar) se cuentan como ocupadas. Si se las contara como desocupadas, la tasa sería más alta.
+  afecta: [desocupacion.total-urbano, desocupacion.gba]
+  fuente: INDEC, EPH.
+
+- id: q.desocupacion.emergencia-2016
+  desde: 2015-10
+  hasta: 2016-01
+  tipo: intervencion
+  descripcion: >-
+    Emergencia estadística: el INDEC no publicó la EPH del cuarto trimestre de 2015 ni la del primero de 2016.
+  afecta: [desocupacion.total-urbano, desocupacion.gba]
+  fuente: Decreto 55/2016; series de datos.gob.ar.

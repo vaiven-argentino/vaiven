@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vaiven.argentino.workers.dev/esquemas/serie-1.0.json",
+  "title": "Vaivén · serie y variante exportada (export/series/<slug>/<variante>.json)",
+  "description": "Contrato del JSON que consumen la web y el MCP. Si cambia, sube `esquema` y se actualizan los consumidores.",
+  "type": "object",
+  "required": ["esquema", "id", "serie", "codigo", "nombre", "variante", "nombre_variante", "es_variante_por_defecto",
+               "unidad", "tipo", "agregacion", "frecuencia", "metodo", "tramos", "cobertura", "advertencias", "fuentes",
+               "licencia", "cita", "version_datos", "desactualizada_desde", "datos"],
+  "additionalProperties": false,
+  "properties": {
+    "esquema": {"const": "1.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9-]+\\.[a-z0-9-]+$"},
+    "serie": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "codigo": {"type": "string", "pattern": "^[A-Z]{3}-[0-9]{2}$"},
+    "nombre": {"type": "string", "minLength": 1},
+    "variante": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "nombre_variante": {"type": "string", "minLength": 1},
+    "es_variante_por_defecto": {"type": "boolean"},
+    "unidad": {"type": "string", "minLength": 1},
+    "tipo": {"enum": ["precio", "flujo", "stock", "tasa", "cociente", "tasa_de_variacion"]},
+    "agregacion": {"enum": ["promedio", "suma", "fin_de_periodo"]},
+    "frecuencia": {"type": "string", "minLength": 1},
+    "metodo": {"type": "string", "minLength": 1},
+    "tramos": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["fuente", "desde", "hasta"], "additionalProperties": false,
+        "properties": {
+          "fuente": {"type": "string", "pattern": "^f\\.[a-z0-9-]+\\.[a-z0-9.-]+$"},
+          "desde": {"type": "string"}, "hasta": {"type": "string"}, "rol": {"type": "string"}
+        }
+      }
+    },
+    "cobertura": {
+      "type": "object", "required": ["desde", "hasta"], "additionalProperties": false,
+      "properties": {"desde": {"type": "string"}, "hasta": {"type": "string"}}
+    },
+    "advertencias": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "desde", "hasta", "tipo", "descripcion"], "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^q\\."},
+          "desde": {"type": ["string", "null"]}, "hasta": {"type": ["string", "null"]},
+          "tipo": {"enum": ["cambio_de_base", "cobertura", "intervencion", "metodologia", "signo_monetario"]},
+          "descripcion": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "fuentes": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["id", "organismo", "nombre", "url", "licencia", "id_api"], "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"}, "organismo": {"type": "string"}, "nombre": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https://"}, "licencia": {"type": "string"}, "id_api": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "licencia": {"const": "CC-BY-4.0"},
+    "cita": {"type": "string", "minLength": 1},
+    "version_datos": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+    "desactualizada_desde": {"type": ["string", "null"]},
+    "datos": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "array", "minItems": 2, "maxItems": 2,
+        "prefixItems": [
+          {"type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"},
+          {"type": "number"}
+        ]
+      }
+    }
+  }
+}

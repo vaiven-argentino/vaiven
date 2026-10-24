@@ -1,0 +1,40 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Tipo de cambio nominal oficial",
+    "subtitle": "Variante: En pesos actuales · pesos actuales por dólar"
+  },
+  "data": {
+    "url": "descargas/csv/tc-oficial/pesos-actuales.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "pesos actuales por dólar",
+      "scale": {
+        "type": "log"
+      }
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "tc-oficial",
+      "variante": "pesos-actuales",
+      "version_datos": "2026-10-24T05:15:50Z",
+      "cita": "Vaivén (2026). Tipo de cambio nominal oficial, variante «pesos-actuales». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/tc-oficial/"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+id: reservas
+codigo: EXT-06
+nombre: Reservas internacionales
+bloque: Sector externo
+prioridad: A
+definicion: Stock de reservas internacionales brutas del BCRA, saldo de fin de mes.
+unidad: millones de US$
+tipo: stock
+agregacion: fin_de_periodo
+frecuencia: mensual
+cobertura: {desde: 1970-01, hasta: hoy}
+variante_por_defecto: brutas
+variantes:
+  - id: brutas
+    nombre: Reservas brutas
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.
+    tramos:
+      - {fuente: f.bcra.reservas-mensual, desde: 1970-01}
+    excluir:
+      - fecha: 1979-03
+        motivo: >-
+          La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos.
+          Se excluye hasta confirmar el valor; no se corrige por cuenta propia.
+    advertencias: [q.reservas.brutas]
+  - id: netas
+    nombre: Reservas netas
+    estado: pendiente
+    nota: Pendiente hasta acordar qué definición de reservas netas se publica (hay varias en uso).
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.bcra.reservas-mensual, desde: 1970-01}
+validacion:
+  min: 0
+  max: 200000
+  var_min: -60
+  var_max: 150
+  umbral_revision_pct: 0.5
+quiebres: [q.reservas.brutas]
+transformaciones: [var_mensual, var_interanual, base_100, frecuencia, pct_pib]
+fuentes: [f.bcra.reservas-mensual]
+bibliografia: [CENDA2010-G8]
+licencia_derivado: CC-BY-4.0

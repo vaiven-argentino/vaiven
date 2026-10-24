@@ -5,6 +5,9 @@
   "compatibility_date": "2026-10-24",
   "workers_dev": true,
   "preview_urls": false,
+  // Disparo diario del pipeline (SPEC 5.1): 21:23 UTC = 18:23 en Argentina, después de las publicaciones del INDEC.
+  // El token va como secreto: `npx wrangler secret put GITHUB_TOKEN_DISPARO`.
+  "triggers": { "crons": ["23 21 * * *"] },
   "assets": {
     // En la fase 2 pasa a ser el build de Astro (../web/dist).
     "directory": "./public",

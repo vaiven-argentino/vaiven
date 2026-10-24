@@ -1,0 +1,120 @@
+# Corre el pipeline (SPEC 5.1). Lo dispara a diario el Cron Trigger del Worker (workflow_dispatch);
+# el schedule semanal es el respaldo y además controla que el disparo diario esté llegando.
+name: Actualizar datos
+
+on:
+  workflow_dispatch:
+    inputs:
+      series:
+        description: "Series separadas por comas (vacío: todas)"
+        required: false
+        default: ""
+  schedule:
+    - cron: "41 22 * * 0"   # domingos, 19:41 en Argentina
+
+permissions:
+  contents: write
+  issues: write
+  actions: read
+
+concurrency:
+  group: actualizar-datos
+  cancel-in-progress: false
+
+env:
+  RESPONSABLE: Cicolidis      # a quien se asignan los issues (la asignación manda mail)
+  DIAS_SIN_DISPARO: "3"
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Instalar dependencias
+        run: uv sync --frozen
+
+      - name: Correr el pipeline
+        id: pipeline
+        continue-on-error: true
+        env:
+          SERIES: ${{ inputs.series }}
+        run: |
+          args=(actualizar --informe "$RUNNER_TEMP/informe.md")
+          if [ -n "$SERIES" ]; then args+=(--series "$SERIES"); fi
+          uv run python -m pipeline "${args[@]}"
+
+      - name: Pruebas sobre los datos nuevos
+        id: pruebas
+        if: steps.pipeline.outcome == 'success'
+        continue-on-error: true
+        run: uv run pytest -q -p no:cacheprovider 2>&1 | tee "$RUNNER_TEMP/pruebas.txt"; exit "${PIPESTATUS[0]}"
+
+      - name: Publicar (commit con el resumen de cambios)
+        if: steps.pipeline.outcome == 'success' && steps.pruebas.outcome == 'success'
+        run: |
+          git add snapshots datos export
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          {
+            echo "Datos: actualización $(date -u +%Y-%m-%d)"
+            echo
+            sed -n '/^## Cambios publicados/,$p' "$RUNNER_TEMP/informe.md"
+          } > "$RUNNER_TEMP/mensaje.txt"
+          git commit -F "$RUNNER_TEMP/mensaje.txt"
+          git push
+
+      - name: Abrir o comentar el issue de validación
+        if: steps.pipeline.outcome == 'failure' || steps.pruebas.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          URL_RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "La actualización del $(date -u +%Y-%m-%d) no se publicó."
+            echo
+            echo "Corrida: $URL_RUN"
+            echo
+            if [ -f "$RUNNER_TEMP/informe.md" ]; then cat "$RUNNER_TEMP/informe.md"; fi
+            if [ -f "$RUNNER_TEMP/pruebas.txt" ]; then
+              echo; echo "## Pruebas"; echo; echo '```'; tail -n 60 "$RUNNER_TEMP/pruebas.txt"; echo '```'
+            fi
+          } > "$RUNNER_TEMP/issue.md"
+          gh label create validacion --color B60205 --description "Falla de validación del pipeline" 2>/dev/null || true
+          abierto=$(gh issue list --label validacion --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$abierto" ]; then
+            gh issue comment "$abierto" --body-file "$RUNNER_TEMP/issue.md"
+          else
+            gh issue create --title "Validación fallida en la actualización de datos" --label validacion \
+              --assignee "$RESPONSABLE" --body-file "$RUNNER_TEMP/issue.md"
+          fi
+
+      - name: Controlar que el disparo diario esté llegando
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ultimo=$(gh run list --workflow actualizar.yml --event workflow_dispatch --limit 1 --json createdAt --jq '.[0].createdAt // empty')
+          limite=$(( $(date +%s) - DIAS_SIN_DISPARO * 86400 ))
+          if [ -n "$ultimo" ] && [ "$(date -d "$ultimo" +%s)" -ge "$limite" ]; then
+            echo "Último disparo diario: $ultimo"
+            exit 0
+          fi
+          gh label create disparador --color FBCA04 --description "El Cron Trigger de Cloudflare no dispara el workflow" 2>/dev/null || true
+          if [ -z "$(gh issue list --label disparador --state open --limit 1 --json number --jq '.[0].number // empty')" ]; then
+            gh issue create --title "El disparo diario no está llegando" --label disparador --assignee "$RESPONSABLE" --body \
+              "No hubo corridas por workflow_dispatch en los últimos $DIAS_SIN_DISPARO días (último: ${ultimo:-nunca}). Revisá el Cron Trigger del Worker y el secreto GITHUB_TOKEN_DISPARO (\`npx wrangler secret list\`)."
+          fi
+
+      - name: Terminar en rojo si no se publicó
+        if: steps.pipeline.outcome == 'failure' || steps.pruebas.outcome == 'failure'
+        run: exit 1

@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.tc-historico-mensual",
+  "unidad": "pesos actuales por dólar",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.tc-historico-mensual/2026-10-24",
+  "descargado": "2026-10-24T05:14:05Z",
+  "sha256": "e219e9f8f03a1dd14d46f4a7f5d1b5fa9712946c0666a3776f9bf8569f6be7a7",
+  "observaciones": 1036,
+  "desde": "1940-01-01",
+  "hasta": "2026-04-01"
+}

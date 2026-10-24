@@ -8,7 +8,7 @@ No compite con los agregadores generales (datos.gob.ar, ArgenData, Almanac, El T
 
 ## Estado
 
-🚧 **En construcción: fase 0 (preparación).** Todavía no hay datos publicados. El sitio provisorio está en <https://vaiven.argentino.workers.dev>.
+🚧 **En construcción: fase 1 (pipeline piloto).** Ya se actualizan y validan 5 series piloto (IPC, tipo de cambio oficial, reservas, exportaciones y desocupación), en [`export/`](export/). La web llega en la fase 2. El sitio provisorio está en <https://vaiven.argentino.workers.dev>.
 
 | Fase | Contenido |
 |---|---|
@@ -26,6 +26,7 @@ En [`docs/`](docs/):
 - [`SPEC_v1.md`](docs/SPEC_v1.md): especificación del proyecto (fuente de verdad).
 - [`ARQUITECTURA_v0.md`](docs/ARQUITECTURA_v0.md): arquitectura y decisiones técnicas.
 - [`DECISIONES_v0.md`](docs/DECISIONES_v0.md): decisiones de alcance y hallazgos de la planificación.
+- [`NOTAS_FASE1.md`](docs/NOTAS_FASE1.md): decisiones, diferencias con la SPEC y pendientes de la fase 1.
 - [`planificacion/`](docs/planificacion/): catálogo del MVP, inventario de gráficos de la bibliografía y resumen de variables.
 
 ## Licencias

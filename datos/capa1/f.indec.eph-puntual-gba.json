@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.eph-puntual-gba",
+  "unidad": "fracción de la población económicamente activa",
+  "frecuencia": "semestral",
+  "snapshot": "snapshots/f.indec.eph-puntual-gba/2026-10-24",
+  "descargado": "2026-10-24T05:13:56Z",
+  "sha256": "f428281fb8a9afd881f3127f2ef3d04980e6306d7ee391b44e59ae29614041e6",
+  "observaciones": 59,
+  "desde": "1974-05-01",
+  "hasta": "2003-05-01"
+}

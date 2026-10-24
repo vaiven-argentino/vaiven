@@ -19,3 +19,10 @@ __pycache__/
 .idea/
 .vscode/
 *.log
+
+# Pipeline: crudos de fuentes no redistribuibles (solo se versiona su meta.json)
+.crudos/
+
+# Descargas completas: se generan al publicar (no se versionan)
+export/descargas/*.zip
+export/descargas/*.parquet

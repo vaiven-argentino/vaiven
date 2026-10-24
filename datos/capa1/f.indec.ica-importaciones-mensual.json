@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ica-importaciones-mensual",
+  "unidad": "millones de US$",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.indec.ica-importaciones-mensual/2026-10-24",
+  "descargado": "2026-10-24T05:14:06Z",
+  "sha256": "e00a45c4459db6a927378f48d099cee934ffb726b1b450a2ffde8e82c6a4378b",
+  "observaciones": 416,
+  "desde": "1992-01-01",
+  "hasta": "2026-08-01"
+}

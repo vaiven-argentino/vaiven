@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ipc-historico-1943-2008",
+  "unidad": "índice base 1999 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.indec.ipc-historico-1943-2008/2026-10-24",
+  "descargado": "2026-10-24T04:58:55Z",
+  "sha256": "1312917c846cf5ade6efc9a44112164cd30b68471a95ee01e4180e299289158b",
+  "observaciones": 784,
+  "desde": "1943-01-01",
+  "hasta": "2008-04-01"
+}

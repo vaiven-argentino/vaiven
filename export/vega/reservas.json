@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Reservas internacionales",
+    "subtitle": "Variante: Reservas brutas · millones de US$"
+  },
+  "data": {
+    "url": "descargas/csv/reservas/brutas.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de US$"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "reservas",
+      "variante": "brutas",
+      "version_datos": "2026-10-24T05:15:50Z",
+      "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/reservas/"
+    }
+  }
+}

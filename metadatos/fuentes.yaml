@@ -1,0 +1,248 @@
+# Series fuente (capa 1): una entrada por serie publicada por un organismo (SPEC 2.4).
+# `id_api` es el identificador en la API de la que se descarga (`api`).
+# `redistribuible: false` hace que el snapshot guarde solo meta.json y que la serie no se publique.
+# `verificado` es la fecha en que se confirmaron ID, cobertura y licencia contra la API.
+
+# ── IPC (PRE-01) ───────────────────────────────────────────────────────────────
+- id: f.indec.ipc-historico-1943-2008
+  organismo: INDEC
+  nombre: IPC histórico (empalme de las bases 1943, 1960, 1974 y 1988, base 1999), nivel general. Serie discontinuada
+  api: datos.gob.ar
+  id_api: 178.1_NL_GENERAL_0_0_13
+  url: https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice base 1999 = 100
+  cobertura: {desde: 1943-01, hasta: 2008-04}
+  verificado: 2026-10-24
+
+- id: f.indec.ipc-gba-base-2008
+  organismo: INDEC
+  nombre: IPC-GBA base abril 2008 = 100, nivel general. Serie discontinuada
+  api: datos.gob.ar
+  id_api: 97.2_ING_2008_M_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=97.2_ING_2008_M_17
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice abr. 2008 = 100
+  cobertura: {desde: 1993-01, hasta: 2013-12}
+  verificado: 2026-10-24
+
+- id: f.indec.ipc-nu-base-2013
+  organismo: INDEC
+  nombre: IPC Nacional Urbano (IPCNu) base oct. 2013 – sep. 2014 = 100, nivel general. Serie discontinuada
+  api: datos.gob.ar
+  id_api: 98.3_INNG_2013_0_20
+  url: https://apis.datos.gob.ar/series/api/series/?ids=98.3_INNG_2013_0_20
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice oct. 2013 – sep. 2014 = 100
+  cobertura: {desde: 2013-12, hasta: 2015-10}
+  verificado: 2026-10-24
+  nota: >-
+    La API tiene otra serie del IPCNu (124.3_NGI_OCTU_0_20) que difiere en las tasas de ene. 2014 (3,6486 %) y
+    oct. 2014 (1,2000 %). Se usa 98.3 porque sus tasas, redondeadas a un decimal, coinciden con las que publicó
+    el INDEC en ambos meses (3,7 % y 1,2 %); la de 124.3 para enero redondea a 3,6 %.
+
+- id: f.indec.ipc-gba-base-2016
+  organismo: INDEC
+  nombre: IPC-GBA base diciembre 2016 = 100, nivel general
+  api: datos.gob.ar
+  id_api: 101.1_I2NG_2016_M_22
+  url: https://apis.datos.gob.ar/series/api/series/?ids=101.1_I2NG_2016_M_22
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice dic. 2016 = 100
+  cobertura: {desde: 2016-04, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.indec.ipc-nacional-base-2016
+  organismo: INDEC
+  nombre: IPC Nacional base diciembre 2016 = 100, nivel general
+  api: datos.gob.ar
+  id_api: 148.3_INIVELNAL_DICI_M_26
+  url: https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice dic. 2016 = 100
+  cobertura: {desde: 2016-12, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.caba.ipcba-base-2011-2012
+  organismo: Instituto de Estadística y Censos de la Ciudad Autónoma de Buenos Aires
+  nombre: IPCBA base julio 2011 – junio 2012 = 100, nivel general
+  api: datos.gob.ar
+  id_api: 193.1_NIVEL_GENERAL_JULI_0_13
+  url: https://apis.datos.gob.ar/series/api/series/?ids=193.1_NIVEL_GENERAL_JULI_0_13
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice jul. 2011 – jun. 2012 = 100
+  cobertura: {desde: 2012-07, hasta: 2022-02}
+  verificado: 2026-10-24
+
+- id: f.sanluis.ipc-base-2003
+  organismo: Dirección Provincial de Estadística y Censos de San Luis
+  nombre: IPC de la Provincia de San Luis base 2003 = 100, nivel general
+  api: datos.gob.ar
+  id_api: 197.1_NIVEL_GENERAL_2014_0_13
+  url: https://apis.datos.gob.ar/series/api/series/?ids=197.1_NIVEL_GENERAL_2014_0_13
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice 2003 = 100
+  cobertura: {desde: 2005-10, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.cavallo-bertolotto.ipc
+  organismo: Alberto Cavallo y Manuel Bertolotto
+  nombre: Índice de precios de Cavallo y Bertolotto (2016), San Luis + PriceStats, 2007–2016
+  api: ninguna
+  id_api: null
+  url: https://www.thebillionpricesproject.com/
+  licencia: sin confirmar
+  redistribuible: false
+  frecuencia: mensual
+  unidad: índice
+  cobertura: {desde: 2007-01, hasta: 2016-04}
+  nota: >-
+    Licencia sin confirmar. Los términos del dataset de Cavallo (2013) en Harvard Dataverse (doi:10.7910/DVN/UYX11A)
+    limitan el uso a investigación y publicaciones académicas y prohíben el uso comercial, lo que es incompatible
+    con CC BY 4.0. No se descarga ni se publica hasta tener permiso de los autores.
+
+# ── Tipo de cambio (CAM-01) y reservas (EXT-06) ────────────────────────────────
+# Copias de datos.gob.ar (CC BY 4.0). La API del BCRA no se usa por ahora: su aviso legal no permite
+# el uso comercial sin autorización, lo que no es compatible con CC BY 4.0 (decisión del 24/10/2026).
+- id: f.bcra.tc-historico-mensual
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes
+  api: datos.gob.ar
+  id_api: 174.1_T_DE_CATES_0_0_32
+  url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: pesos actuales por dólar
+  cobertura: {desde: 1940-01, hasta: hoy}
+  verificado: 2026-10-24
+  nota: >-
+    Valor de fin de mes: coincide con el último dato del mes de las series diarias de «Tipos de Cambio Históricos»
+    (dataset 175). No sigue un único mercado en los períodos de desdoblamiento (ver q.tc.mercados-desdoblados).
+    Se usa la versión en pesos equivalentes (CATES) y no la «moneda de cada momento» (174.1_T_DE_CANTO_0_0_37),
+    porque esta última cambia de unidad en enero de 1983, enero de 1985 y enero de 1990, y no en las fechas de
+    los cambios de signo monetario (junio de 1983, junio de 1985 y enero de 1992).
+
+- id: f.bcra.reservas-mensual
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Series históricas de estadísticas monetarias. Reservas internacionales del BCRA, saldos
+  api: datos.gob.ar
+  id_api: 174.1_RRVAS_IDOS_0_0_36
+  url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de US$
+  cobertura: {desde: 1940-01, hasta: hoy}
+  verificado: 2026-10-24
+  nota: >-
+    Saldo de fin de mes: en dic. 2005, ene. 2010 y dic. 2020 coincide con el último dato diario de la API del BCRA
+    (diferencia máxima, 0,14 millones en dic. 2005).
+
+# ── Exportaciones (EXT-01) ─────────────────────────────────────────────────────
+- id: f.indec.ica-exportaciones-anual
+  organismo: INDEC
+  nombre: Intercambio Comercial Argentino. Exportaciones totales, anual
+  api: datos.gob.ar
+  id_api: 74.1_IET_0_A_16
+  url: https://apis.datos.gob.ar/series/api/series/?ids=74.1_IET_0_A_16
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1910, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.indec.ica-exportaciones-mensual
+  organismo: INDEC
+  nombre: Intercambio Comercial Argentino. Exportaciones totales, mensual
+  api: datos.gob.ar
+  id_api: 74.3_IET_0_M_16
+  url: https://apis.datos.gob.ar/series/api/series/?ids=74.3_IET_0_M_16
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de US$
+  cobertura: {desde: 1992-01, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.indec.ica-importaciones-mensual
+  organismo: INDEC
+  nombre: Intercambio Comercial Argentino. Importaciones totales, mensual
+  api: datos.gob.ar
+  id_api: 74.3_IIT_0_M_25
+  url: https://apis.datos.gob.ar/series/api/series/?ids=74.3_IIT_0_M_25
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de US$
+  cobertura: {desde: 1992-01, hasta: hoy}
+  verificado: 2026-10-24
+  auxiliar: true
+  para: [exportaciones]
+  nota: >-
+    Serie auxiliar (SPEC 2.6): por ahora solo la usa el caso de la bibliografía CENDA2010-G5 (saldo comercial).
+    Las importaciones anuales largas (74.1_IIT_0_A_25) figuran en el catálogo pero la API no devuelve datos.
+
+# ── Desocupación (TRA-01) ──────────────────────────────────────────────────────
+# La EPH puntual 1974–2003 no está en la API (devuelve 0 filas), pero sí en el CSV de su distribución.
+- id: f.indec.eph-puntual-total
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: EPH puntual. Tasa de desocupación, total de aglomerados urbanos, 1974–2003
+  api: datos.gob.ar-csv
+  id_api: 343.1_TOTAL_AGLONOS__25
+  url_descarga: https://infra.datos.gob.ar/catalog/sspm/dataset/343/distribution/343.1/download/tasa-de-desocupacion-por-aglomerado-1974-2003.csv
+  columna: total_aglomerados_urbanos
+  url: https://datos.gob.ar/dataset/sspm-tasa-desocupacion-por-aglomerado-1974-2003
+  licencia: CC-BY-4.0
+  frecuencia: semestral
+  meses: [5, 11]
+  unidad: fracción de la población económicamente activa
+  cobertura: {desde: 1974-05, hasta: 2003-05}
+  verificado: 2026-10-24
+
+- id: f.indec.eph-puntual-gba
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: EPH puntual. Tasa de desocupación, Gran Buenos Aires, 1974–2003
+  api: datos.gob.ar-csv
+  id_api: 343.1_GRAN_BUENORES__17
+  url_descarga: https://infra.datos.gob.ar/catalog/sspm/dataset/343/distribution/343.1/download/tasa-de-desocupacion-por-aglomerado-1974-2003.csv
+  columna: gran_buenos_aires
+  url: https://datos.gob.ar/dataset/sspm-tasa-desocupacion-por-aglomerado-1974-2003
+  licencia: CC-BY-4.0
+  frecuencia: semestral
+  meses: [5, 11]
+  unidad: fracción de la población económicamente activa
+  cobertura: {desde: 1974-05, hasta: 2003-05}
+  verificado: 2026-10-24
+
+- id: f.indec.eph-continua-total
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: EPH continua. Tasa de desocupación, total de aglomerados urbanos, trimestral
+  api: datos.gob.ar
+  id_api: 42.3_EPH_PUNTUATAL_0_M_30
+  url: https://apis.datos.gob.ar/series/api/series/?ids=42.3_EPH_PUNTUATAL_0_M_30
+  licencia: CC-BY-4.0
+  frecuencia: trimestral
+  unidad: fracción de la población económicamente activa
+  cobertura: {desde: 2003-01, hasta: hoy}
+  huecos_permitidos:
+    - {desde: 2015-10, hasta: 2016-01}   # EPH no publicada: 4.º trimestre de 2015 y 1.º de 2016
+  verificado: 2026-10-24
+
+- id: f.indec.eph-continua-gba
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: EPH continua. Tasa de desocupación, Gran Buenos Aires, trimestral
+  api: datos.gob.ar
+  id_api: 42.3_EPH_PUNTUAGBA_0_M_28
+  url: https://apis.datos.gob.ar/series/api/series/?ids=42.3_EPH_PUNTUAGBA_0_M_28
+  licencia: CC-BY-4.0
+  frecuencia: trimestral
+  unidad: fracción de la población económicamente activa
+  cobertura: {desde: 2003-01, hasta: hoy}
+  huecos_permitidos:
+    - {desde: 2007-07}                   # la fuente no tiene el dato del 3.er trimestre de 2007 para GBA
+    - {desde: 2015-10, hasta: 2016-01}
+  verificado: 2026-10-24

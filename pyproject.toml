@@ -1,0 +1,30 @@
+[project]
+name = "vaiven-pipeline"
+version = "0.1.0"
+description = "Pipeline de Vaivén: snapshot, capa 1, capa 2, validación y export de series económicas argentinas."
+readme = "pipeline/README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Camilo Gómez Ortega von Zeschau" }]
+dependencies = [
+    "httpx>=0.28",
+    "jsonschema>=4.26",
+    "pandas>=2.2",
+    "pandera>=0.34",
+    "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=9.0"]
+descargas = ["pyarrow>=22"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+markers = [
+    "red: pruebas que consultan las API reales (se saltean con -m 'not red')",
+]

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Inflación minorista (IPC)",
+    "subtitle": "Variante: Oficial INDEC, sin corregir · índice dic. 2016 = 100"
+  },
+  "data": {
+    "url": "descargas/csv/ipc/oficial.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "índice dic. 2016 = 100",
+      "scale": {
+        "type": "log"
+      }
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "ipc",
+      "variante": "oficial",
+      "version_datos": "2026-10-24T05:15:50Z",
+      "cita": "Vaivén (2026). Inflación minorista (IPC), variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/ipc/"
+    }
+  }
+}

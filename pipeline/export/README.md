@@ -1,5 +1,5 @@
 # pipeline/export/
 
-Genera todo lo que va a `export/`: JSON por serie y variante, descargas, `datapackage.json` y especificaciones de Vega-Lite (SPEC, 2.5).
+Genera todo lo que va a `export/`: JSON y CSV por serie y variante, `catalogo.json`, `quiebres.json`, `revisiones.json`, `datapackage.json`, Vega-Lite y la descarga completa (SPEC, 2.5).
 
-**Se llena en:** fase 1.
+**Se llenó en:** fase 1.

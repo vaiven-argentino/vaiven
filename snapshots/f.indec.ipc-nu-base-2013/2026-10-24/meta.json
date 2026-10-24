@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ipc-nu-base-2013",
+  "descargado": "2026-10-24T04:58:58Z",
+  "sha256": "fc0b71eb09a931d0212a0213483520188462928fe19da9b0c4b7efde6b7f5ad0",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=98.3_INNG_2013_0_20&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4173,
+      "sha256": "fd0086b3f6cd7f41a094f849cc786ba66132327013b0dd47d992d7467eb90c3a"
+    }
+  ]
+}

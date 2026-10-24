@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.tc-historico-mensual",
+  "descargado": "2026-10-24T05:14:05Z",
+  "sha256": "e219e9f8f03a1dd14d46f4a7f5d1b5fa9712946c0666a3776f9bf8569f6be7a7",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 35009,
+      "sha256": "bb0557e1de9c2ded0e94950b3b9582bb7eafd594b03ba4d8694957f59e3ef776"
+    }
+  ]
+}
