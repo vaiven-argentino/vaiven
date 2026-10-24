@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from pipeline.comun import etiqueta_fecha
+from pipeline.comun import etiqueta_fecha, redondear
 
 
 def leer_publicada(ruta_json: Path) -> dict[str, float] | None:
@@ -21,13 +21,14 @@ def comparar(serie: pd.Series, frecuencia: str, publicada: dict[str, float] | No
     """Devuelve las fechas ya publicadas cuyo valor cambió y cuáles superan el umbral (en %)."""
     if publicada is None:
         return {"cambios": [], "sobre_umbral": [], "nuevas": len(serie), "quitadas": []}
-    nueva = {etiqueta_fecha(f, frecuencia): float(v) for f, v in serie.items()}
+    # Se compara con el mismo redondeo con el que se publica, para no contar ruido de punto flotante.
+    nueva = {etiqueta_fecha(f, frecuencia): redondear(float(v)) for f, v in serie.items()}
     cambios, sobre_umbral = [], []
     for fecha, anterior in publicada.items():
         if fecha not in nueva:
             continue
         actual = nueva[fecha]
-        if actual == anterior or round(actual, 10) == round(anterior, 10):
+        if actual == anterior:
             continue
         variacion = (actual / anterior - 1) * 100 if anterior else float("inf")
         registro = {"fecha": fecha, "anterior": anterior, "nuevo": actual, "variacion_pct": round(variacion, 6)}

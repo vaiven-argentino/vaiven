@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from pipeline.comun import etiqueta_fecha
+from pipeline.comun import etiqueta_fecha, redondear
 
 URL_SITIO = "https://vaiven.argentino.workers.dev"
 VERSION_ESQUEMA = "1.0"
@@ -26,9 +26,13 @@ def _advertencias(variante: dict, quiebres: dict[str, dict], serie: pd.Series) -
     salida = []
     for qid in variante.get("advertencias", []):
         q = quiebres[qid]
-        salida.append({"id": qid, "desde": str(q.get("desde", "")), "hasta": str(q.get("hasta", "")),
+        salida.append({"id": qid, "desde": _texto(q.get("desde")), "hasta": _texto(q.get("hasta")),
                        "tipo": q.get("tipo"), "descripcion": q["descripcion"]})
     return salida
+
+
+def _texto(valor) -> str | None:
+    return None if valor is None else str(valor)
 
 
 def _fuentes(variante: dict, fuentes: dict[str, dict]) -> list[dict]:
@@ -73,13 +77,8 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         "cita": cita(serie_meta, variante, version_datos),
         "version_datos": version_datos,
         "desactualizada_desde": desactualizada_desde,
-        "datos": [[etiqueta_fecha(f, frecuencia), _redondear(v)] for f, v in serie.items()],
+        "datos": [[etiqueta_fecha(f, frecuencia), redondear(v)] for f, v in serie.items()],
     }
-
-
-def _redondear(v: float) -> float:
-    """Diez cifras significativas: suficiente para cualquier serie y evita ruido de punto flotante en los diffs."""
-    return float(f"{v:.10g}")
 
 
 def a_texto(doc: dict) -> str:

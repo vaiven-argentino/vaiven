@@ -1,0 +1,61 @@
+id: tc-oficial
+codigo: CAM-01
+nombre: Tipo de cambio nominal oficial
+bloque: Cambiario
+prioridad: A
+definicion: Pesos por dólar estadounidense, valor de fin de mes, según la serie histórica del BCRA.
+unidad: pesos actuales por dólar
+tipo: precio
+agregacion: promedio
+frecuencia: mensual
+escala_log: true
+cobertura: {desde: 1970-01, hasta: hoy}
+variante_por_defecto: pesos-actuales
+variantes:
+  - id: pesos-actuales
+    nombre: En pesos actuales
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos
+      actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos
+      = 10¹¹ pesos ley 18.188).
+    tramos:
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01}
+    advertencias: [q.tc.mercados-desdoblados]
+  - id: moneda-de-epoca
+    nombre: En la moneda de cada época
+    estado: publicada
+    empalme: yuxtaponer
+    unidad: moneda de cada época por dólar (peso ley 18.188, peso argentino, austral o peso)
+    conversion: a_moneda_de_epoca
+    fecha_conversion: fin_de_mes
+    metodo: >-
+      La serie en pesos equivalentes del BCRA convertida a la moneda vigente el último día de cada mes, con las
+      equivalencias de metadatos/signos_monetarios.yaml. No se usa la versión «moneda de cada momento» de la
+      fuente porque cambia de unidad en fechas que no son las de los cambios de signo (ver fuentes.yaml).
+    tramos:
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01}
+    advertencias: [q.tc.mercados-desdoblados, q.tc.signos-monetarios]
+    validacion:
+      var_min: -100     # los cambios de signo monetario dividen el valor por 10.000 o 1.000
+  - id: comercial
+    nombre: Mercado oficial o comercial
+    estado: pendiente
+    nota: >-
+      Pendiente: las series diarias del mercado oficial tienen huecos largos (faltan los datos de nov. 1976 a
+      ene. 1987) y falta ubicar una fuente abierta para completarlos.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01}
+validacion:
+  min: 0
+  var_min: -60
+  var_max: 300
+  umbral_revision_pct: 0.1
+quiebres: [q.tc.mercados-desdoblados, q.tc.signos-monetarios]
+transformaciones: [var_mensual, var_interanual, base_100, frecuencia, pesos_actuales]
+fuentes: [f.bcra.tc-historico-mensual]
+bibliografia: []
+licencia_derivado: CC-BY-4.0

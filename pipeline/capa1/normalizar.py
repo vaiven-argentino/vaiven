@@ -7,9 +7,9 @@ from pathlib import Path
 import pandas as pd
 
 from pipeline.comun import ErrorPipeline, Rutas, escribir_csv_serie, escribir_json, serie_desde_df
-from pipeline.fuentes import base, bcra, datos_gob_ar
+from pipeline.fuentes import base, bcra, datos_gob_ar, datos_gob_ar_csv
 
-MODULOS = {"datos.gob.ar": datos_gob_ar, "bcra": bcra}
+MODULOS = {"datos.gob.ar": datos_gob_ar, "datos.gob.ar-csv": datos_gob_ar_csv, "bcra": bcra}
 
 
 def modulo(fuente: dict):
@@ -28,7 +28,8 @@ def dir_capa1(rutas: Rutas, fuente: dict) -> Path:
 
 def normalizar(rutas: Rutas, fuente: dict, dir_snapshot: Path) -> pd.Series:
     archivos = base.leer_archivos(rutas.snapshots, dir_snapshot)
-    df = modulo(fuente).normalizar(archivos)
+    mod = modulo(fuente)
+    df = mod.normalizar(archivos, fuente["columna"]) if "columna" in fuente else mod.normalizar(archivos)
     serie = serie_desde_df(df)
     destino = dir_capa1(rutas, fuente)
     escribir_csv_serie(destino / f"{fuente['id']}.csv", serie)

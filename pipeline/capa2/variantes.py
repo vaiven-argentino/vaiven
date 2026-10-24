@@ -35,11 +35,19 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict]) -
     if metodo not in METODOS:
         raise ErrorPipeline(f"Método de empalme desconocido en {variante['id']}: {metodo}")
     serie = METODOS[metodo](tramos(variante, capa1))
+    excluir = [a_fecha(e["fecha"]) for e in variante.get("excluir", [])]
+    if excluir:
+        # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos.
+        serie = serie.drop(index=excluir, errors="ignore")
+    if "escala" in variante:
+        # Cambio de unidad declarado (por ejemplo, de fracción a porcentaje).
+        serie = serie * float(variante["escala"])
     conversion = variante.get("conversion")
+    fin_de_mes = variante.get("fecha_conversion") == "fin_de_mes"
     if conversion == "a_pesos_actuales":
-        serie = signos_monetarios.a_pesos_actuales(serie, signos)
+        serie = signos_monetarios.a_pesos_actuales(serie, signos, fin_de_mes)
     elif conversion == "a_moneda_de_epoca":
-        serie = signos_monetarios.a_moneda_de_epoca(serie, signos)
+        serie = signos_monetarios.a_moneda_de_epoca(serie, signos, fin_de_mes)
     elif conversion is not None:
         raise ErrorPipeline(f"Conversión desconocida en {variante['id']}: {conversion}")
     return serie

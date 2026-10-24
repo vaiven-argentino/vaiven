@@ -1,0 +1,29 @@
+# Qué se compara en cada ficha del inventario (SPEC, sección 10).
+# Los valores de referencia se cargan a mano en <ficha>.csv (ver README.md).
+# `transformacion`: nivel | var_interanual (mensual, en %) | var_dic_dic (anual, en %) | promedio_anual
+# `tolerancia` en puntos porcentuales (`pp`) o en % del valor de referencia (`pct`).
+DF2013-G2:
+  serie: ipc
+  variante: oficial
+  transformacion: var_interanual
+  tolerancia: {pp: 1.0}
+DF1990-C1:
+  serie: ipc
+  variante: oficial
+  transformacion: var_dic_dic
+  tolerancia: {pct: 2.0}
+OS2006-G3:
+  serie: desocupacion
+  variante: total-urbano
+  transformacion: promedio_anual
+  tolerancia: {pp: 0.5}
+CENDA2010-G5:
+  serie: exportaciones
+  variante: oficial
+  transformacion: nivel
+  tolerancia: {pct: 2.0}
+CENDA2010-G8:
+  serie: reservas
+  variante: brutas
+  transformacion: nivel
+  tolerancia: {pct: 3.0}

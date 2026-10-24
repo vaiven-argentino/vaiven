@@ -62,7 +62,8 @@ def esquema(nombre: str, serie: pd.Series) -> list[Problema]:
 
 def huecos(nombre: str, serie: pd.Series, frecuencia: str, permitidos: list | None = None, meses: list[int] | None = None) -> list[Problema]:
     """Fechas que faltan entre la primera y la última observación, salvo las declaradas como huecos esperados."""
-    if frecuencia == "diaria" or serie.empty:
+    if frecuencia not in ("mensual", "trimestral", "semestral", "anual") or serie.empty:
+        # Las diarias no tienen calendario fijo; las variantes de frecuencia mixta se controlan por tramo, en la capa 1.
         return []
     esperadas = calendario(frecuencia, serie.index[0], serie.index[-1], meses)
     faltan = esperadas.difference(serie.index)
@@ -133,3 +134,22 @@ def continuidad(nombre: str, a: pd.Series, b: pd.Series, etiqueta: str, toleranc
             valores=[f"{f.date()}: a={float(r.a)!r} b={float(r.b)!r} dif={float(r.diferencia)!r}" for f, r in grandes.iterrows()],
         )
     ]
+
+
+def coherencia_anual(nombre: str, mensual: pd.Series, anual: pd.Series, etiqueta: str, agregacion: str,
+                     tolerancia_pct: float, severidad: str = "error") -> list[Problema]:
+    """Compara la serie anual publicada con la agregación de la mensual en los años completos (12 meses)."""
+    grupos = mensual.groupby(mensual.index.year)
+    completos = grupos.count()[lambda c: c == 12].index
+    funciones = {"suma": grupos.sum(), "promedio": grupos.mean(), "fin_de_periodo": grupos.last()}
+    agregada = funciones[agregacion].loc[completos]
+    anual_por_anio = pd.Series(anual.to_numpy(), index=anual.index.year)
+    comun = agregada.index.intersection(anual_por_anio.index)
+    dif = (agregada.loc[comun] / anual_por_anio.loc[comun] - 1) * 100
+    grandes = dif[dif.abs() > tolerancia_pct]
+    if grandes.empty:
+        return []
+    return [Problema(nombre, "coherencia", f"{etiqueta}: {len(grandes)} de {len(comun)} años difieren en más de {tolerancia_pct} %",
+                     severidad=severidad,
+                     valores=[f"{a}: agregada={float(agregada.loc[a])!r} anual={float(anual_por_anio.loc[a])!r} dif={float(d)!r} %"
+                              for a, d in grandes.items()])]

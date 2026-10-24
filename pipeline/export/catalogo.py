@@ -40,8 +40,12 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
 
 
 def quiebres_export(quiebres: dict[str, dict]) -> list[dict]:
-    return [{"id": qid, **{k: (str(v) if k in ("desde", "hasta") else v) for k, v in q.items()}}
-            for qid, q in sorted(quiebres.items())]
+    salida = []
+    for qid, q in sorted(quiebres.items()):
+        entrada = {k: (str(v) if k in ("desde", "hasta") else v) for k, v in q.items()}
+        entrada.setdefault("hasta", None)
+        salida.append(entrada)
+    return salida
 
 
 def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_datos: str) -> dict:

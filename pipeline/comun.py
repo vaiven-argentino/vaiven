@@ -65,6 +65,11 @@ def ahora_utc() -> datetime:
     return datetime.now(timezone.utc).replace(microsecond=0)
 
 
+def redondear(v: float) -> float:
+    """Diez cifras significativas: suficiente para cualquier serie y evita ruido de punto flotante en los diffs."""
+    return float(f"{v:.10g}")
+
+
 def a_fecha(valor) -> pd.Timestamp:
     """Convierte '1970', '1970-01', '1970-01-15', date o Timestamp al inicio del período."""
     if isinstance(valor, pd.Timestamp):

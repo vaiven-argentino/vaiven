@@ -95,6 +95,7 @@ def publicadas(serie: dict) -> list[dict]:
 
 
 def fuentes_necesarias(meta: Metadatos) -> list[str]:
+    """Fuentes de las variantes publicadas, de sus controles de continuidad y las auxiliares (SPEC 2.6)."""
     ids = []
     for s in meta.series:
         for v in publicadas(s):
@@ -102,6 +103,10 @@ def fuentes_necesarias(meta: Metadatos) -> list[str]:
                 ids.append(t["fuente"])
             for c in v.get("continuidad", []):
                 ids += [c["a"], c["b"]]
+            for c in v.get("coherencia", []):
+                ids += [c["mensual"], c["anual"]]
+    series_ids = {s["id"] for s in meta.series}
+    ids += [fid for fid, f in meta.fuentes.items() if f.get("auxiliar") and series_ids & set(f.get("para", []))]
     return list(dict.fromkeys(ids))
 
 
@@ -130,7 +135,11 @@ def obtener_fuente(rutas: Rutas, fuente: dict, con_red: bool, res: Resultado) ->
 
 
 def _reglas_variante(serie: dict, variante: dict) -> dict:
-    return {**serie.get("validacion", {}), **variante.get("validacion", {})}
+    reglas_v = {**serie.get("validacion", {}), **variante.get("validacion", {})}
+    excluidas = [{"desde": e["fecha"]} for e in variante.get("excluir", [])]
+    if excluidas:
+        reglas_v["huecos_permitidos"] = reglas_v.get("huecos_permitidos", []) + excluidas
+    return reglas_v
 
 
 def validar_variante(nombre: str, s: pd.Series, frecuencia: str, reglas_v: dict, variante: dict,
@@ -145,6 +154,10 @@ def validar_variante(nombre: str, s: pd.Series, frecuencia: str, reglas_v: dict,
                                         c["tolerancia"], c.get("en", "tasas"), c.get("severidad", "error"),
                                         desde=a_fecha(c["desde"]), hasta=a_fecha(c["hasta"]),
                                         excepciones=c.get("excepciones"))
+    for c in variante.get("coherencia", []):
+        problemas += reglas.coherencia_anual(nombre, capa1_series[c["mensual"]], capa1_series[c["anual"]],
+                                             f"{c['mensual']} vs {c['anual']}", c.get("agregacion", "suma"),
+                                             c["tolerancia_pct"])
     return problemas
 
 

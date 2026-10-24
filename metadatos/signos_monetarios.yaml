@@ -1,0 +1,28 @@
+# Signos monetarios argentinos desde 1970 (SPEC, sección 4).
+# `equivale` es cuántas unidades del signo anterior vale una unidad del nuevo.
+# Lo leen el pipeline (variantes en pesos actuales) y la librería de transformaciones (pesos_actuales).
+- id: peso-moneda-nacional
+  nombre: Peso moneda nacional
+  desde: 1881-11-05
+  equivale: null
+  fuente: Ley 1130
+- id: peso-ley-18188
+  nombre: Peso ley 18.188
+  desde: 1970-01-01
+  equivale: 100
+  fuente: Ley 18.188
+- id: peso-argentino
+  nombre: Peso argentino
+  desde: 1983-06-01
+  equivale: 10000
+  fuente: Ley 22.707
+- id: austral
+  nombre: Austral
+  desde: 1985-06-15
+  equivale: 1000
+  fuente: Decreto 1096/1985
+- id: peso
+  nombre: Peso
+  desde: 1992-01-01
+  equivale: 10000
+  fuente: Decreto 2128/1991

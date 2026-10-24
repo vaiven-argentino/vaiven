@@ -28,13 +28,18 @@ def factor_a_pesos_actuales(fecha: pd.Timestamp, signos: list[dict]) -> float:
     return factor
 
 
-def a_pesos_actuales(serie: pd.Series, signos: list[dict]) -> pd.Series:
+def _factores(serie: pd.Series, signos: list[dict], fin_de_mes: bool) -> pd.Series:
+    """Factor de cada fecha. Con `fin_de_mes`, se usa el signo vigente el último día del mes
+    (para valores de fin de período: por ejemplo, junio de 1985 ya está en australes)."""
+    fechas = serie.index + pd.offsets.MonthEnd(0) if fin_de_mes else serie.index
+    return pd.Series([factor_a_pesos_actuales(f, signos) for f in fechas], index=serie.index)
+
+
+def a_pesos_actuales(serie: pd.Series, signos: list[dict], fin_de_mes: bool = False) -> pd.Series:
     """Pasa una serie en moneda de cada época a pesos actuales (divide por el factor de cada fecha)."""
-    factores = pd.Series([factor_a_pesos_actuales(f, signos) for f in serie.index], index=serie.index)
-    return serie / factores
+    return serie / _factores(serie, signos, fin_de_mes)
 
 
-def a_moneda_de_epoca(serie: pd.Series, signos: list[dict]) -> pd.Series:
+def a_moneda_de_epoca(serie: pd.Series, signos: list[dict], fin_de_mes: bool = False) -> pd.Series:
     """Inversa de `a_pesos_actuales`."""
-    factores = pd.Series([factor_a_pesos_actuales(f, signos) for f in serie.index], index=serie.index)
-    return serie * factores
+    return serie * _factores(serie, signos, fin_de_mes)

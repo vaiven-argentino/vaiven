@@ -1,0 +1,57 @@
+id: desocupacion
+codigo: TRA-01
+nombre: Tasa de desocupación
+bloque: Trabajo e ingresos
+prioridad: A
+definicion: Personas desocupadas como porcentaje de la población económicamente activa, según la EPH del INDEC.
+unidad: "% de la población económicamente activa"
+tipo: tasa
+agregacion: promedio
+frecuencia: semestral (1974–2003) y trimestral (2003–hoy)
+cobertura: {desde: 1974-05, hasta: hoy}
+variante_por_defecto: total-urbano
+variantes:
+  - id: total-urbano
+    nombre: Total de aglomerados urbanos, sin empalmar
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 100
+    metodo: >-
+      EPH puntual (ondas de mayo y octubre, 1974–2003) seguida de la EPH continua (trimestral, desde el tercer
+      trimestre de 2003), sin coeficientes de empalme. La fuente publica fracciones; se multiplican por 100.
+    tramos:
+      - {fuente: f.indec.eph-puntual-total, desde: 1974-05, hasta: 2003-05}
+      - {fuente: f.indec.eph-continua-total, desde: 2003-07}
+    advertencias: [q.desocupacion.eph-2003, q.desocupacion.aglomerados, q.desocupacion.planes-2002, q.desocupacion.emergencia-2016]
+  - id: gba
+    nombre: Gran Buenos Aires, sin empalmar
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 100
+    metodo: >-
+      Igual que la variante del total urbano, pero para el Gran Buenos Aires, que tiene la misma cobertura
+      geográfica en todo el período. La fuente publica fracciones; se multiplican por 100.
+    tramos:
+      - {fuente: f.indec.eph-puntual-gba, desde: 1974-05, hasta: 2003-05}
+      - {fuente: f.indec.eph-continua-gba, desde: 2003-07}
+    advertencias: [q.desocupacion.eph-2003, q.desocupacion.planes-2002, q.desocupacion.emergencia-2016]
+  - id: empalmada
+    nombre: Total urbano empalmado
+    estado: pendiente
+    nota: >-
+      Pendiente: no se ubicaron coeficientes oficiales de empalme entre la EPH puntual y la continua. Hay
+      propuestas académicas (por ejemplo, Quartulli y Stefani, 2008) que se pueden evaluar.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.indec.eph-puntual-total, desde: 1974-05, hasta: 2003-05}
+      - {fuente: f.indec.eph-continua-total, desde: 2003-07}
+validacion:
+  min: 0
+  max: 35
+  umbral_revision_pct: 0.5
+quiebres: [q.desocupacion.eph-2003, q.desocupacion.aglomerados, q.desocupacion.planes-2002, q.desocupacion.emergencia-2016]
+transformaciones: [base_100, frecuencia, media_movil]
+fuentes: [f.indec.eph-puntual-total, f.indec.eph-puntual-gba, f.indec.eph-continua-total, f.indec.eph-continua-gba]
+bibliografia: [OS2006-G3]
+licencia_derivado: CC-BY-4.0
