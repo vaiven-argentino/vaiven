@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from pipeline.capa2 import empalmes, signos_monetarios
+from pipeline.capa2 import derivadas, empalmes, signos_monetarios
 from pipeline.comun import ErrorPipeline, a_fecha
 
 METODOS = {
@@ -37,15 +37,18 @@ def tramos(variante: dict, capa1: dict[str, pd.Series], fuentes: dict[str, dict]
 
 
 def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
-              fuentes: dict[str, dict] | None = None) -> pd.Series:
+              fuentes: dict[str, dict] | None = None, operandos: dict[str, pd.Series] | None = None,
+              frecuencia: str | None = None) -> pd.Series:
     metodo = variante.get("empalme", "yuxtaponer")
-    if metodo not in METODOS:
+    if metodo not in METODOS and metodo != "derivar":
         raise ErrorPipeline(f"Método de empalme desconocido en {variante['id']}: {metodo}")
-    partes = tramos(variante, capa1, fuentes)
-    if metodo == "encadenar_tasas":
+    if metodo == "derivar":
+        serie = derivadas.derivar(variante, operandos or {}, frecuencia or "mensual")
+    elif metodo == "encadenar_tasas":
+        partes = tramos(variante, capa1, fuentes)
         serie = empalmes.encadenar_tasas(partes, enlace=variante.get("enlace", "periodo"))
     else:
-        serie = METODOS[metodo](partes)
+        serie = METODOS[metodo](tramos(variante, capa1, fuentes))
     excluir = [a_fecha(e["fecha"]) for e in variante.get("excluir", [])]
     if excluir:
         # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos.

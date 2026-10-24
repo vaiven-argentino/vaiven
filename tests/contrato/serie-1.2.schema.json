@@ -98,7 +98,8 @@
     "empalme": {
       "enum": [
         "encadenar_tasas",
-        "yuxtaponer"
+        "yuxtaponer",
+        "derivar"
       ]
     },
     "transformaciones": {
