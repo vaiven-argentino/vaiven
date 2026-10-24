@@ -12,6 +12,26 @@ export interface OpcionesHttp {
   hosts?: string[];
   /** Devuelve `false` si el pedido supera el límite (en el Worker, el binding de Rate Limiting por IP). */
   limitador?: (request: Request) => Promise<boolean>;
+  /** Recibe un resumen de cada pedido POST (en el Worker va a los registros, para ver la CPU por método). */
+  registrar?: (resumen: ResumenPedido) => void;
+}
+
+/** Qué pidió el cliente: método JSON-RPC, herramienta (en tools/call) y versión del protocolo que declara. */
+export interface ResumenPedido {
+  mcp: { metodo: string; herramienta?: string; protocolo?: string; estado: number };
+}
+
+/** Lee el método y la herramienta de una copia del cuerpo; si no es JSON-RPC válido, lo dice y sigue. */
+async function resumir(request: Request): Promise<Omit<ResumenPedido["mcp"], "estado">> {
+  const protocolo = request.headers.get("mcp-protocol-version") ?? undefined;
+  try {
+    const cuerpo = (await request.clone().json()) as { method?: unknown; params?: { name?: unknown } };
+    const metodo = typeof cuerpo.method === "string" ? cuerpo.method : "(respuesta o lote)";
+    const herramienta = metodo === "tools/call" && typeof cuerpo.params?.name === "string" ? cuerpo.params.name : undefined;
+    return { metodo, ...(herramienta ? { herramienta } : {}), ...(protocolo ? { protocolo } : {}) };
+  } catch {
+    return { metodo: "(cuerpo ilegible)", ...(protocolo ? { protocolo } : {}) };
+  }
 }
 
 // Los datos son públicos y no hay cookies ni credenciales: se acepta cualquier origen, como en /datos/.
@@ -66,5 +86,8 @@ export async function manejarMcp(request: Request, repo: Repositorio, opciones: 
     ));
   }
 
-  return conEncabezados(await manejador(repo).fetch(request));
+  const resumen = opciones.registrar ? await resumir(request) : undefined;
+  const respuesta = conEncabezados(await manejador(repo).fetch(request));
+  if (resumen) opciones.registrar!({ mcp: { ...resumen, estado: respuesta.status } });
+  return respuesta;
 }

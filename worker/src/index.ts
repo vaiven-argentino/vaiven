@@ -29,6 +29,9 @@ export default {
           const ip = r.headers.get("cf-connecting-ip") ?? "sin-ip";
           return (await env.LIMITE_MCP.limit({ key: `mcp:${ip}` })).success;
         },
+        // Un registro por pedido (método, herramienta y protocolo): en Observabilidad, cada invocación muestra su CPU
+        // junto a este registro, y así se ve qué pedidos pasan de los 10 ms del plan gratuito.
+        registrar: (resumen) => console.log(resumen),
       });
     }
 
