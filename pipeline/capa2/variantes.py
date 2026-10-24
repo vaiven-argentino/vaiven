@@ -50,6 +50,9 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
     if excluir:
         # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos.
         serie = serie.drop(index=excluir, errors="ignore")
+    if "invertir" in variante:
+        # Índice dado vuelta (k ÷ valor), declarado: por ejemplo, para que un aumento del TCR sea depreciación.
+        serie = float(variante["invertir"]) / serie
     if "escala" in variante:
         # Cambio de unidad declarado (por ejemplo, de fracción a porcentaje).
         serie = serie * float(variante["escala"])

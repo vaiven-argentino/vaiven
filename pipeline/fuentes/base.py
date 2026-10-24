@@ -27,6 +27,8 @@ class Archivo:
     nombre: str
     url: str
     contenido: bytes
+    # Si el archivo se extrajo de otro más grande que no se guarda (por ejemplo, el zip de Bruegel): de dónde salió.
+    origen: dict | None = None
 
 
 def descargar(url: str, params: dict | None = None, timeout: float = 60.0) -> bytes:
@@ -100,7 +102,8 @@ def guardar_snapshot(dir_snapshots: Path, fuente: dict, archivos: list[Archivo])
             "licencia": fuente.get("licencia"),
             "redistribuible": redistribuible,
             "archivos": [
-                {"nombre": a.nombre, "url": a.url, "bytes": len(a.contenido), "sha256": hashlib.sha256(a.contenido).hexdigest()}
+                {"nombre": a.nombre, "url": a.url, "bytes": len(a.contenido), "sha256": hashlib.sha256(a.contenido).hexdigest(),
+                 **({"extraido_de": a.origen} if a.origen else {})}
                 for a in archivos
             ],
         },

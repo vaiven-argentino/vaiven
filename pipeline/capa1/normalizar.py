@@ -7,9 +7,9 @@ from pathlib import Path
 import pandas as pd
 
 from pipeline.comun import ErrorPipeline, Rutas, escribir_csv_serie, escribir_json, serie_desde_df
-from pipeline.fuentes import base, bcra, datos_gob_ar, datos_gob_ar_csv
+from pipeline.fuentes import base, bcra, bruegel, datos_gob_ar, datos_gob_ar_csv
 
-MODULOS = {"datos.gob.ar": datos_gob_ar, "datos.gob.ar-csv": datos_gob_ar_csv, "bcra": bcra}
+MODULOS = {"datos.gob.ar": datos_gob_ar, "datos.gob.ar-csv": datos_gob_ar_csv, "bcra": bcra, "bruegel": bruegel}
 
 
 def modulo(fuente: dict):
