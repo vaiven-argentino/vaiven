@@ -91,6 +91,13 @@ describe("HTTP", () => {
     expect(r.headers.get("retry-after")).toBe("60");
     expect(((await r.json()) as { error: { message: string } }).error.message).toMatch(/Demasiados pedidos/);
   });
+  it("registra método, herramienta, protocolo y estado de cada POST", async () => {
+    const registros: unknown[] = [];
+    const c = await conectar("legacy", { registrar: (r) => registros.push(r) });
+    await c.callTool({ name: "citar", arguments: { id: "ipc" } });
+    expect(registros).toContainEqual({ mcp: { metodo: "initialize", estado: 200 } });
+    expect(registros).toContainEqual({ mcp: { metodo: "tools/call", herramienta: "citar", protocolo: "2025-11-25", estado: 200 } });
+  });
   it("las respuestas de /mcp no se guardan en caché", async () => {
     expect((await pedir({ method: "GET" })).headers.get("cache-control")).toBe("no-store");
   });
