@@ -180,14 +180,22 @@ En las tres corridas no hubo ningún corte por CPU.
 
 **Decisión (con Camilo): cerrar y vigilar.**
 - Queda el registro por pedido.
-- Si aparecen errores 1102, el próximo paso es aligerar `describir_serie`: guardar en memoria las transformaciones disponibles de cada variante y armar solo la cita en texto (APA y BibTeX quedan para `citar`).
+- **Causa probable de los 10–19 ms de `describir_serie`:** fue siempre la primera llamada a esa herramienta en el isolate, así que es costo de arranque en frío. Lee y parsea por primera vez el catálogo, los quiebres y los JSON completos de cada variante, y compila ese código por primera vez. Con todo en memoria, en Node cuesta ~2 ms.
+- **Descartado: caché de transformaciones y cita solo en texto.**
+  - Se evaluó guardar en memoria las transformaciones disponibles de cada variante y devolver solo la cita en texto.
+  - Ninguna de las dos cosas ataca el costo en frío: la caché solo ayuda desde la segunda llamada, que ya es barata.
+  - Sin APA ni BibTeX, Claude necesitaría una llamada más a `citar` para esos formatos, lo que suma CPU en total.
+  - Con unas 17 muestras por medición, un ahorro chico tampoco se podría comprobar.
+- **Si aparecen errores 1102:** evitar que `describir_serie` lea los archivos completos de cada variante, con un archivo de metadatos livianos por serie precalculado al armar el export.
+  - Es un cambio más grande: toca cómo se genera el export.
+  - Hay que pensarlo con la SPEC, porque las transformaciones se implementan una sola vez, en TypeScript (sección 4), y ese archivo tendría que salir de esa librería, no del pipeline de Python.
 
 **Lo que no se tocó.** La apertura de la conexión (18–23 ms) es del SDK y solo bajaría con un manejador propio sin el SDK. Eso se aparta de la SPEC 7.1 y quedó descartado por ahora.
 
 ## Pendientes
 
 1. **CPU por pedido de `/mcp` (vigilar):** durante la prueba manual y en las primeras semanas, revisar en Observabilidad si aparecen errores «Exceeded CPU» (1102). Si aparecen:
-   - primero, aligerar `describir_serie`;
+   - primero, el archivo de metadatos livianos para `describir_serie` (ver «CPU de `/mcp` por método»);
    - después, evaluar un manejador propio sin el SDK (diferencia con la SPEC 7.1).
 2. **Prueba manual desde Claude, web y escritorio** (la hace Camilo): guion en `mcp/PRUEBA_MANUAL.md`. Es lo que cierra la fase según la SPEC (sección 11).
 3. **Ficha web:** mostrar «Uso en la bibliografía» con los datos que ya trae `catalogo.json` (pendiente de la fase 2, para la fase 4).
