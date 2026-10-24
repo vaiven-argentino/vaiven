@@ -11,6 +11,7 @@ from pipeline.capa1 import normalizar as capa1
 from pipeline.capa2 import signos_monetarios, variantes
 from pipeline.comun import ErrorPipeline, Rutas, a_fecha, ahora_utc, escribir_csv_serie, leer_yaml
 from pipeline.export import catalogo as export_generales
+from pipeline.export import insumos as export_insumos
 from pipeline.export import series as export_series
 from pipeline.fuentes import base
 from pipeline.validacion import reglas, revisiones
@@ -204,11 +205,20 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
     documentos: dict[str, dict] = {}
     entradas_revision = []
     hubo_cambios = False
+    nuevos: dict[str, dict] = {}
+    for vid, (s, v, serie) in construidas.items():
+        desde = min((desactualizadas[t["fuente"]] for t in v["tramos"] if t["fuente"] in desactualizadas), default=None)
+        nuevos[vid] = export_series.documento(s, v, serie, meta.fuentes, meta.quiebres, momento, desde)
+    # Los insumos dependen de qué otras variantes quedan publicadas: se completan con todos los documentos armados.
+    publicadas_export = export_insumos.Publicadas(nuevos, rutas.export, rutas.metadatos)
+    for vid, (s, v, serie) in construidas.items():
+        unidades = {**s.get("unidades_medida", {}), **v.get("unidades_medida", {})}
+        nuevos[vid]["insumos"] = export_insumos.insumos(nuevos[vid], unidades, publicadas_export)
+
     for vid, (s, v, serie) in construidas.items():
         frecuencia = v.get("frecuencia", s["frecuencia"])
-        ruta = rutas.export / "series" / s["id"] / f"{v['id']}.json"
-        desde = min((desactualizadas[t["fuente"]] for t in v["tramos"] if t["fuente"] in desactualizadas), default=None)
-        doc = export_series.documento(s, v, serie, meta.fuentes, meta.quiebres, momento, desde)
+        ruta = rutas.export / export_insumos.archivo(s["id"], v["id"], bool(s.get("auxiliar")))
+        doc = nuevos[vid]
         anterior = json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else None
         if anterior is not None and _sin_version(anterior) == _sin_version(json.loads(export_series.a_texto(doc))):
             documentos[vid] = anterior

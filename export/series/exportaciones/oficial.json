@@ -1,5 +1,5 @@
 {
-  "esquema": "1.1",
+  "esquema": "1.2",
   "id": "exportaciones.oficial",
   "serie": "exportaciones",
   "codigo": "EXT-01",
@@ -11,6 +11,7 @@
   "tipo": "flujo",
   "agregacion": "suma",
   "frecuencia": "anual",
+  "moneda": "dolares",
   "metodo": "Serie anual del Intercambio Comercial Argentino (INDEC), sin cambios.",
   "empalme": "yuxtaponer",
   "transformaciones": [
@@ -19,6 +20,8 @@
     "frecuencia",
     "pct_pib"
   ],
+  "insumos": {},
+  "auxiliar": false,
   "tramos": [
     {
       "fuente": "f.indec.ica-exportaciones-anual",
@@ -45,7 +48,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Exportaciones, variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/exportaciones/",
-  "version_datos": "2026-10-24T07:40:29Z",
+  "version_datos": "2026-10-24T23:04:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 1773.167],

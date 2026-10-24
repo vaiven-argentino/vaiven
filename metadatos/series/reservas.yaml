@@ -8,6 +8,7 @@ unidad: millones de US$
 tipo: stock
 agregacion: fin_de_periodo
 frecuencia: mensual
+moneda: dolares
 cobertura: {desde: 1970-01, hasta: hoy}
 variante_por_defecto: brutas
 variantes:

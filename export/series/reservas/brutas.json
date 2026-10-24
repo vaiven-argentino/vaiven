@@ -1,5 +1,5 @@
 {
-  "esquema": "1.1",
+  "esquema": "1.2",
   "id": "reservas.brutas",
   "serie": "reservas",
   "codigo": "EXT-06",
@@ -11,6 +11,7 @@
   "tipo": "stock",
   "agregacion": "fin_de_periodo",
   "frecuencia": "mensual",
+  "moneda": "dolares",
   "metodo": "Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.",
   "empalme": "yuxtaponer",
   "transformaciones": [
@@ -20,6 +21,8 @@
     "frecuencia",
     "pct_pib"
   ],
+  "insumos": {},
+  "auxiliar": false,
   "tramos": [
     {
       "fuente": "f.bcra.reservas-mensual",
@@ -59,7 +62,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/reservas/",
-  "version_datos": "2026-10-24T07:40:29Z",
+  "version_datos": "2026-10-24T23:04:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 589.5],

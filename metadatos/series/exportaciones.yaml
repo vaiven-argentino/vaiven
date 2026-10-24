@@ -8,6 +8,7 @@ unidad: millones de US$ corrientes
 tipo: flujo
 agregacion: suma
 frecuencia: anual
+moneda: dolares
 cobertura: {desde: 1970, hasta: hoy}
 variante_por_defecto: oficial
 variantes:

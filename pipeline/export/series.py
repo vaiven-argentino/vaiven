@@ -10,7 +10,7 @@ import pandas as pd
 from pipeline.comun import etiqueta_fecha, redondear
 
 URL_SITIO = "https://vaiven.argentino.workers.dev"
-VERSION_ESQUEMA = "1.1"
+VERSION_ESQUEMA = "1.2"
 
 
 def url_ficha(serie_meta: dict, variante: dict) -> str:
@@ -68,11 +68,16 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         "es_variante_por_defecto": variante["id"] == serie_meta["variante_por_defecto"],
         "unidad": variante.get("unidad", serie_meta["unidad"]),
         "tipo": serie_meta["tipo"],
-        "agregacion": serie_meta["agregacion"],
+        "agregacion": variante.get("agregacion", serie_meta["agregacion"]),
         "frecuencia": frecuencia,
+        "moneda": variante.get("moneda", serie_meta.get("moneda")),
         "metodo": variante["metodo"],
         "empalme": variante.get("empalme", "yuxtaponer"),
         "transformaciones": list(variante.get("transformaciones", serie_meta.get("transformaciones", []))),
+        # Las series que necesitan las medidas (real, en dólares, % del PIB, pesos actuales): las completa insumos.py.
+        "insumos": {},
+        "auxiliar": bool(serie_meta.get("auxiliar", False)),
+        **({"vista_inicial": vista} if (vista := variante.get("vista_inicial", serie_meta.get("vista_inicial"))) else {}),
         "tramos": [
             {"fuente": t["fuente"], "desde": str(t["desde"]), "hasta": str(t.get("hasta", "hoy")),
              "frecuencia": fuentes[t["fuente"]]["frecuencia"], **({"rol": t["rol"]} if "rol" in t else {})}
@@ -100,11 +105,18 @@ def a_texto(doc: dict) -> str:
     return cabeza + ',\n  "datos": [\n' + filas + "\n  ]\n}\n"
 
 
+def ruta_csv_relativa(doc: dict) -> str:
+    """Ruta del CSV de descarga dentro de descargas/csv/ (las auxiliares, en auxiliares/)."""
+    return f"{'auxiliares/' if doc.get('auxiliar') else ''}{doc['serie']}/{doc['variante']}.csv"
+
+
 def escribir(dir_export: Path, doc: dict) -> None:
-    ruta_json = dir_export / "series" / doc["serie"] / f"{doc['variante']}.json"
+    # Las auxiliares (SPEC 2.6) van aparte: no figuran en el catálogo, pero se publican igual.
+    carpeta = "auxiliares" if doc.get("auxiliar") else "series"
+    ruta_json = dir_export / carpeta / doc["serie"] / f"{doc['variante']}.json"
     ruta_json.parent.mkdir(parents=True, exist_ok=True)
     ruta_json.write_text(a_texto(doc), encoding="utf-8")
-    ruta_csv = dir_export / "descargas" / "csv" / doc["serie"] / f"{doc['variante']}.csv"
+    ruta_csv = dir_export / "descargas" / "csv" / ruta_csv_relativa(doc)
     ruta_csv.parent.mkdir(parents=True, exist_ok=True)
     lineas = ["fecha,valor"] + [f"{f},{v!r}" for f, v in doc["datos"]]
     ruta_csv.write_text("\n".join(lineas) + "\n", encoding="utf-8")
