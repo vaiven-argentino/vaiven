@@ -1,6 +1,7 @@
 # Qué se compara en cada ficha del inventario (SPEC, sección 10).
 # Los valores de referencia se cargan a mano en <ficha>.csv (ver README.md).
 # `transformacion`: nivel | var_interanual (mensual, en %) | var_dic_dic (anual, en %) | promedio_anual
+# Si la ficha compara varias series, cada fila del CSV dice la suya en `variable` (por ejemplo, importaciones.oficial).
 # `tolerancia` en puntos porcentuales (`pp`) o en % del valor de referencia (`pct`).
 DF2013-G2:
   serie: ipc
@@ -25,5 +26,10 @@ CENDA2010-G5:
 CENDA2010-G8:
   serie: reservas
   variante: brutas
+  transformacion: nivel
+  tolerancia: {pct: 3.0}
+SCH1998c2-C8:
+  serie: importaciones
+  variante: oficial
   transformacion: nivel
   tolerancia: {pct: 3.0}

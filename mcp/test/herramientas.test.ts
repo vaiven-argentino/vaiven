@@ -14,11 +14,14 @@ import { EXPORT, repoCon, repoReal } from "./ayuda";
 const repo = repoReal();
 const documento = (s: string, v: string) => JSON.parse(readFileSync(join(EXPORT, "series", s, `${v}.json`), "utf-8"));
 const ids = (r: { series: Array<{ id: string }> }) => r.series.map((s) => s.id);
+// El catálogo crece por fases: lo esperado se calcula con el catálogo publicado, no con un número fijo.
+const catalogo = JSON.parse(readFileSync(join(EXPORT, "catalogo.json"), "utf-8")) as { series: Array<{ id: string; bloque: string; prioridad: string }> };
+const deBloque = (b: string) => catalogo.series.filter((s) => s.bloque === b).map((s) => s.id).sort();
 
 describe("buscar_series", () => {
   it("sin filtros lista las series publicadas, con la versión de datos y la nota del catálogo", async () => {
     const r = await buscarSeries(repo, {});
-    expect(r.total).toBe(5);
+    expect(r.total).toBe(catalogo.series.length);
     expect(r.version_datos).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(r.notas[0]).toContain("39");
   });
@@ -30,8 +33,9 @@ describe("buscar_series", () => {
     expect(ids(await buscarSeries(repo, { texto: "exportación" }))[0]).toBe("exportaciones");
   });
   it("filtra por bloque, prioridad y período", async () => {
-    expect(ids(await buscarSeries(repo, { bloque: "sector externo" })).sort()).toEqual(["exportaciones", "reservas"]);
-    expect((await buscarSeries(repo, { prioridad: "B" })).total).toBe(0);
+    expect(ids(await buscarSeries(repo, { bloque: "sector externo" })).sort()).toEqual(deBloque("Sector externo"));
+    expect(deBloque("Sector externo")).toContain("reservas");
+    expect((await buscarSeries(repo, { prioridad: "B" })).total).toBe(catalogo.series.filter((s) => s.prioridad === "B").length);
     // La desocupación arranca en 1974: no tiene datos en 1970–1973.
     expect(ids(await buscarSeries(repo, { desde: "1970", hasta: "1973" }))).not.toContain("desocupacion");
   });
@@ -43,7 +47,7 @@ describe("buscar_series", () => {
   });
   it("sin coincidencias, lista todo y lo avisa", async () => {
     const r = await buscarSeries(repo, { texto: "soja" });
-    expect(r.total).toBe(5);
+    expect(r.total).toBe(catalogo.series.length);
     expect(r.notas.at(-1)).toContain("soja");
   });
 });
