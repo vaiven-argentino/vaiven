@@ -189,7 +189,7 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
         for v in publicadas(s):
             vid = f"{s['id']}.{v['id']}"
             try:
-                serie = variantes.construir(v, capa1_series, meta.signos)
+                serie = variantes.construir(v, capa1_series, meta.signos, meta.fuentes)
             except ErrorPipeline as e:
                 res.problemas.append(reglas.Problema(vid, "construcción", str(e)))
                 continue
@@ -250,8 +250,18 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
     version_general = momento
     if not hubo_cambios and ruta_catalogo.exists():
         version_general = json.loads(ruta_catalogo.read_text(encoding="utf-8"))["version_datos"]
-    export_generales.escribir_generales(rutas.export, meta.series, documentos, meta.fuentes, meta.quiebres, version_general,
-                                        rutas.inventario)
+    series_generales = meta.series
+    if solo:
+        # Corrida parcial: el catálogo y el datapackage siguen describiendo todas las series, con lo ya publicado.
+        series_generales = cargar_metadatos(rutas).series
+        for s in series_generales:
+            for v in publicadas(s):
+                vid = f"{s['id']}.{v['id']}"
+                ruta = rutas.export / export_insumos.archivo(s["id"], v["id"], bool(s.get("auxiliar")))
+                if vid not in documentos and ruta.exists():
+                    documentos[vid] = json.loads(ruta.read_text(encoding="utf-8"))
+    export_generales.escribir_generales(rutas.export, series_generales, documentos, meta.fuentes, meta.quiebres,
+                                        version_general, rutas.inventario)
     export_generales.agregar_revisiones(rutas.export / "revisiones.json", entradas_revision)
     res.publicado = True
     return res
