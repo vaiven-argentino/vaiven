@@ -25,7 +25,7 @@
   - Bundle de hasta 64 MiB sin comprimir (ya no hay límite comprimido). El nuestro pesa 1,26 MB (223 KB comprimido).
   - 50 subpedidos, 100.000 pedidos por día y 1 s de arranque.
   - Los pedidos a los assets son gratis e ilimitados, pero los de `run_worker_first` (`/salud` y `/mcp`) cuentan como pedidos al Worker.
-- **Límite por IP:** el binding de Rate Limiting es GA y no tiene costo aparte. La documentación no dice explícitamente que esté en el plan gratuito; en `wrangler dev` funciona. Las reglas de WAF no sirven, porque son por zona y `workers.dev` no es una zona propia.
+- **Límite por IP:** el binding de Rate Limiting es GA y no tiene costo aparte. La documentación no dice explícitamente que esté en el plan gratuito, pero el despliegue del 24/10/2026 lo aceptó (`env.LIMITE_MCP (120 requests/60s)`). Las reglas de WAF no sirven, porque son por zona y `workers.dev` no es una zona propia.
 
 ## Decisiones de diseño (revisables)
 
@@ -64,7 +64,7 @@
 
 ## Diferencias con la SPEC
 
-- **7.1, límite por IP:** es aproximado (se cuenta por ubicación de Cloudflare y con consistencia eventual). Si el plan gratuito no admitiera el binding, en `/mcp` quedaría solo el tope diario de la cuenta.
+- **7.1, límite por IP:** es aproximado (se cuenta por ubicación de Cloudflare y con consistencia eventual).
 - **7.1, variante local:** no se publica para `npx`; se corre desde una copia del repositorio (fase 5).
 - **7.1, SDK:** es `@modelcontextprotocol/server` (v2), no `@modelcontextprotocol/sdk`.
 - **7.2, `obtener_serie`:** no tiene `deflactor` ni `paises` (fase 4: necesitan las transformaciones con series auxiliares y la dimensión `pais`).
@@ -93,12 +93,54 @@
   - Fichas de desocupación (las dos variantes), IPC, reservas y tipo de cambio: el pico de 2002 queda a 11 px o más de los números de los quiebres.
   - `/agentes/`, `/datos/` y el inicio, en 390 y 1280 px, claro y oscuro: 0 problemas.
 
+## Despliegue (24/10/2026)
+
+- **PR y CI:** [vaiven-argentino/vaiven#4](https://github.com/vaiven-argentino/vaiven/pull/4), mergeado con commit de merge después de `Pruebas` en verde.
+- **`Publicar`:** desplegó con `wrangler deploy` (versión `6404363f-1b33-43ab-8a2c-5770a96f3e7b`).
+  - Cloudflare aceptó el binding `LIMITE_MCP` en el plan gratuito.
+  - El Worker arranca en 45 ms. El bundle pesa 1.259 KiB (223 KiB comprimido).
+- **Producción:** `mcp/scripts/probar-endpoint.mjs` pasó entero contra `https://vaiven.argentino.workers.dev`:
+  - `/mcp` en las dos eras, con las 4 herramientas;
+  - GET 405 y OPTIONS 204, con CORS y `no-store`;
+  - `/salud` con fase 3, `/datos/`, `/agentes/`, el 301 y el 404.
+  - El 429 no se forzó en producción.
+- **CPU de `/mcp`** (panel de Cloudflare, 17 invocaciones de esa prueba, 20:49 UTC):
+  - Gráfico «CPU Time»: P50 5,94 ms, P90 14,42 ms, P99 y P999 50 ms.
+  - Query Builder: mediana de `$workers.cpuTimeMs` 7 ms, máximo 50 ms.
+  - Ningún pedido falló: en el plan gratuito, Cloudflare tolera que un pedido pase de 10 ms de vez en cuando, pero corta con el error 1102 si pasa seguido.
+  - La mediana entra en el límite, pero una parte de los pedidos lo pasa. Todavía no se sabe cuáles son (el primero de cada isolate, `tools/list` o alguna herramienta en particular).
+
+## Precalentamiento al arrancar (decidido con Camilo)
+
+**Diagnóstico.** Medido en Node:
+- Con el isolate ya «caliente», cada pedido cuesta de 0,6 a 3,6 ms.
+- El exceso está en el primer pedido de cada isolate y en la primera llamada de cada herramienta, por la inicialización perezosa del SDK, de zod y del código propio.
+- Con poco tráfico, casi cada conexión de Claude cae en un isolate nuevo.
+
+**Medidas:**
+- `mcp/src/precalentar.ts`, llamado al cargar el módulo del Worker. El arranque tiene su propio límite de 1 s; cada pedido, 10 ms de CPU. Hace dos cosas:
+  - corre `preloadSchemas()` del SDK (lo recomienda para estos entornos);
+  - arma el JSON Schema de las herramientas y pasa una serie chica en memoria por las transformaciones y la cita.
+- Los esquemas de las herramientas se envuelven (`conJsonFijo` en `servidor.ts`): el JSON Schema se arma una vez por isolate y no en cada pedido, porque el SDK lo guarda por instancia del servidor y hay una instancia por pedido.
+
+**Límite.** Los primeros pedidos completos del protocolo no se pueden hacer al arrancar: el transporte del SDK usa `crypto.randomUUID` y temporizadores, y workerd los prohíbe al cargar el módulo (se probó y el Worker no arranca). Por eso el primer pedido de cada isolate sigue pagando la inicialización de esa parte.
+
+**Efecto medido en Node, en un proceso nuevo** (sin contar la carga de `undici`, que en workerd no existe):
+
+| Primer pedido | Sin precalentar | Con precalentar |
+|---|---|---|
+| `initialize` | ~28 ms | ~21–26 ms |
+| `tools/list` | ~7 ms | ~3–5 ms |
+| `buscar_series` | ~11–13 ms | ~7 ms |
+| `describir_serie` | ~9 ms | ~6,5 ms |
+| `obtener_serie` | ~5 ms | ~4 ms |
+| `citar` | ~4 ms | ~3 ms |
+
+**Riesgo que queda.** El primer pedido de cada isolate puede pasar de 10 ms. Cloudflare tolera excesos esporádicos por isolate y corta (error 1102) solo si se repiten. Como este exceso ocurre una vez por isolate, se espera que entre en esa tolerancia, pero hay que confirmarlo en producción.
+
 ## Pendientes
 
-1. **Push y despliegue (piden aprobación).** Después del despliegue hay que:
-   - correr `node mcp/scripts/probar-endpoint.mjs https://vaiven.argentino.workers.dev`;
-   - confirmar que el plan gratuito acepta el binding de Rate Limiting;
-   - mirar la CPU por pedido de `/mcp` en los registros del Worker.
+1. **CPU por pedido de `/mcp`:** después del precalentamiento (ver abajo), volver a mirar el gráfico «CPU Time» y los errores «Exceeded CPU» (1102) en Observabilidad, durante la prueba manual y con el uso real.
 2. **Prueba manual desde Claude, web y escritorio** (la hace Camilo): guion en `mcp/PRUEBA_MANUAL.md`. Es lo que cierra la fase según la SPEC (sección 11).
 3. **Ficha web:** mostrar «Uso en la bibliografía» con los datos que ya trae `catalogo.json` (pendiente de la fase 2, para la fase 4).
 4. **Distribución de la variante local por `npx`** (fase 5).
