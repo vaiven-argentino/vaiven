@@ -1,0 +1,40 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Base monetaria",
+    "subtitle": "Variante: Saldo de fin de mes (desde 1970) · millones de pesos actuales"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/base-monetaria/fin-de-mes.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de pesos actuales",
+      "scale": {
+        "type": "log"
+      }
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "base-monetaria",
+      "variante": "fin-de-mes",
+      "version_datos": "2026-10-24T23:15:18Z",
+      "cita": "Vaivén (2026). Base monetaria, variante «fin-de-mes». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/base-monetaria/"
+    }
+  }
+}

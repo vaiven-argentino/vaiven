@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.badlar",
+  "unidad": "% nominal anual",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.badlar/2026-10-24",
+  "descargado": "2026-10-24T23:14:17Z",
+  "sha256": "03fc8f80d4cec32dba5c4811c82ad27b027fe020360ee7c852a9c9de707b9a60",
+  "observaciones": 332,
+  "desde": "1999-01-01",
+  "hasta": "2026-08-01"
+}

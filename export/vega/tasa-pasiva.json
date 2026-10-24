@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Tasa de interés pasiva",
+    "subtitle": "Variante: Plazo fijo de 30 a 59 días (desde 1970) · % nominal anual"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/tasa-pasiva/plazo-fijo.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "% nominal anual"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "tasa-pasiva",
+      "variante": "plazo-fijo",
+      "version_datos": "2026-10-24T23:15:18Z",
+      "cita": "Vaivén (2026). Tasa de interés pasiva, variante «plazo-fijo». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/tasa-pasiva/"
+    }
+  }
+}

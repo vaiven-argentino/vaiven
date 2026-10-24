@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.tasa-plazo-fijo-panorama",
+  "unidad": "% nominal anual",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.tasa-plazo-fijo-panorama/2026-10-24",
+  "descargado": "2026-10-24T23:14:15Z",
+  "sha256": "faf3f613f5ca9ad0f83778a3fa8365b26cf8bd378bdca534a6c4ad8320817abb",
+  "observaciones": 781,
+  "desde": "1940-02-01",
+  "hasta": "2021-06-01"
+}

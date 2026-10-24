@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-24T23:12:21Z",
-  "created": "2026-10-24T23:12:21Z",
+  "version": "2026-10-24T23:15:18Z",
+  "created": "2026-10-24T23:15:18Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -22,6 +22,90 @@
     }
   ],
   "resources": [
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "base-monetaria.fin-de-mes",
+      "title": "Base monetaria · Saldo de fin de mes (desde 1970)",
+      "path": "descargas/csv/base-monetaria/fin-de-mes.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Serie histórica del BCRA, saldo de fin de mes en pesos equivalentes (pesos actuales), sin cambios. Llega con el atraso de la copia de datos.gob.ar.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos actuales"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Agregados monetarios en pesos, base monetaria",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_AGADOS_BM_0_0_28"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "base-monetaria.promedio-mensual",
+      "title": "Base monetaria · Promedio mensual (desde 2003)",
+      "path": "descargas/csv/base-monetaria/promedio-mensual.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Base monetaria total en promedio de saldos diarios de cada mes, según el BCRA, sin cambios. Empieza en enero de 2003.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos actuales"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Agregados monetarios. Base monetaria total, promedio mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=90.1_BMT_0_0_20"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "cuenta-corriente.larga",
@@ -630,6 +714,94 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Reservas internacionales del BCRA, saldos",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tasa-pasiva.badlar",
+      "title": "Tasa de interés pasiva · BADLAR, bancos privados (desde 1999)",
+      "path": "descargas/csv/tasa-pasiva/badlar.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Tasa BADLAR de bancos privados (depósitos a plazo fijo de más de un millón de pesos, de 30 a 35 días), promedio mensual, nominal anual, según el BCRA, sin cambios.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "% nominal anual"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Principales tasas de interés. Tasa BADLAR (depósitos a plazo fijo de más de un millón de pesos, bancos privados), promedio mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=89.1_TIB_0_0_20"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "tasa-pasiva.plazo-fijo",
+      "title": "Tasa de interés pasiva · Plazo fijo de 30 a 59 días (desde 1970)",
+      "path": "descargas/csv/tasa-pasiva/plazo-fijo.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Tasa por depósitos a plazo fijo de 30 a 59 días en moneda nacional, promedio mensual, nominal anual, según el BCRA: del Panorama monetario y financiero entre 1970 y febrero de 1981 y de las series históricas de estadísticas monetarias desde marzo de 1981. Las dos fuentes dan la misma serie donde se superponen (diferencia máxima de 0,005 puntos). La fuente no tiene datos entre julio de 1982 y mayo de 1984 ni entre enero y marzo de 1990.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "% nominal anual"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA: Panorama monetario y financiero. Tasa de interés por depósitos a plazo fijo de 30 a 59 días en moneda nacional, promedio mensual, nominal anual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=bcra_30"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tasa de interés por depósitos a plazo fijo de 30 a 59 días en moneda nacional",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_INTERD_0_0_41"
         }
       ],
       "licenses": [

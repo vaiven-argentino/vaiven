@@ -1,5 +1,27 @@
 [
   {
+    "id": "q.base-monetaria.caida-2026",
+    "desde": "2026-06",
+    "hasta": "2026-06",
+    "tipo": "metodologia",
+    "descripcion": "En junio de 2026 la base monetaria promedio cae 56 % en un mes (de 41,4 a 18,2 billones de pesos) y se mantiene en ese nivel. La fuente no lo explica; puede ser un cambio de definición. A confirmar con el BCRA: Vaivén no ajusta ni recorta la serie.",
+    "afecta": [
+      "base-monetaria.promedio-mensual"
+    ],
+    "fuente": "datos.gob.ar, 90.1_BMT_0_0_20 (24/10/2026)."
+  },
+  {
+    "id": "q.base-monetaria.reforma-1982",
+    "desde": "1982-07",
+    "hasta": "1982-07",
+    "tipo": "metodologia",
+    "descripcion": "Reforma financiera de julio de 1982: el encaje sobre los depósitos existentes pasó al 100 % y el BCRA compró la cartera de préstamos de los bancos con emisión. La base monetaria casi se quintuplica en el mes (+393 %); no es un error de la fuente y Vaivén no lo ajusta.",
+    "afecta": [
+      "base-monetaria.fin-de-mes"
+    ],
+    "fuente": "Rodríguez, C. A. (1986), «Un análisis estilizado de la reforma financiera de julio de 1982», CEMA, Documento de trabajo 52."
+  },
+  {
     "id": "q.cuenta-corriente.fuente-1992",
     "desde": "1992",
     "hasta": "1992",
@@ -189,6 +211,40 @@
     ],
     "fuente": "BCRA, series históricas de estadísticas monetarias.",
     "hasta": null
+  },
+  {
+    "id": "q.tasa.nominal-anual",
+    "desde": "1970-01",
+    "tipo": "metodologia",
+    "descripcion": "Es una tasa nominal anual. Para compararla con la inflación de un mes hay que pasarla a tasa mensual; en los años de alta inflación la diferencia es grande (por ejemplo, junio de 1989: 1.646,9 % nominal anual).",
+    "afecta": [
+      "tasa-pasiva.plazo-fijo",
+      "tasa-pasiva.badlar"
+    ],
+    "fuente": "BCRA, Panorama monetario y financiero («promedio mensual en porcentaje nominal anual»).",
+    "hasta": null
+  },
+  {
+    "id": "q.tasa.regulada-1977",
+    "desde": "1970-01",
+    "hasta": "1977-05",
+    "tipo": "metodologia",
+    "descripcion": "Tasas reguladas: hasta la reforma financiera de 1977, el BCRA fijaba las tasas de los depósitos, que en estos años quedaron muy por debajo de la inflación. Desde entonces, las tasas son libres o pactadas, salvo en algunos períodos de regulación posteriores.",
+    "afecta": [
+      "tasa-pasiva.plazo-fijo"
+    ],
+    "fuente": "BCRA; Ley 21.526 de Entidades Financieras (1977)."
+  },
+  {
+    "id": "q.tasa.sin-datos-1982-1984",
+    "desde": "1982-07",
+    "hasta": "1984-05",
+    "tipo": "cobertura",
+    "descripcion": "La fuente no tiene la tasa entre julio de 1982 y mayo de 1984, ni entre enero y marzo de 1990. Vaivén no completa esos meses.",
+    "afecta": [
+      "tasa-pasiva.plazo-fijo"
+    ],
+    "fuente": "datos.gob.ar, 174.1_T_INTERD_0_0_41 y bcra_30 (24/10/2026)."
   },
   {
     "id": "q.tc.mercados-desdoblados",

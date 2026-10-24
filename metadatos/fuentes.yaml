@@ -367,3 +367,78 @@
   unidad: millones de pesos de 2004
   cobertura: {desde: 2004-01, hasta: hoy}
   verificado: 2026-10-24
+
+# ── Monetario: base monetaria (MON-01) y tasa pasiva (MON-03) ──────────────────
+- id: f.bcra.base-monetaria-mensual
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Series históricas de estadísticas monetarias. Agregados monetarios en pesos, base monetaria
+  api: datos.gob.ar
+  id_api: 174.1_AGADOS_BM_0_0_28
+  url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_AGADOS_BM_0_0_28
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos actuales (pesos equivalentes)
+  cobertura: {desde: 1940-06, hasta: hoy}
+  verificado: 2026-10-24
+  nota: >-
+    Saldo de fin de mes: coincide con la base monetaria del Panorama monetario y financiero del BCRA («saldos a fin
+    de mes», bcra_15) multiplicada por 0,001 en 1940–2021. Los valores están en pesos actuales equivalentes, como el
+    tipo de cambio 174.1_T_DE_CATES_0_0_32: medida en dólares, la serie no salta en los cambios de signo monetario
+    de 1983, 1985 y 1992. Llega con atraso (abril de 2026 al 24/10/2026).
+
+- id: f.bcra.base-monetaria-promedio
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Agregados monetarios. Base monetaria total, promedio mensual
+  api: datos.gob.ar
+  id_api: 90.1_BMT_0_0_20
+  url: https://apis.datos.gob.ar/series/api/series/?ids=90.1_BMT_0_0_20
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 2003-01, hasta: hoy}
+  verificado: 2026-10-24
+
+- id: f.bcra.tasa-plazo-fijo-panorama
+  organismo: BCRA
+  nombre: Panorama monetario y financiero. Tasa de interés por depósitos a plazo fijo de 30 a 59 días en moneda nacional, promedio mensual, nominal anual
+  api: datos.gob.ar
+  id_api: bcra_30
+  url: https://apis.datos.gob.ar/series/api/series/?ids=bcra_30
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: '% nominal anual'
+  cobertura: {desde: 1940-02, hasta: 2021-06}
+  huecos_permitidos:
+    - {desde: 1946-05, hasta: 1962-05}   # la fuente no tiene datos
+    - {desde: 1990-01, hasta: 1990-03}
+  verificado: 2026-10-24
+  nota: >-
+    Coincide con 174.1_T_INTERD_0_0_41 en los meses que tienen las dos (diferencia máxima de 0,005 puntos). Se usa
+    solo para 1970–1981, que la otra no tiene.
+
+- id: f.bcra.tasa-plazo-fijo
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Series históricas de estadísticas monetarias. Tasa de interés por depósitos a plazo fijo de 30 a 59 días en moneda nacional
+  api: datos.gob.ar
+  id_api: 174.1_T_INTERD_0_0_41
+  url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_INTERD_0_0_41
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: '% nominal anual'
+  cobertura: {desde: 1981-03, hasta: hoy}
+  huecos_permitidos:
+    - {desde: 1982-07, hasta: 1984-05}   # la fuente no tiene datos
+    - {desde: 1990-01, hasta: 1990-03}
+  verificado: 2026-10-24
+
+- id: f.bcra.badlar
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Principales tasas de interés. Tasa BADLAR (depósitos a plazo fijo de más de un millón de pesos, bancos privados), promedio mensual
+  api: datos.gob.ar
+  id_api: 89.1_TIB_0_0_20
+  url: https://apis.datos.gob.ar/series/api/series/?ids=89.1_TIB_0_0_20
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: '% nominal anual'
+  cobertura: {desde: 1999-01, hasta: hoy}
+  verificado: 2026-10-24

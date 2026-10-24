@@ -1,6 +1,99 @@
 {
-  "version_datos": "2026-10-24T23:12:21Z",
+  "version_datos": "2026-10-24T23:15:18Z",
   "series": [
+    {
+      "id": "base-monetaria",
+      "codigo": "MON-01",
+      "nombre": "Base monetaria",
+      "bloque": "Monetario",
+      "prioridad": "A",
+      "definicion": "Base monetaria (circulación monetaria más los depósitos de los bancos en el BCRA), en millones de pesos actuales: los valores anteriores a 1992 están convertidos con las equivalencias de los signos monetarios.",
+      "unidad": "millones de pesos actuales",
+      "tipo": "stock",
+      "agregacion": "fin_de_periodo",
+      "transformaciones": [
+        "var_mensual",
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "media_movil",
+        "real",
+        "en_dolares",
+        "pct_pib"
+      ],
+      "frecuencia": "mensual",
+      "variante_por_defecto": "fin-de-mes",
+      "quiebres": [
+        "q.base-monetaria.reforma-1982",
+        "q.base-monetaria.caida-2026"
+      ],
+      "variantes": [
+        {
+          "id": "fin-de-mes",
+          "nombre": "Saldo de fin de mes (desde 1970)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/base-monetaria/fin-de-mes.json"
+        },
+        {
+          "id": "promedio-mensual",
+          "nombre": "Promedio mensual (desde 2003)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "2003-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/base-monetaria/promedio-mensual.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "DLB1993-A13",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 50 (132)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Evolución de los principales agregados monetarios. Promedio mensual de saldos diarios",
+          "periodo_cubierto": "jun-1989 – mar-1993"
+        },
+        {
+          "id": "RAP2005-G3.8",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "18",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Base monetaria en relación al PIB y a los depósitos totales (series desestacionalizadas)",
+          "periodo_cubierto": "2003 (aprox.; período a verificar)"
+        },
+        {
+          "id": "RAP2005-C3.2",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "20",
+          "tipo": "cuadro",
+          "titulo_original": "Fuentes de variación de la Base Monetaria (promedio mensual, en millones de pesos y dólares)",
+          "periodo_cubierto": "2002 – 2005 (aprox.)"
+        },
+        {
+          "id": "DF2013-C3",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "38",
+          "tipo": "cuadro",
+          "titulo_original": "Base monetaria y préstamos bancarios al sector privado, como porcentaje del PIB",
+          "periodo_cubierto": "2002 – 2012"
+        },
+        {
+          "id": "DF2013-G9",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "39",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución de indicadores monetarios en términos reales",
+          "periodo_cubierto": "ene-2002 – may-2013"
+        }
+      ]
+    },
     {
       "id": "cuenta-corriente",
       "codigo": "EXT-04",
@@ -650,6 +743,151 @@
           "tipo": "gráfico de líneas",
           "titulo_original": "Reservas Internacionales del Banco Central de la República Argentina, 1996-2010. En millones de dólares corrientes",
           "periodo_cubierto": "ene-1996 – ene-2010"
+        }
+      ]
+    },
+    {
+      "id": "tasa-pasiva",
+      "codigo": "MON-03",
+      "nombre": "Tasa de interés pasiva",
+      "bloque": "Monetario",
+      "prioridad": "A",
+      "definicion": "Tasa de interés por depósitos en moneda nacional, en porcentaje nominal anual (promedio mensual).",
+      "unidad": "% nominal anual",
+      "tipo": "tasa",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "frecuencia",
+        "media_movil"
+      ],
+      "frecuencia": "mensual",
+      "variante_por_defecto": "plazo-fijo",
+      "quiebres": [
+        "q.tasa.regulada-1977",
+        "q.tasa.nominal-anual",
+        "q.tasa.sin-datos-1982-1984"
+      ],
+      "variantes": [
+        {
+          "id": "plazo-fijo",
+          "nombre": "Plazo fijo de 30 a 59 días (desde 1970)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/tasa-pasiva/plazo-fijo.json"
+        },
+        {
+          "id": "badlar",
+          "nombre": "BADLAR, bancos privados (desde 1999)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1999-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/tasa-pasiva/badlar.json"
+        },
+        {
+          "id": "real",
+          "nombre": "Tasa real (con cada variante del IPC)",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente hasta acordar el método (tasa real ex post y conversión de la tasa nominal anual a mensual)."
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "FF1990-G4",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 46 (45)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tasas semanales de aumento del dólar libre y tasas semanales de interés (call interbancario)",
+          "periodo_cubierto": "ene-1989 – jul-1989"
+        },
+        {
+          "id": "FF1990-G5",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 47 (46)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tasas semanales de interés y media móvil de cuatro semanas de la tasa de aumento del dólar libre",
+          "periodo_cubierto": "feb-1989 – jul-1989"
+        },
+        {
+          "id": "RAP2005-G3.6",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "16",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tasa de interés en pesos de Lebac (14 y 91 días), de depósitos a plazo fijo (30 a 59 días) y Prime (30 días)",
+          "periodo_cubierto": "2002 – 2004 (aprox.)"
+        },
+        {
+          "id": "CENDA2010-G9",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 12 (32)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tasas de interés reales, 1996-2005. En porcentaje",
+          "periodo_cubierto": "1996 – 2009"
+        },
+        {
+          "id": "KIG2015-G3",
+          "referencia": "Kiguel (2015), Las crisis económicas argentinas, cap. 5, Sudamericana",
+          "pagina": "pdf 9",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tasa Lebacs de hasta 20 días (TNA en %)",
+          "periodo_cubierto": "mar-2002 – oct-2002"
+        },
+        {
+          "id": "KUL2016-G5.2",
+          "referencia": "Kulfas (2016), Los tres kirchnerismos, caps. 5 y 6, Siglo XXI",
+          "pagina": "pdf 26",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tasas mensuales de interés, devaluación e inflación, 2011-2015",
+          "periodo_cubierto": "ene-2011 – ene-2015"
+        },
+        {
+          "id": "BICI-T3",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 3",
+          "tipo": "cuadro",
+          "titulo_original": "Bicicleta financiera en dólares (1979-1980)",
+          "periodo_cubierto": "may-1979 – 1980"
+        },
+        {
+          "id": "BICI-G8",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 8",
+          "tipo": "gráfico de columnas",
+          "titulo_original": "Tasas de interés nominal y real, devaluación, inflación y tasa de la FED (sin título)",
+          "periodo_cubierto": "1978 – 1982 (aprox.; 15 trimestres)"
+        },
+        {
+          "id": "BICI-G10",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 10",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Diferencial de tasas activa y pasiva (dólar y peso), 1977-1982",
+          "periodo_cubierto": "1977 – 1982"
+        },
+        {
+          "id": "BICI-G11",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 11",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Diferencial de tasas activa y pasiva (dólar y peso) y devaluación, 1977-1982",
+          "periodo_cubierto": "1977 – 1982"
+        },
+        {
+          "id": "BICI-G12",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 12",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Tasas de interés (dólar y pesos) e inflación anual, 1977-1982",
+          "periodo_cubierto": "1977 – 1982"
         }
       ]
     },
