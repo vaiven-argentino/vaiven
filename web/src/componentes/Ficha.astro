@@ -38,7 +38,10 @@ const NOMBRE_EMPALME: Record<string, string> = {
   yuxtaponer: "Tramos yuxtapuestos, sin empalmar: cada tramo conserva los valores de su fuente.",
   derivar: "Serie calculada por Vaivén a partir de otras series publicadas: los tramos de abajo son sus insumos.",
 };
-const citaInicial = nombreTransformacion({ medida, transformacion: inicial, entidad: entidadInicial });
+const ARRANCA = { real: "a precios constantes", en_dolares: "en dólares", pct_pib: "en % del PIB" } as const;
+// En la cita, el país va con su nombre («entidad Argentina»); el MCP usa el código ISO3.
+const nombreEntidad = pais ? doc.entidades.find((e) => e.id === entidadInicial)?.nombre : undefined;
+const citaInicial = nombreTransformacion({ medida, transformacion: inicial, entidad: nombreEntidad });
 const datosCliente = JSON.stringify(doc).replace(/</g, "\\u003c");
 const bibliografia = serie.bibliografia ?? [];
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
@@ -52,7 +55,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
     </div>
     <p class="definicion">{serie.definicion}</p>
     <dl class="datos-clave">
-      <div><dt>Unidad</dt><dd>{doc.unidad}</dd></div>
+      <div><dt>Unidad</dt><dd>{doc.unidad}{medida && `, como se publica (el gráfico arranca ${ARRANCA[medida]})`}</dd></div>
       <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
       <div><dt>Cobertura</dt><dd>{fechaCorta(doc.cobertura.desde)} – {fechaCorta(doc.cobertura.hasta)}</dd></div>
       <div><dt>Versión de datos</dt><dd><time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time></dd></div>

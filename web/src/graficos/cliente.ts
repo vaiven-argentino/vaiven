@@ -247,7 +247,7 @@ function iniciar(): void {
   }
 
   function opcionesCita(o: Opciones) {
-    return { ...o, entidad: pais ? cEntidad?.value : undefined };
+    return { ...o, entidad: pais ? (cEntidad?.selectedOptions[0]?.textContent ?? cEntidad?.value) : undefined };
   }
 
   function cita(o: Opciones): void {
