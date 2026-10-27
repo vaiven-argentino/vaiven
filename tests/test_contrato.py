@@ -133,6 +133,17 @@ def test_los_insumos_apuntan_a_archivos_publicados(ruta):
             assert (EXPORT / o["archivo"]).exists(), (medida, o["archivo"])
 
 
+@pytest.mark.parametrize("ruta", ARCHIVOS, ids=lambda r: f"{r.parent.name}.{r.stem}")
+def test_las_medidas_declaradas_tienen_sus_insumos(ruta):
+    # Si la variante declara una medida y su moneda la admite, el export trae los insumos (un export viejo no los trae).
+    doc = json.loads(ruta.read_text(encoding="utf-8"))
+    esperadas = {"real": {"pesos_actuales"}, "en_dolares": {"pesos_actuales"}, "pct_pib": {"pesos_actuales", "dolares"},
+                 "pesos_actuales": {"moneda_de_epoca"}}
+    for medida, monedas in esperadas.items():
+        if medida in doc["transformaciones"] and doc.get("moneda") in monedas:
+            assert medida in doc.get("insumos", {}), (doc["id"], medida)
+
+
 def test_indice_de_auxiliares_y_signos_monetarios():
     indice = json.loads((EXPORT / "auxiliares.json").read_text(encoding="utf-8"))
     catalogo = {s["id"] for s in json.loads((EXPORT / "catalogo.json").read_text(encoding="utf-8"))["series"]}

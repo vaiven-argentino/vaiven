@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-27T19:44:10Z",
+  "version_datos": "2026-10-27T19:55:59Z",
   "auxiliares": [
     {
       "id": "ipc-eeuu",
@@ -43,11 +43,22 @@
             "cuenta-corriente.larga",
             "cuenta-corriente.mbp5",
             "cuenta-corriente.mbp6",
+            "deuda-externa.indec",
+            "deuda-externa.indec-1991-2001",
+            "deuda-externa.privada",
+            "deuda-externa.publica",
+            "deuda-externa.total",
+            "deuda-publica.externa-bm",
             "exportaciones.mensual",
             "exportaciones.oficial",
+            "fuga.activos-externos",
+            "fuga.fae",
+            "fuga.variacion-activos",
             "importaciones.mensual",
             "importaciones.oficial",
-            "reservas.brutas"
+            "reservas.brutas",
+            "saldo-comercial.mensual",
+            "saldo-comercial.oficial"
           ]
         },
         {
@@ -64,11 +75,22 @@
             "cuenta-corriente.larga",
             "cuenta-corriente.mbp5",
             "cuenta-corriente.mbp6",
+            "deuda-externa.indec",
+            "deuda-externa.indec-1991-2001",
+            "deuda-externa.privada",
+            "deuda-externa.publica",
+            "deuda-externa.total",
+            "deuda-publica.externa-bm",
             "exportaciones.mensual",
             "exportaciones.oficial",
+            "fuga.activos-externos",
+            "fuga.fae",
+            "fuga.variacion-activos",
             "importaciones.mensual",
             "importaciones.oficial",
-            "reservas.brutas"
+            "reservas.brutas",
+            "saldo-comercial.mensual",
+            "saldo-comercial.oficial"
           ]
         }
       ]
@@ -91,8 +113,17 @@
           },
           "archivo": "auxiliares/pib-nominal/anual.json",
           "usada_por": [
+            "agregados.m1",
+            "agregados.m2-pesos",
+            "agregados.m2-privado",
+            "agregados.m2-total",
+            "agregados.m3-total",
             "base-monetaria.fin-de-mes",
-            "base-monetaria.promedio-mensual"
+            "base-monetaria.promedio-mensual",
+            "resultado-fiscal.financiero",
+            "resultado-fiscal.financiero-devengado",
+            "resultado-fiscal.primario",
+            "resultado-fiscal.primario-devengado"
           ]
         },
         {
@@ -106,8 +137,17 @@
           },
           "archivo": "auxiliares/pib-nominal/trimestral.json",
           "usada_por": [
+            "agregados.m1",
+            "agregados.m2-pesos",
+            "agregados.m2-privado",
+            "agregados.m2-total",
+            "agregados.m3-total",
             "base-monetaria.fin-de-mes",
-            "base-monetaria.promedio-mensual"
+            "base-monetaria.promedio-mensual",
+            "resultado-fiscal.financiero",
+            "resultado-fiscal.financiero-devengado",
+            "resultado-fiscal.primario",
+            "resultado-fiscal.primario-devengado"
           ]
         }
       ]

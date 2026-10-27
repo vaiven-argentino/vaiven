@@ -21,7 +21,26 @@
     "media_movil",
     "pct_pib"
   ],
-  "insumos": {},
+  "insumos": {
+    "pct_pib": {
+      "opciones": [
+        {
+          "id": "pib-dolares.anual",
+          "archivo": "auxiliares/pib-dolares/anual.json",
+          "nombre": "Anual",
+          "frecuencia": "anual"
+        },
+        {
+          "id": "pib-dolares.trimestral",
+          "archivo": "auxiliares/pib-dolares/trimestral.json",
+          "nombre": "Trimestral (desde 1993)",
+          "frecuencia": "trimestral"
+        }
+      ],
+      "por_defecto": "pib-dolares.anual",
+      "unidad": "% del PIB"
+    }
+  },
   "auxiliar": false,
   "tramos": [
     {
@@ -64,7 +83,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Deuda externa total, variante «privada». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/deuda-externa/privada/",
-  "version_datos": "2026-10-27T19:39:08Z",
+  "version_datos": "2026-10-27T19:55:59Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 3291.0],

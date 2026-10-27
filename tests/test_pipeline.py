@@ -156,3 +156,16 @@ def test_ficha_de_bibliografia_inexistente_frena_el_export(repo):
     meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
     with pytest.raises(ErrorPipeline, match="NO-EXISTE"):
         ejecutar(repo, con_red=False)
+
+
+def test_insumos_encuentran_las_auxiliares_fuera_de_la_corrida(tmp_path):
+    # En una corrida parcial, el PIB auxiliar no está entre los documentos armados: se busca en export/auxiliares/.
+    from pipeline.export.insumos import Publicadas
+    (tmp_path / "metadatos" / "auxiliares").mkdir(parents=True)
+    aux = {"id": "pib-dolares", "frecuencia": "anual", "variantes": [{"id": "anual", "nombre": "Anual"}]}
+    (tmp_path / "metadatos" / "auxiliares" / "pib-dolares.yaml").write_text(yaml.safe_dump(aux), encoding="utf-8")
+    (tmp_path / "export" / "auxiliares" / "pib-dolares").mkdir(parents=True)
+    (tmp_path / "export" / "auxiliares" / "pib-dolares" / "anual.json").write_text("{}", encoding="utf-8")
+    p = Publicadas({}, tmp_path / "export", tmp_path / "metadatos")
+    assert p.opcion("pib-dolares.anual") == {"id": "pib-dolares.anual", "archivo": "auxiliares/pib-dolares/anual.json",
+                                             "nombre": "Anual", "frecuencia": "anual"}
