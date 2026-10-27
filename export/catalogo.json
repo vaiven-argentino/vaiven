@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-27T19:39:08Z",
+  "version_datos": "2026-10-27T19:42:14Z",
   "series": [
     {
       "id": "agregados",
@@ -639,6 +639,111 @@
       ]
     },
     {
+      "id": "deuda-publica",
+      "codigo": "FIS-04",
+      "nombre": "Deuda pública",
+      "bloque": "Fiscal",
+      "prioridad": "A",
+      "definicion": "Stock de deuda del sector público. Por ahora solo hay una fuente abierta para la parte externa: la deuda pública total (interna y externa) queda pendiente de licencia.",
+      "unidad": "millones de US$ corrientes",
+      "tipo": "stock",
+      "agregacion": "fin_de_periodo",
+      "transformaciones": [
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "media_movil",
+        "pct_pib"
+      ],
+      "frecuencia": "anual",
+      "variante_por_defecto": "externa-bm",
+      "quiebres": [
+        "q.deuda-publica.solo-externa",
+        "q.deuda-externa.componentes-bm"
+      ],
+      "variantes": [
+        {
+          "id": "externa-bm",
+          "nombre": "Deuda externa pública y con garantía pública, de largo plazo, Banco Mundial (1970–2024)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2024"
+          },
+          "archivo": "series/deuda-publica/externa-bm.json"
+        },
+        {
+          "id": "finanzas",
+          "nombre": "Secretaría de Finanzas, deuda bruta de la Administración Central (desde 2019)",
+          "estado": "pendiente_licencia",
+          "frecuencia": "anual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente de licencia: la página de la Secretaría de Finanzas no muestra una licencia (el aviso CC BY 4.0 de argentina.gob.ar está comentado en el HTML). Hay que consultarlo."
+        },
+        {
+          "id": "fmi",
+          "nombre": "FMI, deuda del gobierno en % del PIB (desde 1970)",
+          "estado": "pendiente_licencia",
+          "frecuencia": "anual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente de licencia: los términos del FMI piden permiso para el reuso comercial, que CC BY 4.0 habilita."
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "BRE2019-C4.10",
+          "referencia": "Brenta (2019), Historia de la deuda externa argentina, cap. 4 «De la hiperinflación al default», Capital Intelectual",
+          "pagina": "pdf 76 (153)",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Deuda pública como porcentaje del PIB",
+          "periodo_cubierto": "IV-2001; II-2002"
+        },
+        {
+          "id": "CENDA2010-G7",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 10 (29)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Deuda del Sector Público Nacional, 1992-2009. En porcentaje del PIB",
+          "periodo_cubierto": "dic-1992 – dic-2009"
+        },
+        {
+          "id": "DF2013-G11",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "40",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Relación deuda pública total/PIB (%)",
+          "periodo_cubierto": "1990 – 2010"
+        },
+        {
+          "id": "BRE2019-C4.7",
+          "referencia": "Brenta (2019), Historia de la deuda externa argentina, cap. 4 «De la hiperinflación al default», Capital Intelectual",
+          "pagina": "pdf 70 (140)",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Deuda externa pública al 31/12/1989 y 31/12/2001 y deuda pública en moneda extranjera al 31/12/2001 por acreedor",
+          "periodo_cubierto": "1989; 2001"
+        },
+        {
+          "id": "BRE2019-C4.8",
+          "referencia": "Brenta (2019), Historia de la deuda externa argentina, cap. 4 «De la hiperinflación al default», Capital Intelectual",
+          "pagina": "pdf 75 (150)",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Deuda total del Sector Público por tipo de acreedor",
+          "periodo_cubierto": "mar-2001; dic-2001"
+        },
+        {
+          "id": "BRE2019-C4.9",
+          "referencia": "Brenta (2019), Historia de la deuda externa argentina, cap. 4 «De la hiperinflación al default», Capital Intelectual",
+          "pagina": "pdf 75 (151)",
+          "tipo": "cuadro",
+          "titulo_original": "Deuda Pública. Distribución por moneda y tipo de deuda al 31/12/2001",
+          "periodo_cubierto": "31/12/2001"
+        }
+      ]
+    },
+    {
       "id": "exportaciones",
       "codigo": "EXT-01",
       "nombre": "Exportaciones",
@@ -698,6 +803,211 @@
           "tipo": "gráfico de líneas",
           "titulo_original": "Exportaciones, importaciones y saldo de balanza comercial, 1990-2009. En millones de dólares corrientes",
           "periodo_cubierto": "1990 – 2009"
+        }
+      ]
+    },
+    {
+      "id": "fuga",
+      "codigo": "EXT-08",
+      "nombre": "Fuga de capitales",
+      "bloque": "Sector externo",
+      "prioridad": "A",
+      "definicion": "Compra neta de activos externos por parte de residentes del sector privado, en millones de dólares. Un valor positivo es una salida (formación de activos externos). No hay una medición oficial única: cada variante mide algo distinto.",
+      "unidad": "millones de US$",
+      "tipo": "flujo",
+      "agregacion": "suma",
+      "transformaciones": [
+        "frecuencia",
+        "media_movil",
+        "pct_pib"
+      ],
+      "frecuencia": "mensual",
+      "variante_por_defecto": "fae",
+      "quiebres": [
+        "q.fuga.mediciones",
+        "q.fuga.otros-sectores-2006",
+        "q.fuga.revaluaciones"
+      ],
+      "variantes": [
+        {
+          "id": "fae",
+          "nombre": "Formación de activos externos, balance cambiario (desde 2003)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "2003-01",
+            "hasta": "2026-08"
+          },
+          "archivo": "series/fuga/fae.json"
+        },
+        {
+          "id": "activos-externos",
+          "nombre": "Stock de activos externos del sector privado (desde 1991)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1991",
+            "hasta": "2024"
+          },
+          "archivo": "series/fuga/activos-externos.json"
+        },
+        {
+          "id": "variacion-activos",
+          "nombre": "Variación del stock de activos externos del sector privado (desde 1992)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1992",
+            "hasta": "2024"
+          },
+          "archivo": "series/fuga/variacion-activos.json"
+        },
+        {
+          "id": "residual",
+          "nombre": "Método residual (Basualdo–Kulfas)",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente: no hay una serie publicada con licencia abierta (la de ArgenData es CC BY-NC-ND) y reconstruirla con el balance de pagos requiere acordar el método."
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "SCH1998c2-C4",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 2 «El quiebre del modelo cerrado en los setenta»",
+          "pagina": "pdf 13 (libro 55)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la deuda total neta y sus causas (en millones de dólares corrientes)",
+          "periodo_cubierto": "1977 – I-1981"
+        },
+        {
+          "id": "OS2006-G2",
+          "referencia": "Ortiz y Schorr (2006), «La economía política del gobierno de Alfonsín…», en Pucciarelli (coord.), Siglo XXI",
+          "pagina": "20",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Argentina. Evolución de la deuda externa total y fuga de capitales, 1981-1989",
+          "periodo_cubierto": "1981 – 1989"
+        },
+        {
+          "id": "BAS2000-C1",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 21 (23)",
+          "tipo": "cuadro",
+          "titulo_original": "Transferencias internas y externas de ingresos y formación de capital, 1981-1989",
+          "periodo_cubierto": "1981 – 1989 (acumulado y anual; compara con 1970-75 y 1970-80)"
+        },
+        {
+          "id": "BAS2000-G5",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 47 (49)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución del stock de deuda externa total y de los capitales locales en el exterior, 1991-1997",
+          "periodo_cubierto": "1991 – 1997"
+        },
+        {
+          "id": "BAS2000-G6",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 49 (51)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Variación anual de la deuda externa total, la salida de capitales locales al exterior y los ingresos por privatización de empresas públicas, 1991-1997",
+          "periodo_cubierto": "1991 – 1997"
+        },
+        {
+          "id": "BAS2000-G7",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 53 (55)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución de los intereses y la amortización de la deuda externa y de la salida de capital local y la renta obtenida en el exterior, 1991-1997",
+          "periodo_cubierto": "1991 – 1997"
+        },
+        {
+          "id": "DF2013-G7",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "37",
+          "tipo": "gráfico de barras",
+          "titulo_original": "Evolución de la Formación de Activos Externos del Sector Privado no Financiero",
+          "periodo_cubierto": "I-2003 – I-2013"
+        },
+        {
+          "id": "SW2015-G5",
+          "referencia": "Schorr y Wainer (2015), «Algunos determinantes de la restricción externa en la Argentina», Márgenes 1, UNGS (no figura en el cronograma 2026)",
+          "pagina": "pdf 48 (47)",
+          "tipo": "gráfico",
+          "titulo_original": "Evolución de la fuga de capitales locales al exterior y la variación de reservas, 2003-2014",
+          "periodo_cubierto": "2003 – 2014"
+        },
+        {
+          "id": "RZ2017-G1",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "13",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Argentina. Stock de deuda externa total vs. stock de fuga de capitales desde 1980 hasta 2016",
+          "periodo_cubierto": "1980 – 2016"
+        },
+        {
+          "id": "RZ2017-G2",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "13",
+          "tipo": "gráfico de barras y líneas",
+          "titulo_original": "Argentina. Fuga de capitales vs. saldo de la balanza comercial 2003-2016",
+          "periodo_cubierto": "2003 – 2016"
+        },
+        {
+          "id": "RZ2017-G3",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "20",
+          "tipo": "gráfico de barras",
+          "titulo_original": "Argentina. Formación de Activos Externos del Sector Privado no Financiero. Con y sin controles de cambios. Diciembre de 2014-abril de 2017",
+          "periodo_cubierto": "dic-2014 – abr-2017"
+        },
+        {
+          "id": "RZ2017-G4",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "20",
+          "tipo": "gráfico de áreas",
+          "titulo_original": "Argentina. Compradores de dólares según tipo de operación en billetes y divisas. Enero de 2015-abril de 2017",
+          "periodo_cubierto": "ene-2015 – abr-2017"
+        },
+        {
+          "id": "RZ2017-G5",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "21",
+          "tipo": "gráfico de barras",
+          "titulo_original": "Argentina. Composición de la Formación de Activos Externos del BCRA 2009-2016",
+          "periodo_cubierto": "2009 – 2016"
+        },
+        {
+          "id": "RZ2017-G7",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "24",
+          "tipo": "gráfico de barras",
+          "titulo_original": "Argentina. Promedios anuales de fuga de capitales y deuda externa total, 1975-2016",
+          "periodo_cubierto": "1975-1983; 1984-1989; 1990-2001; 2002-2015; 2016"
+        },
+        {
+          "id": "BICI-G17",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 17",
+          "tipo": "gráfico de columnas y líneas",
+          "titulo_original": "Evolución de la deuda externa total bruta, pública, privada, reservas y fuga de capitales (1975-1982)",
+          "periodo_cubierto": "1975 – 1982"
+        },
+        {
+          "id": "BICI-T21",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 21",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Aplicación de la deuda externa antes de su crisis en 1982. Acumulado del 31.12.75 al 31.12.81",
+          "periodo_cubierto": "31/12/1975 – 31/12/1981"
+        },
+        {
+          "id": "BP-E1",
+          "referencia": "Cátedra, Balanza de pagos, esquema (material complementario)",
+          "pagina": "1–2",
+          "tipo": "esquema",
+          "titulo_original": "Balanza de pagos (esquema y referencias)",
+          "periodo_cubierto": "—"
         }
       ]
     },
@@ -1434,6 +1744,172 @@
           "tipo": "cuadro",
           "titulo_original": "Principales variables macroeconómicas",
           "periodo_cubierto": "2003–2012"
+        }
+      ]
+    },
+    {
+      "id": "salario-real",
+      "codigo": "TRA-03",
+      "nombre": "Salario real",
+      "bloque": "Trabajo e ingresos",
+      "prioridad": "A",
+      "definicion": "Salarios nominales de los trabajadores registrados, para ver en términos reales con la medida «real» (deflactados con la variante elegida del IPC). La ficha arranca en términos reales, con el IPC oficial.",
+      "unidad": "pesos corrientes",
+      "tipo": "precio",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "var_mensual",
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "media_movil",
+        "real",
+        "en_dolares"
+      ],
+      "frecuencia": "mensual",
+      "variante_por_defecto": "ripte",
+      "quiebres": [
+        "q.salario.registrados",
+        "q.salario.hueco-1976-1984"
+      ],
+      "variantes": [
+        {
+          "id": "ripte",
+          "nombre": "RIPTE, trabajadores estables registrados (desde 1994)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1994-07",
+            "hasta": "2026-07"
+          },
+          "archivo": "series/salario-real/ripte.json"
+        },
+        {
+          "id": "indice-salarios",
+          "nombre": "Índice de salarios del INDEC, sector privado registrado (desde 2001)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "2001-10",
+            "hasta": "2026-07"
+          },
+          "archivo": "series/salario-real/indice-salarios.json"
+        },
+        {
+          "id": "iso",
+          "nombre": "Índice de Salarios por Obrero (1990–2015)",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente para una fase siguiente."
+        },
+        {
+          "id": "industria-historica",
+          "nombre": "Salario industrial histórico (1970–1975 y 1985–1990)",
+          "estado": "pendiente",
+          "frecuencia": "mensual",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente. Hay series de salarios de convenio de la industria hasta 1975 y de salario industrial en 1985–1990 (con valores a revisar), pero ninguna serie abierta para 1976–1984: la de ArgenData es CC BY-NC-ND, e ILOSTAT y CEPAL no tienen esos años."
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "DF1990-C4",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 66 (63)",
+          "tipo": "cuadro",
+          "titulo_original": "Tipo de cambio real y salario real (1980=100)",
+          "periodo_cubierto": "1971-75 – 1989"
+        },
+        {
+          "id": "FF1990-C5",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 32 (31)",
+          "tipo": "cuadro",
+          "titulo_original": "Evolución de la inflación y los precios relativos clave",
+          "periodo_cubierto": "1985 – 1989 (aprox.)"
+        },
+        {
+          "id": "FF1990-C8",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 42 (41)",
+          "tipo": "cuadro",
+          "titulo_original": "Precios relativos (índices sep-89=1,000)",
+          "periodo_cubierto": "ene-1988 – jul-1989"
+        },
+        {
+          "id": "OS2006-G4",
+          "referencia": "Ortiz y Schorr (2006), «La economía política del gobierno de Alfonsín…», en Pucciarelli (coord.), Siglo XXI",
+          "pagina": "28",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Argentina. Evolución del PBI, del salario medio y de la participación de los asalariados en el PBI, 1974-1989",
+          "periodo_cubierto": "1974 – 1989"
+        },
+        {
+          "id": "DLB1993-A4",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 45 (123)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Producción industrial, salarios, desocupación y tasas de actividad",
+          "periodo_cubierto": "1980 – mar-1993"
+        },
+        {
+          "id": "SCH1998c4-C1",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 4 «La reorganización forzosa de la economía en los noventa»",
+          "pagina": "pdf 28 (174)",
+          "tipo": "cuadro",
+          "titulo_original": "Salario real y costo laboral en la Argentina",
+          "periodo_cubierto": "1985 – 1994"
+        },
+        {
+          "id": "CENDA2010-G3",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 8 (25)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución de los salarios reales registrados, 1995-2009. En número índice base 2001 = 100",
+          "periodo_cubierto": "1995 – 2009"
+        },
+        {
+          "id": "CENDA2010-G14",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 31 (70)",
+          "tipo": "gráfico de barras",
+          "titulo_original": "Variación anual de salarios y precios, 2007-2009",
+          "periodo_cubierto": "2007 – 2009"
+        },
+        {
+          "id": "DF2013-C1",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "33",
+          "tipo": "cuadro",
+          "titulo_original": "Principales variables macroeconómicas",
+          "periodo_cubierto": "2003–2012"
+        },
+        {
+          "id": "DF2013-G4",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "35",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Salario real y salario medido en dólares constantes, promedio de la industria manufacturera (2001.4T=100)",
+          "periodo_cubierto": "1997 – 2012 (aprox., según el eje)"
+        },
+        {
+          "id": "DF2013-C2",
+          "referencia": "Damill y Frenkel (2013), La economía argentina bajo los Kirchner: una historia de dos lustros, ITF",
+          "pagina": "36",
+          "tipo": "cuadro",
+          "titulo_original": "Descomposición de las variaciones del costo salarial unitario (CSU) medido en moneda extranjera",
+          "periodo_cubierto": "2002; 2003–2007; 2008–2012"
+        },
+        {
+          "id": "CENDA2004-G2",
+          "referencia": "CENDA (2004), «Las consecuencias económicas del Sr. Lavagna. Dilemas de un país devaluado», Tendencias de la economía actual, documento n.º 1 (no figura en el cronograma 2026)",
+          "pagina": "13",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución de salarios reales industriales (índice 1980=100), 1950-2003. Promedios móviles trienales",
+          "periodo_cubierto": "1950 – 2003"
         }
       ]
     },

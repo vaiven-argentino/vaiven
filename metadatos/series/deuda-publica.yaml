@@ -1,0 +1,57 @@
+id: deuda-publica
+codigo: FIS-04
+nombre: Deuda pública
+bloque: Fiscal
+prioridad: A
+definicion: >-
+  Stock de deuda del sector público. Por ahora solo hay una fuente abierta para la parte externa: la deuda pública
+  total (interna y externa) queda pendiente de licencia.
+unidad: millones de US$ corrientes
+tipo: stock
+agregacion: fin_de_periodo
+frecuencia: anual
+moneda: dolares
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: externa-bm
+variantes:
+  - id: externa-bm
+    nombre: Deuda externa pública y con garantía pública, de largo plazo, Banco Mundial (1970–2024)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 0.000001
+    metodo: >-
+      Deuda externa de largo plazo del sector público y la privada con garantía pública, según la base
+      International Debt Statistics del Banco Mundial (DT.DOD.DPPG.CD), en millones de dólares. Es la misma serie que
+      la variante «pública» de la deuda externa (EXT-07).
+    tramos:
+      - {fuente: f.bm.deuda-externa-publica, desde: 1970}
+    advertencias: [q.deuda-publica.solo-externa, q.deuda-externa.componentes-bm]
+  - id: finanzas
+    nombre: Secretaría de Finanzas, deuda bruta de la Administración Central (desde 2019)
+    estado: pendiente_licencia
+    nota: >-
+      Pendiente de licencia: la página de la Secretaría de Finanzas no muestra una licencia (el aviso CC BY 4.0 de
+      argentina.gob.ar está comentado en el HTML). Hay que consultarlo.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.finanzas.deuda-publica, desde: 2019-01}
+  - id: fmi
+    nombre: FMI, deuda del gobierno en % del PIB (desde 1970)
+    estado: pendiente_licencia
+    nota: >-
+      Pendiente de licencia: los términos del FMI piden permiso para el reuso comercial, que CC BY 4.0 habilita.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.fmi.deuda-publica, desde: 1970}
+validacion:
+  min: 0
+  var_min: -50
+  var_max: 100
+  umbral_revision_pct: 1
+quiebres: [q.deuda-publica.solo-externa, q.deuda-externa.componentes-bm]
+transformaciones: [var_interanual, base_100, frecuencia, media_movil, pct_pib]
+fuentes: [f.bm.deuda-externa-publica]
+bibliografia: [BRE2019-C4.10, CENDA2010-G7, DF2013-G11, BRE2019-C4.7, BRE2019-C4.8, BRE2019-C4.9]
+licencia_derivado: CC-BY-4.0
