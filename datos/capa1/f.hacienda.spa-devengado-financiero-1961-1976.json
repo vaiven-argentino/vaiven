@@ -1,0 +1,11 @@
+{
+  "fuente": "f.hacienda.spa-devengado-financiero-1961-1976",
+  "unidad": "australes (rótulo de la distribución: miles de australes)",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.hacienda.spa-devengado-financiero-1961-1976/2026-10-27",
+  "descargado": "2026-10-27T19:37:01Z",
+  "sha256": "87bfe92f1788878af0eda03010d87f7b9dc117a2129c57225b56cc0bb227685e",
+  "observaciones": 16,
+  "desde": "1961-01-01",
+  "hasta": "1976-01-01"
+}

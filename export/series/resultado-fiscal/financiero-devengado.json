@@ -1,0 +1,170 @@
+{
+  "esquema": "1.2",
+  "id": "resultado-fiscal.financiero-devengado",
+  "serie": "resultado-fiscal",
+  "codigo": "FIS-01",
+  "nombre": "Resultado primario y financiero",
+  "variante": "financiero-devengado",
+  "nombre_variante": "Resultado financiero, base devengado, Sector Público Argentino (1970–1992)",
+  "es_variante_por_defecto": false,
+  "unidad": "millones de pesos corrientes",
+  "tipo": "flujo",
+  "agregacion": "suma",
+  "frecuencia": "anual",
+  "moneda": "pesos_actuales",
+  "metodo": "Necesidad de financiamiento de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público Argentino (Secretaría de Hacienda), con el signo dado vuelta para que un déficit sea negativo, como en base caja. Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen: Vaivén la infirió con el PIB nominal y la declara en el coeficiente de cada tramo, que lleva todo a millones de pesos actuales (1970–1976 en australes; 1977–1984 en miles de australes; 1985–1986 en millones de australes; 1987–1989 en miles de pesos; 1990–1992 en millones de pesos). En 1979, la fuente da una necesidad de financiamiento distinta de la diferencia entre erogaciones y recursos (1.047,42 contra 987,77 miles de australes). No se une con la serie en base caja.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "frecuencia",
+    "media_movil",
+    "real",
+    "en_dolares",
+    "pct_pib"
+  ],
+  "insumos": {
+    "real": {
+      "opciones": [
+        {
+          "id": "ipc.oficial",
+          "archivo": "series/ipc/oficial.json",
+          "nombre": "Oficial INDEC, sin corregir"
+        },
+        {
+          "id": "ipc.provincias",
+          "archivo": "series/ipc/provincias.json",
+          "nombre": "Provincias (San Luis y Ciudad de Buenos Aires) en 2007–2016"
+        }
+      ],
+      "por_defecto": "ipc.oficial",
+      "unidad": "millones de pesos de {base}"
+    },
+    "en_dolares": {
+      "opciones": [
+        {
+          "id": "tc-oficial.pesos-actuales",
+          "archivo": "series/tc-oficial/pesos-actuales.json",
+          "nombre": "En pesos actuales"
+        }
+      ],
+      "por_defecto": "tc-oficial.pesos-actuales",
+      "unidad": "millones de US$"
+    }
+  },
+  "auxiliar": false,
+  "tramos": [
+    {
+      "fuente": "f.hacienda.spa-devengado-financiero-1961-1976",
+      "desde": "1970",
+      "hasta": "1976",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-financiero-1977-1986",
+      "desde": "1977",
+      "hasta": "1984",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-financiero-1977-1986",
+      "desde": "1985",
+      "hasta": "1986",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-financiero-1987-1989",
+      "desde": "1987",
+      "hasta": "1989",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-financiero-1990-1992",
+      "desde": "1990",
+      "hasta": "1992",
+      "frecuencia": "anual"
+    }
+  ],
+  "cobertura": {
+    "desde": "1970",
+    "hasta": "1992"
+  },
+  "advertencias": [
+    {
+      "id": "q.fiscal.devengado-unidad",
+      "desde": "1970",
+      "hasta": "1992",
+      "tipo": "metodologia",
+      "descripcion": "Unidad inferida por Vaivén: Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen. La unidad que se usa es la que da déficits plausibles y sin saltos en % del PIB. Contrastado con cifras publicadas (déficit en % del PIB nominal del Banco Mundial): 1983 coincide (9,5 % contra 9,6 % según Hacienda); 1975 da 2,7 puntos menos; 1981, 1987 y 1989 difieren de 1 a 1,5 puntos; 1991–1992 no coincide. Con el PIB retropolado de Vaivén (más alto antes de 2004), los porcentajes dan alrededor de 8 % menos (1983: 8,8 %). Usar con cautela."
+    },
+    {
+      "id": "q.fiscal.devengado-spa",
+      "desde": "1970",
+      "hasta": "1992",
+      "tipo": "cobertura",
+      "descripcion": "Otra cobertura y otra base que la serie desde 1993: Sector Público Argentino (incluye provincias, Ciudad de Buenos Aires y empresas públicas) y base devengado, contra el Sector Público Nacional en base caja. No se unen."
+    }
+  ],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.hacienda.spa-devengado-financiero-1961-1976",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Necesidad de financiamiento (déficit financiero)",
+      "url": "https://datos.gob.ar/dataset/sspm-cuenta-ahorro-inversion-financiamiento-base-devengado-sector-publico-argentino",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.1_NECES_FINANAN_DEVE_0_11_81"
+    },
+    {
+      "id": "f.hacienda.spa-devengado-financiero-1977-1986",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Necesidad de financiamiento (déficit financiero)",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.2_NECES_FINANAN_DEVE_0_11_87",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.2_NECES_FINANAN_DEVE_0_11_87"
+    },
+    {
+      "id": "f.hacienda.spa-devengado-financiero-1987-1989",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Necesidad de financiamiento (déficit financiero)",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.3_NECES_FINANAN_DEVE_0_11_41",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.3_NECES_FINANAN_DEVE_0_11_41"
+    },
+    {
+      "id": "f.hacienda.spa-devengado-financiero-1990-1992",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Necesidad de financiamiento (déficit financiero)",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_NECES_FINANAN_DEVE_0_11_48",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.4_NECES_FINANAN_DEVE_0_11_48"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). Resultado primario y financiero, variante «financiero-devengado». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/resultado-fiscal/financiero-devengado/",
+  "version_datos": "2026-10-27T19:37:25Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1970", -1.6423e-08],
+    ["1971", -5.5081e-08],
+    ["1972", -1.19933e-07],
+    ["1973", -2.65443e-07],
+    ["1974", -3.93057e-07],
+    ["1975", -2.156157e-06],
+    ["1976", -8.86824e-06],
+    ["1977", -9.855e-06],
+    ["1978", -3.4018e-05],
+    ["1979", -0.000104742],
+    ["1980", -0.00022834],
+    ["1981", -0.00077333],
+    ["1982", -0.00228003],
+    ["1983", -0.0104328],
+    ["1984", -0.0633932],
+    ["1985", -0.2413],
+    ["1986", -0.37538],
+    ["1987", -1.5072],
+    ["1988", -8.0841],
+    ["1989", -232.6675],
+    ["1990", -2995.9],
+    ["1991", -2362.4],
+    ["1992", -936.8]
+  ]
+}

@@ -835,3 +835,109 @@
   unidad: millones de pesos corrientes, a ritmo anual
   cobertura: {desde: 2004-01, hasta: hoy}
   verificado: 2026-10-27
+
+# ── Fiscal: Cuenta AIF base devengado, Sector Público Argentino, 1961–1992 (FIS-01) ─
+- id: f.hacienda.spa-devengado-financiero-1961-1976
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Necesidad de financiamiento (déficit financiero)
+  api: datos.gob.ar-csv
+  id_api: 439.1_NECES_FINANAN_DEVE_0_11_81
+  url_descarga: https://infra.datos.gob.ar/catalog/sspm/dataset/442/distribution/442.26/download/cuenta-aif-base-devengado-administracion-sector-publico-1961-1976-miles-australes.csv
+  columna: neces_finan
+  url: https://datos.gob.ar/dataset/sspm-cuenta-ahorro-inversion-financiamiento-base-devengado-sector-publico-argentino
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: 'australes (rótulo de la distribución: miles de australes)'
+  cobertura: {desde: 1961, hasta: 1976}
+  verificado: 2026-10-27
+  nota: >-
+    La API rotula la serie como «Variación porcentual», pero son niveles. La unidad no está documentada: la de cada
+    tramo se infirió con el PIB nominal (ver q.fiscal.devengado-unidad).
+    La API devuelve 0 filas para esta serie; se usa el CSV de la distribución 442.26.
+
+- id: f.hacienda.spa-devengado-financiero-1977-1986
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Necesidad de financiamiento (déficit financiero)
+  api: datos.gob.ar
+  id_api: 439.2_NECES_FINANAN_DEVE_0_11_87
+  url: https://apis.datos.gob.ar/series/api/series/?ids=439.2_NECES_FINANAN_DEVE_0_11_87
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: 'miles de australes hasta 1984 y millones de australes en 1985–1986 (rótulo: miles de australes)'
+  cobertura: {desde: 1977, hasta: 1986}
+  verificado: 2026-10-27
+
+- id: f.hacienda.spa-devengado-financiero-1987-1989
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Necesidad de financiamiento (déficit financiero)
+  api: datos.gob.ar
+  id_api: 439.3_NECES_FINANAN_DEVE_0_11_41
+  url: https://apis.datos.gob.ar/series/api/series/?ids=439.3_NECES_FINANAN_DEVE_0_11_41
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: miles de pesos actuales
+  cobertura: {desde: 1987, hasta: 1989}
+  verificado: 2026-10-27
+
+- id: f.hacienda.spa-devengado-financiero-1990-1992
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Necesidad de financiamiento (déficit financiero)
+  api: datos.gob.ar
+  id_api: 439.4_NECES_FINANAN_DEVE_0_11_48
+  url: https://apis.datos.gob.ar/series/api/series/?ids=439.4_NECES_FINANAN_DEVE_0_11_48
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de pesos actuales
+  cobertura: {desde: 1990, hasta: 1992}
+  verificado: 2026-10-27
+
+- id: f.hacienda.spa-devengado-primario-1961-1976
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Superávit primario total
+  api: datos.gob.ar
+  id_api: 439.1_SUPERAVIT_TAL_DEVE_0_20_67
+  url: https://apis.datos.gob.ar/series/api/series/?ids=439.1_SUPERAVIT_TAL_DEVE_0_20_67
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: 'australes (rótulo de la distribución: miles de australes)'
+  cobertura: {desde: 1961, hasta: 1976}
+  verificado: 2026-10-27
+  nota: >-
+    La API rotula la serie como «Variación porcentual», pero son niveles. La unidad no está documentada: la de cada
+    tramo se infirió con el PIB nominal (ver q.fiscal.devengado-unidad).
+
+- id: f.hacienda.spa-devengado-primario-1977-1986
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Superávit primario total
+  api: datos.gob.ar
+  id_api: 439.2_SUPERAVIT_TAL_DEVE_0_20_67
+  url: https://apis.datos.gob.ar/series/api/series/?ids=439.2_SUPERAVIT_TAL_DEVE_0_20_67
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: 'miles de australes hasta 1984 y millones de australes en 1985–1986 (rótulo: miles de australes)'
+  cobertura: {desde: 1977, hasta: 1986}
+  verificado: 2026-10-27
+
+- id: f.hacienda.spa-devengado-primario-1987-1989
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Superávit primario total
+  api: datos.gob.ar
+  id_api: 439.3_SUPERAVIT_TAL_DEVE_0_20_16
+  url: https://apis.datos.gob.ar/series/api/series/?ids=439.3_SUPERAVIT_TAL_DEVE_0_20_16
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: miles de pesos actuales
+  cobertura: {desde: 1987, hasta: 1989}
+  verificado: 2026-10-27
+
+- id: f.hacienda.spa-devengado-primario-1990-1992
+  organismo: Secretaría de Hacienda, Ministerio de Economía
+  nombre: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Superávit primario total
+  api: datos.gob.ar
+  id_api: 439.4_SUPERAVIT_TAL_DEVE_0_20_28
+  url: https://apis.datos.gob.ar/series/api/series/?ids=439.4_SUPERAVIT_TAL_DEVE_0_20_28
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de pesos actuales
+  cobertura: {desde: 1990, hasta: 1992}
+  verificado: 2026-10-27

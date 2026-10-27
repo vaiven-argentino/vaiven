@@ -11,7 +11,7 @@ tipo: flujo
 agregacion: suma
 frecuencia: mensual
 moneda: pesos_actuales
-cobertura: {desde: 1993-01, hasta: hoy}
+cobertura: {desde: 1970, hasta: hoy}
 variante_por_defecto: primario
 unidades_medida: {real: 'millones de pesos de {base}', en_dolares: millones de US$}
 variantes:
@@ -42,14 +42,59 @@ variantes:
       - {fuente: f.hacienda.spn-financiero-2007-2014, desde: 2007-01, hasta: 2014-12}
       - {fuente: f.hacienda.spn-financiero-2017, desde: 2015-01}
     advertencias: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
+  - id: financiero-devengado
+    nombre: Resultado financiero, base devengado, Sector Público Argentino (1970–1992)
+    estado: publicada
+    frecuencia: anual
+    empalme: yuxtaponer
+    metodo: >-
+      Necesidad de financiamiento de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público
+      Argentino (Secretaría de Hacienda), con el signo dado vuelta para que un déficit sea negativo, como en base
+      caja. Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen: Vaivén la infirió con el
+      PIB nominal y la declara en el coeficiente de cada tramo, que lleva todo a millones de pesos actuales
+      (1970–1976 en australes; 1977–1984 en miles de australes; 1985–1986 en millones de australes; 1987–1989 en
+      miles de pesos; 1990–1992 en millones de pesos). En 1979, la fuente da una necesidad de financiamiento
+      distinta de la diferencia entre erogaciones y recursos (1.047,42 contra 987,77 miles de australes). No se
+      une con la serie en base caja.
+    tramos:
+      - {fuente: f.hacienda.spa-devengado-financiero-1961-1976, desde: 1970, hasta: 1976, coeficiente: -1.0e-10}
+      - {fuente: f.hacienda.spa-devengado-financiero-1977-1986, desde: 1977, hasta: 1984, coeficiente: -1.0e-7}
+      - {fuente: f.hacienda.spa-devengado-financiero-1977-1986, desde: 1985, hasta: 1986, coeficiente: -1.0e-4}
+      - {fuente: f.hacienda.spa-devengado-financiero-1987-1989, desde: 1987, hasta: 1989, coeficiente: -1.0e-3}
+      - {fuente: f.hacienda.spa-devengado-financiero-1990-1992, desde: 1990, hasta: 1992, coeficiente: -1.0}
+    advertencias: [q.fiscal.devengado-unidad, q.fiscal.devengado-spa]
+  - id: primario-devengado
+    nombre: Resultado primario, base devengado, Sector Público Argentino (1970–1992)
+    estado: publicada
+    frecuencia: anual
+    empalme: yuxtaponer
+    metodo: >-
+      Superávit primario total de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público
+      Argentino (Secretaría de Hacienda), en millones de pesos actuales, con la misma unidad inferida por tramo que
+      el resultado financiero devengado. No se une con la serie en base caja.
+    tramos:
+      - {fuente: f.hacienda.spa-devengado-primario-1961-1976, desde: 1970, hasta: 1976, coeficiente: 1.0e-10}
+      - {fuente: f.hacienda.spa-devengado-primario-1977-1986, desde: 1977, hasta: 1984, coeficiente: 1.0e-7}
+      - {fuente: f.hacienda.spa-devengado-primario-1977-1986, desde: 1985, hasta: 1986, coeficiente: 1.0e-4}
+      - {fuente: f.hacienda.spa-devengado-primario-1987-1989, desde: 1987, hasta: 1989, coeficiente: 1.0e-3}
+      - {fuente: f.hacienda.spa-devengado-primario-1990-1992, desde: 1990, hasta: 1992, coeficiente: 1.0}
+    advertencias: [q.fiscal.devengado-unidad, q.fiscal.devengado-spa]
 validacion:
   min: -100000000
   max: 100000000
   umbral_revision_pct: 1
-quiebres: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
+quiebres: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015, q.fiscal.devengado-unidad, q.fiscal.devengado-spa]
 # Sin variaciones ni base 100: el resultado cambia de signo.
 transformaciones: [frecuencia, media_movil, real, en_dolares, pct_pib]
 fuentes:
+  - f.hacienda.spa-devengado-financiero-1961-1976
+  - f.hacienda.spa-devengado-financiero-1977-1986
+  - f.hacienda.spa-devengado-financiero-1987-1989
+  - f.hacienda.spa-devengado-financiero-1990-1992
+  - f.hacienda.spa-devengado-primario-1961-1976
+  - f.hacienda.spa-devengado-primario-1977-1986
+  - f.hacienda.spa-devengado-primario-1987-1989
+  - f.hacienda.spa-devengado-primario-1990-1992
   - f.hacienda.spn-primario-1993-2006
   - f.hacienda.spn-primario-2007-2014
   - f.hacienda.spn-primario-2017

@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spa-devengado-financiero-1961-1976",
+  "descargado": "2026-10-27T19:37:01Z",
+  "sha256": "87bfe92f1788878af0eda03010d87f7b9dc117a2129c57225b56cc0bb227685e",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "distribucion.csv",
+      "url": "https://infra.datos.gob.ar/catalog/sspm/dataset/442/distribution/442.26/download/cuenta-aif-base-devengado-administracion-sector-publico-1961-1976-miles-australes.csv",
+      "bytes": 7078,
+      "sha256": "70d3e4295cad7701ce41f0de48f5c758a9a7f8b7034205f24ab9e8f9a21b6152"
+    }
+  ]
+}

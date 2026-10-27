@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-27T19:35:28Z",
+  "version_datos": "2026-10-27T19:37:25Z",
   "auxiliares": [
     {
       "id": "ipc-eeuu",
@@ -92,9 +92,7 @@
           "archivo": "auxiliares/pib-nominal/anual.json",
           "usada_por": [
             "base-monetaria.fin-de-mes",
-            "base-monetaria.promedio-mensual",
-            "resultado-fiscal.financiero",
-            "resultado-fiscal.primario"
+            "base-monetaria.promedio-mensual"
           ]
         },
         {
@@ -109,9 +107,7 @@
           "archivo": "auxiliares/pib-nominal/trimestral.json",
           "usada_por": [
             "base-monetaria.fin-de-mes",
-            "base-monetaria.promedio-mensual",
-            "resultado-fiscal.financiero",
-            "resultado-fiscal.primario"
+            "base-monetaria.promedio-mensual"
           ]
         }
       ]

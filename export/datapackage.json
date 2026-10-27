@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-27T19:35:28Z",
-  "created": "2026-10-27T19:35:28Z",
+  "version": "2026-10-27T19:37:25Z",
+  "created": "2026-10-27T19:37:25Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -1416,6 +1416,60 @@
     },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "resultado-fiscal.financiero-devengado",
+      "title": "Resultado primario y financiero · Resultado financiero, base devengado, Sector Público Argentino (1970–1992)",
+      "path": "descargas/csv/resultado-fiscal/financiero-devengado.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Necesidad de financiamiento de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público Argentino (Secretaría de Hacienda), con el signo dado vuelta para que un déficit sea negativo, como en base caja. Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen: Vaivén la infirió con el PIB nominal y la declara en el coeficiente de cada tramo, que lleva todo a millones de pesos actuales (1970–1976 en australes; 1977–1984 en miles de australes; 1985–1986 en millones de australes; 1987–1989 en miles de pesos; 1990–1992 en millones de pesos). En 1979, la fuente da una necesidad de financiamiento distinta de la diferencia entre erogaciones y recursos (1.047,42 contra 987,77 miles de australes). No se une con la serie en base caja.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Necesidad de financiamiento (déficit financiero)",
+          "path": "https://datos.gob.ar/dataset/sspm-cuenta-ahorro-inversion-financiamiento-base-devengado-sector-publico-argentino"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Necesidad de financiamiento (déficit financiero)",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.2_NECES_FINANAN_DEVE_0_11_87"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Necesidad de financiamiento (déficit financiero)",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.3_NECES_FINANAN_DEVE_0_11_41"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Necesidad de financiamiento (déficit financiero)",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_NECES_FINANAN_DEVE_0_11_48"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "resultado-fiscal.primario",
       "title": "Resultado primario y financiero · Resultado primario, base caja (desde 1993)",
       "path": "descargas/csv/resultado-fiscal/primario.csv",
@@ -1454,6 +1508,60 @@
         {
           "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 2017, mensual",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.9_SUPERAVIT_017__23_94"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "resultado-fiscal.primario-devengado",
+      "title": "Resultado primario y financiero · Resultado primario, base devengado, Sector Público Argentino (1970–1992)",
+      "path": "descargas/csv/resultado-fiscal/primario-devengado.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Superávit primario total de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público Argentino (Secretaría de Hacienda), en millones de pesos actuales, con la misma unidad inferida por tramo que el resultado financiero devengado. No se une con la serie en base caja.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos corrientes"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Superávit primario total",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.1_SUPERAVIT_TAL_DEVE_0_20_67"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Superávit primario total",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.2_SUPERAVIT_TAL_DEVE_0_20_67"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Superávit primario total",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.3_SUPERAVIT_TAL_DEVE_0_20_16"
+        },
+        {
+          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Superávit primario total",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_SUPERAVIT_TAL_DEVE_0_20_28"
         }
       ],
       "licenses": [

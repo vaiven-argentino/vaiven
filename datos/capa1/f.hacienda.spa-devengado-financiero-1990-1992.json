@@ -1,0 +1,11 @@
+{
+  "fuente": "f.hacienda.spa-devengado-financiero-1990-1992",
+  "unidad": "millones de pesos actuales",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.hacienda.spa-devengado-financiero-1990-1992/2026-10-27",
+  "descargado": "2026-10-27T19:37:04Z",
+  "sha256": "16ef5226f4dd8ffa8e0ce0dd69bc65f5c5a0e7465db57ab4fdcdfbf7e05deca0",
+  "observaciones": 3,
+  "desde": "1990-01-01",
+  "hasta": "1992-01-01"
+}

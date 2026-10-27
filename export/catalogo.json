@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-27T19:35:28Z",
+  "version_datos": "2026-10-27T19:37:25Z",
   "series": [
     {
       "id": "agregados",
@@ -1076,7 +1076,9 @@
         "q.fiscal.cobertura-spn",
         "q.fiscal.sin-privatizaciones",
         "q.fiscal.metodologia-2007",
-        "q.fiscal.metodologia-2015"
+        "q.fiscal.metodologia-2015",
+        "q.fiscal.devengado-unidad",
+        "q.fiscal.devengado-spa"
       ],
       "variantes": [
         {
@@ -1100,6 +1102,28 @@
             "hasta": "2026-08"
           },
           "archivo": "series/resultado-fiscal/financiero.json"
+        },
+        {
+          "id": "financiero-devengado",
+          "nombre": "Resultado financiero, base devengado, Sector Público Argentino (1970–1992)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "1992"
+          },
+          "archivo": "series/resultado-fiscal/financiero-devengado.json"
+        },
+        {
+          "id": "primario-devengado",
+          "nombre": "Resultado primario, base devengado, Sector Público Argentino (1970–1992)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "1992"
+          },
+          "archivo": "series/resultado-fiscal/primario-devengado.json"
         }
       ],
       "bibliografia": [

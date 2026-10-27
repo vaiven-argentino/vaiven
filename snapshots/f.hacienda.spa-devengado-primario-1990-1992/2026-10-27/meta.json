@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spa-devengado-primario-1990-1992",
+  "descargado": "2026-10-27T19:37:12Z",
+  "sha256": "b2510ec0b10650f4a59d6de9e9a7c8fba71d501d2370967275ffd3b050e346a1",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_SUPERAVIT_TAL_DEVE_0_20_28&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 3693,
+      "sha256": "2c5700ff7302dc4f7c5178aed73f06b057e88f8d90ff63e2f6b5ff2ed31cb8a5"
+    }
+  ]
+}

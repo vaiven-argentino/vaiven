@@ -127,6 +127,30 @@
     "hasta": null
   },
   {
+    "id": "q.fiscal.devengado-spa",
+    "desde": "1970",
+    "hasta": "1992",
+    "tipo": "cobertura",
+    "descripcion": "Otra cobertura y otra base que la serie desde 1993: Sector Público Argentino (incluye provincias, Ciudad de Buenos Aires y empresas públicas) y base devengado, contra el Sector Público Nacional en base caja. No se unen.",
+    "afecta": [
+      "resultado-fiscal.financiero-devengado",
+      "resultado-fiscal.primario-devengado"
+    ],
+    "fuente": "Secretaría de Hacienda, Cuenta AIF base devengado (datos.gob.ar, dataset 442)."
+  },
+  {
+    "id": "q.fiscal.devengado-unidad",
+    "desde": "1970",
+    "hasta": "1992",
+    "tipo": "metodologia",
+    "descripcion": "Unidad inferida por Vaivén: Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen. La unidad que se usa es la que da déficits plausibles y sin saltos en % del PIB. Contrastado con cifras publicadas (déficit en % del PIB nominal del Banco Mundial): 1983 coincide (9,5 % contra 9,6 % según Hacienda); 1975 da 2,7 puntos menos; 1981, 1987 y 1989 difieren de 1 a 1,5 puntos; 1991–1992 no coincide. Con el PIB retropolado de Vaivén (más alto antes de 2004), los porcentajes dan alrededor de 8 % menos (1983: 8,8 %). Usar con cautela.",
+    "afecta": [
+      "resultado-fiscal.financiero-devengado",
+      "resultado-fiscal.primario-devengado"
+    ],
+    "fuente": "Cetrángolo et al., «La sostenibilidad de la política fiscal en América Latina: el caso argentino», BID/CEDES, R-315; Lazzari, con datos de la ONP (2004)."
+  },
+  {
     "id": "q.fiscal.metodologia-2007",
     "desde": "2007-01",
     "hasta": "2007-01",
