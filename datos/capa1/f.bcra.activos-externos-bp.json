@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.activos-externos-bp",
+  "unidad": "millones de US$",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.bcra.activos-externos-bp/2026-10-27",
+  "descargado": "2026-10-27T19:41:35Z",
+  "sha256": "92d469f812130b5619b8631760e2a0b977dce2181bf6356428b0c3277f333371",
+  "observaciones": 19,
+  "desde": "1991-01-01",
+  "hasta": "2009-01-01"
+}

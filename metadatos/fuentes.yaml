@@ -1068,3 +1068,117 @@
   nota: >-
     En datos.gob.ar llega hasta el segundo trimestre de 2024 (27/10/2026), aunque el INDEC publicó trimestres
     posteriores en sus informes.
+
+# ── Fuga de capitales (EXT-08) ─────────────────────────────────────────────────
+- id: f.bcra.fae-spnf
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Balance cambiario. Formación de activos externos del sector privado no financiero, total (ingresos menos egresos)
+  api: datos.gob.ar
+  id_api: 182.1_C_K_FINC_CINC_0_M_56
+  url: https://apis.datos.gob.ar/series/api/series/?ids=182.1_C_K_FINC_CINC_0_M_56
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de US$ (negativo = compra neta de activos externos)
+  cobertura: {desde: 2003-01, hasta: hoy}
+  verificado: 2026-10-27
+
+- id: f.bcra.activos-externos-bp
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Activos externos en millones de dólares. Activos externos del sector privado según el balance de pagos
+  api: datos.gob.ar
+  id_api: 336.1_ACTIVOS_SEGOS__27
+  url: https://apis.datos.gob.ar/series/api/series/?ids=336.1_ACTIVOS_SEGOS__27
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1991, hasta: 2009}
+  verificado: 2026-10-27
+  nota: En 1991–2001 coincide con los activos externos del sector privado no financiero de la posición de inversión base 1991 del INDEC.
+
+- id: f.indec.pii-activos-otros-sectores
+  organismo: INDEC
+  nombre: Posición de inversión internacional. Activos de otros sectores, anual
+  api: datos.gob.ar
+  id_api: 144.3_ACVOSOTLES_0_A_30
+  url: https://apis.datos.gob.ar/series/api/series/?ids=144.3_ACVOSOTLES_0_A_30
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 2006, hasta: hoy}
+  verificado: 2026-10-27
+  nota: >-
+    «Otros sectores» incluye otras sociedades financieras, sociedades no financieras y hogares. En 2006–2007 coincide
+    con la serie del BCRA; en 2008–2009 difiere en menos de 0,3 %.
+
+# ── Salario (TRA-03) ───────────────────────────────────────────────────────────
+- id: f.trabajo.ripte
+  organismo: Secretaría de Trabajo, Empleo y Seguridad Social
+  nombre: Remuneración imponible promedio de los trabajadores estables (RIPTE), total país, mensual
+  api: datos.gob.ar-csv
+  id_api: 158.1_REPTE_0_0_5
+  url_descarga: https://infra.datos.gob.ar/catalog/sspm/dataset/158/distribution/158.1/download/remuneracion-imponible-promedio-trabajadores-estables-ripte-total-pais-pesos-serie-mensual.csv
+  columna: ripte
+  url: https://datos.gob.ar/dataset/sspm-remuneracion-imponible-promedio-trabajadores-estables-ripte
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: pesos corrientes
+  cobertura: {desde: 1994-07, hasta: hoy}
+  verificado: 2026-10-27
+  nota: La API devuelve 0 filas para esta serie; se usa el CSV de su distribución.
+
+- id: f.indec.salarios-privado-registrado-base-2012
+  organismo: INDEC
+  nombre: Índice de salarios, base 2012. Sector privado registrado, con las modificaciones del Decreto 381/07 desde enero de 2008, mensual
+  api: datos.gob.ar
+  id_api: 56.2_SPRMD_2012_M_29
+  url: https://apis.datos.gob.ar/series/api/series/?ids=56.2_SPRMD_2012_M_29
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice
+  cobertura: {desde: 2001-10, hasta: 2016-12}
+  verificado: 2026-10-27
+  nota: La API también publica la versión sin las modificaciones del Decreto 381/07 (56.2_SPRSMD_2012_M_33).
+
+- id: f.indec.salarios-privado-registrado-base-2016
+  organismo: INDEC
+  nombre: Índice de salarios, base octubre 2016. Empleo registrado, sector privado, mensual
+  api: datos.gob.ar
+  id_api: 149.1_SOR_PRIADO_OCTU_0_25
+  url: https://apis.datos.gob.ar/series/api/series/?ids=149.1_SOR_PRIADO_OCTU_0_25
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: índice oct. 2016 = 100
+  cobertura: {desde: 2015-10, hasta: hoy}
+  verificado: 2026-10-27
+
+# ── Deuda pública (FIS-04): variantes pendientes de licencia ───────────────────
+- id: f.finanzas.deuda-publica
+  organismo: Secretaría de Finanzas, Ministerio de Economía
+  nombre: Serie mensual de deuda pública bruta de la Administración Central
+  api: ninguna
+  id_api: null
+  url: https://www.argentina.gob.ar/economia/finanzas/datos-mensuales
+  licencia: sin confirmar
+  redistribuible: false
+  frecuencia: mensual
+  unidad: millones de US$
+  cobertura: {desde: 2019-01, hasta: hoy}
+  nota: >-
+    La página no muestra una licencia: el texto «Los contenidos de Argentina.gob.ar están licenciados bajo Creative
+    Commons Atribución 4.0 Internacional» figura en el HTML, pero comentado (24/10/2026). No se descarga hasta
+    confirmarla.
+
+- id: f.fmi.deuda-publica
+  organismo: Fondo Monetario Internacional
+  nombre: Public Finances in Modern History y Global Debt Database. Deuda del gobierno en % del PIB
+  api: ninguna
+  id_api: null
+  url: https://www.imf.org/external/datamapper/
+  licencia: términos del FMI (el reuso comercial requiere permiso)
+  redistribuible: false
+  frecuencia: anual
+  unidad: '% del PIB'
+  cobertura: {desde: 1864, hasta: 2024}
+  nota: >-
+    Los términos del FMI permiten redistribuir con atribución, pero piden permiso para el reuso comercial, que
+    CC BY 4.0 habilita: no es compatible sin ese permiso (24/10/2026).

@@ -477,3 +477,65 @@
     2006.
   afecta: [deuda-externa.indec-1991-2001]
   fuente: INDEC, posición de inversión internacional base 1991 (datos.gob.ar, dataset 86).
+
+# ── Fuga, salario y deuda pública ──────────────────────────────────────────────
+- id: q.fuga.mediciones
+  desde: 1991
+  tipo: metodologia
+  descripcion: >-
+    No hay una medición oficial única de la fuga de capitales. La formación de activos externos del balance
+    cambiario mide compras netas de divisas en el mercado de cambios; la variación del stock de activos externos
+    incluye además los cambios de valor; el método residual (pendiente) la estima con el balance de pagos. Las
+    variantes miden cosas distintas y no se comparan entre sí.
+  afecta: [fuga.fae, fuga.activos-externos, fuga.variacion-activos]
+  fuente: BCRA, balance cambiario; INDEC, posición de inversión internacional.
+
+- id: q.fuga.otros-sectores-2006
+  desde: 2006
+  hasta: 2006
+  tipo: metodologia
+  descripcion: >-
+    Cambio de fuente: hasta 2005, los activos externos del sector privado según el balance de pagos del BCRA; desde
+    2006, los activos de «otros sectores» de la posición de inversión internacional del INDEC (otras sociedades
+    financieras, sociedades no financieras y hogares). En 2006–2009, cuando hay las dos, difieren menos de 0,3 %.
+  afecta: [fuga.activos-externos, fuga.variacion-activos]
+  fuente: Comparación de 336.1_ACTIVOS_SEGOS__27 con 144.3_ACVOSOTLES_0_A_30 en datos.gob.ar (24/10/2026).
+
+- id: q.fuga.revaluaciones
+  desde: 1992
+  tipo: metodologia
+  descripcion: >-
+    La variación del stock incluye los cambios de valor de los activos (precios de los títulos y tipos de cambio),
+    no solo las compras netas: un año con caída de precios puede dar una variación negativa aunque haya habido
+    compras.
+  afecta: [fuga.variacion-activos]
+  fuente: Vaivén (método de la variante).
+
+- id: q.salario.registrados
+  desde: 1994-07
+  tipo: cobertura
+  descripcion: >-
+    Cubre solo a los asalariados registrados (el RIPTE, a los estables, con al menos 13 meses en el mismo empleo).
+    Los asalariados no registrados y los cuentapropistas no están incluidos.
+  afecta: [salario-real.ripte, salario-real.indice-salarios]
+  fuente: Secretaría de Trabajo (RIPTE); INDEC (Índice de salarios).
+
+- id: q.salario.hueco-1976-1984
+  desde: 1976
+  hasta: 1984
+  tipo: cobertura
+  descripcion: >-
+    No hay una serie abierta de salario real para 1976–1984 (la de ArgenData es CC BY-NC-ND, e ILOSTAT y CEPAL no
+    tienen esos años); las series publicadas empiezan en 1994 (RIPTE) y 2001 (Índice de salarios).
+  afecta: [salario-real.ripte, salario-real.indice-salarios]
+  fuente: Búsqueda de fuentes de Vaivén (24/10/2026).
+
+- id: q.deuda-publica.solo-externa
+  desde: 1970
+  tipo: cobertura
+  descripcion: >-
+    No es la deuda pública total: es solo la deuda externa de largo plazo del sector público (y la privada con
+    garantía pública), según el Banco Mundial. No incluye la deuda pública en moneda local con residentes. La serie
+    total de la Secretaría de Finanzas y la del FMI están pendientes de licencia.
+  afecta: [deuda-publica.externa-bm]
+  fuente: Banco Mundial, International Debt Statistics.

@@ -1,0 +1,83 @@
+id: fuga
+codigo: EXT-08
+nombre: Fuga de capitales
+bloque: Sector externo
+prioridad: A
+definicion: >-
+  Compra neta de activos externos por parte de residentes del sector privado, en millones de dólares. Un valor
+  positivo es una salida (formación de activos externos). No hay una medición oficial única: cada variante mide
+  algo distinto.
+unidad: millones de US$
+tipo: flujo
+agregacion: suma
+frecuencia: mensual
+moneda: dolares
+cobertura: {desde: 1992, hasta: hoy}
+variante_por_defecto: fae
+variantes:
+  - id: fae
+    nombre: Formación de activos externos, balance cambiario (desde 2003)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: -1
+    metodo: >-
+      Formación de activos externos (FAE) del sector privado no financiero en el balance cambiario del BCRA: compras
+      menos ventas de moneda extranjera de residentes para atesoramiento e inversión en el exterior. La fuente la
+      publica como ingresos menos egresos (negativo cuando hay salida); Vaivén le da vuelta el signo para que una
+      salida sea positiva. Mide operaciones en el mercado de cambios, no el stock de activos.
+    tramos:
+      - {fuente: f.bcra.fae-spnf, desde: 2003-01}
+    advertencias: [q.fuga.mediciones]
+  - id: activos-externos
+    nombre: Stock de activos externos del sector privado (desde 1991)
+    estado: publicada
+    tipo: stock
+    agregacion: fin_de_periodo
+    frecuencia: anual
+    empalme: yuxtaponer
+    metodo: >-
+      Stock de activos externos del sector privado: la serie del BCRA según el balance de pagos hasta 2005 y los
+      activos de «otros sectores» de la posición de inversión internacional del INDEC desde 2006, unidos sin ajustar.
+    tramos:
+      - {fuente: f.bcra.activos-externos-bp, desde: 1991, hasta: 2005}
+      - {fuente: f.indec.pii-activos-otros-sectores, desde: 2006}
+    excluir:
+      - fecha: 2025
+        motivo: La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).
+    advertencias: [q.fuga.mediciones, q.fuga.otros-sectores-2006]
+    validacion:
+      min: 0
+      max: 2000000
+  - id: variacion-activos
+    nombre: Variación del stock de activos externos del sector privado (desde 1992)
+    estado: publicada
+    frecuencia: anual
+    empalme: derivar
+    operacion: diferencia
+    operandos: [fuga.activos-externos]
+    metodo: >-
+      Variación anual del stock de activos externos del sector privado (variante «activos-externos»). Incluye los
+      cambios de valor de los activos (precios y tipos de cambio), no solo las compras netas.
+    tramos:
+      - {fuente: f.bcra.activos-externos-bp, desde: 1991, hasta: 2005, rol: insumo}
+      - {fuente: f.indec.pii-activos-otros-sectores, desde: 2006, rol: insumo}
+    advertencias: [q.fuga.mediciones, q.fuga.otros-sectores-2006, q.fuga.revaluaciones]
+  - id: residual
+    nombre: Método residual (Basualdo–Kulfas)
+    estado: pendiente
+    nota: >-
+      Pendiente: no hay una serie publicada con licencia abierta (la de ArgenData es CC BY-NC-ND) y reconstruirla
+      con el balance de pagos requiere acordar el método.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.bcra.activos-externos-bp, desde: 1991}
+validacion:
+  min: -60000
+  max: 200000
+  umbral_revision_pct: 1
+quiebres: [q.fuga.mediciones, q.fuga.otros-sectores-2006, q.fuga.revaluaciones]
+transformaciones: [frecuencia, media_movil, pct_pib]
+fuentes: [f.bcra.fae-spnf, f.bcra.activos-externos-bp, f.indec.pii-activos-otros-sectores]
+bibliografia: [SCH1998c2-C4, OS2006-G2, BAS2000-C1, BAS2000-G5, BAS2000-G6, BAS2000-G7, DF2013-G7, SW2015-G5, RZ2017-G1, RZ2017-G2, RZ2017-G3, RZ2017-G4, RZ2017-G5, RZ2017-G7, BICI-G17, BICI-T21, BP-E1]
+licencia_derivado: CC-BY-4.0

@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.activos-externos-bp",
+  "descargado": "2026-10-27T19:41:35Z",
+  "sha256": "92d469f812130b5619b8631760e2a0b977dce2181bf6356428b0c3277f333371",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=336.1_ACTIVOS_SEGOS__27&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 3798,
+      "sha256": "290a2051627eee61f568fbd8ba9565017f8844f8b392bbeaeaab170d01c05c7b"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.pii-activos-otros-sectores",
+  "unidad": "millones de US$",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.indec.pii-activos-otros-sectores/2026-10-27",
+  "descargado": "2026-10-27T19:41:36Z",
+  "sha256": "c07f520ac2d9cb1f71149b8a035fb33c9c38c47d1faa2f8b515e08c4ec83c813",
+  "observaciones": 20,
+  "desde": "2006-01-01",
+  "hasta": "2025-01-01"
+}
