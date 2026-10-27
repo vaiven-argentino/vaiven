@@ -42,5 +42,6 @@ describe("nombreTransformacion con medidas y entidades", () => {
     expect(nombreTransformacion({ medida: "pct_pib", frecuencia: "anual" })).toBe("frecuencia anual, en % del PIB");
     expect(nombreTransformacion({ entidad: "BRA", transformacion: "indice_desde_tasas" }))
       .toBe("entidad BRA, índice desde las tasas (año base = 100)");
+    expect(nombreTransformacion({ entidad: ["ARG", "BRA", "WLD"] })).toBe("entidades ARG, BRA y WLD");
   });
 });
