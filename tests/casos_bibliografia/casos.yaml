@@ -33,3 +33,8 @@ SCH1998c2-C8:
   variante: oficial
   transformacion: nivel
   tolerancia: {pct: 3.0}
+BAS2000-G1:
+  serie: deuda-externa
+  variante: total
+  transformacion: nivel
+  tolerancia: {pct: 5.0}

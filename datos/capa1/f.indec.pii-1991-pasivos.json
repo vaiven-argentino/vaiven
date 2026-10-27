@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.pii-1991-pasivos",
+  "unidad": "millones de US$",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.indec.pii-1991-pasivos/2026-10-27",
+  "descargado": "2026-10-27T19:38:41Z",
+  "sha256": "10fb94a56ac3de8a1cfb91dc6ea6d552385291244647ca794c1af489e1bcf434",
+  "observaciones": 11,
+  "desde": "1991-01-01",
+  "hasta": "2001-01-01"
+}

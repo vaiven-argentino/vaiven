@@ -444,3 +444,36 @@
     Buenos Aires y empresas públicas) y base devengado, contra el Sector Público Nacional en base caja. No se unen.
   afecta: [resultado-fiscal.financiero-devengado, resultado-fiscal.primario-devengado]
   fuente: Secretaría de Hacienda, Cuenta AIF base devengado (datos.gob.ar, dataset 442).
+
+# ── Deuda externa ──────────────────────────────────────────────────────────────
+- id: q.deuda-externa.criterios
+  desde: 1970
+  tipo: metodologia
+  descripcion: >-
+    El Banco Mundial y el INDEC registran la deuda externa con criterios distintos y sus cifras no coinciden: en
+    1993–2000 el Banco Mundial da entre 4 % menos y 10 % más que el INDEC, pero en 1991, 1992 y 2001 da entre 44 % y
+    66 % más, y entre 2006 y 2023 da entre 21 % menos y 6 % más (−13 % en 2006, −12 % en 2023). Las variantes no se
+    unen: para comparar en el tiempo, conviene usar una sola.
+  afecta: [deuda-externa.total, deuda-externa.publica, deuda-externa.privada, deuda-externa.indec-1991-2001, deuda-externa.indec]
+  fuente: Comparación de DT.DOD.DECT.CD (Banco Mundial) con la posición de inversión base 1991 y el cuarto trimestre de la serie 161.1 del INDEC (27/10/2026).
+
+- id: q.deuda-externa.componentes-bm
+  desde: 1970
+  tipo: metodologia
+  descripcion: >-
+    La pública y la privada del Banco Mundial son solo de largo plazo: no suman el total, que además incluye el
+    crédito del FMI y la deuda de corto plazo (por ejemplo, en 1990: 47.154 + 1.800 de largo plazo, 3.083 del FMI
+    y 10.440 de corto plazo, sobre un total de 62.478 millones).
+  afecta: [deuda-externa.publica, deuda-externa.privada, deuda-publica.externa-bm]
+  fuente: Banco Mundial, International Debt Statistics.
+
+- id: q.deuda-externa.derivada-1991
+  desde: 1991
+  hasta: 2001
+  tipo: metodologia
+  descripcion: >-
+    Serie calculada por Vaivén con la posición de inversión base 1991 del INDEC (pasivos externos menos inversión
+    directa y acciones). No hay datos del INDEC para 2002–2005 en datos.gob.ar, así que no se une con la serie desde
+    2006.
+  afecta: [deuda-externa.indec-1991-2001]
+  fuente: INDEC, posición de inversión internacional base 1991 (datos.gob.ar, dataset 86).

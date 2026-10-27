@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.pii-1991-pasivos",
+  "descargado": "2026-10-27T19:38:41Z",
+  "sha256": "10fb94a56ac3de8a1cfb91dc6ea6d552385291244647ca794c1af489e1bcf434",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_PE_1991_A_16&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 3741,
+      "sha256": "41cd82edc73eaef67b80ba9e50194bf166ae5418d49dc7acec42fffc0e287f8a"
+    }
+  ]
+}

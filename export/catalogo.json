@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-27T19:37:25Z",
+  "version_datos": "2026-10-27T19:39:08Z",
   "series": [
     {
       "id": "agregados",
@@ -431,6 +431,210 @@
           "tipo": "gráfico de líneas",
           "titulo_original": "Argentina. Evolución de las tasas de desocupación y subocupación, 1980-1989",
           "periodo_cubierto": "1980 – 1989"
+        }
+      ]
+    },
+    {
+      "id": "deuda-externa",
+      "codigo": "EXT-07",
+      "nombre": "Deuda externa total",
+      "bloque": "Sector externo",
+      "prioridad": "A",
+      "definicion": "Stock de deuda externa bruta (con no residentes), pública y privada, en millones de dólares corrientes, al fin de cada año o trimestre.",
+      "unidad": "millones de US$ corrientes",
+      "tipo": "stock",
+      "agregacion": "fin_de_periodo",
+      "transformaciones": [
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "media_movil",
+        "pct_pib"
+      ],
+      "frecuencia": "anual",
+      "variante_por_defecto": "total",
+      "quiebres": [
+        "q.deuda-externa.criterios",
+        "q.deuda-externa.componentes-bm",
+        "q.deuda-externa.derivada-1991"
+      ],
+      "variantes": [
+        {
+          "id": "total",
+          "nombre": "Banco Mundial, total (1970–2024)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2024"
+          },
+          "archivo": "series/deuda-externa/total.json"
+        },
+        {
+          "id": "publica",
+          "nombre": "Banco Mundial, pública y con garantía pública, de largo plazo (1970–2024)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2024"
+          },
+          "archivo": "series/deuda-externa/publica.json"
+        },
+        {
+          "id": "privada",
+          "nombre": "Banco Mundial, privada no garantizada, de largo plazo (1970–2024)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2024"
+          },
+          "archivo": "series/deuda-externa/privada.json"
+        },
+        {
+          "id": "indec-1991-2001",
+          "nombre": "INDEC, derivada de la posición de inversión base 1991 (1991–2001)",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1991",
+            "hasta": "2001"
+          },
+          "archivo": "series/deuda-externa/indec-1991-2001.json"
+        },
+        {
+          "id": "indec",
+          "nombre": "INDEC, deuda externa bruta, trimestral (desde 2006)",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "2006-01",
+            "hasta": "2024-04"
+          },
+          "archivo": "series/deuda-externa/indec.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "SCH1998c2-C3",
+          "referencia": "Schvarzer (1998), Implantación de un modelo económico, cap. 2 «El quiebre del modelo cerrado en los setenta»",
+          "pagina": "pdf 11 (libro 50)",
+          "tipo": "cuadro",
+          "titulo_original": "Deuda bruta por origen del deudor (en millones de dólares corrientes)",
+          "periodo_cubierto": "1975 – 1981 (incluye mar-1981)"
+        },
+        {
+          "id": "DF1990-C5",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 67 (64)",
+          "tipo": "cuadro",
+          "titulo_original": "Deuda externa total y pública",
+          "periodo_cubierto": "1976 – 1988"
+        },
+        {
+          "id": "FF1990-C3",
+          "referencia": "Fanelli y Frenkel (1990), «Desequilibrios, políticas de estabilización e hiperinflación en la Argentina», Ed. Tesis",
+          "pagina": "pdf 30 (29)",
+          "tipo": "cuadro",
+          "titulo_original": "Deuda externa (millones de dólares)",
+          "periodo_cubierto": "1975 – 1988"
+        },
+        {
+          "id": "OS2006-G2",
+          "referencia": "Ortiz y Schorr (2006), «La economía política del gobierno de Alfonsín…», en Pucciarelli (coord.), Siglo XXI",
+          "pagina": "20",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Argentina. Evolución de la deuda externa total y fuga de capitales, 1981-1989",
+          "periodo_cubierto": "1981 – 1989"
+        },
+        {
+          "id": "BAS2000-G1",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 33 (35)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución de la deuda externa total, pública y privada, 1991-1998",
+          "periodo_cubierto": "1991 – 1998"
+        },
+        {
+          "id": "BAS2000-G3",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 36 (38)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución de la incidencia del endeudamiento externo contraído con los bancos comerciales y a través de la emisión de bonos y títulos, 1991-1998",
+          "periodo_cubierto": "1991 – 1998"
+        },
+        {
+          "id": "BAS2000-G5",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 47 (49)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Evolución del stock de deuda externa total y de los capitales locales en el exterior, 1991-1997",
+          "periodo_cubierto": "1991 – 1997"
+        },
+        {
+          "id": "BAS2000-G6",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 49 (51)",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Variación anual de la deuda externa total, la salida de capitales locales al exterior y los ingresos por privatización de empresas públicas, 1991-1997",
+          "periodo_cubierto": "1991 – 1997"
+        },
+        {
+          "id": "DLB1993-A9",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 48 (128)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Evolución del stock de deuda externa por acreedor",
+          "periodo_cubierto": "dic-1983 – dic-1992"
+        },
+        {
+          "id": "BRE2019-C4.1",
+          "referencia": "Brenta (2019), Historia de la deuda externa argentina, cap. 4 «De la hiperinflación al default», Capital Intelectual",
+          "pagina": "pdf 62 (125)",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Deuda externa por acreedor 1989-1990",
+          "periodo_cubierto": "31/12/1989; 31/12/1990"
+        },
+        {
+          "id": "RZ2017-G1",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "13",
+          "tipo": "gráfico de líneas",
+          "titulo_original": "Argentina. Stock de deuda externa total vs. stock de fuga de capitales desde 1980 hasta 2016",
+          "periodo_cubierto": "1980 – 2016"
+        },
+        {
+          "id": "RZ2017-G7",
+          "referencia": "Rúa y Zeolla (2017/2019), «Desregulación cambiaria, fuga de capitales y endeudamiento externo»",
+          "pagina": "24",
+          "tipo": "gráfico de barras",
+          "titulo_original": "Argentina. Promedios anuales de fuga de capitales y deuda externa total, 1975-2016",
+          "periodo_cubierto": "1975-1983; 1984-1989; 1990-2001; 2002-2015; 2016"
+        },
+        {
+          "id": "BICI-G17",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 17",
+          "tipo": "gráfico de columnas y líneas",
+          "titulo_original": "Evolución de la deuda externa total bruta, pública, privada, reservas y fuga de capitales (1975-1982)",
+          "periodo_cubierto": "1975 – 1982"
+        },
+        {
+          "id": "BICI-T18",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 18",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Deuda externa por acreedor, al 31/12/83 (en porcentajes)",
+          "periodo_cubierto": "31/12/1983"
+        },
+        {
+          "id": "BICI-T21",
+          "referencia": "Cátedra (2025), Bicicleta financiera, presentación (material complementario)",
+          "pagina": "diapositiva 21",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Aplicación de la deuda externa antes de su crisis en 1982. Acumulado del 31.12.75 al 31.12.81",
+          "periodo_cubierto": "31/12/1975 – 31/12/1981"
         }
       ]
     },

@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bm.deuda-externa-publica",
+  "unidad": "US$ corrientes",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.bm.deuda-externa-publica/2026-10-27",
+  "descargado": "2026-10-27T19:38:40Z",
+  "sha256": "ff498897fb05e2e964e0adc98111c8702d39d94fe0f7f1104984b01f415bc822",
+  "observaciones": 55,
+  "desde": "1970-01-01",
+  "hasta": "2024-01-01"
+}

@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bm.deuda-externa-publica",
+  "descargado": "2026-10-27T19:38:40Z",
+  "sha256": "ff498897fb05e2e964e0adc98111c8702d39d94fe0f7f1104984b01f415bc822",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://api.worldbank.org/v2/country/ARG/indicator/DT.DOD.DPPG.CD?format=json&per_page=20000",
+      "bytes": 17541,
+      "sha256": "229bd17d978f547c836575292bc903d4c9e53b784fc92adba5aa926b7f8723a0"
+    }
+  ]
+}

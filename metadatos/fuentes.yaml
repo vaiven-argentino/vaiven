@@ -941,3 +941,130 @@
   unidad: millones de pesos actuales
   cobertura: {desde: 1990, hasta: 1992}
   verificado: 2026-10-27
+
+# ── Deuda externa (EXT-07) y deuda pública externa (FIS-04) ────────────────────
+- id: f.bm.deuda-externa-total
+  organismo: Banco Mundial (International Debt Statistics)
+  nombre: Deuda externa total (stock), en US$ corrientes (DT.DOD.DECT.CD), Argentina
+  api: banco-mundial
+  id_api: DT.DOD.DECT.CD
+  pais: ARG
+  url: https://data.worldbank.org/indicator/DT.DOD.DECT.CD?locations=AR
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: US$ corrientes
+  cobertura: {desde: 1970, hasta: hoy}
+  verificado: 2026-10-27
+  nota: >-
+    Base International Debt Statistics (IDS) del Banco Mundial, CC BY 4.0. Es la deuda con no residentes: el total
+    suma la de largo plazo pública y con garantía, la privada no garantizada, el crédito del FMI y la de corto plazo
+    (incluidos los atrasos de intereses). Puede diferir de la del INDEC por criterios de registro.
+
+- id: f.bm.deuda-externa-publica
+  organismo: Banco Mundial (International Debt Statistics)
+  nombre: Deuda externa de largo plazo pública y con garantía pública (stock), en US$ corrientes (DT.DOD.DPPG.CD), Argentina
+  api: banco-mundial
+  id_api: DT.DOD.DPPG.CD
+  pais: ARG
+  url: https://data.worldbank.org/indicator/DT.DOD.DPPG.CD?locations=AR
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: US$ corrientes
+  cobertura: {desde: 1970, hasta: hoy}
+  verificado: 2026-10-27
+  nota: >-
+    Base International Debt Statistics (IDS) del Banco Mundial, CC BY 4.0. Es la deuda con no residentes: el total
+    suma la de largo plazo pública y con garantía, la privada no garantizada, el crédito del FMI y la de corto plazo
+    (incluidos los atrasos de intereses). Puede diferir de la del INDEC por criterios de registro.
+
+- id: f.bm.deuda-externa-privada
+  organismo: Banco Mundial (International Debt Statistics)
+  nombre: Deuda externa de largo plazo privada no garantizada (stock), en US$ corrientes (DT.DOD.DPNG.CD), Argentina
+  api: banco-mundial
+  id_api: DT.DOD.DPNG.CD
+  pais: ARG
+  url: https://data.worldbank.org/indicator/DT.DOD.DPNG.CD?locations=AR
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: US$ corrientes
+  cobertura: {desde: 1970, hasta: hoy}
+  verificado: 2026-10-27
+  nota: >-
+    Base International Debt Statistics (IDS) del Banco Mundial, CC BY 4.0. Es la deuda con no residentes: el total
+    suma la de largo plazo pública y con garantía, la privada no garantizada, el crédito del FMI y la de corto plazo
+    (incluidos los atrasos de intereses). Puede diferir de la del INDEC por criterios de registro.
+
+- id: f.indec.pii-1991-pasivos
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Posición de inversión internacional, base 1991. Pasivos externos, total
+  api: datos.gob.ar
+  id_api: 86.1_PE_1991_A_16
+  url: https://apis.datos.gob.ar/series/api/series/?ids=86.1_PE_1991_A_16
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1991, hasta: 2001}
+  verificado: 2026-10-27
+
+- id: f.indec.pii-1991-id-oef
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: 'Posición de inversión internacional, base 1991. Pasivos externos de otras entidades financieras: inversión directa'
+  api: datos.gob.ar
+  id_api: 86.1_IDO_1991_A_23
+  url: https://apis.datos.gob.ar/series/api/series/?ids=86.1_IDO_1991_A_23
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1991, hasta: 2001}
+  verificado: 2026-10-27
+
+- id: f.indec.pii-1991-acciones-oef
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: 'Posición de inversión internacional, base 1991. Pasivos externos de otras entidades financieras: acciones'
+  api: datos.gob.ar
+  id_api: 86.1_A_1991_A_8
+  url: https://apis.datos.gob.ar/series/api/series/?ids=86.1_A_1991_A_8
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1991, hasta: 2001}
+  verificado: 2026-10-27
+
+- id: f.indec.pii-1991-id-spnf
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: 'Posición de inversión internacional, base 1991. Pasivos externos del sector privado no financiero: inversión directa'
+  api: datos.gob.ar
+  id_api: 86.1_ID_1991_A_17
+  url: https://apis.datos.gob.ar/series/api/series/?ids=86.1_ID_1991_A_17
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1991, hasta: 2001}
+  verificado: 2026-10-27
+
+- id: f.indec.pii-1991-acciones-spnf
+  organismo: INDEC (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: 'Posición de inversión internacional, base 1991. Pasivos externos del sector privado no financiero: acciones'
+  api: datos.gob.ar
+  id_api: 86.1_AV_1991_A_11
+  url: https://apis.datos.gob.ar/series/api/series/?ids=86.1_AV_1991_A_11
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: millones de US$
+  cobertura: {desde: 1991, hasta: 2001}
+  verificado: 2026-10-27
+
+- id: f.indec.deuda-externa-bruta
+  organismo: INDEC
+  nombre: Deuda externa bruta por sector residente. Total, saldo a fin de trimestre
+  api: datos.gob.ar
+  id_api: 161.1_TL_DEUDRNA_0_0_19
+  url: https://apis.datos.gob.ar/series/api/series/?ids=161.1_TL_DEUDRNA_0_0_19
+  licencia: CC-BY-4.0
+  frecuencia: trimestral
+  unidad: millones de US$
+  cobertura: {desde: 2006-01, hasta: hoy}
+  verificado: 2026-10-27
+  nota: >-
+    En datos.gob.ar llega hasta el segundo trimestre de 2024 (27/10/2026), aunque el INDEC publicó trimestres
+    posteriores en sus informes.

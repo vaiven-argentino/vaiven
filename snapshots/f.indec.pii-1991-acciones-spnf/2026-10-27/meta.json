@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.pii-1991-acciones-spnf",
+  "descargado": "2026-10-27T19:38:46Z",
+  "sha256": "bc9a3b6b4e9cadbaba0d381664567aff231992c1fbaacc69b90ff20d6cbe2671",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_AV_1991_A_11&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 3741,
+      "sha256": "c3029f0d8ddeff6116e81d34ccf1d378e743586b0e0d910b65f47b9dac88a086"
+    }
+  ]
+}

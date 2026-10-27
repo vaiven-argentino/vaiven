@@ -1,0 +1,93 @@
+id: deuda-externa
+codigo: EXT-07
+nombre: Deuda externa total
+bloque: Sector externo
+prioridad: A
+definicion: >-
+  Stock de deuda externa bruta (con no residentes), pública y privada, en millones de dólares corrientes, al fin de
+  cada año o trimestre.
+unidad: millones de US$ corrientes
+tipo: stock
+agregacion: fin_de_periodo
+frecuencia: anual
+moneda: dolares
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: total
+variantes:
+  - id: total
+    nombre: Banco Mundial, total (1970–2024)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 0.000001
+    metodo: >-
+      Deuda externa total de la base International Debt Statistics del Banco Mundial (DT.DOD.DECT.CD), en millones
+      de dólares: deuda de largo plazo pública y con garantía pública, privada no garantizada, crédito del FMI y deuda
+      de corto plazo. Es la única serie abierta que cubre 1970–1990, con una sola metodología para todo el período.
+    tramos:
+      - {fuente: f.bm.deuda-externa-total, desde: 1970}
+    advertencias: [q.deuda-externa.criterios]
+  - id: publica
+    nombre: Banco Mundial, pública y con garantía pública, de largo plazo (1970–2024)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 0.000001
+    metodo: >-
+      Deuda externa de largo plazo del sector público y la privada con garantía pública, según el Banco Mundial
+      (DT.DOD.DPPG.CD). No incluye el crédito del FMI ni la deuda de corto plazo.
+    tramos:
+      - {fuente: f.bm.deuda-externa-publica, desde: 1970}
+    advertencias: [q.deuda-externa.criterios, q.deuda-externa.componentes-bm]
+  - id: privada
+    nombre: Banco Mundial, privada no garantizada, de largo plazo (1970–2024)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 0.000001
+    metodo: >-
+      Deuda externa de largo plazo del sector privado sin garantía pública, según el Banco Mundial (DT.DOD.DPNG.CD).
+      No incluye la deuda privada de corto plazo, que en el Banco Mundial va en otro rubro sin separar por sector.
+    tramos:
+      - {fuente: f.bm.deuda-externa-privada, desde: 1970}
+    advertencias: [q.deuda-externa.criterios, q.deuda-externa.componentes-bm]
+    validacion:
+      # Montos chicos y muy variables: estatización de deuda privada en 1982–1985 y canjes de los noventa.
+      var_min: -70
+      var_max: 250
+  - id: indec-1991-2001
+    nombre: INDEC, derivada de la posición de inversión base 1991 (1991–2001)
+    estado: publicada
+    empalme: derivar
+    operacion: resta
+    operandos: [f.indec.pii-1991-pasivos, f.indec.pii-1991-id-oef, f.indec.pii-1991-acciones-oef, f.indec.pii-1991-id-spnf, f.indec.pii-1991-acciones-spnf]
+    metodo: >-
+      Calculada por Vaivén: pasivos externos de la posición de inversión internacional base 1991 del INDEC menos la
+      inversión directa y las acciones (de otras entidades financieras y del sector privado no financiero), que no
+      son deuda. El INDEC no publica un total de deuda externa para estos años en datos.gob.ar.
+    tramos:
+      - {fuente: f.indec.pii-1991-pasivos, desde: 1991, rol: insumo}
+      - {fuente: f.indec.pii-1991-id-oef, desde: 1991, rol: insumo}
+      - {fuente: f.indec.pii-1991-acciones-oef, desde: 1991, rol: insumo}
+      - {fuente: f.indec.pii-1991-id-spnf, desde: 1991, rol: insumo}
+      - {fuente: f.indec.pii-1991-acciones-spnf, desde: 1991, rol: insumo}
+    advertencias: [q.deuda-externa.criterios, q.deuda-externa.derivada-1991]
+  - id: indec
+    nombre: INDEC, deuda externa bruta, trimestral (desde 2006)
+    estado: publicada
+    frecuencia: trimestral
+    empalme: yuxtaponer
+    metodo: >-
+      Deuda externa bruta total del INDEC (por sector residente), saldo a fin de trimestre, sin cambios. La copia de
+      datos.gob.ar llega hasta el segundo trimestre de 2024.
+    tramos:
+      - {fuente: f.indec.deuda-externa-bruta, desde: 2006-01}
+    advertencias: [q.deuda-externa.criterios]
+validacion:
+  min: 0
+  max: 1000000
+  var_min: -50
+  var_max: 100
+  umbral_revision_pct: 1
+quiebres: [q.deuda-externa.criterios, q.deuda-externa.componentes-bm, q.deuda-externa.derivada-1991]
+transformaciones: [var_interanual, base_100, frecuencia, media_movil, pct_pib]
+fuentes: [f.bm.deuda-externa-total, f.bm.deuda-externa-publica, f.bm.deuda-externa-privada, f.indec.pii-1991-pasivos, f.indec.deuda-externa-bruta]
+bibliografia: [SCH1998c2-C3, DF1990-C5, FF1990-C3, OS2006-G2, BAS2000-G1, BAS2000-G3, BAS2000-G5, BAS2000-G6, DLB1993-A9, BRE2019-C4.1, RZ2017-G1, RZ2017-G7, BICI-G17, BICI-T18, BICI-T21]
+licencia_derivado: CC-BY-4.0
