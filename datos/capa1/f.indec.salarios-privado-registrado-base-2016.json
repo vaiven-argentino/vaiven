@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.salarios-privado-registrado-base-2016",
+  "unidad": "índice oct. 2016 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.indec.salarios-privado-registrado-base-2016/2026-10-27",
+  "descargado": "2026-10-27T19:41:38Z",
+  "sha256": "cddf58b75c9d4aeeddf7a6ca9b835686ee654c6e2ac83950f6c95e87a10404ea",
+  "observaciones": 130,
+  "desde": "2015-10-01",
+  "hasta": "2026-07-01"
+}

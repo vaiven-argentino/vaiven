@@ -1,0 +1,15 @@
+{
+  "fuente": "f.trabajo.ripte",
+  "descargado": "2026-10-27T19:41:36Z",
+  "sha256": "484db307acce5ebb8bfc6469d719e2cfcb4b531324184e4bf5f6a3c58d5dd417",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "distribucion.csv",
+      "url": "https://infra.datos.gob.ar/catalog/sspm/dataset/158/distribution/158.1/download/remuneracion-imponible-promedio-trabajadores-estables-ripte-total-pais-pesos-serie-mensual.csv",
+      "bytes": 7436,
+      "sha256": "2b00bcdb63432c48a0778f2f40e443c7ccf9027ea403efe23a6be7dc140f686b"
+    }
+  ]
+}
