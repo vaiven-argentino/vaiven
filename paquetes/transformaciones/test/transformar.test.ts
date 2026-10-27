@@ -202,7 +202,7 @@ describe("período y advertencias", () => {
 describe("disponibles", () => {
   it("respeta lo que declara la variante", () => {
     expect(disponibles(serie(mensual("2000-01", [1, 2]), { transformaciones: [] }))).toEqual({
-      transformaciones: ["nivel"], frecuencias: [], mediaMovil: false,
+      transformaciones: ["nivel"], frecuencias: [], mediaMovil: false, medidas: [], deflactores: [],
     });
     expect(() => transformar(serie(mensual("2000-01", [1, 2]), { transformaciones: [] }), { transformacion: "var_mensual" }))
       .toThrow(ErrorTransformacion);
@@ -212,7 +212,7 @@ describe("disponibles", () => {
 describe("moneda de cada época", () => {
   it("solo ofrece el nivel: las variaciones cruzarían los cambios de signo monetario", () => {
     const s = serie(mensual("1985-01", [1, 2, 3]), { moneda: "moneda_de_epoca" });
-    expect(disponibles(s)).toEqual({ transformaciones: ["nivel"], frecuencias: [], mediaMovil: false });
+    expect(disponibles(s)).toMatchObject({ transformaciones: ["nivel"], frecuencias: [], mediaMovil: false });
     expect(() => transformar(s, { transformacion: "var_mensual" })).toThrow(ErrorTransformacion);
   });
 });
