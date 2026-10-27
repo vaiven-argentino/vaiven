@@ -9,7 +9,8 @@ import pandas as pd
 
 from pipeline.capa1 import normalizar as capa1
 from pipeline.capa2 import derivadas, signos_monetarios, variantes
-from pipeline.comun import ErrorPipeline, Rutas, a_fecha, ahora_utc, escribir_csv_serie, leer_csv_serie, leer_yaml
+from pipeline.comun import (ErrorPipeline, Rutas, a_fecha, ahora_utc, escribir_csv_entidades, escribir_csv_serie,
+                            leer_csv_serie, leer_yaml)
 from pipeline.export import catalogo as export_generales
 from pipeline.export import insumos as export_insumos
 from pipeline.export import series as export_series
@@ -138,6 +139,8 @@ def obtener_fuente(rutas: Rutas, fuente: dict, con_red: bool, res: Resultado) ->
         snapshot = base.ultimo_snapshot(dir_fuente)
         if snapshot is None:
             raise ErrorPipeline(f"{fuente['id']}: no hay snapshots y se pidió correr sin red.")
+    if fuente.get("paises"):
+        return capa1.normalizar_paises(rutas, fuente, snapshot), desactualizada
     return capa1.normalizar(rutas, fuente, snapshot), desactualizada
 
 
@@ -183,6 +186,16 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
     for fid in fuentes_necesarias(meta):
         fuente = meta.fuentes[fid]
         serie, desde = obtener_fuente(rutas, fuente, con_red, res)
+        if isinstance(serie, dict):
+            # Fuente con dimensión pais: cada entidad es una serie de capa 1 «<fuente>#<ISO3>».
+            for entidad, s_ent in serie.items():
+                capa1_series[f"{fid}#{entidad}"] = s_ent
+                res.problemas += reglas.esquema(f"{fid}#{entidad}", s_ent)
+                res.problemas += reglas.huecos(f"{fid}#{entidad}", s_ent, fuente["frecuencia"],
+                                               fuente.get("huecos_permitidos"), fuente.get("meses"))
+            if desde:
+                desactualizadas[fid] = desde
+            continue
         capa1_series[fid] = serie
         if desde:
             desactualizadas[fid] = desde
@@ -215,6 +228,21 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                 disponibles = ops
             pendientes.remove((s, v))
             avance = True
+            if "pais" in s.get("dimensiones", []):
+                # Una serie por entidad, con las fuentes de esa entidad; se validan por separado.
+                por_entidad = {}
+                for ent in [e["id"] for e in s["entidades"]]:
+                    v_ent = {**v, "tramos": [{**t, "fuente": f"{t['fuente']}#{ent}"} for t in v["tramos"]]}
+                    try:
+                        por_entidad[ent] = variantes.construir(v_ent, capa1_series, meta.signos, meta.fuentes, None, frecuencia)
+                    except ErrorPipeline as e:
+                        res.problemas.append(reglas.Problema(f"{vid}[{ent}]", "construcción", str(e)))
+                        continue
+                    res.problemas += validar_variante(f"{vid}[{ent}]", por_entidad[ent], frecuencia,
+                                                      _reglas_variante(s, v), v, capa1_series)
+                construidas[vid] = (s, v, por_entidad)
+                escribir_csv_entidades(rutas.capa2 / s["id"] / f"{v['id']}.csv", por_entidad)
+                continue
             try:
                 serie = variantes.construir(v, capa1_series, meta.signos, meta.fuentes, disponibles, frecuencia)
             except ErrorPipeline as e:
@@ -257,7 +285,11 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
             continue
         hubo_cambios = True
         umbral = _reglas_variante(s, v).get("umbral_revision_pct", 0.5)
-        rev = revisiones.comparar(serie, frecuencia, revisiones.leer_publicada(ruta), umbral)
+        if isinstance(serie, dict):
+            rev = revisiones.comparar_entidades(serie, frecuencia, revisiones.leer_publicada(ruta), umbral)
+            serie = pd.concat(serie.values())   # solo para contar observaciones en el informe
+        else:
+            rev = revisiones.comparar(serie, frecuencia, revisiones.leer_publicada(ruta), umbral)
         partes = []
         if anterior is None:
             partes.append(f"{len(serie)} observaciones (primera publicación)")

@@ -139,9 +139,11 @@ def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_d
                 "fields": [
                     {"name": "fecha", "type": "string",
                      "description": f"Período ({doc['frecuencia']}): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."},
+                    *([{"name": "pais", "type": "string", "description": "Código ISO3 del Banco Mundial (país o agregado)."}]
+                      if con_pais(doc) else []),
                     {"name": "valor", "type": "number", "description": doc["unidad"]},
                 ],
-                "primaryKey": ["fecha"],
+                "primaryKey": ["fecha", "pais"] if con_pais(doc) else ["fecha"],
             },
             "sources": [{"title": f"{f['organismo']}: {f['nombre']}", "path": f["url"]} for f in doc["fuentes"]],
             "licenses": [{"name": "CC-BY-4.0", "path": "https://creativecommons.org/licenses/by/4.0/",
@@ -162,6 +164,10 @@ def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_d
     }
 
 
+def con_pais(doc: dict) -> bool:
+    return "pais" in doc.get("dimensiones", [])
+
+
 def especificacion_vega(serie_meta: dict, doc: dict) -> dict:
     """Gráfico de líneas por defecto de la variante por defecto.
 
@@ -172,11 +178,13 @@ def especificacion_vega(serie_meta: dict, doc: dict) -> dict:
         "$schema": VEGA_LITE,
         "title": {"text": doc["nombre"], "subtitle": f"Variante: {doc['nombre_variante']} · {doc['unidad']}"},
         "data": {"url": f"{URL_SITIO}/datos/descargas/csv/{ruta_csv_relativa(doc)}", "format": {"type": "csv"}},
+        **({"transform": [{"filter": {"field": "pais", "oneOf": doc["entidades_por_defecto"]}}]} if con_pais(doc) else {}),
         "mark": {"type": "line", "interpolate": "linear"},
         "encoding": {
             "x": {"field": "fecha", "type": tipo_fecha, "title": None},
             "y": {"field": "valor", "type": "quantitative", "title": doc["unidad"],
                   **({"scale": {"type": "log"}} if serie_meta.get("escala_log") else {})},
+            **({"color": {"field": "pais", "type": "nominal", "title": "País o agregado"}} if con_pais(doc) else {}),
         },
         "usermeta": {"vaiven": {"serie": doc["serie"], "variante": doc["variante"], "version_datos": doc["version_datos"],
                                 "cita": doc["cita"]}},

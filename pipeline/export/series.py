@@ -86,7 +86,7 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
              **({"rol": t["rol"]} if "rol" in t else {})}
             for t in variante["tramos"]
         ],
-        "cobertura": {"desde": etiqueta_fecha(serie.index[0], frecuencia), "hasta": etiqueta_fecha(serie.index[-1], frecuencia)},
+        "cobertura": _cobertura(serie, frecuencia),
         "advertencias": _advertencias(variante, quiebres, serie),
         # Observaciones de la fuente que se quitaron a propósito (no son huecos): la web y el MCP las muestran.
         "excluidos": [{"fecha": str(e["fecha"]), "motivo": " ".join(str(e["motivo"]).split())}
@@ -96,14 +96,49 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         "cita": cita(serie_meta, variante, version_datos),
         "version_datos": version_datos,
         "desactualizada_desde": desactualizada_desde,
-        "datos": [[etiqueta_fecha(f, frecuencia), redondear(v)] for f, v in serie.items()],
+        **_dimension_pais(serie_meta),
+        "datos": _datos(serie, frecuencia, serie_meta),
     }
+
+
+def _filas(serie: pd.Series, frecuencia: str) -> list:
+    return [[etiqueta_fecha(f, frecuencia), redondear(v)] for f, v in serie.items()]
+
+
+def _datos(serie, frecuencia: str, serie_meta: dict):
+    """Lista de [fecha, valor]; en las series con dimensión pais, un objeto por entidad (SPEC 2.5)."""
+    if isinstance(serie, dict):
+        orden = [e["id"] for e in serie_meta["entidades"]]
+        return {ent: _filas(serie[ent], frecuencia) for ent in orden if ent in serie}
+    return _filas(serie, frecuencia)
+
+
+def _cobertura(serie, frecuencia: str) -> dict:
+    if isinstance(serie, dict):
+        desde = min(s.index[0] for s in serie.values())
+        hasta = max(s.index[-1] for s in serie.values())
+    else:
+        desde, hasta = serie.index[0], serie.index[-1]
+    return {"desde": etiqueta_fecha(desde, frecuencia), "hasta": etiqueta_fecha(hasta, frecuencia)}
+
+
+def _dimension_pais(serie_meta: dict) -> dict:
+    if "pais" not in serie_meta.get("dimensiones", []):
+        return {}
+    return {"dimensiones": ["pais"], "entidades": [{"id": e["id"], "nombre": e["nombre"]} for e in serie_meta["entidades"]],
+            "entidades_por_defecto": list(serie_meta["entidades_por_defecto"])}
 
 
 def a_texto(doc: dict) -> str:
     """JSON con los metadatos indentados y una observación por línea: legible y con diffs chicos en Git."""
     sin_datos = {k: v for k, v in doc.items() if k != "datos"}
     cabeza = json.dumps(sin_datos, ensure_ascii=False, indent=2)[:-2]
+    if isinstance(doc["datos"], dict):
+        bloques = []
+        for ent, pares in doc["datos"].items():
+            filas = ",\n".join("      " + json.dumps(par, ensure_ascii=False) for par in pares)
+            bloques.append(f'    "{ent}": [\n{filas}\n    ]')
+        return cabeza + ',\n  "datos": {\n' + ",\n".join(bloques) + "\n  }\n}\n"
     filas = ",\n".join("    " + json.dumps(par, ensure_ascii=False) for par in doc["datos"])
     return cabeza + ',\n  "datos": [\n' + filas + "\n  ]\n}\n"
 
@@ -121,5 +156,9 @@ def escribir(dir_export: Path, doc: dict) -> None:
     ruta_json.write_text(a_texto(doc), encoding="utf-8")
     ruta_csv = dir_export / "descargas" / "csv" / ruta_csv_relativa(doc)
     ruta_csv.parent.mkdir(parents=True, exist_ok=True)
-    lineas = ["fecha,valor"] + [f"{f},{v!r}" for f, v in doc["datos"]]
+    if isinstance(doc["datos"], dict):
+        # Formato largo: una fila por fecha y entidad.
+        lineas = ["fecha,pais,valor"] + [f"{f},{ent},{v!r}" for ent, filas in doc["datos"].items() for f, v in filas]
+    else:
+        lineas = ["fecha,valor"] + [f"{f},{v!r}" for f, v in doc["datos"]]
     ruta_csv.write_text("\n".join(lineas) + "\n", encoding="utf-8")

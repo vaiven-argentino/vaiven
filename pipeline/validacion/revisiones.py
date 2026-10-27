@@ -10,11 +10,28 @@ import pandas as pd
 from pipeline.comun import etiqueta_fecha, redondear
 
 
-def leer_publicada(ruta_json: Path) -> dict[str, float] | None:
+def leer_publicada(ruta_json: Path) -> dict[str, float] | dict[str, dict[str, float]] | None:
+    """Lo publicado, por fecha. En las series con dimensión pais, por entidad y por fecha."""
     if not ruta_json.exists():
         return None
     contenido = json.loads(ruta_json.read_text(encoding="utf-8"))
+    if isinstance(contenido["datos"], dict):
+        return {ent: {fecha: valor for fecha, valor in filas} for ent, filas in contenido["datos"].items()}
     return {fecha: valor for fecha, valor in contenido["datos"]}
+
+
+def comparar_entidades(por_entidad: dict[str, pd.Series], frecuencia: str, publicada: dict | None,
+                       umbral_pct: float) -> dict:
+    """Como `comparar`, entidad por entidad; las fechas del resultado llevan la entidad adelante («ARG 1990»)."""
+    total = {"cambios": [], "sobre_umbral": [], "nuevas": 0, "quitadas": []}
+    for ent, serie in sorted(por_entidad.items()):
+        previa = None if publicada is None else publicada.get(ent, {})
+        r = comparar(serie, frecuencia, previa, umbral_pct)
+        for clave in ("cambios", "sobre_umbral"):
+            total[clave] += [{**c, "fecha": f"{ent} {c['fecha']}"} for c in r[clave]]
+        total["quitadas"] += [f"{ent} {f}" for f in r["quitadas"]]
+        total["nuevas"] += r["nuevas"]
+    return total
 
 
 def comparar(serie: pd.Series, frecuencia: str, publicada: dict[str, float] | None, umbral_pct: float) -> dict:

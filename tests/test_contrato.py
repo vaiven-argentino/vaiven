@@ -25,9 +25,18 @@ def test_serie_cumple_el_esquema(ruta):
     doc = json.loads(ruta.read_text(encoding="utf-8"))
     assert doc.get("esquema") in ESQUEMAS, f"versión de esquema sin contrato: {doc.get('esquema')!r}"
     jsonschema.validate(doc, ESQUEMAS[doc["esquema"]])
-    fechas = [f for f, _ in doc["datos"]]
-    assert fechas == sorted(fechas) and len(set(fechas)) == len(fechas)
-    assert doc["cobertura"] == {"desde": fechas[0], "hasta": fechas[-1]}
+    if isinstance(doc["datos"], dict):
+        # Dimensión pais: una lista por entidad, todas declaradas, y la cobertura abarca todas.
+        assert set(doc["datos"]) == {e["id"] for e in doc["entidades"]}
+        assert set(doc["entidades_por_defecto"]) <= set(doc["datos"])
+        listas = list(doc["datos"].values())
+    else:
+        listas = [doc["datos"]]
+    for pares in listas:
+        fechas = [f for f, _ in pares]
+        assert fechas == sorted(fechas) and len(set(fechas)) == len(fechas)
+    todas = sorted(f for pares in listas for f, _ in pares)
+    assert doc["cobertura"] == {"desde": todas[0], "hasta": todas[-1]}
     carpeta = EXPORT / "descargas" / "csv" / ("auxiliares" if doc.get("auxiliar") else "")
     assert (carpeta / doc["serie"] / f"{doc['variante']}.csv").exists()
     assert doc.get("auxiliar", False) == (ruta.parent.parent.name == "auxiliares")
@@ -88,7 +97,8 @@ def test_especificaciones_vega_usan_url_absoluta():
 def test_excluidos_no_figuran_en_los_datos():
     for ruta in ARCHIVOS:
         doc = json.loads(ruta.read_text(encoding="utf-8"))
-        fechas = {f for f, _ in doc["datos"]}
+        listas = doc["datos"].values() if isinstance(doc["datos"], dict) else [doc["datos"]]
+        fechas = {f for pares in listas for f, _ in pares}
         for e in doc["excluidos"]:
             assert e["fecha"] not in fechas, (doc["id"], e["fecha"])
     reservas = json.loads((EXPORT / "series" / "reservas" / "brutas.json").read_text(encoding="utf-8"))
