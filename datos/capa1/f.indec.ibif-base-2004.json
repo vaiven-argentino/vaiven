@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ibif-base-2004",
+  "unidad": "millones de pesos de 2004, a ritmo anual",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.indec.ibif-base-2004/2026-10-27",
+  "descargado": "2026-10-27T19:35:12Z",
+  "sha256": "83b9bb3fd73dcb82ec9ddeb1a5dd7bf4fd2d60d49aa46cdf095415ffd266cc5d",
+  "observaciones": 90,
+  "desde": "2004-01-01",
+  "hasta": "2026-04-01"
+}

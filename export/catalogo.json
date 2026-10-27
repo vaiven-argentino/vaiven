@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-27T19:33:01Z",
+  "version_datos": "2026-10-27T19:35:28Z",
   "series": [
     {
       "id": "agregados",
@@ -606,6 +606,155 @@
           "tipo": "gráfico",
           "titulo_original": "Argentina. Evolución de los pagos por exportaciones e importaciones y el saldo comercial de mercancías, 2003-2014",
           "periodo_cubierto": "2003 – 2014"
+        }
+      ]
+    },
+    {
+      "id": "inversion",
+      "codigo": "ACT-03",
+      "nombre": "Inversión bruta interna fija",
+      "bloque": "Actividad",
+      "prioridad": "A",
+      "definicion": "Inversión bruta interna fija (construcción, maquinaria y equipo) a precios constantes, trimestral y a ritmo anual, y como porcentaje del PIB a precios corrientes.",
+      "unidad": "millones de pesos de 2004, a ritmo anual",
+      "tipo": "flujo",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "var_interanual",
+        "base_100",
+        "frecuencia",
+        "media_movil"
+      ],
+      "frecuencia": "trimestral",
+      "variante_por_defecto": "retropolada",
+      "quiebres": [
+        "q.inversion.base-2004",
+        "q.inversion.hueco-1991-1992"
+      ],
+      "variantes": [
+        {
+          "id": "retropolada",
+          "nombre": "A precios constantes, retropolada desde la base 2004 (desde 1993)",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/inversion/retropolada.json"
+        },
+        {
+          "id": "base-1970",
+          "nombre": "A precios de 1970 (1970–1990)",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "1990-10"
+          },
+          "archivo": "series/inversion/base-1970.json"
+        },
+        {
+          "id": "pct-pib-corrientes",
+          "nombre": "En % del PIB, a precios corrientes (desde 1993)",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "series/inversion/pct-pib-corrientes.json"
+        },
+        {
+          "id": "pct-pib-constantes",
+          "nombre": "En % del PIB, a precios constantes",
+          "estado": "pendiente",
+          "frecuencia": "trimestral",
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente. El cociente a precios constantes depende de la base y falta acordar cómo publicarlo."
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "ARO2003-C1",
+          "referencia": "Aronskind (2003), «El país del desarrollo posible», cap. II de Nueva historia argentina, t. IX, Sudamericana; datos de edición a verificar (no figura en el cronograma 2026)",
+          "pagina": "pdf 3 (67)",
+          "tipo": "cuadro",
+          "titulo_original": "Tasa de crecimiento del consumo y la inversión",
+          "periodo_cubierto": "1956 – 1975"
+        },
+        {
+          "id": "DF1990-C2",
+          "referencia": "Damill y Frenkel (1990), Malos tiempos. La economía argentina en la década de los ochenta, parte 3, CEDES",
+          "pagina": "pdf 65 (62)",
+          "tipo": "cuadro",
+          "titulo_original": "Ingreso nacional, ahorro e inversión (% del pbi)",
+          "periodo_cubierto": "1961-65 – 1989 (1.er semestre)"
+        },
+        {
+          "id": "OS2006-C5",
+          "referencia": "Ortiz y Schorr (2006), «La economía política del gobierno de Alfonsín…», en Pucciarelli (coord.), Siglo XXI",
+          "pagina": "17",
+          "tipo": "cuadro",
+          "titulo_original": "Argentina. Transferencias de ingresos e inversión, 1981-1989",
+          "periodo_cubierto": "1981 – 1989 (acumulado y anual; compara con 1970-75/1970-80)"
+        },
+        {
+          "id": "BAS2000-C1",
+          "referencia": "Basualdo (2000), Acerca de la naturaleza de la deuda externa y la definición de una estrategia política, FLACSO/UNQ/Página 12",
+          "pagina": "pdf 21 (23)",
+          "tipo": "cuadro",
+          "titulo_original": "Transferencias internas y externas de ingresos y formación de capital, 1981-1989",
+          "periodo_cubierto": "1981 – 1989 (acumulado y anual; compara con 1970-75 y 1970-80)"
+        },
+        {
+          "id": "DLB1993-C7",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 7 (47)",
+          "tipo": "cuadro",
+          "titulo_original": "Indicadores de performance económica (1973-1990)",
+          "periodo_cubierto": "1973/76; 1977/79; 1980/83; 1984/88; 1989/90"
+        },
+        {
+          "id": "DLB1993-C9",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 14 (61)",
+          "tipo": "cuadro",
+          "titulo_original": "Indicadores de performance económica (1989-1992)",
+          "periodo_cubierto": "1989 – 1992"
+        },
+        {
+          "id": "DLB1993-A2",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 44 (121)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Inversión como porcentaje del PBI para algunos países o grupo de países seleccionados",
+          "periodo_cubierto": "1960 – 1991"
+        },
+        {
+          "id": "DLB1993-A3",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 45 (122)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Relación inversión/producto y capital/producto",
+          "periodo_cubierto": "1906-1910 – 1986-1990"
+        },
+        {
+          "id": "RAP2005-C3.1",
+          "referencia": "Rapetti (2005), «La macroeconomía argentina durante la post-convertibilidad: evolución, debates y perspectivas», Observatorio Argentina",
+          "pagina": "37 (apéndice)",
+          "tipo": "cuadro",
+          "titulo_original": "PIB y componentes de la demanda: tasas de variación y contribución al crecimiento del PIB",
+          "periodo_cubierto": "2002 – 2005 (por fases)"
+        },
+        {
+          "id": "CENDA2010-C1",
+          "referencia": "CENDA (2010), «La macroeconomía después de la convertibilidad», en La anatomía del nuevo patrón de crecimiento…, pp. 7-46",
+          "pagina": "pdf 21 (51)",
+          "tipo": "cuadro",
+          "titulo_original": "Demanda agregada. Tasas de crecimiento reales y participación en el PIB. 2003-2007",
+          "periodo_cubierto": "2003 – 2007"
         }
       ]
     },

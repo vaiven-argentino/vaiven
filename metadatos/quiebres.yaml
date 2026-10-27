@@ -395,3 +395,26 @@
     no lo usa: el M1 de la misma serie sigue coincidiendo con el del Panorama. A consultar con el BCRA.
   afecta: [agregados.m1]
   fuente: Comparación de 174.1_AGADOS_M2_0_0_28 con bcra_3544 y con el Informe Monetario Mensual del BCRA (27/10/2026).
+
+# ── Inversión ──────────────────────────────────────────────────────────────────
+- id: q.inversion.base-2004
+  desde: 2004-01
+  hasta: 2004-01
+  tipo: cambio_de_base
+  descripcion: >-
+    Cambio de base: desde 2004, la serie es la de las cuentas nacionales del INDEC a precios de 2004; antes, la de
+    la base 1993. En los años que se superponen (2005–2012), las tasas anuales de la IBIF difieren mucho entre las
+    dos bases (en 2009, −10,2 % en la base 1993 y −22,6 % en la base 2004).
+  afecta: [inversion.retropolada, inversion.pct-pib-corrientes]
+  fuente: Comparación de 2.2_DGI_1993_T_19 con 4.2_DGIT_2004_T_25 (sumas anuales) en datos.gob.ar (27/10/2026).
+
+- id: q.inversion.hueco-1991-1992
+  desde: 1991-01
+  hasta: 1992-10
+  tipo: cobertura
+  descripcion: >-
+    No hay IBIF publicada para 1991 y 1992: la serie a precios de 1970 termina en 1990, la de 1993 empieza en 1993,
+    y la base 1986 del BCRA solo trae la inversión bruta interna total, con variación de existencias. Vaivén no
+    completa esos años: la serie desde 1993 y la de 1970–1990 son variantes separadas.
+  afecta: [inversion.retropolada, inversion.base-1970]
+  fuente: datos.gob.ar, cuentas nacionales del BCRA y del INDEC (27/10/2026).

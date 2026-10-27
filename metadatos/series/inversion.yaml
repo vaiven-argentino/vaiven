@@ -1,0 +1,86 @@
+id: inversion
+codigo: ACT-03
+nombre: Inversión bruta interna fija
+bloque: Actividad
+prioridad: A
+definicion: >-
+  Inversión bruta interna fija (construcción, maquinaria y equipo) a precios constantes, trimestral y a ritmo
+  anual, y como porcentaje del PIB a precios corrientes.
+unidad: millones de pesos de 2004, a ritmo anual
+tipo: flujo
+agregacion: promedio
+frecuencia: trimestral
+cobertura: {desde: 1970-01, hasta: hoy}
+variante_por_defecto: retropolada
+vista_inicial: {transformacion: var_interanual}
+variantes:
+  - id: retropolada
+    nombre: A precios constantes, retropolada desde la base 2004 (desde 1993)
+    estado: publicada
+    empalme: encadenar_tasas
+    enlace: anual
+    metodo: >-
+      Base 2004 del INDEC desde 2004 y, hacia atrás, las tasas de la base 1993 (1993–2003), con el enlace en 2004 (el
+      tramo anterior se reescala con el cociente de los totales de ese año). Empieza en 1993: para 1991–1992 no hay
+      IBIF en ninguna base publicada, y la serie anterior está en la variante «base 1970».
+    tramos:
+      - {fuente: f.indec.ibif-base-1993, desde: 1993-01, hasta: 2003-10}
+      - {fuente: f.indec.ibif-base-2004, desde: 2004-01}
+    advertencias: [q.inversion.base-2004, q.inversion.hueco-1991-1992]
+  - id: base-1970
+    nombre: A precios de 1970 (1970–1990)
+    estado: publicada
+    unidad: australes a precios de 1970
+    empalme: encadenar_tasas
+    enlace: anual
+    metodo: >-
+      Cuentas nacionales del BCRA a precios de 1970: la serie 1970–1980 en pesos y la serie 1980–1990 en australes,
+      encadenadas con el enlace en 1980. Termina en 1990: no se une con la serie desde 1993 porque para 1991–1992
+      no hay IBIF publicada (la base 1986 solo trae la inversión total, con variación de existencias).
+    tramos:
+      - {fuente: f.bcra.ibif-base-1970, desde: 1970-01, hasta: 1979-10}
+      - {fuente: f.bcra.ibif-base-1970-australes, desde: 1980-01}
+    advertencias: [q.inversion.hueco-1991-1992]
+  - id: pct-pib-corrientes
+    nombre: En % del PIB, a precios corrientes (desde 1993)
+    estado: publicada
+    unidad: '% del PIB'
+    empalme: derivar
+    operacion: cociente
+    por: 100
+    segmentos:
+      - {operandos: [f.indec.ibif-corriente-base-1993, f.indec.pib-nominal-base-1993-trimestral], desde: 1993-01, hasta: 2003-10}
+      - {operandos: [f.indec.ibif-corriente-base-2004, f.indec.pib-nominal-base-2004-trimestral], desde: 2004-01}
+    metodo: >-
+      IBIF a precios corrientes dividida por el PIB a precios corrientes de la misma base y el mismo trimestre: base
+      1993 en 1993–2003 y base 2004 desde 2004. Los cocientes de cada base se unen sin ajustar.
+    tramos:
+      - {fuente: f.indec.ibif-corriente-base-1993, desde: 1993-01, hasta: 2003-10, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-1993-trimestral, desde: 1993-01, hasta: 2003-10, rol: insumo}
+      - {fuente: f.indec.ibif-corriente-base-2004, desde: 2004-01, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-2004-trimestral, desde: 2004-01, rol: insumo}
+    advertencias: [q.inversion.base-2004]
+    transformaciones: [frecuencia, media_movil]
+    validacion:
+      min: 5
+      max: 40
+      var_min: -50
+      var_max: 50
+  - id: pct-pib-constantes
+    nombre: En % del PIB, a precios constantes
+    estado: pendiente
+    nota: Pendiente. El cociente a precios constantes depende de la base y falta acordar cómo publicarlo.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.indec.ibif-base-2004, desde: 2004-01}
+validacion:
+  min: 0
+  var_min: -40
+  var_max: 60       # tercer trimestre de 2020: +52 % (rebote después de la pandemia)
+  umbral_revision_pct: 0.5
+quiebres: [q.inversion.base-2004, q.inversion.hueco-1991-1992]
+transformaciones: [var_interanual, base_100, frecuencia, media_movil]
+fuentes: [f.bcra.ibif-base-1970, f.bcra.ibif-base-1970-australes, f.indec.ibif-base-1993, f.indec.ibif-base-2004, f.indec.ibif-corriente-base-1993, f.indec.ibif-corriente-base-2004]
+bibliografia: [ARO2003-C1, DF1990-C2, OS2006-C5, BAS2000-C1, DLB1993-C7, DLB1993-C9, DLB1993-A2, DLB1993-A3, RAP2005-C3.1, CENDA2010-C1]
+licencia_derivado: CC-BY-4.0
