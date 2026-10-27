@@ -33,3 +33,14 @@ describe("nombreTransformacion", () => {
       .toBe("frecuencia anual, variación interanual (%), media móvil de 3 períodos");
   });
 });
+
+describe("nombreTransformacion con medidas y entidades", () => {
+  it("nombra en orden lo que se calculó", () => {
+    expect(nombreTransformacion({ medida: "real", deflactor: "ipc.provincias", transformacion: "var_interanual" }))
+      .toBe("a precios constantes, deflactada con el IPC «ipc.provincias», variación interanual (%)");
+    expect(nombreTransformacion({ pesosActuales: true, frecuencia: "anual" })).toBe("en pesos actuales, frecuencia anual");
+    expect(nombreTransformacion({ medida: "pct_pib", frecuencia: "anual" })).toBe("frecuencia anual, en % del PIB");
+    expect(nombreTransformacion({ entidad: "BRA", transformacion: "indice_desde_tasas" }))
+      .toBe("entidad BRA, índice desde las tasas (año base = 100)");
+  });
+});

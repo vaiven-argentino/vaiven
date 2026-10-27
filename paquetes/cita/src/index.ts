@@ -18,11 +18,28 @@ export const NOMBRE_TRANSFORMACION: Record<string, string> = {
   var_dic_dic: "Variación diciembre–diciembre (%)",
   acumulada_anio: "Variación acumulada en el año (%)",
   base_100: "Índice base 100",
+  indice_desde_tasas: "Índice desde las tasas (año base = 100)",
 };
 
-/** Lo que nombra la línea de la transformación en la cita (frecuencia → transformación → media móvil). */
+/** Nombres de las medidas (SPEC 4), como los muestra la ficha. */
+export const NOMBRE_MEDIDA: Record<string, string> = {
+  real: "A precios constantes (real)",
+  en_dolares: "En dólares",
+  pct_pib: "En % del PIB",
+};
+
+/**
+ * Lo que nombra la línea de la transformación en la cita, en el orden en que se aplica: pesos actuales →
+ * frecuencia → medida → transformación → media móvil. En las series con dimensión pais, también la entidad.
+ */
 export interface OpcionesCita {
+  entidad?: string;
+  pesosActuales?: boolean;
   frecuencia?: string;
+  medida?: string;
+  /** Variante del IPC con que se deflactó (medida real). */
+  deflactor?: string;
+  baseReal?: string;
   transformacion?: string;
   mediaMovil?: number;
 }
@@ -30,7 +47,16 @@ export interface OpcionesCita {
 /** «frecuencia anual, variación interanual (%)», o `undefined` si la serie va tal cual se publica. */
 export function nombreTransformacion(o: OpcionesCita): string | undefined {
   const partes: string[] = [];
+  if (o.entidad) partes.push(`entidad ${o.entidad}`);
+  if (o.pesosActuales) partes.push("en pesos actuales");
   if (o.frecuencia) partes.push(`frecuencia ${o.frecuencia}`);
+  if (o.medida === "real") {
+    partes.push(`a precios constantes${o.baseReal ? ` de ${o.baseReal}` : ""}, deflactada con el IPC «${o.deflactor ?? "ipc.oficial"}»`);
+  } else if (o.medida === "en_dolares") {
+    partes.push("en dólares");
+  } else if (o.medida === "pct_pib") {
+    partes.push("en % del PIB");
+  }
   if (o.transformacion && o.transformacion !== "nivel") {
     partes.push((NOMBRE_TRANSFORMACION[o.transformacion] ?? o.transformacion).toLowerCase());
   }
