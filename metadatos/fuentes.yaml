@@ -1182,3 +1182,30 @@
   nota: >-
     Los términos del FMI permiten redistribuir con atribución, pero piden permiso para el reuso comercial, que
     CC BY 4.0 habilita: no es compatible sin ese permiso (24/10/2026).
+
+# ── Contexto internacional (INT-01 e INT-02): dimensión pais ───────────────────
+- id: f.bm.crecimiento-pib
+  organismo: Banco Mundial (Indicadores del Desarrollo Mundial)
+  nombre: Crecimiento del PIB, % anual (NY.GDP.MKTP.KD.ZG), países y agregados seleccionados
+  api: banco-mundial
+  id_api: NY.GDP.MKTP.KD.ZG
+  paises: [ARG, USA, CHN, MEX, BRA, BOL, CHL, COL, ECU, GUY, PRY, PER, SUR, URY, VEN, WLD, LCN, EUU, EMU]
+  url: https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: variación % anual
+  cobertura: {desde: 1961, hasta: hoy}
+  verificado: 2026-10-27
+
+- id: f.bm.crecimiento-pib-per-capita
+  organismo: Banco Mundial (Indicadores del Desarrollo Mundial)
+  nombre: Crecimiento del PIB per cápita, % anual (NY.GDP.PCAP.KD.ZG), países y agregados seleccionados
+  api: banco-mundial
+  id_api: NY.GDP.PCAP.KD.ZG
+  paises: [ARG, USA, CHN, MEX, BRA, BOL, CHL, COL, ECU, GUY, PRY, PER, SUR, URY, VEN, WLD, LCN, EUU, EMU]
+  url: https://data.worldbank.org/indicator/NY.GDP.PCAP.KD.ZG
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: variación % anual
+  cobertura: {desde: 1961, hasta: hoy}
+  verificado: 2026-10-27

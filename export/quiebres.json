@@ -284,6 +284,42 @@
     "fuente": "Comparación de 335.1_CUENTA_CONES_IV__42 con 76.1_ITG_0_A_17 en datos.gob.ar (24/10/2026)."
   },
   {
+    "id": "q.int.agregados",
+    "desde": "1961",
+    "tipo": "cobertura",
+    "descripcion": "Los agregados (Mundo, América Latina y el Caribe, Unión Europea y Zona del euro) se calculan con la composición actual de cada grupo para todos los años, no con la que tenían en cada momento.",
+    "afecta": [
+      "int-pib.banco-mundial",
+      "int-pib-per-capita.banco-mundial"
+    ],
+    "fuente": "Banco Mundial, Indicadores del Desarrollo Mundial.",
+    "hasta": null
+  },
+  {
+    "id": "q.int.argentina",
+    "desde": "1961",
+    "tipo": "metodologia",
+    "descripcion": "Argentina figura con la serie del Banco Mundial, para comparar con la misma metodología que el resto de los países. Puede diferir del PIB real del INDEC (ACT-01), que es la serie propia de Vaivén para la Argentina.",
+    "afecta": [
+      "int-pib.banco-mundial",
+      "int-pib-per-capita.banco-mundial"
+    ],
+    "fuente": "Banco Mundial; INDEC.",
+    "hasta": null
+  },
+  {
+    "id": "q.int.revisiones",
+    "desde": "1961",
+    "tipo": "metodologia",
+    "descripcion": "El Banco Mundial revisa estos indicadores todos los años (cambios de base de los países, nuevas estimaciones): los valores históricos pueden cambiar de una versión a otra.",
+    "afecta": [
+      "int-pib.banco-mundial",
+      "int-pib-per-capita.banco-mundial"
+    ],
+    "fuente": "Banco Mundial, Indicadores del Desarrollo Mundial.",
+    "hasta": null
+  },
+  {
     "id": "q.inversion.base-2004",
     "desde": "2004-01",
     "hasta": "2004-01",

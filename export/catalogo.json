@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-27T19:42:14Z",
+  "version_datos": "2026-10-27T19:44:10Z",
   "series": [
     {
       "id": "agregados",
@@ -1120,6 +1120,144 @@
           "tipo": "gráfico",
           "titulo_original": "Argentina. Evolución de los pagos por exportaciones e importaciones y el saldo comercial de mercancías, 2003-2014",
           "periodo_cubierto": "2003 – 2014"
+        }
+      ]
+    },
+    {
+      "id": "int-pib-per-capita",
+      "codigo": "INT-02",
+      "nombre": "Crecimiento del PIB per cápita, países seleccionados",
+      "bloque": "Contexto internacional",
+      "prioridad": "B",
+      "definicion": "Variación anual del PIB real per cápita (en dólares constantes), por país y agregado, según el Banco Mundial.",
+      "unidad": "variación % anual",
+      "tipo": "tasa_de_variacion",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "indice_desde_tasas",
+        "media_movil"
+      ],
+      "frecuencia": "anual",
+      "variante_por_defecto": "banco-mundial",
+      "quiebres": [
+        "q.int.revisiones",
+        "q.int.agregados",
+        "q.int.argentina"
+      ],
+      "variantes": [
+        {
+          "id": "banco-mundial",
+          "nombre": "Banco Mundial, Indicadores del Desarrollo Mundial",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1961",
+            "hasta": "2025"
+          },
+          "archivo": "series/int-pib-per-capita/banco-mundial.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "ARO2003-C4",
+          "referencia": "Aronskind (2003), «El país del desarrollo posible», cap. II de Nueva historia argentina, t. IX, Sudamericana; datos de edición a verificar (no figura en el cronograma 2026)",
+          "pagina": "pdf 13 (86)",
+          "tipo": "cuadro",
+          "titulo_original": "Inflación en precios minoristas",
+          "periodo_cubierto": "1955-59; 1960-64; 1965-69; 1970-74"
+        },
+        {
+          "id": "DLB1993-A2",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 44 (121)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Inversión como porcentaje del PBI para algunos países o grupo de países seleccionados",
+          "periodo_cubierto": "1960 – 1991"
+        },
+        {
+          "id": "CENDA2004-C2",
+          "referencia": "CENDA (2004), «Las consecuencias económicas del Sr. Lavagna. Dilemas de un país devaluado», Tendencias de la economía actual, documento n.º 1 (no figura en el cronograma 2026)",
+          "pagina": "18",
+          "tipo": "cuadro",
+          "titulo_original": "Comparación internacional de salarios, 2003",
+          "periodo_cubierto": "2003"
+        },
+        {
+          "id": "KUL2016-C6.1",
+          "referencia": "Kulfas (2016), Los tres kirchnerismos, caps. 5 y 6, Siglo XXI",
+          "pagina": "pdf 50",
+          "tipo": "cuadro",
+          "titulo_original": "Distribución geográfica y crecimiento del sector industrial en el mundo",
+          "periodo_cubierto": "1990; 2000; 2010"
+        }
+      ]
+    },
+    {
+      "id": "int-pib",
+      "codigo": "INT-01",
+      "nombre": "Crecimiento del PIB, países seleccionados",
+      "bloque": "Contexto internacional",
+      "prioridad": "B",
+      "definicion": "Variación anual del PIB real (en dólares constantes), por país y agregado, según el Banco Mundial.",
+      "unidad": "variación % anual",
+      "tipo": "tasa_de_variacion",
+      "agregacion": "promedio",
+      "transformaciones": [
+        "indice_desde_tasas",
+        "media_movil"
+      ],
+      "frecuencia": "anual",
+      "variante_por_defecto": "banco-mundial",
+      "quiebres": [
+        "q.int.revisiones",
+        "q.int.agregados",
+        "q.int.argentina"
+      ],
+      "variantes": [
+        {
+          "id": "banco-mundial",
+          "nombre": "Banco Mundial, Indicadores del Desarrollo Mundial",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1961",
+            "hasta": "2025"
+          },
+          "archivo": "series/int-pib/banco-mundial.json"
+        }
+      ],
+      "bibliografia": [
+        {
+          "id": "ARO2003-C4",
+          "referencia": "Aronskind (2003), «El país del desarrollo posible», cap. II de Nueva historia argentina, t. IX, Sudamericana; datos de edición a verificar (no figura en el cronograma 2026)",
+          "pagina": "pdf 13 (86)",
+          "tipo": "cuadro",
+          "titulo_original": "Inflación en precios minoristas",
+          "periodo_cubierto": "1955-59; 1960-64; 1965-69; 1970-74"
+        },
+        {
+          "id": "DLB1993-A2",
+          "referencia": "De la Balze (1993), «Reforma y crecimiento en la Argentina», en Reforma y convergencia, ADEBA (pp. 41-136)",
+          "pagina": "pdf 44 (121)",
+          "tipo": "cuadro",
+          "titulo_original": "Anexo. Inversión como porcentaje del PBI para algunos países o grupo de países seleccionados",
+          "periodo_cubierto": "1960 – 1991"
+        },
+        {
+          "id": "CENDA2004-C2",
+          "referencia": "CENDA (2004), «Las consecuencias económicas del Sr. Lavagna. Dilemas de un país devaluado», Tendencias de la economía actual, documento n.º 1 (no figura en el cronograma 2026)",
+          "pagina": "18",
+          "tipo": "cuadro",
+          "titulo_original": "Comparación internacional de salarios, 2003",
+          "periodo_cubierto": "2003"
+        },
+        {
+          "id": "KUL2016-C6.1",
+          "referencia": "Kulfas (2016), Los tres kirchnerismos, caps. 5 y 6, Siglo XXI",
+          "pagina": "pdf 50",
+          "tipo": "cuadro",
+          "titulo_original": "Distribución geográfica y crecimiento del sector industrial en el mundo",
+          "periodo_cubierto": "1990; 2000; 2010"
         }
       ]
     },

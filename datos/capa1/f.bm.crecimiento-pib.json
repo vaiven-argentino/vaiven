@@ -1,0 +1,30 @@
+{
+  "fuente": "f.bm.crecimiento-pib",
+  "unidad": "variación % anual",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.bm.crecimiento-pib/2026-10-27",
+  "descargado": "2026-10-27T19:44:21Z",
+  "sha256": "3273c53a05871e118d3c94cbc103a1af2fba4223e8b67c2f8bba7681325de0c4",
+  "observaciones": 1235,
+  "paises": [
+    "ARG",
+    "BOL",
+    "BRA",
+    "CHL",
+    "CHN",
+    "COL",
+    "ECU",
+    "EMU",
+    "EUU",
+    "GUY",
+    "LCN",
+    "MEX",
+    "PER",
+    "PRY",
+    "SUR",
+    "URY",
+    "USA",
+    "VEN",
+    "WLD"
+  ]
+}

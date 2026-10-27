@@ -1,0 +1,56 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Crecimiento del PIB per cápita, países seleccionados",
+    "subtitle": "Variante: Banco Mundial, Indicadores del Desarrollo Mundial · variación % anual"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/int-pib-per-capita/banco-mundial.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {
+      "filter": {
+        "field": "pais",
+        "oneOf": [
+          "ARG",
+          "BRA",
+          "USA",
+          "LCN",
+          "WLD"
+        ]
+      }
+    }
+  ],
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "variación % anual"
+    },
+    "color": {
+      "field": "pais",
+      "type": "nominal",
+      "title": "País o agregado"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "int-pib-per-capita",
+      "variante": "banco-mundial",
+      "version_datos": "2026-10-27T19:44:10Z",
+      "cita": "Vaivén (2026). Crecimiento del PIB per cápita, países seleccionados, variante «banco-mundial». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/int-pib-per-capita/"
+    }
+  }
+}

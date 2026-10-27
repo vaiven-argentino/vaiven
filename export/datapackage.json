@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-27T19:42:14Z",
-  "created": "2026-10-27T19:42:14Z",
+  "version": "2026-10-27T19:44:10Z",
+  "created": "2026-10-27T19:44:10Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -1106,6 +1106,102 @@
         {
           "title": "INDEC: Importaciones CIF por uso económico. Importaciones, total general, anual",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=76.1_ITG_0_A_17"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "int-pib-per-capita.banco-mundial",
+      "title": "Crecimiento del PIB per cápita, países seleccionados · Banco Mundial, Indicadores del Desarrollo Mundial",
+      "path": "descargas/csv/int-pib-per-capita/banco-mundial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Indicador NY.GDP.PCAP.KD.ZG de los Indicadores del Desarrollo Mundial del Banco Mundial, sin cambios, para Argentina, el resto de Sudamérica, Estados Unidos, China y México, y cuatro agregados (Mundo, América Latina y el Caribe, Unión Europea y Zona del euro). Argentina figura con la serie del Banco Mundial para comparar con la misma metodología; su serie propia es el PIB real (ACT-01), del INDEC.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "pais",
+            "type": "string",
+            "description": "Código ISO3 del Banco Mundial (país o agregado)."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "variación % anual"
+          }
+        ],
+        "primaryKey": [
+          "fecha",
+          "pais"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Banco Mundial (Indicadores del Desarrollo Mundial): Crecimiento del PIB per cápita, % anual (NY.GDP.PCAP.KD.ZG), países y agregados seleccionados",
+          "path": "https://data.worldbank.org/indicator/NY.GDP.PCAP.KD.ZG"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "int-pib.banco-mundial",
+      "title": "Crecimiento del PIB, países seleccionados · Banco Mundial, Indicadores del Desarrollo Mundial",
+      "path": "descargas/csv/int-pib/banco-mundial.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Indicador NY.GDP.MKTP.KD.ZG de los Indicadores del Desarrollo Mundial del Banco Mundial, sin cambios, para Argentina, el resto de Sudamérica, Estados Unidos, China y México, y cuatro agregados (Mundo, América Latina y el Caribe, Unión Europea y Zona del euro). Argentina figura con la serie del Banco Mundial para comparar con la misma metodología; su serie propia es el PIB real (ACT-01), del INDEC.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "pais",
+            "type": "string",
+            "description": "Código ISO3 del Banco Mundial (país o agregado)."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "variación % anual"
+          }
+        ],
+        "primaryKey": [
+          "fecha",
+          "pais"
+        ]
+      },
+      "sources": [
+        {
+          "title": "Banco Mundial (Indicadores del Desarrollo Mundial): Crecimiento del PIB, % anual (NY.GDP.MKTP.KD.ZG), países y agregados seleccionados",
+          "path": "https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG"
         }
       ],
       "licenses": [
