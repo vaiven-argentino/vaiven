@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-24T23:25:28Z",
-  "created": "2026-10-24T23:25:28Z",
+  "version": "2026-10-27T19:33:01Z",
+  "created": "2026-10-27T19:33:01Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -22,6 +22,216 @@
     }
   ],
   "resources": [
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "agregados.m1",
+      "title": "Agregados monetarios M1, M2 y M3 · M1 en pesos (desde 1970)",
+      "path": "descargas/csv/agregados/m1.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "M1 en moneda nacional, saldo de fin de mes, de las series históricas de estadísticas monetarias del BCRA (en pesos actuales equivalentes), sin cambios. Se toma del CSV de la distribución, porque la API de datos.gob.ar devuelve la serie vacía. Llega con el atraso de esa copia.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos actuales"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Agregados monetarios en pesos, M1",
+          "path": "https://datos.gob.ar/dataset/sspm-series-historicas-estadisticas-monetarias"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "agregados.m2-pesos",
+      "title": "Agregados monetarios M1, M2 y M3 · M2 en pesos (1970–2021)",
+      "path": "descargas/csv/agregados/m2-pesos.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "M2 en moneda nacional (M1 más cajas de ahorro en pesos). Saldo de fin de mes del Panorama monetario y financiero del BCRA, en pesos actuales equivalentes, pasado de miles a millones. La serie termina en mayo de 2021.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos actuales"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA: Panorama monetario y financiero. M2 en moneda nacional, total, saldo de fin de mes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=bcra_3544"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "agregados.m2-privado",
+      "title": "Agregados monetarios M1, M2 y M3 · M2 privado, promedio mensual (desde 2009)",
+      "path": "descargas/csv/agregados/m2-privado.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "M2 del sector privado (circulante en poder del público más depósitos a la vista y en caja de ahorro del sector privado en pesos), promedio de saldos diarios del mes, según el BCRA, sin cambios.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos actuales"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Agregados monetarios. M2 privado, promedio mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=90.1_AMTMA_0_0_39"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "agregados.m2-total",
+      "title": "Agregados monetarios M1, M2 y M3 · M2 total, con depósitos en dólares (1970–2021)",
+      "path": "descargas/csv/agregados/m2-total.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "M2 total, con los depósitos a la vista y en caja de ahorro en moneda extranjera expresados en pesos. Saldo de fin de mes del Panorama monetario y financiero del BCRA, en pesos actuales equivalentes, pasado de miles a millones. La serie termina en mayo de 2021.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos actuales"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA: Panorama monetario y financiero. M2 total (moneda nacional y extranjera), saldo de fin de mes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=bcra_3543"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "agregados.m3-total",
+      "title": "Agregados monetarios M1, M2 y M3 · M3 total, con depósitos en dólares (1970–2021)",
+      "path": "descargas/csv/agregados/m3-total.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "M3 total, con los depósitos en moneda extranjera expresados en pesos. Saldo de fin de mes del Panorama monetario y financiero del BCRA, en pesos actuales equivalentes, pasado de miles a millones. La serie termina en mayo de 2021.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "fields": [
+          {
+            "name": "fecha",
+            "type": "string",
+            "description": "Período (mensual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
+          },
+          {
+            "name": "valor",
+            "type": "number",
+            "description": "millones de pesos actuales"
+          }
+        ],
+        "primaryKey": [
+          "fecha"
+        ]
+      },
+      "sources": [
+        {
+          "title": "BCRA: Panorama monetario y financiero. M3 total (moneda nacional y extranjera), saldo de fin de mes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=bcra_3554"
+        }
+      ],
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "base-monetaria.fin-de-mes",

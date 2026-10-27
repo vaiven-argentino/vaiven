@@ -1,0 +1,89 @@
+id: agregados
+codigo: MON-02
+nombre: Agregados monetarios M1, M2 y M3
+bloque: Monetario
+prioridad: A
+definicion: >-
+  Agregados monetarios: M1 (circulante en poder del público más depósitos a la vista), M2 (M1 más cajas de ahorro)
+  y M3 (M2 más plazos fijos y otros depósitos), en millones de pesos actuales: los valores anteriores a 1992 están
+  convertidos con las equivalencias de los signos monetarios.
+unidad: millones de pesos actuales
+tipo: stock
+agregacion: fin_de_periodo
+frecuencia: mensual
+moneda: pesos_actuales
+escala_log: true
+cobertura: {desde: 1970-01, hasta: hoy}
+variante_por_defecto: m1
+unidades_medida: {real: 'millones de pesos de {base}', en_dolares: millones de US$}
+variantes:
+  - id: m1
+    nombre: M1 en pesos (desde 1970)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      M1 en moneda nacional, saldo de fin de mes, de las series históricas de estadísticas monetarias del BCRA (en
+      pesos actuales equivalentes), sin cambios. Se toma del CSV de la distribución, porque la API de datos.gob.ar
+      devuelve la serie vacía. Llega con el atraso de esa copia.
+    tramos:
+      - {fuente: f.bcra.m1-historica, desde: 1970-01}
+    advertencias: [q.agregados.m2-2019]
+    validacion:
+      var_excepciones: [1982-07]
+  - id: m2-pesos
+    nombre: M2 en pesos (1970–2021)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 0.001
+    metodo: >-
+      M2 en moneda nacional (M1 más cajas de ahorro en pesos). Saldo de fin de mes del Panorama monetario y financiero del BCRA, en pesos actuales equivalentes,
+      pasado de miles a millones. La serie termina en mayo de 2021.
+    tramos:
+      - {fuente: f.bcra.m2-pesos-panorama, desde: 1970-01}
+    advertencias: [q.agregados.panorama-2021]
+    continuidad:
+      # El M2 de la serie histórica coincide con este hasta julio de 2019; desde agosto de 2019 deja de coincidir.
+      - {a: f.bcra.m2-pesos-panorama, b: f.bcra.m2-historica, desde: 1970-02, hasta: 2019-07, en: tasas, tolerancia: 0.5}
+  - id: m2-total
+    nombre: M2 total, con depósitos en dólares (1970–2021)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 0.001
+    metodo: >-
+      M2 total, con los depósitos a la vista y en caja de ahorro en moneda extranjera expresados en pesos. Saldo de fin de mes del Panorama monetario y financiero del BCRA, en pesos actuales equivalentes,
+      pasado de miles a millones. La serie termina en mayo de 2021.
+    tramos:
+      - {fuente: f.bcra.m2-total-panorama, desde: 1970-01}
+    advertencias: [q.agregados.panorama-2021]
+  - id: m3-total
+    nombre: M3 total, con depósitos en dólares (1970–2021)
+    estado: publicada
+    empalme: yuxtaponer
+    escala: 0.001
+    metodo: >-
+      M3 total, con los depósitos en moneda extranjera expresados en pesos. Saldo de fin de mes del Panorama monetario y financiero del BCRA, en pesos actuales equivalentes,
+      pasado de miles a millones. La serie termina en mayo de 2021.
+    tramos:
+      - {fuente: f.bcra.m3-total-panorama, desde: 1970-01}
+    advertencias: [q.agregados.panorama-2021]
+  - id: m2-privado
+    nombre: M2 privado, promedio mensual (desde 2009)
+    estado: publicada
+    agregacion: promedio
+    empalme: yuxtaponer
+    metodo: >-
+      M2 del sector privado (circulante en poder del público más depósitos a la vista y en caja de ahorro del sector
+      privado en pesos), promedio de saldos diarios del mes, según el BCRA, sin cambios.
+    tramos:
+      - {fuente: f.bcra.m2-privado, desde: 2009-06}
+validacion:
+  min: 0
+  var_min: -40
+  var_max: 200
+  umbral_revision_pct: 0.5
+  var_excepciones: [1982-07]
+quiebres: [q.agregados.panorama-2021, q.agregados.m2-2019]
+transformaciones: [var_mensual, var_interanual, base_100, frecuencia, media_movil, real, en_dolares, pct_pib]
+fuentes: [f.bcra.m1-historica, f.bcra.m2-pesos-panorama, f.bcra.m2-total-panorama, f.bcra.m3-total-panorama, f.bcra.m2-privado]
+bibliografia: [DF1990-C8, FF1990-C6, FF1990-C10, DLB1993-C7, DLB1993-C9, DLB1993-A13, SCH1998c4-C5, RAP2005-G3.4, DF2013-G10]
+licencia_derivado: CC-BY-4.0

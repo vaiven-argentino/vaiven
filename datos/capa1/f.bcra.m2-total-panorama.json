@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.m2-total-panorama",
+  "unidad": "miles de pesos actuales (la metadata dice «miles de pesos corrientes»)",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.m2-total-panorama/2026-10-27",
+  "descargado": "2026-10-27T19:33:07Z",
+  "sha256": "c60ad5853d14ecb9b94f3a7dd50d0fde35e2e16c9b43d60a11d633a439d35598",
+  "observaciones": 972,
+  "desde": "1940-06-01",
+  "hasta": "2021-05-01"
+}

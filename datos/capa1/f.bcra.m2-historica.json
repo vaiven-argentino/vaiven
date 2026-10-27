@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.m2-historica",
+  "unidad": "millones de pesos actuales (pesos equivalentes)",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.m2-historica/2026-10-27",
+  "descargado": "2026-10-27T19:33:06Z",
+  "sha256": "472066ec351ad6380d1057bed370f96f564b0cd6ba0d1ba4f7df28bfc0d737be",
+  "observaciones": 1031,
+  "desde": "1940-06-01",
+  "hasta": "2026-04-01"
+}

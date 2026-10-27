@@ -671,3 +671,91 @@
     La OCDE publica sus datos con licencia CC BY 4.0 desde el 1/7/2024; el dato de origen es el CPI-U del BLS
     (dominio público), que bloquea las descargas automáticas. Se descartó la copia de FRED, cuyos términos no
     permiten redistribuir.
+
+# ── Agregados monetarios (MON-02) ──────────────────────────────────────────────
+- id: f.bcra.m1-historica
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Series históricas de estadísticas monetarias. Agregados monetarios en pesos, M1
+  api: datos.gob.ar-csv
+  id_api: 174.1_AGADOS_M1_0_0_28
+  url_descarga: https://infra.datos.gob.ar/catalog/sspm/dataset/174/distribution/174.1/download/series-historicas-monetarias.csv
+  columna: agregados_monetarios_en_pesos_m1
+  url: https://datos.gob.ar/dataset/sspm-series-historicas-estadisticas-monetarias
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos actuales (pesos equivalentes)
+  cobertura: {desde: 1940-06, hasta: hoy}
+  verificado: 2026-10-27
+  nota: >-
+    La API devuelve 0 filas para esta serie; se usa el CSV de su distribución. Es el M1 en moneda nacional de fin de
+    mes: coincide con el del Panorama monetario (bcra_3545) dentro del 0,35 % en 1990–2021. Llega con atraso
+    (abril de 2026 al 27/10/2026).
+
+- id: f.bcra.m2-historica
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Series históricas de estadísticas monetarias. Agregados monetarios en pesos, M2
+  api: datos.gob.ar
+  id_api: 174.1_AGADOS_M2_0_0_28
+  url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_AGADOS_M2_0_0_28
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos actuales (pesos equivalentes)
+  cobertura: {desde: 1940-06, hasta: hoy}
+  verificado: 2026-10-27
+  nota: >-
+    No se publica: solo controla el M2 del Panorama hasta julio de 2019. Desde agosto de 2019 deja de coincidir con
+    cualquier agregado publicado por el BCRA (en 24 meses queda por debajo del M1) y no hay documentación del
+    cambio. A consultar con el BCRA.
+
+- id: f.bcra.m2-pesos-panorama
+  organismo: BCRA
+  nombre: Panorama monetario y financiero. M2 en moneda nacional, total, saldo de fin de mes
+  api: datos.gob.ar
+  id_api: bcra_3544
+  url: https://apis.datos.gob.ar/series/api/series/?ids=bcra_3544
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: miles de pesos actuales (la metadata dice «miles de pesos corrientes»)
+  cobertura: {desde: 1940-06, hasta: 2021-05}
+  verificado: 2026-10-27
+  nota: >-
+    Los valores están en pesos actuales equivalentes, no en pesos de cada época: son exactamente los de la serie
+    histórica 174 multiplicados por 1.000 (por ejemplo, la base monetaria de 1940–2021). La serie termina en mayo de
+    2021.
+
+- id: f.bcra.m2-total-panorama
+  organismo: BCRA
+  nombre: Panorama monetario y financiero. M2 total (moneda nacional y extranjera), saldo de fin de mes
+  api: datos.gob.ar
+  id_api: bcra_3543
+  url: https://apis.datos.gob.ar/series/api/series/?ids=bcra_3543
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: miles de pesos actuales (la metadata dice «miles de pesos corrientes»)
+  cobertura: {desde: 1940-06, hasta: 2021-05}
+  verificado: 2026-10-27
+
+- id: f.bcra.m3-total-panorama
+  organismo: BCRA
+  nombre: Panorama monetario y financiero. M3 total (moneda nacional y extranjera), saldo de fin de mes
+  api: datos.gob.ar
+  id_api: bcra_3554
+  url: https://apis.datos.gob.ar/series/api/series/?ids=bcra_3554
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: miles de pesos actuales (la metadata dice «miles de pesos corrientes»)
+  cobertura: {desde: 1940-06, hasta: 2021-05}
+  verificado: 2026-10-27
+
+- id: f.bcra.m2-privado
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Agregados monetarios. M2 privado, promedio mensual
+  api: datos.gob.ar
+  id_api: 90.1_AMTMA_0_0_39
+  url: https://apis.datos.gob.ar/series/api/series/?ids=90.1_AMTMA_0_0_39
+  licencia: CC-BY-4.0
+  frecuencia: mensual
+  unidad: millones de pesos
+  cobertura: {desde: 2009-06, hasta: hoy}
+  verificado: 2026-10-27
+  nota: Coincide con el M2 privado del Informe Monetario Mensual del BCRA (septiembre de 2020, 3.731.679 millones).

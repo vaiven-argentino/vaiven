@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.m2-pesos-panorama",
+  "descargado": "2026-10-27T19:33:04Z",
+  "sha256": "cb60db23d760e26b24844ec9f6d98f7ba0247e6de16fbdeed203552ab9bf276f",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=bcra_3544&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 33614,
+      "sha256": "805305ef57c3ad997d2a26f835ae475ae6fa279fcf4cc495aa15364b959e7f90"
+    }
+  ]
+}

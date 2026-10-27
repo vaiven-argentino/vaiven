@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.m2-privado",
+  "unidad": "millones de pesos",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.m2-privado/2026-10-27",
+  "descargado": "2026-10-27T19:33:09Z",
+  "sha256": "f130f5818f1cb65562732974c8382bbd2c94ba2ae463a6aa3664a40ac4b18622",
+  "observaciones": 207,
+  "desde": "2009-06-01",
+  "hasta": "2026-08-01"
+}
