@@ -1157,6 +1157,94 @@
           "archivo": "series/int-pib-per-capita/banco-mundial.json"
         }
       ],
+      "dimensiones": [
+        "pais"
+      ],
+      "entidades": [
+        {
+          "id": "ARG",
+          "nombre": "Argentina"
+        },
+        {
+          "id": "USA",
+          "nombre": "Estados Unidos"
+        },
+        {
+          "id": "CHN",
+          "nombre": "China"
+        },
+        {
+          "id": "MEX",
+          "nombre": "México"
+        },
+        {
+          "id": "BRA",
+          "nombre": "Brasil"
+        },
+        {
+          "id": "BOL",
+          "nombre": "Bolivia"
+        },
+        {
+          "id": "CHL",
+          "nombre": "Chile"
+        },
+        {
+          "id": "COL",
+          "nombre": "Colombia"
+        },
+        {
+          "id": "ECU",
+          "nombre": "Ecuador"
+        },
+        {
+          "id": "GUY",
+          "nombre": "Guyana"
+        },
+        {
+          "id": "PRY",
+          "nombre": "Paraguay"
+        },
+        {
+          "id": "PER",
+          "nombre": "Perú"
+        },
+        {
+          "id": "SUR",
+          "nombre": "Surinam"
+        },
+        {
+          "id": "URY",
+          "nombre": "Uruguay"
+        },
+        {
+          "id": "VEN",
+          "nombre": "Venezuela"
+        },
+        {
+          "id": "WLD",
+          "nombre": "Mundo"
+        },
+        {
+          "id": "LCN",
+          "nombre": "América Latina y el Caribe"
+        },
+        {
+          "id": "EUU",
+          "nombre": "Unión Europea"
+        },
+        {
+          "id": "EMU",
+          "nombre": "Zona del euro"
+        }
+      ],
+      "entidades_por_defecto": [
+        "ARG",
+        "BRA",
+        "USA",
+        "LCN",
+        "WLD"
+      ],
       "bibliografia": [
         {
           "id": "ARO2003-C4",
@@ -1225,6 +1313,94 @@
           },
           "archivo": "series/int-pib/banco-mundial.json"
         }
+      ],
+      "dimensiones": [
+        "pais"
+      ],
+      "entidades": [
+        {
+          "id": "ARG",
+          "nombre": "Argentina"
+        },
+        {
+          "id": "USA",
+          "nombre": "Estados Unidos"
+        },
+        {
+          "id": "CHN",
+          "nombre": "China"
+        },
+        {
+          "id": "MEX",
+          "nombre": "México"
+        },
+        {
+          "id": "BRA",
+          "nombre": "Brasil"
+        },
+        {
+          "id": "BOL",
+          "nombre": "Bolivia"
+        },
+        {
+          "id": "CHL",
+          "nombre": "Chile"
+        },
+        {
+          "id": "COL",
+          "nombre": "Colombia"
+        },
+        {
+          "id": "ECU",
+          "nombre": "Ecuador"
+        },
+        {
+          "id": "GUY",
+          "nombre": "Guyana"
+        },
+        {
+          "id": "PRY",
+          "nombre": "Paraguay"
+        },
+        {
+          "id": "PER",
+          "nombre": "Perú"
+        },
+        {
+          "id": "SUR",
+          "nombre": "Surinam"
+        },
+        {
+          "id": "URY",
+          "nombre": "Uruguay"
+        },
+        {
+          "id": "VEN",
+          "nombre": "Venezuela"
+        },
+        {
+          "id": "WLD",
+          "nombre": "Mundo"
+        },
+        {
+          "id": "LCN",
+          "nombre": "América Latina y el Caribe"
+        },
+        {
+          "id": "EUU",
+          "nombre": "Unión Europea"
+        },
+        {
+          "id": "EMU",
+          "nombre": "Zona del euro"
+        }
+      ],
+      "entidades_por_defecto": [
+        "ARG",
+        "BRA",
+        "USA",
+        "LCN",
+        "WLD"
       ],
       "bibliografia": [
         {

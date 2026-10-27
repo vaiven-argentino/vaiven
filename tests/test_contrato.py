@@ -50,6 +50,10 @@ def test_catalogo_y_datapackage_apuntan_a_archivos_existentes():
         for v in s["variantes"]:
             if v["estado"] == "publicada":
                 assert (EXPORT / v["archivo"]).exists(), v["archivo"]
+                doc = json.loads((EXPORT / v["archivo"]).read_text(encoding="utf-8"))
+                if isinstance(doc["datos"], dict):
+                    # Las series con dimensión pais declaran en el catálogo las mismas entidades que en su JSON.
+                    assert s["entidades"] == doc["entidades"] and s["entidades_por_defecto"] == doc["entidades_por_defecto"]
             else:
                 assert v["archivo"] is None and not (EXPORT / "series" / s["id"] / f"{v['id']}.json").exists()
     paquete = json.loads((EXPORT / "datapackage.json").read_text(encoding="utf-8"))
