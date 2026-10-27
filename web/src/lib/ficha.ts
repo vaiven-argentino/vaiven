@@ -4,10 +4,21 @@ import { PASO, disponibles, indiceFin, indiceMes, type Advertencia, type Resulta
 import type { Transformacion } from "@vaiven/transformaciones";
 import { fechaCorta, fechaLegible, numero } from "./formato";
 
-export function transformacionInicial(serie: SerieExportada): Transformacion {
-  // El IPC en nivel va de 6e-11 a 12.276: se lee mejor como inflación interanual.
+type ConVista = SerieExportada & { vista_inicial?: { transformacion?: string; medida?: string } };
+
+export function transformacionInicial(serie: ConVista): Transformacion {
   const disp = disponibles(serie).transformaciones;
+  // Si los metadatos dicen con qué vista arranca la serie (por ejemplo, el PIB en variación interanual), manda eso.
+  const pedida = serie.vista_inicial?.transformacion as Transformacion | undefined;
+  if (pedida && disp.includes(pedida)) return pedida;
+  // El IPC en nivel va de 6e-11 a 12.276: se lee mejor como inflación interanual.
   return serie.tipo === "precio" && serie.unidad.startsWith("índice") && disp.includes("var_interanual") ? "var_interanual" : "nivel";
+}
+
+/** La medida con que arranca la ficha (por ejemplo, el salario en términos reales), si la variante la ofrece. */
+export function medidaInicial(serie: ConVista): "real" | "en_dolares" | "pct_pib" | undefined {
+  const m = serie.vista_inicial?.medida as "real" | "en_dolares" | "pct_pib" | undefined;
+  return m && disponibles(serie).medidas.includes(m) ? m : undefined;
 }
 
 export const esVariacion = (t: string) => t.startsWith("var_") || t === "acumulada_anio";

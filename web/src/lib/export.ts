@@ -2,7 +2,7 @@
 // cada ficha lleva dentro los datos de su variante.
 import { readFileSync, statSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import type { Advertencia, Excluido, SerieExportada, Tramo } from "@vaiven/transformaciones";
+import type { Advertencia, DocumentoExportado, Excluido, InsumosCargados, Medida, SerieExportada, SignosMonetarios, Tramo } from "@vaiven/transformaciones";
 import { ESQUEMAS_SOPORTADOS } from "@vaiven/transformaciones";
 
 export const RAIZ = join(process.cwd(), "..");
@@ -34,6 +34,17 @@ export interface SerieCatalogo {
   variante_por_defecto: string;
   quiebres: string[];
   variantes: VarianteCatalogo[];
+  bibliografia?: FichaBibliografia[];
+}
+
+/** Una ficha del inventario de la bibliografía que usa la serie (docs/planificacion/inventario_graficos.csv). */
+export interface FichaBibliografia {
+  id: string;
+  referencia: string;
+  pagina: string;
+  tipo: string;
+  titulo_original: string;
+  periodo_cubierto: string;
 }
 
 export interface Catalogo {
@@ -50,7 +61,8 @@ export interface Fuente {
   id_api: string | null;
 }
 
-export interface DocumentoSerie extends SerieExportada {
+/** Los metadatos de una variante exportada; `datos` es una lista o, con dimensión pais, un objeto por entidad. */
+interface MetaDocumento {
   esquema: string;
   serie: string;
   codigo: string;
@@ -59,7 +71,7 @@ export interface DocumentoSerie extends SerieExportada {
   nombre_variante: string;
   es_variante_por_defecto: boolean;
   metodo: string;
-  empalme: "encadenar_tasas" | "yuxtaponer";
+  empalme: "encadenar_tasas" | "yuxtaponer" | "derivar";
   tramos: Tramo[];
   cobertura: { desde: string; hasta: string };
   advertencias: Advertencia[];
@@ -69,7 +81,10 @@ export interface DocumentoSerie extends SerieExportada {
   cita: string;
   version_datos: string;
   desactualizada_desde: string | null;
+  vista_inicial?: { transformacion?: string; medida?: "real" | "en_dolares" | "pct_pib" };
 }
+
+export type DocumentoSerie = MetaDocumento & DocumentoExportado;
 
 export interface Quiebre extends Advertencia {
   afecta: string[];
@@ -112,4 +127,17 @@ export function descargaCompleta(ext: "zip" | "parquet"): { archivo: string; tam
   if (!existsSync(dir)) return null;
   const archivo = readdirSync(dir).filter((n) => n.startsWith("vaiven_") && n.endsWith(`.${ext}`)).sort().at(-1);
   return archivo ? { archivo, tamano: tamano(`descargas/${archivo}`) } : null;
+}
+
+/**
+ * Los insumos de una medida, leídos del export en el build (para la vista inicial de la ficha). El navegador los
+ * pide a /datos/ recién cuando se elige la medida.
+ */
+export function insumosDe(doc: SerieExportada, medida: Medida, deflactor?: string): InsumosCargados {
+  const insumo = doc.insumos?.[medida];
+  if (!insumo) return {};
+  if (medida === "pesos_actuales") return { signos: leer<SignosMonetarios>(insumo.opciones[0].archivo) };
+  const ids = medida === "real" ? [deflactor ?? insumo.por_defecto] : insumo.opciones.map((o) => o.id);
+  const series = Object.fromEntries(insumo.opciones.filter((o) => ids.includes(o.id)).map((o) => [o.id, leer<SerieExportada>(o.archivo)]));
+  return { series };
 }

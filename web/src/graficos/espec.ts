@@ -19,7 +19,8 @@ export interface Tema {
 export interface EntradaGrafico {
   resultado: Resultado;
   tramos: Tramo[];
-  empalme: "encadenar_tasas" | "yuxtaponer";
+  /** En las derivadas, los tramos son insumos que se superponen: la línea no se corta entre ellos. */
+  empalme: "encadenar_tasas" | "yuxtaponer" | "derivar";
   quiebres: QuiebreNumerado[];
   tema: Tema;
   esVariacion: boolean;

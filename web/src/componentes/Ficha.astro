@@ -1,24 +1,32 @@
 ---
 // Ficha de serie (SPEC 6.1): todo lo que se lee está en el HTML del build. El gráfico y las transformaciones se
 // suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
-import { disponibles, transformar } from "@vaiven/transformaciones";
-import { apa, bibtex, textoCita } from "@vaiven/cita";
-import { descargaCompleta, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
-import { aniosDe, esVariacion, filasTabla, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
-import { NOMBRE_ESTADO, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
+import { disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
+import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
+import { descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
+import { aniosDe, esVariacion, filasTabla, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
+import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
 
 interface Props {
   serie: SerieCatalogo;
   doc: DocumentoSerie;
 }
 const { serie, doc } = Astro.props;
-const disp = disponibles(doc);
-const inicial = transformacionInicial(doc);
-const r = transformar(doc, { transformacion: inicial });
+// Con dimensión pais, la ficha arranca con la primera entidad de la selección inicial (Argentina); se cambia de a una.
+const pais = tienePais(doc);
+const entidadInicial = pais ? doc.entidades_por_defecto[0] : undefined;
+const base = { ...serieDeEntidad(doc, entidadInicial), vista_inicial: doc.vista_inicial };
+const disp = disponibles(base);
+// En moneda de cada época, el selector ofrece lo que queda disponible al pasar a pesos actuales.
+const dispOfrecidas = disponibles(base, { pesosActuales: base.moneda === "moneda_de_epoca" });
+const medidas = disp.medidas.filter((m) => m !== "pesos_actuales") as Array<"real" | "en_dolares" | "pct_pib">;
+const inicial = transformacionInicial(base);
+const medida = medidaInicial(base);
+const r = transformar(base, { transformacion: inicial, medida }, medida ? insumosDe(base, medida) : {});
 const variacion = esVariacion(inicial);
-const numerados = numerarQuiebres(doc);
+const numerados = numerarQuiebres(base);
 const registro = leerQuiebres();
-const [primerAnio, ultimoAnio] = aniosDe(doc);
+const [primerAnio, ultimoAnio] = aniosDe(base);
 const atajos = [1983, 1991, 2003].filter((a) => a > primerAnio && a < ultimoAnio);
 const zip = descargaCompleta("zip");
 const parquet = descargaCompleta("parquet");
@@ -28,8 +36,11 @@ const licencias = [...new Map(doc.fuentes.map((f) => [`${f.organismo}|${f.licenc
 const NOMBRE_EMPALME: Record<string, string> = {
   encadenar_tasas: "Tramos encadenados por sus tasas de variación: la serie es continua y el nivel sale del tramo más reciente.",
   yuxtaponer: "Tramos yuxtapuestos, sin empalmar: cada tramo conserva los valores de su fuente.",
+  derivar: "Serie calculada por Vaivén a partir de otras series publicadas: los tramos de abajo son sus insumos.",
 };
+const citaInicial = nombreTransformacion({ medida, transformacion: inicial, entidad: entidadInicial });
 const datosCliente = JSON.stringify(doc).replace(/</g, "\\u003c");
+const bibliografia = serie.bibliografia ?? [];
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
 ---
 <article class="ficha contenedor">
@@ -76,34 +87,62 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
   <section class="vista" aria-labelledby="titulo-grafico">
     <div class="vista-cabeza">
       <h2 id="titulo-grafico">{doc.es_variante_por_defecto ? "Gráfico" : `Gráfico · ${doc.nombre_variante}`}</h2>
-      <p class="unidad" id="unidad-grafico">{r.unidad}</p>
+      <p class="unidad" id="unidad-grafico">{r.unidad}{pais && ` · ${doc.entidades.find((e) => e.id === entidadInicial)?.nombre}`}</p>
     </div>
 
     <details class="panel-opciones" id="panel-opciones" open data-requiere-js hidden>
     <summary><span class="po-titulo">Opciones del gráfico</span> <span class="po-resumen secundario" id="resumen-opciones"></span></summary>
     <form id="controles" class="controles" aria-label="Opciones del gráfico">
+      {pais && (
+        <div class="campo">
+          <label for="c-entidad">País o agregado</label>
+          <select id="c-entidad">
+            {doc.entidades.map((e) => <option value={e.id} selected={e.id === entidadInicial}>{e.nombre}</option>)}
+          </select>
+        </div>
+      )}
+      {disp.medidas.includes("pesos_actuales") && (
+        <label class="casilla" id="campo-pesos"><input type="checkbox" id="c-pesos" /> En pesos actuales</label>
+      )}
+      {medidas.length > 0 && (
+        <div class="campo">
+          <label for="c-medida">Medida</label>
+          <select id="c-medida">
+            <option value="">Nominal (como se publica)</option>
+            {medidas.map((m) => <option value={m} selected={m === medida}>{NOMBRE_MEDIDA[m]}</option>)}
+          </select>
+        </div>
+      )}
+      {disp.deflactores.length > 0 && (
+        <div class="campo" id="campo-deflactor" hidden={medida !== "real"}>
+          <label for="c-deflactor">IPC para deflactar</label>
+          <select id="c-deflactor">
+            {disp.deflactores.map((o) => <option value={o.id}>{o.nombre ?? o.id}</option>)}
+          </select>
+        </div>
+      )}
       <div class="campo">
         <label for="c-transformacion">Transformación</label>
         <select id="c-transformacion">
-          {disp.transformaciones.map((t) => <option value={t} selected={t === inicial}>{NOMBRE_TRANSFORMACION[t]}</option>)}
+          {dispOfrecidas.transformaciones.map((t) => <option value={t} selected={t === inicial}>{NOMBRE_TRANSFORMACION[t]}</option>)}
         </select>
       </div>
-      {disp.transformaciones.includes("base_100") && (
+      {dispOfrecidas.transformaciones.includes("base_100") && (
         <div class="campo" id="campo-base" hidden>
           <label for="c-base">Base = 100 (AAAA o AAAA-MM)</label>
           <input id="c-base" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" value={String(primerAnio)} />
         </div>
       )}
-      {disp.frecuencias.length > 0 && (
+      {dispOfrecidas.frecuencias.length > 0 && (
         <div class="campo">
           <label for="c-frecuencia">Frecuencia</label>
           <select id="c-frecuencia">
             <option value="">Original</option>
-            {disp.frecuencias.map((f) => <option value={f}>{f === "anual" ? "Anual" : "Trimestral"}</option>)}
+            {dispOfrecidas.frecuencias.map((f) => <option value={f}>{f === "anual" ? "Anual" : "Trimestral"}</option>)}
           </select>
         </div>
       )}
-      {disp.mediaMovil && (
+      {dispOfrecidas.mediaMovil && (
         <div class="campo">
           <label for="c-media">Media móvil</label>
           <select id="c-media">
@@ -162,7 +201,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
       <div class="grupo">
         <h3>Esta variante</h3>
         <ul class="lista-descargas">
-          <li><a href={`/datos/${csv}`} download={`vaiven_${doc.serie}_${doc.variante}.csv`}>CSV</a> <span class="secundario">{tamano(csv)} · fecha y valor</span></li>
+          <li><a href={`/datos/${csv}`} download={`vaiven_${doc.serie}_${doc.variante}.csv`}>CSV</a> <span class="secundario">{tamano(csv)} · {pais ? "fecha, país y valor" : "fecha y valor"}</span></li>
           <li><a href={`/datos/${json}`} download={`vaiven_${doc.serie}_${doc.variante}.json`}>JSON</a> <span class="secundario">{tamano(json)} · con metadatos, quiebres y fuentes</span></li>
         </ul>
       </div>
@@ -196,9 +235,9 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
     <section aria-labelledby="titulo-cita" class="cita">
       <h2 id="titulo-cita">Cómo citar</h2>
       {[
-        { id: "cita-texto", nombre: "Texto", contenido: textoCita(doc) },
-        { id: "cita-apa", nombre: "APA", contenido: apa(doc) },
-        { id: "cita-bibtex", nombre: "BibTeX", contenido: bibtex(doc) },
+        { id: "cita-texto", nombre: "Texto", contenido: textoCita(doc, citaInicial) },
+        { id: "cita-apa", nombre: "APA", contenido: apa(doc, citaInicial) },
+        { id: "cita-bibtex", nombre: "BibTeX", contenido: bibtex(doc, citaInicial) },
       ].map((c) => (
         <div class="formato-cita">
           <div class="formato-cabeza">
@@ -272,6 +311,21 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
       ))}
     </ul>
   </section>
+
+  {bibliografia.length > 0 && (
+    <section aria-labelledby="titulo-bibliografia" class="bloque">
+      <h2 id="titulo-bibliografia">Uso en la bibliografía</h2>
+      <p class="lectura secundario">Cuadros y gráficos de la bibliografía de la cátedra que usan esta variable. Son referencias: Vaivén no reproduce el material.</p>
+      <ul class="bibliografia">
+        {bibliografia.map((b) => (
+          <li>
+            <p><strong>{b.titulo_original}</strong> <span class="secundario">({b.tipo}, {b.periodo_cubierto})</span></p>
+            <p class="secundario">{b.referencia}{b.pagina && `, pág. ${b.pagina}`}. Ficha <code>{b.id}</code>.</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <script type="application/json" id="datos-ficha" set:html={datosCliente}></script>
 </article>
@@ -381,6 +435,8 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
   .fuentes { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
   .fuentes li { display: grid; gap: 2px; max-width: 80ch; }
   .fuentes code { overflow-wrap: anywhere; }
+  .bibliografia { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .bibliografia li { display: grid; gap: 2px; max-width: 80ch; }
 </style>
 
 <style is:global>

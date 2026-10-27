@@ -1,9 +1,12 @@
 // Interactividad de la ficha: transformaciones, período y escala, con el estado en la URL; gráfico (Vega-Lite,
 // cargado recién cuando hace falta); tabla, resumen, avisos, descargas de la vista y cita.
-import { ErrorTransformacion, disponibles, transformar, type Opciones, type Resultado, type Transformacion } from "@vaiven/transformaciones";
+import {
+  ErrorTransformacion, disponibles, serieDeEntidad, tienePais, transformar, type InsumosCargados, type Opciones, type Resultado,
+  type SerieExportada, type Transformacion,
+} from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { esVariacion, filasTabla, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
+import { esVariacion, filasTabla, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
 import { especificacion, type Tema } from "./espec";
 
@@ -22,11 +25,20 @@ function iniciar(): void {
   const nodoDatos = $<HTMLScriptElement>("datos-ficha");
   if (!nodoDatos?.textContent) return;
   const doc = JSON.parse(nodoDatos.textContent) as DocumentoSerie;
-  const disp = disponibles(doc);
-  const quiebres = numerarQuiebres(doc);
+  const pais = tienePais(doc);
+  // La serie que se ve: en las series con dimensión pais, la de la entidad elegida.
+  let serie: SerieExportada & { vista_inicial?: DocumentoSerie["vista_inicial"] } = { ...serieDeEntidad(doc), vista_inicial: doc.vista_inicial };
+  let quiebres: QuiebreNumerado[] = numerarQuiebres(serie);
+  // Insumos de las medidas, pedidos a /datos/ la primera vez que se eligen.
+  const cargados: InsumosCargados & { series: Record<string, SerieExportada> } = { series: {} };
 
   const form = $<HTMLFormElement>("controles")!;
   const cTransf = $<HTMLSelectElement>("c-transformacion")!;
+  const cEntidad = $<HTMLSelectElement>("c-entidad");
+  const cMedida = $<HTMLSelectElement>("c-medida");
+  const cDeflactor = $<HTMLSelectElement>("c-deflactor");
+  const campoDeflactor = $<HTMLDivElement>("campo-deflactor");
+  const cPesos = $<HTMLInputElement>("c-pesos");
   const cBase = $<HTMLInputElement>("c-base");
   const campoBase = $<HTMLDivElement>("campo-base");
   const cFrec = $<HTMLSelectElement>("c-frecuencia");
@@ -40,8 +52,14 @@ function iniciar(): void {
 
   // Estado inicial: la URL manda; si no dice nada, la transformación inicial de la serie.
   const q = new URLSearchParams(location.search);
+  if (cEntidad && q.get("e") && [...cEntidad.options].some((o) => o.value === q.get("e"))) cEntidad.value = q.get("e")!;
+  if (pais && cEntidad) elegirEntidad(cEntidad.value);
+  if (cPesos && q.get("pa") === "1") cPesos.checked = true;
+  if (cMedida) cMedida.value = q.get("m") ?? medidaInicial(serie) ?? "";
+  if (cDeflactor && q.get("d") && [...cDeflactor.options].some((o) => o.value === q.get("d"))) cDeflactor.value = q.get("d")!;
+  const disp = disponibles(serie, { pesosActuales: cPesos?.checked });
   const t = q.get("t") as Transformacion | null;
-  cTransf.value = t && disp.transformaciones.includes(t) ? t : transformacionInicial(doc);
+  cTransf.value = t && disp.transformaciones.includes(t) ? t : transformacionInicial(serie);
   if (cFrec && q.get("f") && disp.frecuencias.includes(q.get("f") as "anual")) cFrec.value = q.get("f")!;
   if (cMedia && q.get("mm")) cMedia.value = q.get("mm")!;
   if (cBase && q.get("base")) cBase.value = q.get("base")!;
@@ -53,13 +71,38 @@ function iniciar(): void {
   if (panel && window.matchMedia("(max-width: 700px)").matches) panel.open = false;
   document.querySelectorAll<HTMLElement>("[data-requiere-js]").forEach((el) => (el.hidden = false));
 
+  function elegirEntidad(id: string): void {
+    serie = { ...serieDeEntidad(doc, id), vista_inicial: doc.vista_inicial };
+    quiebres = numerarQuiebres(serie);
+  }
+
   function escalaLogInicial(): boolean {
-    const v = doc.datos.map((d) => d[1]);
-    return v.every((x) => x > 0) && Math.max(...v) / Math.min(...v) > 1000 && cTransf.value === "nivel";
+    const v = serie.datos.map((d) => d[1]);
+    return !cMedida?.value && v.every((x) => x > 0) && Math.max(...v) / Math.min(...v) > 1000 && cTransf.value === "nivel";
+  }
+
+  /** Habilita en los selectores lo que la variante admite ahora (en moneda de época, depende de pasar a pesos actuales). */
+  function habilitar(): void {
+    const d = disponibles(serie, { pesosActuales: cPesos?.checked });
+    for (const o of cTransf.options) o.disabled = !d.transformaciones.includes(o.value as Transformacion);
+    if (cTransf.selectedOptions[0]?.disabled) cTransf.value = "nivel";
+    if (cFrec) {
+      for (const o of cFrec.options) o.disabled = o.value !== "" && !d.frecuencias.includes(o.value as "anual");
+      if (cFrec.selectedOptions[0]?.disabled) cFrec.value = "";
+    }
+    if (cMedia) cMedia.disabled = !d.mediaMovil;
+    if (campoDeflactor) campoDeflactor.hidden = cMedida?.value !== "real";
+    // % del PIB pide la frecuencia del PIB: si la serie es más fina, pasa sola a anual.
+    if (cMedida?.value === "pct_pib" && cFrec && !cFrec.value && !["anual", "trimestral"].includes(serie.frecuencia) && d.frecuencias.includes("anual")) {
+      cFrec.value = "anual";
+    }
   }
 
   function opciones(): Opciones {
     const o: Opciones = { transformacion: cTransf.value as Transformacion };
+    if (cPesos?.checked) o.pesosActuales = true;
+    if (cMedida?.value) o.medida = cMedida.value as "real" | "en_dolares" | "pct_pib";
+    if (o.medida === "real" && cDeflactor?.value) o.deflactor = cDeflactor.value;
     if (cFrec?.value) o.frecuencia = cFrec.value as "trimestral" | "anual";
     if (cMedia?.value) o.mediaMovil = Number(cMedia.value);
     if (o.transformacion === "base_100") {
@@ -73,7 +116,11 @@ function iniciar(): void {
 
   function guardarEnUrl(): void {
     const p = new URLSearchParams();
-    if (cTransf.value !== transformacionInicial(doc)) p.set("t", cTransf.value);
+    if (pais && cEntidad && cEntidad.value !== doc.entidades_por_defecto[0]) p.set("e", cEntidad.value);
+    if (cPesos?.checked) p.set("pa", "1");
+    if (cMedida && cMedida.value !== (medidaInicial(serie) ?? "")) p.set("m", cMedida.value);
+    if (cMedida?.value === "real" && cDeflactor && cDeflactor.selectedIndex > 0) p.set("d", cDeflactor.value);
+    if (cTransf.value !== transformacionInicial(serie)) p.set("t", cTransf.value);
     if (cFrec?.value) p.set("f", cFrec.value);
     if (cMedia?.value) p.set("mm", cMedia.value);
     if (cTransf.value === "base_100" && cBase?.value) p.set("base", cBase.value);
@@ -86,12 +133,38 @@ function iniciar(): void {
 
   let ultimo: { r: Resultado; o: Opciones } | null = null;
 
-  function actualizar(): void {
+  /** Pide a /datos/ los insumos que la medida elegida todavía no tiene. */
+  async function cargarInsumos(o: Opciones): Promise<void> {
+    const pedidos: Array<Promise<void>> = [];
+    const leer = async (archivo: string) => {
+      const res = await fetch(`/datos/${archivo}`);
+      if (!res.ok) throw new Error(`no se pudo leer /datos/${archivo} (${res.status})`);
+      return res.json();
+    };
+    if (o.pesosActuales && !cargados.signos) {
+      const archivo = serie.insumos?.pesos_actuales?.opciones[0].archivo;
+      if (archivo) pedidos.push(leer(archivo).then((s) => { cargados.signos = s; }));
+    }
+    if (o.medida) {
+      const insumo = serie.insumos?.[o.medida];
+      const ids = o.medida === "real" ? [o.deflactor ?? insumo?.por_defecto] : insumo?.opciones.map((x) => x.id) ?? [];
+      for (const op of insumo?.opciones ?? []) {
+        if (ids.includes(op.id) && !cargados.series[op.id]) pedidos.push(leer(op.archivo).then((s) => { cargados.series[op.id] = s; }));
+      }
+    }
+    if (!pedidos.length) return;
+    estado.textContent = "Cargando los datos que necesita la medida…";
+    await Promise.all(pedidos);
+  }
+
+  async function actualizar(): Promise<void> {
     if (campoBase) campoBase.hidden = cTransf.value !== "base_100";
+    habilitar();
     const o = opciones();
     let r: Resultado;
     try {
-      r = transformar(doc, o);
+      await cargarInsumos(o);
+      r = transformar(serie, o, cargados);
     } catch (err) {
       estado.textContent = err instanceof ErrorTransformacion || err instanceof Error ? err.message : String(err);
       estado.dataset.tipo = "error";
@@ -104,7 +177,8 @@ function iniciar(): void {
     const positivos = r.datos.every((d) => d[1] === null || d[1] > 0);
     cLog.disabled = !positivos;
     campoLog.classList.toggle("deshabilitado", !positivos);
-    $("unidad-grafico")!.textContent = r.unidad;
+    const entidad = pais && cEntidad ? ` · ${cEntidad.selectedOptions[0]?.textContent ?? cEntidad.value}` : "";
+    $("unidad-grafico")!.textContent = `${r.unidad}${entidad}`;
     $("resumen-grafico")!.textContent = resumen(r, r.unidad, variacion, quiebres);
     avisos(r);
     tabla(r, variacion);
@@ -115,7 +189,11 @@ function iniciar(): void {
   }
 
   function resumenOpciones(o: Opciones): void {
-    const partes = [NOMBRE_TRANSFORMACION[o.transformacion ?? "nivel"]];
+    const partes: string[] = [];
+    if (pais && cEntidad) partes.push(cEntidad.selectedOptions[0]?.textContent ?? cEntidad.value);
+    if (o.pesosActuales) partes.push("pesos actuales");
+    if (o.medida) partes.push(cMedida?.selectedOptions[0]?.textContent ?? o.medida);
+    partes.push(NOMBRE_TRANSFORMACION[o.transformacion ?? "nivel"]);
     if (o.frecuencia) partes.push(o.frecuencia);
     if (o.mediaMovil) partes.push(`media móvil de ${o.mediaMovil}`);
     partes.push(o.desde || o.hasta ? `${o.desde ?? "inicio"}–${o.hasta ?? "hoy"}` : "toda la serie");
@@ -168,8 +246,12 @@ function iniciar(): void {
     $("tabla-cantidad")!.textContent = `${r.datos.length} filas`;
   }
 
+  function opcionesCita(o: Opciones) {
+    return { ...o, entidad: pais ? cEntidad?.value : undefined };
+  }
+
   function cita(o: Opciones): void {
-    const tr = nombreTransformacion(o);
+    const tr = nombreTransformacion(opcionesCita(o));
     $("cita-texto")!.textContent = textoCita(doc, tr);
     $("cita-apa")!.textContent = apa(doc, tr);
     $("cita-bibtex")!.textContent = bibtex(doc, tr);
@@ -192,7 +274,7 @@ function iniciar(): void {
     const { r, o } = ultimo;
     const ancho = contenedor.clientWidth || 600;
     const spec = especificacion({
-      resultado: r, tramos: doc.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
+      resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
       log: cLog.checked && !cLog.disabled, alto: ancho < 520 ? 240 : 320, ancho, descripcion: $("resumen-grafico")!.textContent ?? "",
     });
     try {
@@ -218,7 +300,7 @@ function iniciar(): void {
     const { vega, vegaLite } = await import("vega-embed");
     const fuentes = [...new Set(doc.fuentes.map((f) => f.organismo))].join("; ");
     const spec = especificacion({
-      resultado: r, tramos: doc.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
+      resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
       log: cLog.checked && !cLog.disabled, alto: 380, ancho: 900, descripcion: $("resumen-grafico")!.textContent ?? "",
       impreso: {
         titulo: `${doc.nombre} · ${doc.nombre_variante}`,
@@ -238,7 +320,8 @@ function iniciar(): void {
 
   function nombreArchivo(): string {
     const o = ultimo?.o;
-    const partes = ["vaiven", doc.serie, doc.variante, o?.frecuencia, o?.transformacion !== "nivel" ? o?.transformacion : undefined, o?.mediaMovil ? `mm${o.mediaMovil}` : undefined];
+    const partes = ["vaiven", doc.serie, doc.variante, pais ? cEntidad?.value : undefined, o?.pesosActuales ? "pesos_actuales" : undefined,
+      o?.frecuencia, o?.medida, o?.transformacion !== "nivel" ? o?.transformacion : undefined, o?.mediaMovil ? `mm${o.mediaMovil}` : undefined];
     return partes.filter(Boolean).join("_");
   }
 
@@ -258,7 +341,7 @@ function iniciar(): void {
 
   function citaTxt(): void {
     if (!ultimo) return;
-    const tr = nombreTransformacion(ultimo.o);
+    const tr = nombreTransformacion(opcionesCita(ultimo.o));
     const licencias = [...new Set(doc.fuentes.map((f) => `${f.organismo}: ${f.licencia}`))];
     const texto = [
       `${doc.nombre} · ${doc.nombre_variante}`, `Unidad: ${ultimo.r.unidad}`, `Vista: ${location.href}`, "",
@@ -270,12 +353,15 @@ function iniciar(): void {
 
   // Eventos
   form.addEventListener("submit", (e) => e.preventDefault());
-  form.addEventListener("change", actualizar);
-  cBase?.addEventListener("input", () => { if (/^\d{4}(-\d{2})?$/.test(cBase.value.trim())) actualizar(); });
+  form.addEventListener("change", (e) => {
+    if (e.target === cEntidad && cEntidad) elegirEntidad(cEntidad.value);
+    void actualizar();
+  });
+  cBase?.addEventListener("input", () => { if (/^\d{4}(-\d{2})?$/.test(cBase.value.trim())) void actualizar(); });
   document.querySelectorAll<HTMLButtonElement>("[data-desde]").forEach((b) => b.addEventListener("click", () => {
     cDesde.value = b.dataset.desde ?? "";
     cHasta.value = "";
-    actualizar();
+    void actualizar();
   }));
   $("bajar-csv")?.addEventListener("click", csvVista);
   $("bajar-cita")?.addEventListener("click", citaTxt);
@@ -304,7 +390,7 @@ function iniciar(): void {
     anchoPrevio = ancho;
   }).observe(contenedor);
 
-  actualizar();
+  void actualizar();
 }
 
 iniciar();
