@@ -102,3 +102,16 @@ def test_encadenar_con_enlace_anual_respeta_el_crecimiento_anual_de_cada_fuente(
     assert anual.loc[1980] / anual.loc[1979] == pytest.approx(1.1)      # tasa de la vieja en el año de enlace
     assert anual.loc[1981] / anual.loc[1980] == pytest.approx(1.1)      # tasa de la nueva después
     assert s.loc["1981-01-01"] == 22.0                                  # nivel del tramo más reciente
+
+
+def test_derivada_por_segmentos_calcula_el_cociente_dentro_de_cada_base():
+    import pandas as pd
+    from pipeline.capa2.derivadas import derivar
+    f = lambda d, h: pd.date_range(d, h, freq="YS")
+    s = {"f.a.x1": pd.Series([10.0, 20.0], index=f("2002", "2003")), "f.a.p1": pd.Series([100.0, 100.0], index=f("2002", "2003")),
+         "f.a.x2": pd.Series([30.0, 40.0], index=f("2004", "2005")), "f.a.p2": pd.Series([200.0, 200.0], index=f("2004", "2005"))}
+    v = {"id": "x.y", "operacion": "cociente", "por": 100,
+         "segmentos": [{"operandos": ["f.a.x1", "f.a.p1"], "desde": "2002", "hasta": "2003"},
+                       {"operandos": ["f.a.x2", "f.a.p2"], "desde": "2004"}]}
+    r = derivar(v, s, "anual")
+    assert list(r) == [10.0, 20.0, 15.0, 20.0]
