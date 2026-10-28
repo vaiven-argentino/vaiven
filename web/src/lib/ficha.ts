@@ -21,6 +21,15 @@ export function medidaInicial(serie: ConVista): "real" | "en_dolares" | "pct_pib
   return m && disponibles(serie).medidas.includes(m) ? m : undefined;
 }
 
+/**
+ * La frecuencia con que arranca la ficha: anual si la medida inicial es % del PIB y la serie es más fina que el PIB
+ * (el resultado fiscal mensual). Es la misma regla que aplica el selector cuando se elige «% del PIB».
+ */
+export function frecuenciaInicial(serie: ConVista): "anual" | undefined {
+  if (medidaInicial(serie) !== "pct_pib" || ["anual", "trimestral"].includes(serie.frecuencia)) return undefined;
+  return disponibles(serie).frecuencias.includes("anual") ? "anual" : undefined;
+}
+
 export const esVariacion = (t: string) => t.startsWith("var_") || t === "acumulada_anio";
 
 export interface QuiebreNumerado {

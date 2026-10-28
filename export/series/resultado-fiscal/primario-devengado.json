@@ -69,6 +69,10 @@
     }
   },
   "auxiliar": false,
+  "vista_inicial": {
+    "transformacion": "nivel",
+    "medida": "pct_pib"
+  },
   "tramos": [
     {
       "fuente": "f.hacienda.spa-devengado-primario-1961-1976",
@@ -157,8 +161,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Resultado primario y financiero, variante «primario-devengado». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/resultado-fiscal/primario-devengado/",
-  "version_datos": "2026-10-27T19:55:59Z",
+  "cita": "Vaivén (2026). Resultado primario y financiero, variante «primario-devengado». Versión de datos 2026-10-28. https://vaiven.argentino.workers.dev/series/resultado-fiscal/primario-devengado/",
+  "version_datos": "2026-10-28T03:05:25Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", -9.706e-09],

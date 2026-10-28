@@ -4,7 +4,7 @@
 import { disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
-import { aniosDe, esVariacion, filasTabla, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
+import { aniosDe, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
 import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
 
 interface Props {
@@ -22,7 +22,8 @@ const dispOfrecidas = disponibles(base, { pesosActuales: base.moneda === "moneda
 const medidas = disp.medidas.filter((m) => m !== "pesos_actuales") as Array<"real" | "en_dolares" | "pct_pib">;
 const inicial = transformacionInicial(base);
 const medida = medidaInicial(base);
-const r = transformar(base, { transformacion: inicial, medida }, medida ? insumosDe(base, medida) : {});
+const frecuencia = frecuenciaInicial(base);
+const r = transformar(base, { transformacion: inicial, medida, frecuencia }, medida ? insumosDe(base, medida) : {});
 const variacion = esVariacion(inicial);
 const numerados = numerarQuiebres(base);
 const registro = leerQuiebres();
@@ -141,7 +142,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
           <label for="c-frecuencia">Frecuencia</label>
           <select id="c-frecuencia">
             <option value="">Original</option>
-            {dispOfrecidas.frecuencias.map((f) => <option value={f}>{f === "anual" ? "Anual" : "Trimestral"}</option>)}
+            {dispOfrecidas.frecuencias.map((f) => <option value={f} selected={f === frecuencia}>{f === "anual" ? "Anual" : "Trimestral"}</option>)}
           </select>
         </div>
       )}

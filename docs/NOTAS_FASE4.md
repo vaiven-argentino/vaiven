@@ -62,6 +62,7 @@
 | MON-02 | Por defecto, `m1` (fin de mes, 1970–hoy, del CSV de la serie histórica). Del Panorama, `m2-pesos`, `m2-total` y `m3-total` hasta 2021-05, con aviso de cobertura parcial. `m2-privado`, promedio mensual 2009–hoy. El M2 de la serie 174 posterior a 2019-07 no se usa (quiebre sin documentar en 2019-08). |
 | MON-03 | Solo la nominal; la real queda pendiente. |
 | TRA-03 | RIPTE por defecto e Índice de salarios del INDEC. La ficha arranca en términos reales con el IPC oficial (`vista_inicial`). ISO e históricos quedan pendientes, con nota sobre el hueco 1976–1984. |
+| FIS-01, vista inicial (28/10/2026) | La ficha arranca en % del PIB; las variantes mensuales, en frecuencia anual. En pesos actuales, la línea quedaba pegada a 0 hasta los años de alta inflación. |
 | Base 2026 de la base monetaria promedio | Se publica con advertencia. |
 | Yuxtaposiciones | Aprobadas: importaciones 1970–hoy, cuenta corriente 1970–hoy, resultado fiscal 1993–hoy y stock de activos externos 1991–hoy. |
 | Prueba manual de la fase 3 | Sigue sin resultados (ver pendientes). |
@@ -181,10 +182,9 @@
 - **Variantes pendientes:** `pib.niveles`, `inversion.pct-pib-constantes`, `tasa-pasiva.real`, `fuga.residual`, `salario-real.iso` y `salario-real.industria-historica` (hueco 1976–1984), y `tcr-multilateral.ipc-alternativo` y `reconstruccion`.
 - **Revisiones espurias:** las derivadas (saldo comercial, TCR bilateral) difieren en la décima cifra significativa entre una corrida parcial y una completa. Quedan como «valores revisados» con 0 sobre el umbral. Es inofensivo; se puede evitar redondeando los operandos.
 
-**De la revisión visual** (a decidir; salvo el resultado fiscal y el dato excluido del salario real, vienen de fases anteriores):
-- **Resultado fiscal en nominal** (`primario`, `financiero` y los devengados): en pesos actuales, la línea queda pegada a 0 hasta los años de alta inflación y no se lee.
-  - Propuesta: `vista_inicial` en % del PIB o en términos reales.
-  - En la misma ficha, la leyenda «Tramo» muestra formas que la línea no lleva.
+**De la revisión visual** (a decidir; salvo el dato excluido del salario real, vienen de fases anteriores):
+- **Resultado fiscal:** la leyenda «Tramo» muestra formas que la línea no lleva.
+- **Gráficos con valores negativos** (por ejemplo, el resultado fiscal en % del PIB): la línea del 0 tiene el mismo trazo que el resto de la grilla, y el mínimo (2020) queda pegado al eje x, sin margen.
 - **Salario real (RIPTE):** el dato excluido de 2026-08 figura en «Datos excluidos» pero no en el gráfico. Como es la última observación, la librería recorta los `null` del final.
 - **Botones de atajo del período** («Toda la serie», «Desde 1983»…): miden 36 px de alto en 390 px; el criterio es 44 px para los controles principales.
 - **Contraste del placeholder** de Desde/Hasta: 4,31:1 en claro y 3,99:1 en oscuro, por debajo de 4,5:1.

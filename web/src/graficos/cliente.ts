@@ -6,7 +6,7 @@ import {
 } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { esVariacion, filasTabla, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
+import { esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
 import { especificacion, type Tema } from "./espec";
 
@@ -60,7 +60,12 @@ function iniciar(): void {
   const disp = disponibles(serie, { pesosActuales: cPesos?.checked });
   const t = q.get("t") as Transformacion | null;
   cTransf.value = t && disp.transformaciones.includes(t) ? t : transformacionInicial(serie);
-  if (cFrec && q.get("f") && disp.frecuencias.includes(q.get("f") as "anual")) cFrec.value = q.get("f")!;
+  if (cFrec) {
+    // Sin `f`, la frecuencia inicial de la vista (anual en el resultado fiscal en % del PIB); «original», la de la serie.
+    const f = q.get("f");
+    if (f && disp.frecuencias.includes(f as "anual")) cFrec.value = f;
+    else cFrec.value = f === null && q.get("m") === null ? (frecuenciaInicial(serie) ?? "") : "";
+  }
   if (cMedia && q.get("mm")) cMedia.value = q.get("mm")!;
   if (cBase && q.get("base")) cBase.value = q.get("base")!;
   if (q.get("desde")) cDesde.value = q.get("desde")!;
@@ -121,7 +126,8 @@ function iniciar(): void {
     if (cMedida && cMedida.value !== (medidaInicial(serie) ?? "")) p.set("m", cMedida.value);
     if (cMedida?.value === "real" && cDeflactor && cDeflactor.selectedIndex > 0) p.set("d", cDeflactor.value);
     if (cTransf.value !== transformacionInicial(serie)) p.set("t", cTransf.value);
-    if (cFrec?.value) p.set("f", cFrec.value);
+    const frecDefecto = (cMedida?.value ?? "") === (medidaInicial(serie) ?? "") ? (frecuenciaInicial(serie) ?? "") : "";
+    if (cFrec && cFrec.value !== frecDefecto) p.set("f", cFrec.value || "original");
     if (cMedia?.value) p.set("mm", cMedia.value);
     if (cTransf.value === "base_100" && cBase?.value) p.set("base", cBase.value);
     if (cDesde.value) p.set("desde", cDesde.value);
