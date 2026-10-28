@@ -65,6 +65,7 @@
 | FIS-01, vista inicial (28/10/2026) | La ficha arranca en % del PIB; las variantes mensuales, en frecuencia anual. En pesos actuales, la línea quedaba pegada a 0 hasta los años de alta inflación. |
 | Base 2026 de la base monetaria promedio | Se publica con advertencia. |
 | Yuxtaposiciones | Aprobadas: importaciones 1970–hoy, cuenta corriente 1970–hoy, resultado fiscal 1993–hoy y stock de activos externos 1991–hoy. |
+| Textos del MCP (28/10/2026) | Se aprobaron los agregados de `mcp/src/textos.ts` (medidas, pesos actuales, índice desde tasas y países). |
 | Prueba manual de la fase 3 | Sigue sin resultados (ver pendientes). |
 
 ### Cambios respecto del plan aprobado
@@ -126,7 +127,7 @@
 - `npm test`:
   - transformaciones: 108 pruebas;
   - MCP: 49;
-  - web: 14;
+  - web: 16;
   - cita: 6.
 - `npm run verificar` (tsc, `astro check` y tipos del Worker) sin errores.
 - **Valores publicados en la librería:**
@@ -192,7 +193,6 @@
 - **`tc-oficial.moneda-de-epoca` en escala logarítmica:** la grilla menor forma un rayado denso desde 1992.
 
 **Antes del despliegue:**
-- Aprobar los textos nuevos del MCP (`mcp/src/textos.ts`).
 - La prueba manual de la fase 3 con Claude, sumando los parámetros nuevos (medida, deflactor, países).
 - `/salud` sigue diciendo `"fase": 3`. Se actualiza cuando se despliegue la 4a.
 - Medir la CPU de `/mcp` en producción con el catálogo grande.
