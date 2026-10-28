@@ -51,6 +51,12 @@ for (const [era, modo] of [["2026-07-28", { pin: "2026-07-28" }], ["2025 (initia
     const i = texto(await c.callTool({ name: "obtener_serie", arguments: { id: "ipc", transformacion: "var_interanual", desde: "2023-12", hasta: "2023-12" } }));
     chequear(`MCP ${era}: IPC interanual dic. 2023`, Math.abs(i.datos[0][1] - 211.4) < 0.05, String(i.datos[0][1]));
 
+    // Fase 4a: una medida que lee un insumo de /datos/ y una serie por país.
+    const real = texto(await c.callTool({ name: "obtener_serie", arguments: { id: "salario-real", medida: "real", deflactor: "provincias", base_real: "2016", desde: "2017-12", hasta: "2017-12" } }));
+    chequear(`MCP ${era}: salario real con el IPC de provincias`, real.unidad === "pesos de 2016" && real.datos[0][1] > 0, `${real.unidad}: ${JSON.stringify(real.datos)}`);
+    const pais = texto(await c.callTool({ name: "obtener_serie", arguments: { id: "int-pib", paises: ["ARG", "BRA"], transformacion: "indice_desde_tasas", base: "2000", desde: "2000", hasta: "2001" } }));
+    chequear(`MCP ${era}: PIB de ARG y BRA como índice`, pais.datos?.ARG?.[0]?.[1] === 100 && pais.datos?.BRA?.length === 2, JSON.stringify(pais.datos));
+
     const ct = texto(await c.callTool({ name: "citar", arguments: { id: "reservas", formato: "bibtex" } }));
     chequear(`MCP ${era}: citar en BibTeX`, ct.bibtex?.startsWith("@misc{vaiven_reservas_brutas_"));
 

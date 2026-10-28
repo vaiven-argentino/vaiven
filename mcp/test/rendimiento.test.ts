@@ -24,6 +24,12 @@ it("cada llamada tarda pocos milisegundos con la caché caliente", async () => {
     buscar_series: () => cliente.callTool({ name: "buscar_series", arguments: { texto: "inflación" } }),
     describir_serie: () => cliente.callTool({ name: "describir_serie", arguments: { id: "ipc" } }),
     "obtener_serie (IPC completo, interanual)": () => cliente.callTool({ name: "obtener_serie", arguments: { id: "ipc", transformacion: "var_interanual" } }),
+    "describir_serie (agregados, 5 variantes)": () => cliente.callTool({ name: "describir_serie", arguments: { id: "agregados" } }),
+    "obtener_serie (salario real)": () => cliente.callTool({ name: "obtener_serie", arguments: { id: "salario-real", medida: "real" } }),
+    "obtener_serie (PIB, 19 países, índice)": () => cliente.callTool({ name: "obtener_serie", arguments: {
+      id: "int-pib", transformacion: "indice_desde_tasas",
+      paises: ["ARG", "USA", "CHN", "MEX", "BRA", "BOL", "CHL", "COL", "ECU", "GUY", "PRY", "PER", "SUR", "URY", "VEN", "WLD", "LCN", "EUU", "EMU"],
+    } }),
     citar: () => cliente.callTool({ name: "citar", arguments: { id: "reservas" } }),
   };
   const tiempos: Record<string, string> = {};

@@ -1,6 +1,6 @@
 // describir_serie (SPEC 7.2): metadatos completos de una serie, sin los datos.
 import { apa, bibtex, textoCita } from "@vaiven/cita";
-import { disponibles } from "@vaiven/transformaciones";
+import { disponibles, serieDeEntidad } from "@vaiven/transformaciones";
 import type { Repositorio } from "../datos";
 import type { DocumentoSerie, Fuente } from "../tipos";
 
@@ -8,14 +8,37 @@ export interface ArgsDescribir {
   id: string;
 }
 
-/** Transformaciones y frecuencias que admite la variante (las mismas que ofrece la ficha). */
-export function transformacionesDe(doc: DocumentoSerie): { transformaciones: string[]; frecuencias: string[] } {
+export interface Admite {
+  transformaciones: string[];
+  frecuencias: string[];
+  /** real, en_dolares o pct_pib: las que tienen sus insumos publicados. */
+  medidas: string[];
+  /** Variantes del IPC para la medida real. */
+  deflactores?: string[];
+  /** Solo en moneda de cada época: lo que se habilita al pasar a pesos actuales. */
+  con_pesos_actuales?: { transformaciones: string[]; frecuencias: string[] };
+}
+
+/** Transformaciones, frecuencias y medidas que admite la variante (las mismas que ofrece la ficha). */
+export function transformacionesDe(doc: DocumentoSerie): Admite {
   try {
-    const d = disponibles(doc);
-    return { transformaciones: d.transformaciones, frecuencias: d.frecuencias };
+    // En las series con dimensión pais, todas las entidades admiten lo mismo: alcanza con la primera.
+    const serie = serieDeEntidad(doc);
+    const d = disponibles(serie);
+    const salida: Admite = {
+      transformaciones: d.transformaciones,
+      frecuencias: d.frecuencias,
+      medidas: d.medidas.filter((m) => m !== "pesos_actuales"),
+    };
+    if (d.deflactores.length) salida.deflactores = d.deflactores.map((o) => o.id);
+    if (d.medidas.includes("pesos_actuales")) {
+      const p = disponibles(serie, { pesosActuales: true });
+      salida.con_pesos_actuales = { transformaciones: p.transformaciones, frecuencias: p.frecuencias };
+    }
+    return salida;
   } catch {
     // Las series diarias todavía no se transforman: solo se entregan tal cual.
-    return { transformaciones: ["nivel"], frecuencias: [] };
+    return { transformaciones: ["nivel"], frecuencias: [], medidas: [] };
   }
 }
 
@@ -38,10 +61,12 @@ export async function describirSerie(repo: Repositorio, args: ArgsDescribir) {
     return {
       ...base,
       cobertura: doc.cobertura,
+      ...(doc.moneda ? { moneda: doc.moneda } : {}),
       metodo: doc.metodo,
       empalme: doc.empalme,
       tramos: doc.tramos,
       ...transformacionesDe(doc),
+      ...(doc.vista_inicial ? { vista_inicial: doc.vista_inicial } : {}),
       quiebres: doc.advertencias.map((a) => a.id),
       excluidos: doc.excluidos,
       fuentes: doc.fuentes.map((f) => f.id),
@@ -62,6 +87,7 @@ export async function describirSerie(repo: Repositorio, args: ArgsDescribir) {
     agregacion: serie.agregacion,
     frecuencia: serie.frecuencia,
     variante_por_defecto: serie.variante_por_defecto,
+    ...(serie.entidades ? { paises: serie.entidades, paises_por_defecto: serie.entidades_por_defecto } : {}),
     ...(pedida.id !== serie.variante_por_defecto ? { variante_pedida: pedida.id } : {}),
     variantes,
     quiebres: serie.quiebres.map((id) => quiebres.get(id) ?? { id }),
