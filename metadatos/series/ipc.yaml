@@ -11,6 +11,9 @@ frecuencia: mensual
 escala_log: true
 cobertura: {desde: 1970-01, hasta: hoy}
 variante_por_defecto: oficial
+# La inflación interanual de toda la serie queda aplastada por el pico de 1989–1990: la ficha arranca en 1991 y
+# «Toda la serie» queda como botón (revisión de la 4a, 05/11/2026).
+vista_inicial: {transformacion: var_interanual, desde: '1991'}
 variantes:
   - id: oficial
     nombre: Oficial INDEC, sin corregir

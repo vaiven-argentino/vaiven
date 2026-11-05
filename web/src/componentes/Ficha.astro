@@ -3,16 +3,17 @@
 // suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
 import { disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
 import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
-import { aniosDe, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
-import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
+import { MOSTRAR_BIBLIOGRAFIA, descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
+import { aniosDe, crecimientoPorDecada, desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
+import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, ultimoDato } from "../lib/formato";
 
 interface Props {
   serie: SerieCatalogo;
   doc: DocumentoSerie;
 }
 const { serie, doc } = Astro.props;
-// Con dimensión pais, la ficha arranca con la primera entidad de la selección inicial (Argentina); se cambia de a una.
+// Con dimensión pais, la ficha grafica la selección inicial (SPEC 6.2) con la primera entidad (Argentina) resaltada;
+// el selector cambia cuál se resalta.
 const pais = tienePais(doc);
 const entidadInicial = pais ? doc.entidades_por_defecto[0] : undefined;
 const base = { ...serieDeEntidad(doc, entidadInicial), vista_inicial: doc.vista_inicial };
@@ -23,7 +24,8 @@ const medidas = disp.medidas.filter((m) => m !== "pesos_actuales") as Array<"rea
 const inicial = transformacionInicial(base);
 const medida = medidaInicial(base);
 const frecuencia = frecuenciaInicial(base);
-const r = transformar(base, { transformacion: inicial, medida, frecuencia }, medida ? insumosDe(base, medida) : {});
+const desde = desdeInicial(base);
+const r = transformar(base, { transformacion: inicial, medida, frecuencia, desde }, medida ? insumosDe(base, medida) : {});
 const variacion = esVariacion(inicial);
 const numerados = numerarQuiebres(base);
 const registro = leerQuiebres();
@@ -40,13 +42,19 @@ const NOMBRE_EMPALME: Record<string, string> = {
   derivar: "Serie calculada por Vaivén a partir de otras series publicadas: los tramos de abajo son sus insumos.",
 };
 const ARRANCA = { real: "a precios constantes", en_dolares: "en dólares", pct_pib: "en % del PIB" } as const;
-// En la cita, el país va con su nombre («entidad Argentina»); el MCP usa el código ISO3.
-const nombreEntidad = pais ? doc.entidades.find((e) => e.id === entidadInicial)?.nombre : undefined;
+// En la cita, los países van con su nombre (la resaltada primero); el MCP usa el código ISO3.
+const nombresPais = new Map(pais ? doc.entidades.map((e) => [e.id, e.nombre]) : []);
+const mostradas = pais ? [entidadInicial!, ...doc.entidades_por_defecto.filter((id) => id !== entidadInicial)] : [];
+const nombresMostrados = mostradas.map((id) => nombresPais.get(id) ?? id);
+const decadas = pais ? crecimientoPorDecada(doc, mostradas) : undefined;
 // En % del PIB, la cita dice qué PIB se usó (por defecto, el publicado en cada base).
 const denominadorInicial = medida === "pct_pib" ? base.insumos?.pct_pib?.opciones.find((o) => o.id === base.insumos?.pct_pib?.por_defecto)?.denominador : undefined;
-const citaInicial = nombreTransformacion({ medida, frecuencia, denominador: denominadorInicial, transformacion: inicial, entidad: nombreEntidad });
+const citaInicial = nombreTransformacion({ medida, frecuencia, denominador: denominadorInicial, transformacion: inicial });
 const datosCliente = JSON.stringify(doc).replace(/</g, "\\u003c");
-const bibliografia = serie.bibliografia ?? [];
+// «Uso en la bibliografía» queda oculto hasta consultar a la cátedra (revisión de la 4a, 05/11/2026).
+const bibliografia = MOSTRAR_BIBLIOGRAFIA ? serie.bibliografia ?? [] : [];
+// Visible en la cabecera: el último dato y su atraso (revisión de la 4a, 2.1).
+const ultimo = ultimoDato(doc.cobertura.hasta, doc.tramos.at(-1)?.frecuencia ?? doc.frecuencia, doc.version_datos);
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
 ---
 <article class="ficha contenedor">
@@ -61,7 +69,8 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
       <div><dt>Unidad</dt><dd>{doc.unidad}{medida && `, como se publica (el gráfico arranca ${ARRANCA[medida]})`}</dd></div>
       <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
       <div><dt>Cobertura</dt><dd>{fechaCorta(doc.cobertura.desde)} – {fechaCorta(doc.cobertura.hasta)}</dd></div>
-      <div><dt>Versión de datos</dt><dd><time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time></dd></div>
+      <div class="ultimo-dato"><dt>Último dato</dt><dd><strong>{ultimo.texto}</strong>{ultimo.atraso && <span class="atraso"> · {ultimo.atraso} meses sin datos nuevos de la fuente</span>}</dd></div>
+      <div><dt>Datos de esta serie</dt><dd><time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> <span class="secundario">(el pie dice la última actualización del sitio)</span></dd></div>
     </dl>
     {doc.desactualizada_desde && (
       <p class="alerta">La fuente no responde: la serie está desactualizada desde el {fechaCorta(doc.desactualizada_desde)}.</p>
@@ -93,7 +102,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
   <section class="vista" aria-labelledby="titulo-grafico">
     <div class="vista-cabeza">
       <h2 id="titulo-grafico">{doc.es_variante_por_defecto ? "Gráfico" : `Gráfico · ${doc.nombre_variante}`}</h2>
-      <p class="unidad" id="unidad-grafico">{r.unidad}{pais && ` · ${doc.entidades.find((e) => e.id === entidadInicial)?.nombre}`}</p>
+      <p class="unidad" id="unidad-grafico">{r.unidad}</p>
     </div>
 
     <details class="panel-opciones" id="panel-opciones" open data-requiere-js hidden>
@@ -101,7 +110,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
     <form id="controles" class="controles" aria-label="Opciones del gráfico">
       {pais && (
         <div class="campo">
-          <label for="c-entidad">País o agregado</label>
+          <label for="c-entidad">País resaltado</label>
           <select id="c-entidad">
             {doc.entidades.map((e) => <option value={e.id} selected={e.id === entidadInicial}>{e.nombre}</option>)}
           </select>
@@ -169,7 +178,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
         <legend>Período</legend>
         <div class="periodo-campos">
           <label for="c-desde">Desde</label>
-          <input id="c-desde" type="number" inputmode="numeric" min={primerAnio} max={ultimoAnio} placeholder={String(primerAnio)} />
+          <input id="c-desde" type="number" inputmode="numeric" min={primerAnio} max={ultimoAnio} placeholder={String(primerAnio)} value={desde?.slice(0, 4)} />
           <label for="c-hasta">Hasta</label>
           <input id="c-hasta" type="number" inputmode="numeric" min={primerAnio} max={ultimoAnio} placeholder={String(ultimoAnio)} />
         </div>
@@ -188,10 +197,34 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
     <figure class="figura">
       <div id="grafico" class="grafico" aria-hidden="true"></div>
       <noscript><p class="sin-js">El gráfico y las transformaciones necesitan JavaScript. La tabla, las descargas y la cita funcionan igual.</p></noscript>
+      {pais && (
+        <p class="leyenda-paises" id="leyenda-paises">
+          <span class="muestra resaltada" aria-hidden="true"></span> <strong>{nombresMostrados[0]}</strong>
+          {nombresMostrados.length > 1 && <> · <span class="muestra" aria-hidden="true"></span> {nombresMostrados.slice(1).join(", ")}</>}
+        </p>
+      )}
       <figcaption>
         <span class="visualmente-oculto">Resumen del gráfico: </span><span id="resumen-grafico">{resumen(r, r.unidad, variacion, numerados)}</span>
       </figcaption>
     </figure>
+
+    {decadas && (
+      <div class="decadas">
+        <h3>Crecimiento promedio por década</h3>
+        <p class="secundario">Promedio de las tasas anuales de cada década (geométrico), en %, para comparar sin el ruido de cada año.</p>
+        <div class="tabla-marco" tabindex="0" role="region" aria-label="Crecimiento promedio por década (con desplazamiento)">
+          <table>
+            <caption class="visualmente-oculto">Crecimiento promedio por década, en %</caption>
+            <thead><tr><th scope="col">País o agregado</th>{decadas.decadas.map((d) => <th scope="col">{d}</th>)}</tr></thead>
+            <tbody>
+              {decadas.filas.map((f, k) => (
+                <tr class={k === 0 ? "resaltada" : undefined}><th scope="row">{f.nombre}</th>{f.valores.map((v) => <td>{v}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
 
     <details class="tabla-datos">
       <summary>Tabla de datos <span class="secundario" id="tabla-cantidad">{r.datos.length} filas</span></summary>
@@ -249,9 +282,9 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
     <section aria-labelledby="titulo-cita" class="cita">
       <h2 id="titulo-cita">Cómo citar</h2>
       {[
-        { id: "cita-texto", nombre: "Texto", contenido: textoCita(doc, citaInicial) },
-        { id: "cita-apa", nombre: "APA", contenido: apa(doc, citaInicial) },
-        { id: "cita-bibtex", nombre: "BibTeX", contenido: bibtex(doc, citaInicial) },
+        { id: "cita-texto", nombre: "Texto", contenido: textoCita(doc, citaInicial, nombresMostrados) },
+        { id: "cita-apa", nombre: "APA", contenido: apa(doc, citaInicial, nombresMostrados) },
+        { id: "cita-bibtex", nombre: "BibTeX", contenido: bibtex(doc, citaInicial, nombresMostrados) },
       ].map((c) => (
         <div class="formato-cita">
           <div class="formato-cabeza">
@@ -390,8 +423,12 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
   .periodo legend { font-size: 0.9rem; padding: 0; margin-bottom: 4px; }
   .periodo-campos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
   .periodo-campos input { width: 6.5rem; }
+  .ultimo-dato strong { font-weight: 700; }
+  .atraso { color: var(--secundario); }
+  /* El color por defecto del placeholder no llega a 4,5:1 (revisión visual de la 4a). */
+  .controles input::placeholder { color: var(--secundario); opacity: 1; }
   .atajos { display: flex; flex-wrap: wrap; gap: 6px; }
-  .atajo { background: var(--fondo); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; min-height: 36px; cursor: pointer; font-size: 0.85rem; }
+  .atajo { background: var(--fondo); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; min-height: 44px; cursor: pointer; font-size: 0.85rem; }
   .atajo:hover { border-color: var(--acento); }
   .casilla { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
   .casilla input { width: 20px; height: 20px; accent-color: var(--acento); }
@@ -424,7 +461,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
   .botones { display: flex; flex-wrap: wrap; gap: 8px; }
   .formato-cita { display: grid; gap: 6px; min-width: 0; }
   .formato-cabeza { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .copiar { background: transparent; border: 1px solid var(--borde); border-radius: var(--radio); padding: 4px 12px; min-height: 36px; cursor: pointer; font-size: 0.85rem; }
+  .copiar { background: transparent; border: 1px solid var(--borde); border-radius: var(--radio); padding: 4px 12px; min-height: 44px; cursor: pointer; font-size: 0.85rem; }
   .copiar:hover { border-color: var(--acento); }
   .copiado { font-size: 0.85rem; color: var(--secundario); margin-left: 8px; }
   .texto-cita { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--mono); font-size: 0.85rem; background: var(--superficie); padding: 12px; border-radius: var(--radio); }
@@ -449,6 +486,16 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
   .fuentes { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
   .fuentes li { display: grid; gap: 2px; max-width: 80ch; }
   .fuentes code { overflow-wrap: anywhere; }
+  .leyenda-paises { margin: 4px 0 0; font-size: 0.9rem; color: var(--secundario); }
+  .leyenda-paises strong { color: var(--texto); }
+  .muestra { display: inline-block; width: 18px; height: 0; border-top: 2px solid var(--secundario); vertical-align: middle; opacity: 0.8; }
+  .muestra.resaltada { border-top: 3px solid var(--graf-1); opacity: 1; }
+  /* Hijo de la grilla de .vista: sin min-width 0, la tabla ancha estira toda la página en vez de desplazarse. */
+  .decadas { margin: 16px 0; min-width: 0; }
+  .decadas table { white-space: nowrap; }
+  .decadas h3 { font-size: 1rem; margin: 0 0 4px; }
+  .decadas td { text-align: right; font-variant-numeric: tabular-nums; }
+  .decadas tr.resaltada th, .decadas tr.resaltada td { font-weight: 600; }
   .bibliografia { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
   .bibliografia li { display: grid; gap: 2px; max-width: 80ch; }
 </style>

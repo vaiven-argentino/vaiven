@@ -175,8 +175,13 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
   const desde = opciones.desde ? indiceMes(opciones.desde) : Number.NEGATIVE_INFINITY;
   const hasta = opciones.hasta ? indiceFin(opciones.hasta) : Number.POSITIVE_INFINITY;
   puntos = puntos.filter((p) => p.i >= desde && p.i <= hasta);
-  const primero = puntos.findIndex((p) => p.v !== null);
-  const ultimo = puntos.findLastIndex((p) => p.v !== null);
+  // Los extremos sin dato se recortan, salvo un dato excluido: se deja para que el gráfico y la tabla lo marquen.
+  // (Solo si el período conserva la frecuencia del dato: agregado a otra frecuencia, ya no es «el» dato excluido.)
+  const excluidos = new Map(serie.excluidos.length ? puntosDe(serie).filter((p) => p.v === null).map((p) => [p.i, p.f]) : []);
+  const fechasExcluidas = new Set(serie.excluidos.map((e) => indiceMes(e.fecha)));
+  const conDato = (p: Punto) => p.v !== null || (fechasExcluidas.has(p.i) && excluidos.get(p.i) === p.f);
+  const primero = puntos.findIndex(conDato);
+  const ultimo = puntos.findLastIndex(conDato);
   puntos = primero === -1 ? [] : puntos.slice(primero, ultimo + 1);
 
   const inicio = puntos[0]?.i;

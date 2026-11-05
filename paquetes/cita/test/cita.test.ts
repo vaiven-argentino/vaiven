@@ -41,8 +41,15 @@ describe("nombreTransformacion con medidas y entidades", () => {
     expect(nombreTransformacion({ pesosActuales: true, frecuencia: "anual" })).toBe("en pesos actuales, frecuencia anual");
     expect(nombreTransformacion({ medida: "pct_pib", frecuencia: "anual" })).toBe("frecuencia anual, en % del PIB");
     expect(nombreTransformacion({ medida: "pct_pib", denominador: "cada-base" })).toBe("en % del PIB (PIB publicado en cada base)");
-    expect(nombreTransformacion({ entidad: "BRA", transformacion: "indice_desde_tasas" }))
-      .toBe("entidad BRA, índice desde las tasas (año base = 100)");
-    expect(nombreTransformacion({ entidad: ["ARG", "BRA", "WLD"] })).toBe("entidades ARG, BRA y WLD");
+    expect(nombreTransformacion({ transformacion: "indice_desde_tasas" })).toBe("índice desde las tasas (año base = 100)");
+  });
+  it("el país va aparte de la transformación, y la licencia de una fuente que no es CC BY se dice", () => {
+    const d = { serie: "int-pib", variante: "banco-mundial", nombre: "Crecimiento del PIB", version_datos: "2026-11-05T00:00:00Z",
+      cita: "Vaivén (2026). Crecimiento del PIB. https://vaiven.argentino.workers.dev/series/int-pib/" };
+    expect(textoCita(d, undefined, "Argentina")).toBe(`${d.cita} País: Argentina.`);
+    expect(textoCita(d, "índice", ["Argentina", "Brasil", "Mundo"])).toBe(`${d.cita} Países: Argentina, Brasil y Mundo. Transformación: índice (calculada por Vaivén).`);
+    expect(bibtex(d)).toContain("Licencia CC BY 4.0.");
+    expect(bibtex({ ...d, fuentes: [{ organismo: "Bruegel (Zsolt Darvas)", licencia: "Bruegel, uso libre con atribución" }] }))
+      .toContain("Licencia de Vaivén CC BY 4.0; los datos de Bruegel (Zsolt Darvas) conservan sus propios términos de uso.");
   });
 });

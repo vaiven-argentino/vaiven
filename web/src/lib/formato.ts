@@ -23,6 +23,20 @@ export function fechaLegible(fecha: string, frecuencia: Frecuencia | string, lar
 }
 
 /** Fecha corta de la cobertura o de un quiebre, sin saber la frecuencia: «1970-01» → «ene. 1970». */
+/**
+ * El último dato, en palabras («abril de 2026», «2.º trimestre de 2026», «2025») y, en las mensuales, cuántos meses
+ * de atraso lleva respecto de la versión de datos, si son 3 o más (por ejemplo, las series del BCRA en datos.gob.ar).
+ */
+export function ultimoDato(fecha: string, frecuencia: string, versionDatos: string): { texto: string; atraso: number | null } {
+  const [anio, mes] = fecha.split("-");
+  if (!mes || frecuencia === "anual") return { texto: anio, atraso: null };
+  const m = Number(mes);
+  if (frecuencia === "trimestral") return { texto: `${TRIMESTRES[Math.floor((m - 1) / 3)]} trimestre de ${anio}`, atraso: null };
+  if (frecuencia === "semestral") return { texto: `${MESES[m - 1]} de ${anio}`, atraso: null };
+  const meses = (Number(versionDatos.slice(0, 4)) - Number(anio)) * 12 + Number(versionDatos.slice(5, 7)) - m;
+  return { texto: `${MESES[m - 1]} de ${anio}`, atraso: meses >= 3 ? meses : null };
+}
+
 export function fechaCorta(fecha: string | null | undefined): string {
   if (!fecha) return "hoy";
   if (fecha === "hoy") return "hoy";

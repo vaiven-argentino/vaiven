@@ -6,7 +6,7 @@ import {
 } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { esVariacion, filasTabla, frecuenciaInicial, medidaInicial, opcionesDelDenominador, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
+import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, opcionesDelDenominador, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
 import { especificacion, type Tema } from "./espec";
 
@@ -71,7 +71,9 @@ function iniciar(): void {
   }
   if (cMedia && q.get("mm")) cMedia.value = q.get("mm")!;
   if (cBase && q.get("base")) cBase.value = q.get("base")!;
-  if (q.get("desde")) cDesde.value = q.get("desde")!;
+  // Sin `desde`, el período inicial de la vista (el IPC arranca en 1991); «todo», toda la serie.
+  const desde = q.get("desde");
+  cDesde.value = desde === null ? (desdeInicial(serie) ?? "") : desde === "todo" ? "" : desde;
   if (q.get("hasta")) cHasta.value = q.get("hasta")!;
   cLog.checked = q.get("log") === "1" || (q.get("log") === null && escalaLogInicial());
   // En pantallas chicas el panel de opciones arranca cerrado (SPEC 6.5), para que el gráfico quede a la vista.
@@ -139,14 +141,14 @@ function iniciar(): void {
     if (cFrec && cFrec.value !== frecDefecto) p.set("f", cFrec.value || "original");
     if (cMedia?.value) p.set("mm", cMedia.value);
     if (cTransf.value === "base_100" && cBase?.value) p.set("base", cBase.value);
-    if (cDesde.value) p.set("desde", cDesde.value);
+    if (cDesde.value !== (desdeInicial(serie) ?? "")) p.set("desde", cDesde.value || "todo");
     if (cHasta.value) p.set("hasta", cHasta.value);
     if (cLog.checked !== escalaLogInicial()) p.set("log", cLog.checked ? "1" : "0");
     const nueva = `${location.pathname}${p.size ? `?${p}` : ""}${location.hash}`;
     history.replaceState(null, "", nueva);
   }
 
-  let ultimo: { r: Resultado; o: Opciones } | null = null;
+  let ultimo: { r: Resultado; o: Opciones; otras: Array<{ nombre: string; resultado: Resultado }> } | null = null;
 
   /** Pide a /datos/ los insumos que la medida elegida todavía no tiene. */
   async function cargarInsumos(o: Opciones): Promise<void> {
@@ -188,13 +190,13 @@ function iniciar(): void {
     }
     estado.textContent = "";
     delete estado.dataset.tipo;
-    ultimo = { r, o };
+    ultimo = { r, o, otras: pais ? otrasEntidades(o) : [] };
     const variacion = esVariacion(o.transformacion ?? "nivel");
     const positivos = r.datos.every((d) => d[1] === null || d[1] > 0);
     cLog.disabled = !positivos;
     campoLog.classList.toggle("deshabilitado", !positivos);
-    const entidad = pais && cEntidad ? ` · ${cEntidad.selectedOptions[0]?.textContent ?? cEntidad.value}` : "";
-    $("unidad-grafico")!.textContent = `${r.unidad}${entidad}`;
+    $("unidad-grafico")!.textContent = r.unidad;
+    leyendaPaises();
     $("resumen-grafico")!.textContent = resumen(r, r.unidad, variacion, quiebres);
     avisos(r);
     tabla(r, variacion);
@@ -262,15 +264,39 @@ function iniciar(): void {
     $("tabla-cantidad")!.textContent = `${r.datos.length} filas`;
   }
 
-  function opcionesCita(o: Opciones) {
-    return { ...o, entidad: pais ? (cEntidad?.selectedOptions[0]?.textContent ?? cEntidad?.value) : undefined };
+  /** Las entidades que se ven, la resaltada primero (en las series con dimensión pais). */
+  function mostradas(): string[] {
+    if (!pais || !cEntidad) return [];
+    return [cEntidad.value, ...doc.entidades_por_defecto.filter((id) => id !== cEntidad.value)];
+  }
+  const nombrePais = (id: string) => (pais ? doc.entidades.find((e) => e.id === id)?.nombre : undefined) ?? id;
+
+  /** Las demás entidades de la selección inicial, con las mismas opciones, en tono secundario. */
+  function otrasEntidades(o: Opciones): Array<{ nombre: string; resultado: Resultado }> {
+    return mostradas().slice(1).flatMap((id) => {
+      try {
+        return [{ nombre: nombrePais(id), resultado: transformar(serieDeEntidad(doc, id), o, cargados) }];
+      } catch {
+        return [];
+      }
+    });
+  }
+
+  function leyendaPaises(): void {
+    const nodo = $("leyenda-paises");
+    if (!nodo) return;
+    const [primera, ...resto] = mostradas().map(nombrePais);
+    const muestra = (clase: string) => Object.assign(document.createElement("span"), { className: clase, ariaHidden: "true" });
+    nodo.replaceChildren(muestra("muestra resaltada"), " ", Object.assign(document.createElement("strong"), { textContent: primera }),
+      ...(resto.length ? [" · ", muestra("muestra"), ` ${resto.join(", ")}`] : []));
   }
 
   function cita(o: Opciones): void {
-    const tr = nombreTransformacion(opcionesCita(o));
-    $("cita-texto")!.textContent = textoCita(doc, tr);
-    $("cita-apa")!.textContent = apa(doc, tr);
-    $("cita-bibtex")!.textContent = bibtex(doc, tr);
+    const tr = nombreTransformacion(o);
+    const paises = mostradas().map(nombrePais);
+    $("cita-texto")!.textContent = textoCita(doc, tr, paises);
+    $("cita-apa")!.textContent = apa(doc, tr, paises);
+    $("cita-bibtex")!.textContent = bibtex(doc, tr, paises);
   }
 
   function tema(): Tema {
@@ -287,9 +313,10 @@ function iniciar(): void {
   async function dibujar(): Promise<void> {
     if (!ultimo) return;
     const mio = ++turno;
-    const { r, o } = ultimo;
+    const { r, o, otras } = ultimo;
     const ancho = contenedor.clientWidth || 600;
     const spec = especificacion({
+      nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
       resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
       log: cLog.checked && !cLog.disabled, alto: ancho < 520 ? 240 : 320, ancho, descripcion: $("resumen-grafico")!.textContent ?? "",
     });
@@ -312,16 +339,18 @@ function iniciar(): void {
   // Exportar el gráfico con título, unidad, fuentes, variante y versión impresos (SPEC 6.2).
   async function imagen(formato: "png" | "svg"): Promise<void> {
     if (!ultimo) return;
-    const { r, o } = ultimo;
+    const { r, o, otras } = ultimo;
     const { vega, vegaLite } = await import("vega-embed");
     const fuentes = [...new Set(doc.fuentes.map((f) => f.organismo))].join("; ");
     const spec = especificacion({
+      nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
       resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
       log: cLog.checked && !cLog.disabled, alto: 380, ancho: 900, descripcion: $("resumen-grafico")!.textContent ?? "",
       impreso: {
         titulo: `${doc.nombre} · ${doc.nombre_variante}`,
         subtitulo: r.unidad,
-        pie: [`Fuentes: ${fuentes}.`, `Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. Licencia CC BY 4.0.`, location.href],
+        pie: [`Fuentes: ${fuentes}.`, ...lineaPaises(),
+          `Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. ${licenciaImagen()}`, location.href],
       },
     });
     // Vega exporta `locale` (de vega-format), aunque sus tipos no lo declaren.
@@ -332,6 +361,17 @@ function iniciar(): void {
       : URL.createObjectURL(new Blob([await v.toSVG()], { type: "image/svg+xml" }));
     bajar(url, `${nombreArchivo()}.${formato}`);
     v.finalize();
+  }
+
+  function lineaPaises(): string[] {
+    const [primera, ...resto] = mostradas().map(nombrePais);
+    return primera ? [`Resaltado: ${primera}${resto.length ? `; en gris: ${resto.join(", ")}` : ""}.`] : [];
+  }
+
+  /** Como en la cita: si una fuente tiene otros términos (Bruegel), se dice. */
+  function licenciaImagen(): string {
+    const otras = [...new Set(doc.fuentes.filter((f) => f.licencia !== "CC-BY-4.0").map((f) => f.organismo))];
+    return otras.length ? `Licencia de Vaivén CC BY 4.0; los datos de ${otras.join(" y ")} conservan sus términos.` : "Licencia CC BY 4.0.";
   }
 
   function nombreArchivo(): string {
@@ -351,17 +391,23 @@ function iniciar(): void {
 
   function csvVista(): void {
     if (!ultimo) return;
-    const filas = ["fecha,valor", ...ultimo.r.datos.map(([f, v]) => `${f},${v === null ? "" : v}`)];
+    const linea = ([f, v]: [string, number | null], p?: string) => `${f},${p === undefined ? "" : `${p},`}${v === null ? "" : v}`;
+    // En las series con dimensión pais, el CSV lleva todos los países que se ven (la resaltada primero).
+    const filas = pais
+      ? ["fecha,pais,valor", ...ultimo.r.datos.map((d) => linea(d, cEntidad?.value)),
+        ...ultimo.otras.flatMap((o, k) => o.resultado.datos.map((d) => linea(d, mostradas()[k + 1])))]
+      : ["fecha,valor", ...ultimo.r.datos.map((d) => linea(d))];
     bajar(URL.createObjectURL(new Blob([filas.join("\n") + "\n"], { type: "text/csv;charset=utf-8" })), `${nombreArchivo()}.csv`);
   }
 
   function citaTxt(): void {
     if (!ultimo) return;
-    const tr = nombreTransformacion(opcionesCita(ultimo.o));
+    const tr = nombreTransformacion(ultimo.o);
+    const paises = mostradas().map(nombrePais);
     const licencias = [...new Set(doc.fuentes.map((f) => `${f.organismo}: ${f.licencia}`))];
     const texto = [
       `${doc.nombre} · ${doc.nombre_variante}`, `Unidad: ${ultimo.r.unidad}`, `Vista: ${location.href}`, "",
-      "Cómo citar:", textoCita(doc, tr), "", "APA:", apa(doc, tr), "", "BibTeX:", bibtex(doc, tr), "",
+      "Cómo citar:", textoCita(doc, tr, paises), "", "APA:", apa(doc, tr, paises), "", "BibTeX:", bibtex(doc, tr, paises), "",
       `Licencia de los datos derivados: ${doc.licencia}.`, `Licencias de las fuentes: ${licencias.join("; ")}.`,
     ].join("\n");
     bajar(URL.createObjectURL(new Blob([texto + "\n"], { type: "text/plain;charset=utf-8" })), `${nombreArchivo()}_cita.txt`);

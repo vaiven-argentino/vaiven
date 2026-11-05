@@ -6,6 +6,12 @@ import type { Advertencia, DocumentoExportado, Excluido, InsumosCargados, Medida
 import { ESQUEMAS_SOPORTADOS } from "@vaiven/transformaciones";
 import { opcionesDelDenominador } from "./ficha";
 
+/**
+ * «Uso en la bibliografía» (fichas del inventario con materiales de la cátedra): oculto hasta que la cátedra diga si
+ * quiere figurar (SPEC, sección 12; revisión de la 4a, 05/11/2026). El inventario sigue en el repositorio.
+ */
+export const MOSTRAR_BIBLIOGRAFIA = false;
+
 export const RAIZ = join(process.cwd(), "..");
 export const EXPORT = join(RAIZ, "export");
 export const URL_SITIO = "https://vaiven.argentino.workers.dev";
@@ -82,7 +88,7 @@ interface MetaDocumento {
   cita: string;
   version_datos: string;
   desactualizada_desde: string | null;
-  vista_inicial?: { transformacion?: string; medida?: "real" | "en_dolares" | "pct_pib" };
+  vista_inicial?: { transformacion?: string; medida?: "real" | "en_dolares" | "pct_pib"; frecuencia?: "trimestral" | "anual"; desde?: string };
 }
 
 export type DocumentoSerie = MetaDocumento & DocumentoExportado;

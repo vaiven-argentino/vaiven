@@ -217,3 +217,15 @@ describe("índice desde tasas y dimensión pais", () => {
     expect(() => transformar(intPib as unknown as SerieExportada)).toThrow(/dimensión pais/);
   });
 });
+
+describe("datos excluidos en los extremos", () => {
+  it("un excluido al final del período queda como null para marcarlo (RIPTE, 2026-08)", () => {
+    const ripte = doc("series/salario-real/ripte.json");
+    const ultimo = ripte.excluidos.at(-1)!;
+    const r = transformar(ripte, { desde: "2026" });
+    expect(r.datos.at(-1)).toEqual([ultimo.fecha, null]);
+    expect(r.excluidos.map((e) => e.fecha)).toContain(ultimo.fecha);
+    // Pasado a anual ya no es «el» dato excluido: el año incompleto no se muestra al final.
+    expect(transformar(ripte, { frecuencia: "anual" }).datos.at(-1)![1]).not.toBeNull();
+  });
+});
