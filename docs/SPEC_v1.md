@@ -1,6 +1,6 @@
-# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1
+# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.1
 
-*22/10/2026 · Estado: borrador para revisión · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
+*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
 
 ---
 
@@ -132,15 +132,27 @@ La periodización de la cátedra (sección 6.4) se arma sobre estas tablas. Las 
 
 ### 2.5 Formato de exportación
 - `export/series/<slug>/<variante>.json`: metadatos resumidos + `datos: [["1970-01", 0.0123], ...]` + `version_datos`. En las series con dimensión `pais`, `datos` es un objeto por entidad: `{"ARG": [["1961", 5.4], ...], "BRA": [...]}`.
-- `export/catalogo.json`, `export/periodos.json`, `export/eventos.json`, `export/quiebres.json`.
+  - Fechas: `AAAA-MM` en mensuales, trimestrales (mes de inicio) y semestrales (mes de la onda); `AAAA` en anuales.
+  - Cada JSON declara su versión de esquema en `esquema`. La vigente es la **1.2** (`tests/contrato/serie-1.2.schema.json`, publicada en `/esquemas/`): suma `moneda`, `insumos` (qué series necesita cada medida, con su `denominador` en el % del PIB), `auxiliar`, `vista_inicial` (transformación, medida, frecuencia y período con que arranca la ficha) y los campos de la dimensión `pais`. Las versiones anteriores siguen publicadas y la web, el MCP y la librería las leen.
+  - `desactualizada_desde`: la fecha desde la que la variante no se actualiza (la fuente no respondió o la variante quedó retenida por la validación, sección 5.2).
+- `export/catalogo.json` (con las entidades de las series con `pais` y las fichas de la bibliografía), `export/periodos.json`, `export/eventos.json`, `export/quiebres.json`, `export/revisiones.json`.
+- `export/auxiliares/<slug>/<variante>.json` y su índice `export/auxiliares.json` (sección 2.6), más `export/auxiliares/signos-monetarios.json`.
 - `export/datapackage.json` (Frictionless Data Package v2) que describe todos los recursos.
 - `export/descargas/vaiven_<version>.parquet` y `.zip` con CSV por serie, para descarga completa.
 - `export/vega/<slug>.json`: especificación de Vega-Lite por defecto de cada serie.
 
-Este conjunto de archivos estáticos funciona además como **API pública de solo lectura**, documentada en la web.
+Este conjunto de archivos estáticos funciona además como **API pública de solo lectura**, documentada en la web y servida en `/datos/` (por ejemplo, `/datos/series/ipc/oficial.json`). En las series con dimensión `pais`, el CSV es largo (`fecha,pais,valor`) y la clave primaria del datapackage es `[fecha, pais]`.
 
 ### 2.6 Series auxiliares
-No figuran en el catálogo, pero las transformaciones las necesitan: PIB nominal en pesos y en dólares, población, IPC de EE.UU. (para el TCR bilateral) y los factores de conversión de signos monetarios. Tienen los mismos metadatos y la misma validación que el resto.
+No figuran en el catálogo, pero las transformaciones las necesitan. Tienen los mismos metadatos (en `metadatos/auxiliares/`) y la misma validación que el resto, y códigos propios:
+
+| Código | Serie | Variantes |
+|---|---|---|
+| AUX-01 | PIB nominal en pesos | **Publicado en cada base** (por defecto: Banco Mundial hasta 1992, base 1993 en 1993–2003, base 2004 desde 2004, sin empalmar, como en los cuadros de la bibliografía) y retropolado desde la base 2004 (sin saltos; antes de 2004 da un PIB unos 8 % mayor). Anual y trimestral. |
+| AUX-02 | PIB en dólares | El PIB de cada base o el retropolado ÷ el promedio del tipo de cambio oficial (CAM-01), y el del Banco Mundial (que en 1971–1981 y 2012–2015 usa un factor de conversión alternativo). |
+| AUX-03 | Población | Banco Mundial. |
+| AUX-04 | IPC de EE.UU. | OCDE (CC BY 4.0), que lo toma del BLS; para el TCR bilateral. |
+| AUX-05 | Signos monetarios | Los factores acumulados de la sección 4. |
 
 ---
 
@@ -177,7 +189,7 @@ No figuran en el catálogo, pero las transformaciones las necesitan: PIB nominal
 | FIS-01 | Resultado primario y financiero | A | anual (mensual desde 1993) | 8 | Tramos confirmados en la API |
 | FIS-02 | Gasto público | B | anual | 5 | Confirmado en la API (hasta 2023) |
 | FIS-03 | Ingresos públicos | B | anual | 4 | Parcial |
-| FIS-04 | Deuda pública | A | anual y trimestral | 3 | A determinar |
+| FIS-04 | Deuda pública (por ahora, «Deuda pública externa (Banco Mundial)») | A | anual y trimestral | 3 | Publicada solo la deuda externa pública del Banco Mundial; la total (Secretaría de Finanzas, FMI), pendiente de licencia |
 | FIS-05 | Intereses de la deuda pública | B | anual | 5 | Parcial |
 | TRA-01 | Tasa de desocupación | A | semestral (1974–2003) y trimestral (2003–hoy) | 5 | Confirmado en la API |
 | TRA-02 | Tasas de actividad y empleo | B | semestral y trimestral | 2 | Confirmado en la API |
@@ -214,10 +226,10 @@ Se implementan **una sola vez**, en una librería de TypeScript (`paquetes/trans
 | `var_dic_dic` | Variación entre diciembres consecutivos | precios |
 | `acumulada_anio` | Variación desde diciembre del año anterior | precios |
 | `base_100` | xₜ / x̄ₚ × 100, con x̄ₚ = valor en una fecha o promedio de un período elegido | todas las de nivel |
-| `real` | Valor nominal ÷ IPC (variante elegida) × IPC de la fecha base | montos en pesos |
-| `en_dolares` | Valor en pesos ÷ tipo de cambio oficial (o variante) | montos en pesos |
-| `pct_pib` | Valor ÷ PIB nominal (misma moneda y frecuencia) × 100 | flujos y stocks |
-| `pesos_actuales` | Convierte montos de signos monetarios anteriores a pesos actuales | montos en pesos y TC |
+| `real` | Valor nominal ÷ IPC (variante elegida) × IPC de la fecha base (un año o un mes; por defecto, el último con dato en la serie y en el IPC) | montos en pesos |
+| `en_dolares` | Valor en pesos ÷ promedio del tipo de cambio oficial (fin de mes) del período | montos en pesos |
+| `pct_pib` | Valor ÷ PIB nominal (misma moneda y frecuencia) × 100. El PIB se elige con `denominador`: el publicado en cada base (por defecto), el retropolado o, en dólares, el del Banco Mundial | flujos (anual o trimestral) y stocks (solo anual: valor de fin de año ÷ PIB del año) |
+| `pesos_actuales` | Convierte montos de signos monetarios anteriores a pesos actuales, con el signo vigente el último día de cada período | montos en moneda de cada época |
 | `frecuencia` | Pasa a trimestral o anual según `agregacion` (promedio, suma o fin de período) | todas |
 | `media_movil` | Media móvil de *n* períodos | todas |
 | `indice_desde_tasas` | Encadena tasas de variación anuales en un índice: Iₜ = Iₜ₋₁ × (1 + gₜ/100), con I = 100 en el año base elegido | tasas de variación (contexto internacional) |
@@ -231,9 +243,11 @@ Se implementan **una sola vez**, en una librería de TypeScript (`paquetes/trans
 | 1992-01-01 | Peso | 1 = 10.000 australes |
 
 Reglas:
-- Toda transformación que cruce un quiebre devuelve la advertencia correspondiente.
-- `real` con IPC exige elegir la variante de IPC; por defecto se usa la variante por defecto del IPC, y la elección queda visible en el gráfico, la descarga y la cita.
-- Las transformaciones se encadenan en un orden fijo: frecuencia → real / en_dolares / pesos_actuales → pct_pib → base_100 o variaciones → media_movil.
+- Toda transformación que cruce un quiebre devuelve la advertencia correspondiente, también los quiebres de los insumos de una medida (por ejemplo, la intervención del INDEC al deflactar con el IPC oficial).
+- `real` con IPC exige elegir la variante de IPC; por defecto se usa la variante por defecto del IPC, y la elección queda visible en el gráfico, la descarga y la cita. Lo mismo con el PIB de `pct_pib`.
+- Las transformaciones se encadenan en un orden fijo: pesos_actuales → frecuencia → una medida (real, en_dolares o pct_pib, excluyentes) → base_100, variaciones o indice_desde_tasas → media_movil → período. Los pesos actuales van primero para no promediar ni comparar valores en signos monetarios distintos; en moneda de cada época, sin pasar a pesos actuales solo queda el nivel.
+- Nunca se interpola: un dato faltante o excluido da `null` en todo lo que lo usa, y un insumo con un subperíodo faltante también. `indice_desde_tasas` corta la cadena en un año sin dato.
+- Las medidas se ofrecen solo si el export trae sus insumos; la web y el MCP los leen recién cuando se piden.
 
 ---
 
@@ -255,7 +269,9 @@ Reglas:
 
 ### 5.2 Manejo de errores
 - Si una fuente no responde: se reintenta; si sigue fallando, se publica con los datos anteriores y la serie queda marcada como «desactualizada desde <fecha>».
-- Si la validación falla: no se publica nada, se abre un issue en GitHub con el detalle y se notifica por mail.
+- Si la validación falla: el error se atribuye a la fuente o a la variante que lo produjo. Esa variante (y las derivadas que dependen de ella) queda **retenida**: conserva su versión anterior, marcada «desactualizada desde <fecha>», y el resto se publica. Se abre un issue en GitHub con el detalle y se notifica por mail. Solo un error que no se puede atribuir frena toda la publicación.
+- Si una fuente recorta su historia (pierde más de 12 fechas que ya tenía, o la variante empieza más de un año después de lo declarado): se trata como un error de validación de esa fuente.
+- Una variante que pasa a `pendiente` en los metadatos se quita del export.
 - Si una revisión supera un umbral por serie: se publica, pero queda registrada en `revisiones.json` y se muestra en la ficha.
 
 ### 5.3 Versionado
@@ -266,17 +282,20 @@ Reglas:
 ### 5.4 Estructura del repositorio
 ```
 vaiven/
-├── metadatos/          series/*.yaml, fuentes.yaml, quiebres.yaml, periodos.yaml, eventos.yaml, glosario.yaml
+├── metadatos/          series/*.yaml, auxiliares/*.yaml, fuentes.yaml, quiebres.yaml, signos_monetarios.yaml, periodos.yaml, eventos.yaml, glosario.yaml
 ├── pipeline/           Python: fuentes/, capa1/, capa2/, validacion/, export/
 ├── snapshots/          <fuente>/<fecha>/ (archivos crudos)
 ├── datos/              capa1/, capa2/
 ├── export/             lo que consumen la web y el MCP
 ├── paquetes/transformaciones/   TypeScript (web + MCP)
-├── web/                Astro
+├── paquetes/cita/      cita sugerida (web + MCP: las dos devuelven lo mismo)
+├── web/                Astro; web/scripts/: copia del export, enlaces, revisión visual, punta a punta
 ├── mcp/                servidor MCP (TypeScript): remoto y stdio
 ├── worker/             punto de entrada del Worker: assets estáticos + /mcp
 ├── tests/              unitarios (Python y TS) y casos de la bibliografía
-├── .github/workflows/  actualizar.yml, publicar.yml, release.yml
+├── .github/workflows/  actualizar.yml, pruebas.yml, publicar.yml, release.yml (acciones fijadas por SHA)
+├── .claude/agents/     subagentes de Claude Code (explorador, verificador de fuentes, revisor de datos, revisor visual, tester)
+├── package.json        workspaces de npm
 ├── CITATION.cff, LICENSE (MIT), LICENSE-DATOS (CC BY 4.0)
 ```
 
@@ -289,7 +308,7 @@ vaiven/
 |---|---|
 | **Inicio** | Qué es Vaivén, accesos a catálogo y explorador, series destacadas, última actualización. |
 | **Catálogo** | Las 39 series por bloque, con filtros (bloque, prioridad, frecuencia, fuente) y búsqueda. |
-| **Ficha de serie** | Gráfico con quiebres y períodos marcados; selector de variante; transformaciones; tabla; descargas; metodología; quiebres; fuentes; uso en la bibliografía (fichas del inventario); cómo citar. |
+| **Ficha de serie** | Último dato bien visible (y su atraso, si la fuente lleva meses sin publicar); gráfico con quiebres y períodos marcados; selector de variante; transformaciones y medidas (con su IPC o su PIB); tabla; descargas; metodología; quiebres; fuentes; uso en la bibliografía (fichas del inventario: oculto hasta que la cátedra responda, sección 12); cómo citar. En las series internacionales, la selección inicial de países con el elegido resaltado y la tabla por década (como en el explorador, 6.2). |
 | **Explorador** | Hasta 4 series a la vez, transformaciones por serie, período, frecuencia, sombreado por gobierno, plan o régimen, eventos, dos ejes cuando hace falta. En las series internacionales, selector de países y agregados. |
 | **Períodos** | Línea de tiempo de gobiernos, ministros de Economía, planes y regímenes cambiarios; desde cada período, accesos a gráficos ya filtrados. |
 | **Metodología** | Capas, empalmes, quiebres, variantes, glosario, revisiones. |
@@ -327,21 +346,21 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 
 ### 7.1 Despliegue
 - **Remoto (principal):** `https://vaiven.argentino.workers.dev/mcp` (subdominio de cuenta `argentino`, sujeto a disponibilidad), Streamable HTTP, sin estado, sin autenticación (datos públicos), con límite de pedidos por IP.
-- **Local:** el mismo paquete por stdio (`npx`), que lee el export publicado o una copia local.
-- Implementación con el SDK oficial de TypeScript, compatible con la revisión 2026-07-28 del protocolo y con negociación de versiones para clientes anteriores.
+- **Local:** el mismo paquete por stdio, que lee el export publicado o una copia local. Hasta la fase 5 se corre desde una copia del repositorio; en la fase 5 se publica para `npx`.
+- Implementación con el SDK oficial de TypeScript v2 (`@modelcontextprotocol/server`), compatible con la revisión 2026-07-28 del protocolo y, sin sesión, con los clientes de la era 2025 (`initialize`). El límite por IP es aproximado (Rate Limiting de Cloudflare).
 
 ### 7.2 Herramientas
 | Herramienta | Parámetros | Devuelve |
 |---|---|---|
 | `buscar_series` | `texto?`, `bloque?`, `prioridad?`, `desde?`, `hasta?` | Lista de series con id, nombre, bloque, cobertura, variantes y, si corresponde, entidades disponibles. |
-| `describir_serie` | `id` | Metadatos completos: definición, variantes, quiebres, fuentes, licencias, bibliografía y cita. |
-| `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `frecuencia?`, `transformacion?`, `base?`, `deflactor?`, `paises?` (códigos ISO3; solo series internacionales; por defecto, la selección inicial) | Datos, unidad resultante, advertencias por quiebres en el rango, versión de datos y cita. |
+| `describir_serie` | `id` | Metadatos completos: definición, variantes (con su último dato, sus transformaciones, medidas, deflactores y PIB disponibles), quiebres, fuentes, licencias, países y cita. La bibliografía, cuando la cátedra lo confirme. |
+| `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `pesos_actuales?`, `frecuencia?`, `medida?` (real, en_dolares, pct_pib), `deflactor?`, `base_real?`, `denominador?`, `transformacion?`, `base?`, `paises?` (códigos ISO3; solo series internacionales; por defecto, la selección inicial) | Datos (por país en las internacionales), unidad resultante, último dato, advertencias por quiebres en el rango, versión de datos y cita. |
 | `comparar_series` | `ids[]` (hasta 4) y los mismos parámetros por serie | Series alineadas en fecha, con advertencias y citas. |
 | `listar_periodos` | `tipo?` (gobierno, ministro, plan, régimen, cátedra) | Períodos con fechas y fuente. |
 | `periodo_en_fecha` | `fecha` | Gobierno, ministro, plan y régimen vigentes en esa fecha. |
 | `especificacion_grafico` | igual que `comparar_series` + `sombreado?` | Especificación de Vega-Lite y un link al explorador con esa vista. |
 | `riesgo_pais` | `desde?`, `hasta?`, `frecuencia?` | Consulta en vivo a ArgentinaDatos, con fuente y aviso de licencia; no se almacena. |
-| `citar` | `id`, `variante?`, `formato?` (APA, texto, BibTeX) | Cita lista para usar, con versión de datos. |
+| `citar` | `id`, `variante?`, `formato?` (APA, texto, BibTeX) y los mismos parámetros de transformación de `obtener_serie` | Cita lista para usar, con versión de datos y lo que calculó Vaivén. |
 
 ### 7.3 Reglas de respuesta
 - Toda respuesta con datos incluye `advertencias`, `version_datos`, `fuentes` y `cita`.
@@ -362,9 +381,9 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 
 ## 9. Licencias, citación y créditos
 - **Código:** MIT. **Datos derivados (capa 2 y export):** CC BY 4.0.
-- **Banco Mundial (INT-01 e INT-02):** CC BY 4.0; se redistribuye con atribución al Banco Mundial y el código del indicador.
+- **Banco Mundial (INT-01 e INT-02, deuda externa, PIB):** CC BY 4.0; se redistribuye con atribución al Banco Mundial y el código del indicador. **OCDE:** CC BY 4.0. **Bruegel (TCR multilateral, variante `bruegel`):** uso libre con atribución y sin sugerir respaldo (no es una licencia CC formal); la cita lo dice.
 - **Series de terceros:** conservan su licencia, que figura en `fuentes.yaml`, en la ficha y en cada descarga. Las que no permiten redistribución (el riesgo país) no se descargan.
-- **Cita sugerida:** incluye nombre de la serie, variante, versión de datos, DOI y URL. Formatos: APA, texto y BibTeX.
+- **Cita sugerida:** incluye nombre de la serie, variante, versión de datos, DOI (desde la fase 5) y URL. Formatos: APA, texto y BibTeX. Si hubo transformación, una línea la nombra («calculada por Vaivén»); en las internacionales, los países van aparte. Si una fuente no es CC BY, la cita lo dice. La genera un paquete compartido (`paquetes/cita`), así que la ficha y el MCP dan la misma.
 - **Créditos:** organismos fuente, autores de series académicas usadas como variantes y la cátedra, si da su conformidad.
 
 ---
@@ -384,7 +403,9 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 | CENDA2010-G8 | Reservas internacionales, 1996–2010 |
 | DF2013-G2 | IPC oficial frente a una variante alternativa, 2002–2013 |
 
-- **MCP:** pruebas automáticas de cada herramienta y prueba manual con Claude (web y escritorio) en cada actualización del protocolo o del SDK.
+- **MCP:** pruebas automáticas de cada herramienta y prueba manual con Claude (web y escritorio) en cada actualización del protocolo o del SDK y antes de cada despliegue de fase (`mcp/PRUEBA_MANUAL.md`).
+- **Series que calcula Vaivén** (derivadas, retropolaciones, unidades inferidas, empalmes): se contrastan con al menos una cifra publicada antes de publicarse, con un revisor que no vio cómo se armaron, y el método se aprueba explícitamente.
+- **Medidas:** se contrastan con valores publicados (por ejemplo, el índice desde tasas con los niveles del Banco Mundial y el % del PIB con la cuenta corriente en % del PIB del Banco Mundial).
 
 ---
 
@@ -399,7 +420,9 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 | **4. Núcleo completo** | Resto de las series de prioridad A, explorador, períodos y sombreado, resto de las herramientas del MCP. Además, las dos series de contexto internacional: tienen una sola fuente, sin empalmes, y sirven para probar la dimensión `pais` en el explorador y en el MCP. | Las 20 series A y las 2 internacionales están publicadas con metadatos y pruebas. |
 | **5. Catálogo completo** | Series de prioridad B, riesgo país en vivo, Zenodo, página de datos abiertos, accesibilidad revisada. | Las 39 series están publicadas; primera release con DOI. |
 
-**Sugerencia de trabajo en Claude Code:** Opus para el diseño de los empalmes, la capa 2 y el MCP; Sonnet para componentes de la web y tareas repetitivas del pipeline. Una sesión por fase, empezando cada una con esta SPEC y el catálogo en el contexto.
+**Subfases de la fase 4:** 4a, datos del núcleo (las 20 series A, las 2 internacionales, las auxiliares y las medidas en la librería, la ficha y el MCP); 4b, explorador y períodos; 4c, comparación de series; 4d, el resto de las herramientas del MCP.
+
+**Sugerencia de trabajo en Claude Code:** Opus para el diseño de los empalmes, la capa 2 y el MCP; Sonnet para componentes de la web, tareas repetitivas del pipeline y los subagentes que verifican números (verificador de fuentes, revisor de datos). Una sesión por fase o subfase, empezando cada una con esta SPEC y el catálogo en el contexto.
 
 ---
 
@@ -421,3 +444,19 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 - Definición de reservas netas a publicar (hay varias en uso).
 - Si la cátedra quiere figurar en los créditos o participar.
 - Encuadre académico (posible TFI en la UNAB).
+
+---
+
+## Historial de versiones
+
+- **v1 (22/10/2026):** primera versión aprobada.
+- **v1.1 (05/11/2026):** incorpora lo decidido en las fases 1 a 4a y en la revisión de la 4a:
+  - export en `/datos/`, esquema 1.2 y campos nuevos (2.5);
+  - auxiliares con códigos AUX-01 a AUX-05, PIB publicado en cada base por defecto e IPC de EE.UU. de la OCDE (2.6);
+  - FIS-04 publicada solo como deuda pública externa del Banco Mundial (3);
+  - orden de las transformaciones con los pesos actuales primero, medidas excluyentes, denominador del % del PIB y signo del último día del período (4);
+  - fallas aisladas por variante y control de historia recortada (5.2), y estructura del repositorio actualizada (5.4);
+  - ficha con último dato, medidas y comparación de países; bibliografía oculta hasta consultar a la cátedra (6.1);
+  - SDK v2 del MCP, variante local sin `npx` hasta la fase 5 y parámetros de las medidas (7.1 y 7.2);
+  - licencias de la OCDE y de Bruegel, y cita con los países aparte (9);
+  - contraste de las series que calcula Vaivén (10) y subfases de la fase 4 (11).
