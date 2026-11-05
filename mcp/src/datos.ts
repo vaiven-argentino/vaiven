@@ -78,7 +78,7 @@ export class Repositorio {
    * cambio para dólares, el PIB para % del PIB y los signos monetarios para pesos actuales. Si la variante no declara
    * la medida, no lee nada: la librería da el error con lo que sí admite.
    */
-  async insumos(doc: DocumentoSerie, o: { pesosActuales?: boolean; medida?: "real" | "en_dolares" | "pct_pib"; deflactor?: string }): Promise<InsumosCargados> {
+  async insumos(doc: DocumentoSerie, o: { pesosActuales?: boolean; medida?: "real" | "en_dolares" | "pct_pib"; deflactor?: string; denominador?: string }): Promise<InsumosCargados> {
     const declarados = doc.insumos ?? {};
     const salida: InsumosCargados = {};
     if (o.pesosActuales && declarados.pesos_actuales) {
@@ -86,7 +86,10 @@ export class Repositorio {
     }
     const insumo = o.medida ? declarados[o.medida] : undefined;
     if (insumo) {
-      const ids = o.medida === "real" ? [o.deflactor ?? insumo.por_defecto] : insumo.opciones.map((x) => x.id);
+      // En % del PIB, solo el PIB elegido (por defecto, el de la opción por defecto), en sus frecuencias.
+      const denominador = o.denominador ?? insumo.opciones.find((x) => x.id === insumo.por_defecto)?.denominador;
+      const ids = o.medida === "real" ? [o.deflactor ?? insumo.por_defecto]
+        : insumo.opciones.filter((x) => !denominador || !x.denominador || x.denominador === denominador).map((x) => x.id);
       const elegidas = insumo.opciones.filter((x) => ids.includes(x.id));
       const series = await Promise.all(elegidas.map((x) => this.leer<SerieExportada>(x.archivo)));
       salida.series = Object.fromEntries(elegidas.map((x, k) => [x.id, series[k]]));

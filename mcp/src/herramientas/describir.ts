@@ -2,6 +2,7 @@
 import { apa, bibtex, textoCita } from "@vaiven/cita";
 import { disponibles, serieDeEntidad } from "@vaiven/transformaciones";
 import type { Repositorio } from "../datos";
+import { MOSTRAR_BIBLIOGRAFIA } from "./comun";
 import type { DocumentoSerie, Fuente } from "../tipos";
 
 export interface ArgsDescribir {
@@ -15,6 +16,8 @@ export interface Admite {
   medidas: string[];
   /** Variantes del IPC para la medida real. */
   deflactores?: string[];
+  /** PIB que puede dividir en % del PIB (el primero es el de por defecto). */
+  denominadores?: string[];
   /** Solo en moneda de cada época: lo que se habilita al pasar a pesos actuales. */
   con_pesos_actuales?: { transformaciones: string[]; frecuencias: string[] };
 }
@@ -31,6 +34,7 @@ export function transformacionesDe(doc: DocumentoSerie): Admite {
       medidas: d.medidas.filter((m) => m !== "pesos_actuales"),
     };
     if (d.deflactores.length) salida.deflactores = d.deflactores.map((o) => o.id);
+    if (d.denominadores.length) salida.denominadores = d.denominadores;
     if (d.medidas.includes("pesos_actuales")) {
       const p = disponibles(serie, { pesosActuales: true });
       salida.con_pesos_actuales = { transformaciones: p.transformaciones, frecuencias: p.frecuencias };
@@ -61,6 +65,7 @@ export async function describirSerie(repo: Repositorio, args: ArgsDescribir) {
     return {
       ...base,
       cobertura: doc.cobertura,
+      ultimo_dato: doc.cobertura.hasta,
       ...(doc.moneda ? { moneda: doc.moneda } : {}),
       metodo: doc.metodo,
       empalme: doc.empalme,
@@ -92,7 +97,7 @@ export async function describirSerie(repo: Repositorio, args: ArgsDescribir) {
     variantes,
     quiebres: serie.quiebres.map((id) => quiebres.get(id) ?? { id }),
     fuentes: [...fuentes.values()],
-    bibliografia: serie.bibliografia ?? [],
+    ...(MOSTRAR_BIBLIOGRAFIA ? { bibliografia: serie.bibliografia ?? [] } : {}),
     licencia: "CC-BY-4.0 (datos derivados de Vaivén); cada fuente conserva su licencia (ver fuentes).",
     version_datos: version ?? catalogo.version_datos,
     nota: "Las advertencias por quiebres de un período concreto las da obtener_serie junto con los datos.",

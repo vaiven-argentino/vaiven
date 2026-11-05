@@ -1,6 +1,7 @@
 // Textos que lee el modelo: instrucciones del servidor y descripciones de herramientas y parámetros (SPEC 7.3:
 // en español, pensadas para que elija bien qué herramienta usar). Se aprobaron en el plan de la fase 3; los
-// agregados de la fase 4a (medidas, países e índice desde tasas), el 28/10/2026.
+// agregados de la fase 4a (medidas, países e índice desde tasas), el 28/10/2026; los de la revisión de la 4a
+// (denominador del % del PIB, último dato, sin bibliografía), el 05/11/2026.
 
 export const INSTRUCCIONES =
   "Vaivén es una base curada de series económicas argentinas desde 1970, con sus quiebres metodológicos, variantes y " +
@@ -9,7 +10,9 @@ export const INSTRUCCIONES =
   "metodología, intervención del INDEC, datos excluidos) y citá la fuente con la cita que viene en la respuesta. Los " +
   "valores null son datos faltantes o excluidos: no los completes. Para pasar una serie a términos reales, a dólares, " +
   "a % del PIB o a pesos actuales, pedilo con `medida` o `pesos_actuales` de obtener_serie en lugar de calcularlo por " +
-  "tu cuenta: Vaivén usa los deflactores y el PIB publicados y suma sus advertencias.";
+  "tu cuenta: Vaivén usa el IPC y el tipo de cambio publicados y, para el % del PIB, el PIB publicado en cada base " +
+  "(u otro, si lo pedís con `denominador`), y suma sus advertencias. Algunas fuentes llevan meses de atraso: cada " +
+  "respuesta dice el último dato de la serie (`ultimo_dato`); mencionalo si el usuario pregunta por meses recientes.";
 
 export const DESCRIPCION = {
   buscar_series:
@@ -24,8 +27,9 @@ export const DESCRIPCION = {
   describir_serie:
     "Devuelve los metadatos completos de una serie de Vaivén, sin los datos: definición, unidad, frecuencia, variantes " +
     "(método, tramos y fuentes de cada una, y estado si están pendientes), quiebres metodológicos con sus fechas, datos " +
-    "excluidos, transformaciones y medidas disponibles (real, con sus deflactores, en dólares, % del PIB y pesos " +
-    "actuales), países (en las series internacionales), licencias, bibliografía y la cita sugerida. Usala antes de " +
+    "excluidos, último dato, transformaciones y medidas disponibles (real, con sus deflactores; en dólares; % del PIB, " +
+    "con los PIB que puede usar; pesos actuales), países (en las series internacionales), licencias y la cita " +
+    "sugerida. Usala antes de " +
     "interpretar una serie o de elegir variante y transformación, sobre todo si el período cruza un cambio de metodología (por " +
     "ejemplo, el IPC de 2007–2015 o el cambio de la EPH en 2003). `id`: id de la serie («ipc»), código («PRE-01») o id " +
     "de variante («ipc.provincias»).",
@@ -34,7 +38,7 @@ export const DESCRIPCION = {
     "variaciones, base 100, índice desde tasas, cambio a una frecuencia más baja y medidas (real, en dólares, % del " +
     "PIB y pesos actuales). Se aplican en este orden: pesos actuales → frecuencia → medida → transformación → período. " +
     "En las series internacionales, `paises` elige los países (por defecto, la selección inicial) y `datos` va por " +
-    "país. Cada respuesta trae la unidad resultante, las " +
+    "país. Cada respuesta trae la unidad resultante, el último dato publicado (`ultimo_dato`), las " +
     "advertencias por quiebres metodológicos dentro del rango pedido, los datos excluidos, la versión de datos, las " +
     "fuentes y la cita: mencioná las advertencias cuando uses los datos. Las fechas van como AAAA-MM (en mensuales, " +
     "trimestrales y semestrales, el mes en que empieza el período) o AAAA (anuales). Un valor null es un dato faltante " +
@@ -44,7 +48,8 @@ export const DESCRIPCION = {
     "Devuelve la cita sugerida de una serie de Vaivén, la misma que muestra su ficha en la web, con la versión de " +
     "datos y la URL de la variante. Formatos: texto, apa o bibtex; si no se indica, devuelve los tres. Si los datos se " +
     "transformaron con obtener_serie, pasá los mismos parámetros (`transformacion`, `frecuencia`, `medida`, " +
-    "`deflactor`, `base_real`, `pesos_actuales` y `paises`) para que la cita aclare qué calculó Vaivén. Las " +
+    "`deflactor`, `base_real`, `denominador`, `pesos_actuales` y `paises`) para que la cita aclare qué calculó " +
+    "Vaivén. Las " +
     "respuestas de obtener_serie ya traen la cita en texto: usá esta herramienta " +
     "cuando necesites APA o BibTeX.",
 } as const;
@@ -82,8 +87,13 @@ export const PARAMETRO = {
     "actuales. Hace falta para variaciones, base 100 o cambio de frecuencia en esas series.",
   medida:
     "real: a precios constantes, deflactada con el IPC · en_dolares: dividida por el tipo de cambio oficial · " +
-    "pct_pib: en % del PIB del mismo período; pide frecuencia anual o trimestral (en los stocks, solo anual). Solo " +
-    "valen las que admite la variante (ver describir_serie).",
+    "pct_pib: en % del PIB del mismo período (el PIB lo elige `denominador`); pide frecuencia anual o trimestral " +
+    "(en los stocks, solo anual). Solo valen las que admite la variante (ver describir_serie).",
+  denominador:
+    "Solo con medida pct_pib: qué PIB divide. cada-base (por defecto): el publicado en cada base, como en los " +
+    "cuadros de la bibliografía; salta en 2004 por el cambio de base · retropolado: llevado hacia atrás desde la " +
+    "base 2004, sin saltos (antes de 2004 da un PIB unos 8 % mayor) · banco-mundial: el PIB en dólares del Banco " +
+    "Mundial, solo en las series en dólares (en 1971–1981 y 2012–2015 no usa el tipo de cambio oficial).",
   deflactor: "Solo con medida real: la variante del IPC («ipc.oficial», por defecto, o «ipc.provincias»).",
   baseReal: "Solo con medida real: precios de qué período (AAAA-MM o AAAA). Por defecto, el último con dato en la serie y en el IPC.",
   paises:

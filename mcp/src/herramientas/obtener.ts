@@ -22,6 +22,7 @@ export interface ArgsObtener {
   medida?: MedidaPedida;
   deflactor?: string;
   base_real?: string;
+  denominador?: "cada-base" | "retropolado" | "banco-mundial";
   transformacion?: Transformacion;
   base?: string;
   paises?: string[];
@@ -90,6 +91,9 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   if ((args.deflactor || args.base_real) && args.medida !== "real") {
     throw new ErrorHerramienta("`deflactor` y `base_real` solo se usan con medida «real».");
   }
+  if (args.denominador && args.medida !== "pct_pib") {
+    throw new ErrorHerramienta("`denominador` solo se usa con medida «pct_pib».");
+  }
   if (args.desde && args.hasta && args.desde > args.hasta) {
     throw new ErrorHerramienta(`El período está invertido: desde ${args.desde} es posterior a hasta ${args.hasta}.`);
   }
@@ -101,6 +105,7 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     medida: args.medida,
     deflactor,
     baseReal: args.base_real,
+    denominador: args.denominador,
     transformacion,
     base: args.base ? leerBase(args.base) : undefined,
     desde: args.desde,
@@ -120,6 +125,7 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
         `${d.frecuencias.length ? `; frecuencias ${d.frecuencias.join(", ")}` : "; no se puede cambiar de frecuencia"}` +
         `${d.medidas.length ? `; medidas ${d.medidas.join(", ")}` : "; ninguna medida"}` +
         `${d.deflactores ? ` (deflactores: ${d.deflactores.join(", ")})` : ""}` +
+        `${d.denominadores ? ` (PIB para % del PIB: ${d.denominadores.join(", ")})` : ""}` +
         `${d.con_pesos_actuales ? `; con pesos_actuales: transformaciones ${d.con_pesos_actuales.transformaciones.join(", ")}` : ""}.`);
     }
     throw e;
@@ -153,14 +159,17 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   if (transformada) notas.push("Los valores transformados se redondean a 6 cifras significativas.");
   if (doc.desactualizada_desde) notas.push(`La serie está desactualizada desde ${doc.desactualizada_desde}: la fuente no respondió.`);
 
+  const pctPib = doc.insumos?.pct_pib;
+  const denominadorUsado = args.medida === "pct_pib"
+    ? args.denominador ?? pctPib?.opciones.find((o) => o.id === pctPib.por_defecto)?.denominador : undefined;
   const nombres = tienePais(doc) ? new Map(doc.entidades.map((e) => [e.id, e.nombre])) : new Map<string, string>();
   const cita = nombreTransformacion({
-    entidad: paises.length ? paises : undefined,
     pesosActuales: args.pesos_actuales,
     frecuencia: args.frecuencia,
     medida: args.medida,
     deflactor: args.medida === "real" ? (deflactor ?? doc.insumos?.real?.por_defecto) : undefined,
     baseReal: args.base_real,
+    denominador: denominadorUsado,
     transformacion,
   });
 
@@ -176,11 +185,13 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     ...(args.frecuencia ? { frecuencia_pedida: args.frecuencia } : {}),
     ...(args.medida ? { medida: args.medida } : {}),
     ...(args.medida === "real" ? { deflactor: deflactor ?? doc.insumos?.real?.por_defecto } : {}),
+    ...(denominadorUsado ? { denominador: denominadorUsado } : {}),
     ...(args.base ? { base: args.base } : {}),
     ...(paises.length ? { paises: paises.map((id) => ({ id, nombre: nombres.get(id) ?? id })) } : {}),
     desde: fechas[0] ?? null,
     hasta: fechas.at(-1) ?? null,
     n_observaciones: total,
+    ultimo_dato: doc.cobertura.hasta,
     datos: paises.length ? Object.fromEntries(paises.map((p, k) => [p, listas[k]])) : listas[0],
     frecuencias,
     advertencias,
@@ -190,6 +201,6 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     licencia: doc.licencia,
     version_datos: doc.version_datos,
     desactualizada_desde: doc.desactualizada_desde,
-    cita: textoCita(doc, cita),
+    cita: textoCita(doc, cita, paises.length ? paises : undefined),
   };
 }

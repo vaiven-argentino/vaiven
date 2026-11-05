@@ -84,7 +84,9 @@ describe("describir_serie", () => {
     expect(r.variantes.find((v) => v.id === "empalmada")!.estado).toBe("pendiente");
     expect(r.quiebres.map((q) => q.id)).toContain("q.desocupacion.eph-2003");
     expect(r.fuentes.length).toBeGreaterThan(0);
-    expect(r.bibliografia.map((b) => b.id)).toEqual(["OS2006-G3"]);
+    // «Uso en la bibliografía» queda oculto hasta consultar a la cátedra (como en la web).
+    expect(r).not.toHaveProperty("bibliografia");
+    expect((total as Record<string, unknown>).ultimo_dato).toBe((total.cobertura as { hasta: string }).hasta);
   });
   it("informa medidas, deflactores, pesos actuales y países", async () => {
     const salario = await describirSerie(repo, { id: "salario-real" });
@@ -196,9 +198,21 @@ describe("obtener_serie", () => {
     expect(porPais(r).ARG[0]).toEqual(["2000", 100]);
     expect(r.paises).toEqual([{ id: "ARG", nombre: "Argentina" }, { id: "BRA", nombre: "Brasil" }]);
     expect(r.unidad).toBe("índice, 2000 = 100");
-    expect(r.cita).toContain("entidades ARG y BRA, índice desde las tasas");
+    expect(r.cita).toContain("Países: ARG y BRA. Transformación: índice desde las tasas");
     await expect(obtenerSerie(repo, { id: "int-pib", paises: ["XXX"] })).rejects.toThrow(/no tiene XXX.*ARG \(Argentina\)/);
     await expect(obtenerSerie(repo, { id: "ipc", paises: ["ARG"] })).rejects.toThrow(/no tiene dimensión país/);
+  });
+  it("% del PIB: el PIB de cada base por defecto, y el denominador se puede elegir", async () => {
+    const def = await obtenerSerie(repo, { id: "cuenta-corriente", medida: "pct_pib", desde: "1980", hasta: "1980" });
+    const bm = await obtenerSerie(repo, { id: "cuenta-corriente", medida: "pct_pib", denominador: "banco-mundial", desde: "1980", hasta: "1980" });
+    expect(def.denominador).toBe("cada-base");
+    expect(def.notas.join(" ")).toContain("PIB anual publicado en cada base");
+    expect(def.cita).toContain("en % del PIB (PIB publicado en cada base)");
+    expect(pares(bm)[0][1]).toBeCloseTo(-6.2, 1);   // el Banco Mundial da −6,2 % en 1980
+    expect(def.ultimo_dato).toBe(documento("cuenta-corriente", "larga").cobertura.hasta);
+    await expect(obtenerSerie(repo, { id: "cuenta-corriente", denominador: "retropolado" })).rejects.toThrow(/solo se usa con medida «pct_pib»/);
+    const d = await describirSerie(repo, { id: "cuenta-corriente" });
+    expect((d.variantes[0] as Record<string, unknown>).denominadores).toEqual(["cada-base", "retropolado", "banco-mundial"]);
   });
   it("deflactor sin medida real y medida que la variante no admite dan error", async () => {
     await expect(obtenerSerie(repo, { id: "salario-real", deflactor: "provincias" })).rejects.toThrow(/solo se usan con medida «real»/);
@@ -241,7 +255,7 @@ describe("citar", () => {
     const r = await citar(repo, { id: "salario-real", medida: "real", deflactor: "provincias", formato: "texto" });
     expect(r.texto).toContain("deflactada con el IPC «ipc.provincias»");
     const int = await citar(repo, { id: "int-pib", paises: ["arg", "bra"], formato: "texto" });
-    expect(int.texto).toContain("entidades ARG y BRA");
+    expect(int.texto).toContain("Países: ARG y BRA.");
   });
   it("una variante pendiente no se cita", async () => {
     await expect(citar(repo, { id: "desocupacion", variante: "empalmada" })).rejects.toThrow(/pendiente/);
