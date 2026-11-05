@@ -63,7 +63,7 @@ export function diaDeVersion(version: string): string {
 }
 
 // Los nombres de las transformaciones viven con la cita, porque la cita los usa (web y MCP).
-export { NOMBRE_TRANSFORMACION } from "@vaiven/cita";
+export { NOMBRE_MEDIDA, NOMBRE_TRANSFORMACION } from "@vaiven/cita";
 
 export const NOMBRE_TIPO_QUIEBRE: Record<string, string> = {
   cambio_de_base: "Cambio de base",

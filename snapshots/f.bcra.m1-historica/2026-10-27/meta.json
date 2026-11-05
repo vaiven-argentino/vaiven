@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.m1-historica",
+  "descargado": "2026-10-27T19:33:03Z",
+  "sha256": "e97d35e7b99c19c4c1ae9f490f4749f7a49cdd6be157aa296af7cdb091708705",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "distribucion.csv",
+      "url": "https://infra.datos.gob.ar/catalog/sspm/dataset/174/distribution/174.1/download/series-historicas-monetarias.csv",
+      "bytes": 519930,
+      "sha256": "05ecb021879875f24d88512909c1a2dea865a039e5ce072b8b4fd50f8b0878bb"
+    }
+  ]
+}

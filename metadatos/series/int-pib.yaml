@@ -1,0 +1,56 @@
+id: int-pib
+codigo: INT-01
+nombre: Crecimiento del PIB, países seleccionados
+bloque: Contexto internacional
+prioridad: B
+definicion: Variación anual del PIB real (en dólares constantes), por país y agregado, según el Banco Mundial.
+unidad: variación % anual
+tipo: tasa_de_variacion
+agregacion: promedio
+frecuencia: anual
+dimensiones: [pais]
+entidades:
+  - {id: ARG, nombre: Argentina}
+  - {id: USA, nombre: Estados Unidos}
+  - {id: CHN, nombre: China}
+  - {id: MEX, nombre: México}
+  - {id: BRA, nombre: Brasil}
+  - {id: BOL, nombre: Bolivia}
+  - {id: CHL, nombre: Chile}
+  - {id: COL, nombre: Colombia}
+  - {id: ECU, nombre: Ecuador}
+  - {id: GUY, nombre: Guyana}
+  - {id: PRY, nombre: Paraguay}
+  - {id: PER, nombre: Perú}
+  - {id: SUR, nombre: Surinam}
+  - {id: URY, nombre: Uruguay}
+  - {id: VEN, nombre: Venezuela}
+  - {id: WLD, nombre: Mundo}
+  - {id: LCN, nombre: América Latina y el Caribe}
+  - {id: EUU, nombre: Unión Europea}
+  - {id: EMU, nombre: Zona del euro}
+entidades_por_defecto: [ARG, BRA, USA, LCN, WLD]
+cobertura: {desde: 1961, hasta: hoy}
+variante_por_defecto: banco-mundial
+variantes:
+  - id: banco-mundial
+    nombre: Banco Mundial, Indicadores del Desarrollo Mundial
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Indicador NY.GDP.MKTP.KD.ZG de los Indicadores del Desarrollo Mundial del Banco Mundial, sin cambios, para Argentina, el
+      resto de Sudamérica, Estados Unidos, China y México, y cuatro agregados (Mundo, América Latina y el Caribe,
+      Unión Europea y Zona del euro). Argentina figura con la serie del Banco Mundial para comparar con la misma
+      metodología; su serie propia es el PIB real (ACT-01), del INDEC.
+    tramos:
+      - {fuente: f.bm.crecimiento-pib, desde: 1961}
+    advertencias: [q.int.revisiones, q.int.agregados, q.int.argentina]
+validacion:
+  min: -40
+  max: 70
+  umbral_revision_pct: 5
+quiebres: [q.int.revisiones, q.int.agregados, q.int.argentina]
+transformaciones: [indice_desde_tasas, media_movil]
+fuentes: [f.bm.crecimiento-pib]
+bibliografia: [ARO2003-C4, DLB1993-A2, CENDA2004-C2, KUL2016-C6.1]
+licencia_derivado: CC-BY-4.0

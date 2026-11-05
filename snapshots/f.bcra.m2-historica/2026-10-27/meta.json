@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.m2-historica",
+  "descargado": "2026-10-27T19:33:06Z",
+  "sha256": "472066ec351ad6380d1057bed370f96f564b0cd6ba0d1ba4f7df28bfc0d737be",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_AGADOS_M2_0_0_28&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 36622,
+      "sha256": "ecf082a9826620ad5630e3cac5f6a0f2ed83469ab618150fec49888d889d4446"
+    }
+  ]
+}

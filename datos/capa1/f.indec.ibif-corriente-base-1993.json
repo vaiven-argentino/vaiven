@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.ibif-corriente-base-1993",
+  "unidad": "millones de pesos corrientes, a ritmo anual",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.indec.ibif-corriente-base-1993/2026-10-27",
+  "descargado": "2026-10-27T19:35:16Z",
+  "sha256": "12fbf2f91cc4531005560ecbf024028ac31d5517407f5264cd68531dd0b32f65",
+  "observaciones": 83,
+  "desde": "1993-01-01",
+  "hasta": "2013-07-01"
+}

@@ -13,6 +13,8 @@ from pipeline.comun import ErrorPipeline, a_fecha
 
 
 def operandos_de(variante: dict) -> list[str]:
+    if "segmentos" in variante:
+        return list(dict.fromkeys(o for seg in variante["segmentos"] for o in seg["operandos"]))
     return [o for o in variante.get("operandos", [])]
 
 
@@ -39,6 +41,16 @@ def _promedio_por_periodo(s: pd.Series, fechas: pd.DatetimeIndex, frecuencia: st
 
 
 def derivar(variante: dict, disponibles: dict[str, pd.Series], frecuencia: str) -> pd.Series:
+    if "segmentos" in variante:
+        # La misma operación, con operandos distintos en cada período (por ejemplo, un cociente dentro de cada
+        # base de las cuentas nacionales). Los segmentos no pueden superponerse.
+        partes = []
+        for seg in variante["segmentos"]:
+            partes.append(_segmento(variante, seg, disponibles, frecuencia))
+        r = pd.concat(partes)
+        if r.index.duplicated().any():
+            raise ErrorPipeline(f"{variante['id']}: los segmentos se superponen.")
+        return r.sort_index()
     op = variante.get("operacion")
     nombres = operandos_de(variante)
     faltan = [n for n in nombres if n not in disponibles]
@@ -47,8 +59,9 @@ def derivar(variante: dict, disponibles: dict[str, pd.Series], frecuencia: str) 
     xs = [disponibles[n] for n in nombres]
 
     if op == "resta":
-        a, b = _alinear(xs)
-        r = a - b
+        # El primero menos la suma de los demás (por ejemplo, pasivos externos − inversión directa − acciones).
+        a, *resto = _alinear(xs)
+        r = a - sum(resto[1:], resto[0])
     elif op == "suma":
         partes = _alinear(xs)
         r = sum(partes[1:], partes[0])
@@ -84,4 +97,15 @@ def derivar(variante: dict, disponibles: dict[str, pd.Series], frecuencia: str) 
         raise ErrorPipeline(f"{variante['id']}: la operación {op} no dejó datos.")
     r.index.name = "fecha"
     r.name = "valor"
+    return r
+
+
+def _segmento(variante: dict, seg: dict, disponibles: dict[str, pd.Series], frecuencia: str) -> pd.Series:
+    sub = {k: v for k, v in variante.items() if k != "segmentos"}
+    sub.update({"operandos": seg["operandos"]})
+    sub.pop("desde", None)
+    r = derivar(sub, disponibles, frecuencia)
+    r = r.loc[a_fecha(seg["desde"]):]
+    if seg.get("hasta"):
+        r = r.loc[:a_fecha(seg["hasta"])]
     return r

@@ -1,0 +1,11 @@
+{
+  "fuente": "f.hacienda.spa-devengado-financiero-1987-1989",
+  "unidad": "miles de pesos actuales",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.hacienda.spa-devengado-financiero-1987-1989/2026-10-27",
+  "descargado": "2026-10-27T19:37:03Z",
+  "sha256": "3be28183a97d1fb8c2eda5e3068d69f3e118b7c5e599570fb07d32bb1245651c",
+  "observaciones": 3,
+  "desde": "1987-01-01",
+  "hasta": "1989-01-01"
+}

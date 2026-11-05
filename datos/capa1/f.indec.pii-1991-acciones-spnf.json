@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.pii-1991-acciones-spnf",
+  "unidad": "millones de US$",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.indec.pii-1991-acciones-spnf/2026-10-27",
+  "descargado": "2026-10-27T19:38:46Z",
+  "sha256": "bc9a3b6b4e9cadbaba0d381664567aff231992c1fbaacc69b90ff20d6cbe2671",
+  "observaciones": 11,
+  "desde": "1991-01-01",
+  "hasta": "2001-01-01"
+}

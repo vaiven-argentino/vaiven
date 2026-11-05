@@ -27,6 +27,26 @@ def dir_capa1(rutas: Rutas, fuente: dict) -> Path:
     return rutas.raiz / ".crudos" / "capa1"
 
 
+def normalizar_paises(rutas: Rutas, fuente: dict, dir_snapshot: Path) -> dict[str, pd.Series]:
+    """Fuente con dimensión pais (`paises`): una serie por entidad. El CSV de capa 1 queda en formato largo."""
+    archivos = base.leer_archivos(rutas.snapshots, dir_snapshot)
+    df = modulo(fuente).normalizar_largo(archivos)
+    faltan = sorted(set(fuente["paises"]) - set(df["pais"]))
+    if faltan:
+        raise ErrorPipeline(f"{fuente['id']}: la fuente no trajo datos de {', '.join(faltan)}.")
+    destino = dir_capa1(rutas, fuente)
+    destino.mkdir(parents=True, exist_ok=True)
+    largo = df.assign(fecha=df["fecha"].dt.strftime("%Y-%m-%d"))[["fecha", "pais", "valor"]]
+    largo.to_csv(destino / f"{fuente['id']}.csv", index=False, float_format="%.10g", lineterminator="\n")
+    meta = base.leer_meta(dir_snapshot)
+    escribir_json(destino / f"{fuente['id']}.json", {
+        "fuente": fuente["id"], "unidad": fuente["unidad"], "frecuencia": fuente["frecuencia"],
+        "snapshot": dir_snapshot.relative_to(rutas.raiz).as_posix(), "descargado": meta["descargado"],
+        "sha256": meta["sha256"], "observaciones": len(df), "paises": sorted(df["pais"].unique().tolist()),
+    })
+    return {p: serie_desde_df(g[["fecha", "valor"]]) for p, g in df.groupby("pais")}
+
+
 def normalizar(rutas: Rutas, fuente: dict, dir_snapshot: Path) -> pd.Series:
     archivos = base.leer_archivos(rutas.snapshots, dir_snapshot)
     mod = modulo(fuente)

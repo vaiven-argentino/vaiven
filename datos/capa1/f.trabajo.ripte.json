@@ -1,0 +1,11 @@
+{
+  "fuente": "f.trabajo.ripte",
+  "unidad": "pesos corrientes",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.trabajo.ripte/2026-10-27",
+  "descargado": "2026-10-27T19:41:36Z",
+  "sha256": "484db307acce5ebb8bfc6469d719e2cfcb4b531324184e4bf5f6a3c58d5dd417",
+  "observaciones": 386,
+  "desde": "1994-07-01",
+  "hasta": "2026-08-01"
+}

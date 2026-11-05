@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.pii-1991-id-oef",
+  "descargado": "2026-10-27T19:38:42Z",
+  "sha256": "ce2e91dcce51a199e38bd5ed133615545b8432ecd3a68cd77c403449a7700fb6",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_IDO_1991_A_23&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 3621,
+      "sha256": "e7106d34f6e17a808ce8379133510001c4d4e20b17d0c47a4d31e2d817f5958c"
+    }
+  ]
+}

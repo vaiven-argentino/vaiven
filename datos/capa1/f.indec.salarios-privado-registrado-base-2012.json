@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.salarios-privado-registrado-base-2012",
+  "unidad": "índice",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.indec.salarios-privado-registrado-base-2012/2026-10-27",
+  "descargado": "2026-10-27T19:41:37Z",
+  "sha256": "05de533c3035164573a1798cb547057091b353a56995d8485dfb7d05bb5c9e19",
+  "observaciones": 183,
+  "desde": "2001-10-01",
+  "hasta": "2016-12-01"
+}

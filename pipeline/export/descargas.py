@@ -13,11 +13,16 @@ import pandas as pd
 
 
 def tabla_larga(dir_export: Path) -> pd.DataFrame:
+    """Todas las variantes publicadas (con las auxiliares), una fila por fecha; `pais` va vacío en las argentinas."""
     filas = []
-    for ruta in sorted((dir_export / "series").glob("*/*.json")):
+    for ruta in sorted((dir_export / "series").glob("*/*.json")) + sorted((dir_export / "auxiliares").glob("*/*.json")):
         doc = json.loads(ruta.read_text(encoding="utf-8"))
-        filas += [(doc["serie"], doc["variante"], doc["frecuencia"], doc["unidad"], f, v) for f, v in doc["datos"]]
-    return pd.DataFrame(filas, columns=["serie", "variante", "frecuencia", "unidad", "fecha", "valor"])
+        base = (doc["serie"], doc["variante"], doc["frecuencia"], doc["unidad"])
+        if isinstance(doc["datos"], dict):
+            filas += [(*base, ent, f, v) for ent, pares in doc["datos"].items() for f, v in pares]
+        else:
+            filas += [(*base, None, f, v) for f, v in doc["datos"]]
+    return pd.DataFrame(filas, columns=["serie", "variante", "frecuencia", "unidad", "pais", "fecha", "valor"])
 
 
 def generar(dir_export: Path, parquet: bool = True) -> list[Path]:
@@ -29,9 +34,9 @@ def generar(dir_export: Path, parquet: bool = True) -> list[Path]:
 
     ruta_zip = destino / f"vaiven_{version}.zip"
     with zipfile.ZipFile(ruta_zip, "w", compression=zipfile.ZIP_DEFLATED) as z:
-        for csv in sorted((destino / "csv").glob("*/*.csv")):
-            z.write(csv, f"{csv.parent.name}/{csv.name}")
-        for nombre in ("catalogo.json", "datapackage.json", "quiebres.json"):
+        for csv in sorted((destino / "csv").rglob("*.csv")):
+            z.write(csv, csv.relative_to(destino / "csv").as_posix())
+        for nombre in ("catalogo.json", "auxiliares.json", "datapackage.json", "quiebres.json"):
             z.write(dir_export / nombre, nombre)
         licencia = dir_export.parent / "LICENSE-DATOS"
         if licencia.exists():

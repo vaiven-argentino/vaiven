@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Salario real",
+    "subtitle": "Variante: RIPTE, trabajadores estables registrados (desde 1994) · pesos corrientes"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/salario-real/ripte.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "pesos corrientes"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "salario-real",
+      "variante": "ripte",
+      "version_datos": "2026-10-27T19:42:14Z",
+      "cita": "Vaivén (2026). Salario real, variante «ripte». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/salario-real/"
+    }
+  }
+}

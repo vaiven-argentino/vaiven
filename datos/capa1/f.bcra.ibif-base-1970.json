@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.ibif-base-1970",
+  "unidad": "millones de pesos de 1970",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.bcra.ibif-base-1970/2026-10-27",
+  "descargado": "2026-10-27T19:35:14Z",
+  "sha256": "77c7cdaeb4741d093f662a8b4baddd5a22c484b719c01e9173b8f4cd5fc50aa2",
+  "observaciones": 44,
+  "desde": "1970-01-01",
+  "hasta": "1980-10-01"
+}

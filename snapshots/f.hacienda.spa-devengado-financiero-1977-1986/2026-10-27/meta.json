@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spa-devengado-financiero-1977-1986",
+  "descargado": "2026-10-27T19:37:02Z",
+  "sha256": "df45f6ff0e86a7b61031245cb26a8950927a4fe3f85af9e603da185242584482",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.2_NECES_FINANAN_DEVE_0_11_87&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 3857,
+      "sha256": "9deb896258314b703e820cce1a8fd396fe6acc08182ee15d1e836d8905cf4663"
+    }
+  ]
+}

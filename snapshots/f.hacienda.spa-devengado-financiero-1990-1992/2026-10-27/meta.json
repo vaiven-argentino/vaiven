@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spa-devengado-financiero-1990-1992",
+  "descargado": "2026-10-27T19:37:04Z",
+  "sha256": "16ef5226f4dd8ffa8e0ce0dd69bc65f5c5a0e7465db57ab4fdcdfbf7e05deca0",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_NECES_FINANAN_DEVE_0_11_48&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 3666,
+      "sha256": "c91441cdc50b4a8e3a3abfa4ee39c987f0dfee4f0e6a458ed55f8595cf45f657"
+    }
+  ]
+}

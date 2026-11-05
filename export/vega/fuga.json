@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Fuga de capitales",
+    "subtitle": "Variante: Formación de activos externos, balance cambiario (desde 2003) · millones de US$"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/fuga/fae.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de US$"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "fuga",
+      "variante": "fae",
+      "version_datos": "2026-10-27T19:41:49Z",
+      "cita": "Vaivén (2026). Fuga de capitales, variante «fae». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/fuga/"
+    }
+  }
+}

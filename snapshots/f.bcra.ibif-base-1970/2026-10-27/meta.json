@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.ibif-base-1970",
+  "descargado": "2026-10-27T19:35:14Z",
+  "sha256": "77c7cdaeb4741d093f662a8b4baddd5a22c484b719c01e9173b8f4cd5fc50aa2",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=266.1_IBIF_1970_0_4&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4305,
+      "sha256": "12b10418638127d5e643403a095c3ebf8db31c652518e59c1d0a02cc66777194"
+    }
+  ]
+}

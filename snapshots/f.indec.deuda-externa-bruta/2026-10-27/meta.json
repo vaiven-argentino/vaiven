@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.deuda-externa-bruta",
+  "descargado": "2026-10-27T19:38:47Z",
+  "sha256": "e2c446882869178dddec3c428c6f7eb3e72dc23c97c52a815c8934434f0259e5",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=161.1_TL_DEUDRNA_0_0_19&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6225,
+      "sha256": "623d9dabd27b03766b92fc7110ce50766ddcceaca31469f71fa860a6616c81e3"
+    }
+  ]
+}

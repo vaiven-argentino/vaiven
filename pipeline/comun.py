@@ -140,3 +140,11 @@ def escribir_csv_serie(ruta: Path, s: pd.Series) -> None:
     ruta.parent.mkdir(parents=True, exist_ok=True)
     df = pd.DataFrame({"fecha": [f.strftime("%Y-%m-%d") for f in s.index], "valor": s.to_numpy(dtype=float)})
     df.to_csv(ruta, index=False, float_format="%.10g", lineterminator="\n")
+
+
+def escribir_csv_entidades(ruta: Path, por_entidad: dict[str, pd.Series]) -> None:
+    """Capa 2 de una serie con dimensión pais: formato largo (fecha, pais, valor)."""
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    partes = [pd.DataFrame({"fecha": [f.strftime("%Y-%m-%d") for f in s.index], "pais": ent, "valor": s.to_numpy(dtype=float)})
+              for ent, s in sorted(por_entidad.items())]
+    pd.concat(partes).to_csv(ruta, index=False, float_format="%.10g", lineterminator="\n")

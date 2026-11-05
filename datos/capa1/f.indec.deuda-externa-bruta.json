@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.deuda-externa-bruta",
+  "unidad": "millones de US$",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.indec.deuda-externa-bruta/2026-10-27",
+  "descargado": "2026-10-27T19:38:47Z",
+  "sha256": "e2c446882869178dddec3c428c6f7eb3e72dc23c97c52a815c8934434f0259e5",
+  "observaciones": 74,
+  "desde": "2006-01-01",
+  "hasta": "2024-04-01"
+}

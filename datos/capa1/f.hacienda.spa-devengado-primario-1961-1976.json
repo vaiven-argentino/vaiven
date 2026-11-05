@@ -1,0 +1,11 @@
+{
+  "fuente": "f.hacienda.spa-devengado-primario-1961-1976",
+  "unidad": "australes (rótulo de la distribución: miles de australes)",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.hacienda.spa-devengado-primario-1961-1976/2026-10-27",
+  "descargado": "2026-10-27T19:37:05Z",
+  "sha256": "1fdeb53d5a64237f3600867bccf0d0bbdbf48d31fea667fd0235e66010367aa2",
+  "observaciones": 16,
+  "desde": "1961-01-01",
+  "hasta": "1976-01-01"
+}

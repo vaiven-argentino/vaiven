@@ -1,5 +1,29 @@
 [
   {
+    "id": "q.agregados.m2-2019",
+    "desde": "2019-08",
+    "hasta": "2019-08",
+    "tipo": "metodologia",
+    "descripcion": "Desde agosto de 2019, el M2 de las series históricas de estadísticas monetarias deja de coincidir con cualquier agregado publicado por el BCRA (en 24 meses queda por debajo del M1) y no hay documentación del cambio. Vaivén no lo usa: el M1 de la misma serie sigue coincidiendo con el del Panorama. A consultar con el BCRA.",
+    "afecta": [
+      "agregados.m1"
+    ],
+    "fuente": "Comparación de 174.1_AGADOS_M2_0_0_28 con bcra_3544 y con el Informe Monetario Mensual del BCRA (27/10/2026)."
+  },
+  {
+    "id": "q.agregados.panorama-2021",
+    "desde": "2021-05",
+    "hasta": "2021-05",
+    "tipo": "cobertura",
+    "descripcion": "El Panorama monetario y financiero del BCRA en datos.gob.ar termina en mayo de 2021. Para M2 y M3 no hay otra copia abierta con la misma definición que llegue a hoy: la del M2 de las series históricas cambia sin aviso en agosto de 2019 (ver la variante M1).",
+    "afecta": [
+      "agregados.m2-pesos",
+      "agregados.m2-total",
+      "agregados.m3-total"
+    ],
+    "fuente": "datos.gob.ar, bcra_3543, bcra_3544 y bcra_3554 (27/10/2026)."
+  },
+  {
     "id": "q.base-monetaria.caida-2026",
     "desde": "2026-06",
     "hasta": "2026-06",
@@ -91,6 +115,56 @@
     "hasta": null
   },
   {
+    "id": "q.deuda-externa.componentes-bm",
+    "desde": "1970",
+    "tipo": "metodologia",
+    "descripcion": "La pública y la privada del Banco Mundial son solo de largo plazo: no suman el total, que además incluye el crédito del FMI y la deuda de corto plazo (por ejemplo, en 1990: 47.154 + 1.800 de largo plazo, 3.083 del FMI y 10.440 de corto plazo, sobre un total de 62.478 millones).",
+    "afecta": [
+      "deuda-externa.publica",
+      "deuda-externa.privada",
+      "deuda-publica.externa-bm"
+    ],
+    "fuente": "Banco Mundial, International Debt Statistics.",
+    "hasta": null
+  },
+  {
+    "id": "q.deuda-externa.criterios",
+    "desde": "1970",
+    "tipo": "metodologia",
+    "descripcion": "El Banco Mundial y el INDEC registran la deuda externa con criterios distintos y sus cifras no coinciden: en 1993–2000 el Banco Mundial da entre 4 % menos y 10 % más que el INDEC, pero en 1991, 1992 y 2001 da entre 44 % y 66 % más, y entre 2006 y 2023 da entre 21 % menos y 6 % más (−13 % en 2006, −12 % en 2023). Las variantes no se unen: para comparar en el tiempo, conviene usar una sola.",
+    "afecta": [
+      "deuda-externa.total",
+      "deuda-externa.publica",
+      "deuda-externa.privada",
+      "deuda-externa.indec-1991-2001",
+      "deuda-externa.indec"
+    ],
+    "fuente": "Comparación de DT.DOD.DECT.CD (Banco Mundial) con la posición de inversión base 1991 y el cuarto trimestre de la serie 161.1 del INDEC (27/10/2026).",
+    "hasta": null
+  },
+  {
+    "id": "q.deuda-externa.derivada-1991",
+    "desde": "1991",
+    "hasta": "2001",
+    "tipo": "metodologia",
+    "descripcion": "Serie calculada por Vaivén con la posición de inversión base 1991 del INDEC (pasivos externos menos inversión directa y acciones). No hay datos del INDEC para 2002–2005 en datos.gob.ar, así que no se une con la serie desde 2006.",
+    "afecta": [
+      "deuda-externa.indec-1991-2001"
+    ],
+    "fuente": "INDEC, posición de inversión internacional base 1991 (datos.gob.ar, dataset 86)."
+  },
+  {
+    "id": "q.deuda-publica.solo-externa",
+    "desde": "1970",
+    "tipo": "cobertura",
+    "descripcion": "No es la deuda pública total: es solo la deuda externa de largo plazo del sector público (y la privada con garantía pública), según el Banco Mundial. No incluye la deuda pública en moneda local con residentes. La serie total de la Secretaría de Finanzas y la del FMI están pendientes de licencia.",
+    "afecta": [
+      "deuda-publica.externa-bm"
+    ],
+    "fuente": "Banco Mundial, International Debt Statistics.",
+    "hasta": null
+  },
+  {
     "id": "q.fiscal.cobertura-spn",
     "desde": "1993-01",
     "tipo": "cobertura",
@@ -101,6 +175,30 @@
     ],
     "fuente": "Secretaría de Hacienda, esquema Ahorro-Inversión-Financiamiento del Sector Público Nacional.",
     "hasta": null
+  },
+  {
+    "id": "q.fiscal.devengado-spa",
+    "desde": "1970",
+    "hasta": "1992",
+    "tipo": "cobertura",
+    "descripcion": "Otra cobertura y otra base que la serie desde 1993: Sector Público Argentino (incluye provincias, Ciudad de Buenos Aires y empresas públicas) y base devengado, contra el Sector Público Nacional en base caja. No se unen.",
+    "afecta": [
+      "resultado-fiscal.financiero-devengado",
+      "resultado-fiscal.primario-devengado"
+    ],
+    "fuente": "Secretaría de Hacienda, Cuenta AIF base devengado (datos.gob.ar, dataset 442)."
+  },
+  {
+    "id": "q.fiscal.devengado-unidad",
+    "desde": "1970",
+    "hasta": "1992",
+    "tipo": "metodologia",
+    "descripcion": "Unidad inferida por Vaivén: Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen. La unidad que se usa es la que da déficits plausibles y sin saltos en % del PIB. Contrastado con cifras publicadas (déficit en % del PIB nominal del Banco Mundial): 1983 coincide (9,5 % contra 9,6 % según Hacienda); 1975 da 2,7 puntos menos; 1981, 1987 y 1989 difieren de 1 a 1,5 puntos; 1991–1992 no coincide. Con el PIB retropolado de Vaivén (más alto antes de 2004), los porcentajes dan alrededor de 8 % menos (1983: 8,8 %). Usar con cautela.",
+    "afecta": [
+      "resultado-fiscal.financiero-devengado",
+      "resultado-fiscal.primario-devengado"
+    ],
+    "fuente": "Cetrángolo et al., «La sostenibilidad de la política fiscal en América Latina: el caso argentino», BID/CEDES, R-315; Lazzari, con datos de la ONP (2004)."
   },
   {
     "id": "q.fiscal.metodologia-2007",
@@ -138,15 +236,112 @@
     "fuente": "datos.gob.ar, 379.7_RESULTADO_006__43_20 y 379.7_RESULTADO_006__23_14 (24/10/2026)."
   },
   {
+    "id": "q.fuga.mediciones",
+    "desde": "1991",
+    "tipo": "metodologia",
+    "descripcion": "No hay una medición oficial única de la fuga de capitales. La formación de activos externos del balance cambiario mide compras netas de divisas en el mercado de cambios; la variación del stock de activos externos incluye además los cambios de valor; el método residual (pendiente) la estima con el balance de pagos. Las variantes miden cosas distintas y no se comparan entre sí.",
+    "afecta": [
+      "fuga.fae",
+      "fuga.activos-externos",
+      "fuga.variacion-activos"
+    ],
+    "fuente": "BCRA, balance cambiario; INDEC, posición de inversión internacional.",
+    "hasta": null
+  },
+  {
+    "id": "q.fuga.otros-sectores-2006",
+    "desde": "2006",
+    "hasta": "2006",
+    "tipo": "metodologia",
+    "descripcion": "Cambio de fuente: hasta 2005, los activos externos del sector privado según el balance de pagos del BCRA; desde 2006, los activos de «otros sectores» de la posición de inversión internacional del INDEC (otras sociedades financieras, sociedades no financieras y hogares). En 2006–2009, cuando hay las dos, difieren menos de 0,3 %.",
+    "afecta": [
+      "fuga.activos-externos",
+      "fuga.variacion-activos"
+    ],
+    "fuente": "Comparación de 336.1_ACTIVOS_SEGOS__27 con 144.3_ACVOSOTLES_0_A_30 en datos.gob.ar (24/10/2026)."
+  },
+  {
+    "id": "q.fuga.revaluaciones",
+    "desde": "1992",
+    "tipo": "metodologia",
+    "descripcion": "La variación del stock incluye los cambios de valor de los activos (precios de los títulos y tipos de cambio), no solo las compras netas: un año con caída de precios puede dar una variación negativa aunque haya habido compras.",
+    "afecta": [
+      "fuga.variacion-activos"
+    ],
+    "fuente": "Vaivén (método de la variante).",
+    "hasta": null
+  },
+  {
     "id": "q.importaciones.fob-cif-1992",
     "desde": "1992",
     "hasta": "1992",
     "tipo": "metodologia",
     "descripcion": "Cambio de fuente y de valuación: hasta 1991, las importaciones del balance de pagos del BCRA, que siguen el criterio FOB del balance de pagos (la metadata no lo declara); desde 1992, las del Intercambio Comercial Argentino del INDEC, a valor CIF (incluyen fletes y seguros). En 1992–2009, cuando hay datos de las dos fuentes, la del BCRA es entre 4,3 % y 7,2 % más baja. Los tramos se unen sin ajustar.",
     "afecta": [
-      "importaciones.oficial"
+      "importaciones.oficial",
+      "saldo-comercial.oficial"
     ],
     "fuente": "Comparación de 335.1_CUENTA_CONES_IV__42 con 76.1_ITG_0_A_17 en datos.gob.ar (24/10/2026)."
+  },
+  {
+    "id": "q.int.agregados",
+    "desde": "1961",
+    "tipo": "cobertura",
+    "descripcion": "Los agregados (Mundo, América Latina y el Caribe, Unión Europea y Zona del euro) se calculan con la composición actual de cada grupo para todos los años, no con la que tenían en cada momento.",
+    "afecta": [
+      "int-pib.banco-mundial",
+      "int-pib-per-capita.banco-mundial"
+    ],
+    "fuente": "Banco Mundial, Indicadores del Desarrollo Mundial.",
+    "hasta": null
+  },
+  {
+    "id": "q.int.argentina",
+    "desde": "1961",
+    "tipo": "metodologia",
+    "descripcion": "Argentina figura con la serie del Banco Mundial, para comparar con la misma metodología que el resto de los países. Puede diferir del PIB real del INDEC (ACT-01), que es la serie propia de Vaivén para la Argentina.",
+    "afecta": [
+      "int-pib.banco-mundial",
+      "int-pib-per-capita.banco-mundial"
+    ],
+    "fuente": "Banco Mundial; INDEC.",
+    "hasta": null
+  },
+  {
+    "id": "q.int.revisiones",
+    "desde": "1961",
+    "tipo": "metodologia",
+    "descripcion": "El Banco Mundial revisa estos indicadores todos los años (cambios de base de los países, nuevas estimaciones): los valores históricos pueden cambiar de una versión a otra.",
+    "afecta": [
+      "int-pib.banco-mundial",
+      "int-pib-per-capita.banco-mundial"
+    ],
+    "fuente": "Banco Mundial, Indicadores del Desarrollo Mundial.",
+    "hasta": null
+  },
+  {
+    "id": "q.inversion.base-2004",
+    "desde": "2004-01",
+    "hasta": "2004-01",
+    "tipo": "cambio_de_base",
+    "descripcion": "Cambio de base: desde 2004, la serie es la de las cuentas nacionales del INDEC a precios de 2004; antes, la de la base 1993. En los años que se superponen (2005–2012), las tasas anuales de la IBIF difieren mucho entre las dos bases (en 2009, −10,2 % en la base 1993 y −22,6 % en la base 2004).",
+    "afecta": [
+      "inversion.retropolada",
+      "inversion.pct-pib-corrientes"
+    ],
+    "fuente": "Comparación de 2.2_DGI_1993_T_19 con 4.2_DGIT_2004_T_25 (sumas anuales) en datos.gob.ar (27/10/2026)."
+  },
+  {
+    "id": "q.inversion.hueco-1991-1992",
+    "desde": "1991-01",
+    "hasta": "1992-10",
+    "tipo": "cobertura",
+    "descripcion": "No hay IBIF publicada para 1991 y 1992: la serie a precios de 1970 termina en 1990, la de 1993 empieza en 1993, y la base 1986 del BCRA solo trae la inversión bruta interna total, con variación de existencias. Vaivén no completa esos años: la serie desde 1993 y la de 1970–1990 son variantes separadas.",
+    "afecta": [
+      "inversion.retropolada",
+      "inversion.base-1970"
+    ],
+    "fuente": "datos.gob.ar, cuentas nacionales del BCRA y del INDEC (27/10/2026)."
   },
   {
     "id": "q.ipc-eeuu.octubre-2025",
@@ -155,7 +350,9 @@
     "tipo": "cobertura",
     "descripcion": "El BLS no relevó precios en octubre de 2025 por el cierre del gobierno federal, así que ese mes no tiene dato.",
     "afecta": [
-      "ipc-eeuu.ocde"
+      "ipc-eeuu.ocde",
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias"
     ],
     "fuente": "BLS, «2025 Federal Government Shutdown Impact on the Consumer Price Index»."
   },
@@ -166,7 +363,8 @@
     "tipo": "intervencion",
     "descripcion": "Intervención del INDEC. Desde 2016, el INDEC advierte que la información publicada para este período debe considerarse con reservas. Las mediciones provinciales y privadas de esos años registran inflaciones más altas.",
     "afecta": [
-      "ipc.oficial"
+      "ipc.oficial",
+      "tcr-bilateral.oficial"
     ],
     "fuente": "INDEC, advertencia incluida en sus publicaciones desde 2016."
   },
@@ -177,7 +375,8 @@
     "tipo": "cobertura",
     "descripcion": "Cambios de cobertura: Gran Buenos Aires hasta 2013, Nacional Urbano (IPCNu) en 2014–2015, Gran Buenos Aires otra vez entre mayo y diciembre de 2016 y Nacional desde enero de 2017.",
     "afecta": [
-      "ipc.oficial"
+      "ipc.oficial",
+      "tcr-bilateral.oficial"
     ],
     "fuente": "INDEC, metodologías del IPC-GBA (2008), IPCNu (2014) e IPC (2016)."
   },
@@ -189,7 +388,9 @@
     "descripcion": "Emergencia estadística (Decreto 55/2016): no hay IPC oficial entre noviembre de 2015 y abril de 2016. En la variante oficial, las tasas de esos meses salen del IPC de la Ciudad de Buenos Aires.",
     "afecta": [
       "ipc.oficial",
-      "ipc.provincias"
+      "ipc.provincias",
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias"
     ],
     "fuente": "Decreto 55/2016; series de datos.gob.ar."
   },
@@ -200,7 +401,8 @@
     "tipo": "metodologia",
     "descripcion": "En la variante «provincias», las tasas de 2007-01 a 2012-07 son las del IPC de San Luis y las de 2012-08 a 2016-04, las del IPC de la Ciudad de Buenos Aires: miden canastas y jurisdicciones distintas de las del INDEC.",
     "afecta": [
-      "ipc.provincias"
+      "ipc.provincias",
+      "tcr-bilateral.provincias"
     ],
     "fuente": "Dirección Provincial de Estadística y Censos de San Luis; Instituto de Estadística y Censos de la CABA."
   },
@@ -295,6 +497,30 @@
     "hasta": null
   },
   {
+    "id": "q.salario.hueco-1976-1984",
+    "desde": "1976",
+    "hasta": "1984",
+    "tipo": "cobertura",
+    "descripcion": "No hay una serie abierta de salario real para 1976–1984 (la de ArgenData es CC BY-NC-ND, e ILOSTAT y CEPAL no tienen esos años); las series publicadas empiezan en 1994 (RIPTE) y 2001 (Índice de salarios).",
+    "afecta": [
+      "salario-real.ripte",
+      "salario-real.indice-salarios"
+    ],
+    "fuente": "Búsqueda de fuentes de Vaivén (24/10/2026)."
+  },
+  {
+    "id": "q.salario.registrados",
+    "desde": "1994-07",
+    "tipo": "cobertura",
+    "descripcion": "Cubre solo a los asalariados registrados (el RIPTE, a los estables, con al menos 13 meses en el mismo empleo). Los asalariados no registrados y los cuentapropistas no están incluidos.",
+    "afecta": [
+      "salario-real.ripte",
+      "salario-real.indice-salarios"
+    ],
+    "fuente": "Secretaría de Trabajo (RIPTE); INDEC (Índice de salarios).",
+    "hasta": null
+  },
+  {
     "id": "q.tasa.nominal-anual",
     "desde": "1970-01",
     "tipo": "metodologia",
@@ -336,7 +562,10 @@
     "descripcion": "Mercados cambiarios desdoblados. En estos años hubo, por períodos, un mercado oficial o comercial y otro financiero o libre. La serie del BCRA no sigue siempre el mismo: comparada con las series diarias, coincide con el tipo único en 1970–1971 y 1982, con el financiero en septiembre de 1981, con el oficial en junio de 1987, y queda por encima del oficial en octubre de 1988 y enero de 1989 (15,11 y 17,51 australes, contra 12,36 y 13,94).",
     "afecta": [
       "tc-oficial.pesos-actuales",
-      "tc-oficial.moneda-de-epoca"
+      "tc-oficial.moneda-de-epoca",
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias",
+      "pib-dolares.anual"
     ],
     "fuente": "Comparación de 174.1_T_DE_CANTO_0_0_37 con las series diarias del dataset 175 de datos.gob.ar (24/10/2026)."
   },
@@ -350,6 +579,18 @@
       "tc-oficial.moneda-de-epoca"
     ],
     "fuente": "metadatos/signos_monetarios.yaml"
+  },
+  {
+    "id": "q.tcr-bilateral.fin-de-mes",
+    "desde": "1970-01",
+    "tipo": "metodologia",
+    "descripcion": "El tipo de cambio nominal es el valor de fin de mes de la serie del BCRA (CAM-01), y los IPC son promedios del mes. En los meses de devaluación (por ejemplo, diciembre de 2015 o abril de 2002), el índice refleja el tipo de cambio del último día y no el promedio del mes.",
+    "afecta": [
+      "tcr-bilateral.oficial",
+      "tcr-bilateral.provincias"
+    ],
+    "fuente": "Vaivén (método de la variante).",
+    "hasta": null
   },
   {
     "id": "q.tcr.base-1997",

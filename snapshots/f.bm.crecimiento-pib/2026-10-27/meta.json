@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bm.crecimiento-pib",
+  "descargado": "2026-10-27T19:44:21Z",
+  "sha256": "3273c53a05871e118d3c94cbc103a1af2fba4223e8b67c2f8bba7681325de0c4",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://api.worldbank.org/v2/country/ARG;USA;CHN;MEX;BRA;BOL;CHL;COL;ECU;GUY;PRY;PER;SUR;URY;VEN;WLD;LCN;EUU;EMU/indicator/NY.GDP.MKTP.KD.ZG?format=json&per_page=20000",
+      "bytes": 270467,
+      "sha256": "b8a44582bba4ff56bffcafdc76b657808aa96863dd06877d3b32ceba95852cad"
+    }
+  ]
+}

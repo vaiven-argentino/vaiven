@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.m3-total-panorama",
+  "descargado": "2026-10-27T19:33:08Z",
+  "sha256": "65c0660bc93b8f98b41b7a3beac052b1a5d1e7bff96a1b05061cd25a1f9ef652",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=bcra_3554&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 35280,
+      "sha256": "924167a2b2dbc242b88347e8b277c75e63e8365ad3d16d412dcf66c3ce1e5027"
+    }
+  ]
+}

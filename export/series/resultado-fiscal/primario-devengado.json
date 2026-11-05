@@ -1,0 +1,170 @@
+{
+  "esquema": "1.2",
+  "id": "resultado-fiscal.primario-devengado",
+  "serie": "resultado-fiscal",
+  "codigo": "FIS-01",
+  "nombre": "Resultado primario y financiero",
+  "variante": "primario-devengado",
+  "nombre_variante": "Resultado primario, base devengado, Sector Público Argentino (1970–1992)",
+  "es_variante_por_defecto": false,
+  "unidad": "millones de pesos corrientes",
+  "tipo": "flujo",
+  "agregacion": "suma",
+  "frecuencia": "anual",
+  "moneda": "pesos_actuales",
+  "metodo": "Superávit primario total de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público Argentino (Secretaría de Hacienda), en millones de pesos actuales, con la misma unidad inferida por tramo que el resultado financiero devengado. No se une con la serie en base caja.",
+  "empalme": "yuxtaponer",
+  "transformaciones": [
+    "frecuencia",
+    "media_movil",
+    "real",
+    "en_dolares",
+    "pct_pib"
+  ],
+  "insumos": {
+    "real": {
+      "opciones": [
+        {
+          "id": "ipc.oficial",
+          "archivo": "series/ipc/oficial.json",
+          "nombre": "Oficial INDEC, sin corregir"
+        },
+        {
+          "id": "ipc.provincias",
+          "archivo": "series/ipc/provincias.json",
+          "nombre": "Provincias (San Luis y Ciudad de Buenos Aires) en 2007–2016"
+        }
+      ],
+      "por_defecto": "ipc.oficial",
+      "unidad": "millones de pesos de {base}"
+    },
+    "en_dolares": {
+      "opciones": [
+        {
+          "id": "tc-oficial.pesos-actuales",
+          "archivo": "series/tc-oficial/pesos-actuales.json",
+          "nombre": "En pesos actuales"
+        }
+      ],
+      "por_defecto": "tc-oficial.pesos-actuales",
+      "unidad": "millones de US$"
+    }
+  },
+  "auxiliar": false,
+  "tramos": [
+    {
+      "fuente": "f.hacienda.spa-devengado-primario-1961-1976",
+      "desde": "1970",
+      "hasta": "1976",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-primario-1977-1986",
+      "desde": "1977",
+      "hasta": "1984",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-primario-1977-1986",
+      "desde": "1985",
+      "hasta": "1986",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-primario-1987-1989",
+      "desde": "1987",
+      "hasta": "1989",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.hacienda.spa-devengado-primario-1990-1992",
+      "desde": "1990",
+      "hasta": "1992",
+      "frecuencia": "anual"
+    }
+  ],
+  "cobertura": {
+    "desde": "1970",
+    "hasta": "1992"
+  },
+  "advertencias": [
+    {
+      "id": "q.fiscal.devengado-unidad",
+      "desde": "1970",
+      "hasta": "1992",
+      "tipo": "metodologia",
+      "descripcion": "Unidad inferida por Vaivén: Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen. La unidad que se usa es la que da déficits plausibles y sin saltos en % del PIB. Contrastado con cifras publicadas (déficit en % del PIB nominal del Banco Mundial): 1983 coincide (9,5 % contra 9,6 % según Hacienda); 1975 da 2,7 puntos menos; 1981, 1987 y 1989 difieren de 1 a 1,5 puntos; 1991–1992 no coincide. Con el PIB retropolado de Vaivén (más alto antes de 2004), los porcentajes dan alrededor de 8 % menos (1983: 8,8 %). Usar con cautela."
+    },
+    {
+      "id": "q.fiscal.devengado-spa",
+      "desde": "1970",
+      "hasta": "1992",
+      "tipo": "cobertura",
+      "descripcion": "Otra cobertura y otra base que la serie desde 1993: Sector Público Argentino (incluye provincias, Ciudad de Buenos Aires y empresas públicas) y base devengado, contra el Sector Público Nacional en base caja. No se unen."
+    }
+  ],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.hacienda.spa-devengado-primario-1961-1976",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Superávit primario total",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.1_SUPERAVIT_TAL_DEVE_0_20_67",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.1_SUPERAVIT_TAL_DEVE_0_20_67"
+    },
+    {
+      "id": "f.hacienda.spa-devengado-primario-1977-1986",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Superávit primario total",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.2_SUPERAVIT_TAL_DEVE_0_20_67",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.2_SUPERAVIT_TAL_DEVE_0_20_67"
+    },
+    {
+      "id": "f.hacienda.spa-devengado-primario-1987-1989",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Superávit primario total",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.3_SUPERAVIT_TAL_DEVE_0_20_16",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.3_SUPERAVIT_TAL_DEVE_0_20_16"
+    },
+    {
+      "id": "f.hacienda.spa-devengado-primario-1990-1992",
+      "organismo": "Secretaría de Hacienda, Ministerio de Economía",
+      "nombre": "Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Superávit primario total",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_SUPERAVIT_TAL_DEVE_0_20_28",
+      "licencia": "CC-BY-4.0",
+      "id_api": "439.4_SUPERAVIT_TAL_DEVE_0_20_28"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). Resultado primario y financiero, variante «primario-devengado». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/resultado-fiscal/primario-devengado/",
+  "version_datos": "2026-10-27T19:37:25Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1970", -9.706e-09],
+    ["1971", -4.447e-08],
+    ["1972", -9.8356e-08],
+    ["1973", -2.30706e-07],
+    ["1974", -3.36045e-07],
+    ["1975", -1.975145e-06],
+    ["1976", -7.33828e-06],
+    ["1977", -5.633e-06],
+    ["1978", -1.8064e-05],
+    ["1979", -6.0334e-05],
+    ["1980", -0.00013128],
+    ["1981", -0.00036824],
+    ["1982", -0.0007489],
+    ["1983", -0.006444],
+    ["1984", -0.0372003],
+    ["1985", -0.02555],
+    ["1986", -0.08896],
+    ["1987", -0.8742],
+    ["1988", -5.248],
+    ["1989", -109.0073],
+    ["1990", -1947.2],
+    ["1991", 48.9],
+    ["1992", 3528.8]
+  ]
+}

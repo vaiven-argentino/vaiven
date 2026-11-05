@@ -1,0 +1,81 @@
+id: salario-real
+codigo: TRA-03
+nombre: Salario real
+bloque: Trabajo e ingresos
+prioridad: A
+definicion: >-
+  Salarios nominales de los trabajadores registrados, para ver en términos reales con la medida «real» (deflactados
+  con la variante elegida del IPC). La ficha arranca en términos reales, con el IPC oficial.
+unidad: pesos corrientes
+tipo: precio
+agregacion: promedio
+frecuencia: mensual
+moneda: pesos_actuales
+cobertura: {desde: 1994-07, hasta: hoy}
+variante_por_defecto: ripte
+vista_inicial: {transformacion: nivel, medida: real}
+variantes:
+  - id: ripte
+    nombre: RIPTE, trabajadores estables registrados (desde 1994)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Remuneración imponible promedio de los trabajadores estables (RIPTE) de la Secretaría de Trabajo, en pesos
+      corrientes, sin cambios. Cubre a los asalariados registrados con al menos 13 meses en el mismo empleo.
+    tramos:
+      - {fuente: f.trabajo.ripte, desde: 1994-07}
+    excluir:
+      - fecha: 2026-08
+        motivo: >-
+          La fuente publica para agosto de 2026 exactamente el mismo valor que para junio (1.915.878,76 pesos),
+          después de 1.946.028,12 en julio: probable error de la fuente, a confirmar.
+    advertencias: [q.salario.registrados, q.salario.hueco-1976-1984]
+    unidades_medida: {real: 'pesos de {base}', en_dolares: US$}
+  - id: indice-salarios
+    nombre: Índice de salarios del INDEC, sector privado registrado (desde 2001)
+    estado: publicada
+    unidad: índice oct. 2016 = 100
+    empalme: encadenar_tasas
+    metodo: >-
+      Índice de salarios del INDEC para el sector privado registrado: las tasas de la base 2012 (serie con las
+      modificaciones del Decreto 381/07 desde enero de 2008) hasta septiembre de 2016, encadenadas a la base
+      octubre 2016 desde entonces, que da el nivel. En 2015–2016, donde se superponen, sus tasas mensuales difieren
+      como máximo 0,02 puntos. El nivel general no se puede encadenar: no hay datos entre noviembre de 2015 y
+      septiembre de 2016.
+    tramos:
+      - {fuente: f.indec.salarios-privado-registrado-base-2012, desde: 2001-10, hasta: 2016-09}
+      - {fuente: f.indec.salarios-privado-registrado-base-2016, desde: 2016-10}
+    continuidad:
+      - {a: f.indec.salarios-privado-registrado-base-2012, b: f.indec.salarios-privado-registrado-base-2016, desde: 2015-11, hasta: 2016-12, en: tasas, tolerancia: 0.1}
+    advertencias: [q.salario.registrados, q.salario.hueco-1976-1984]
+    unidades_medida: {real: 'índice, a precios de {base}'}
+    transformaciones: [var_mensual, var_interanual, base_100, frecuencia, media_movil, real]
+  - id: iso
+    nombre: Índice de Salarios por Obrero (1990–2015)
+    estado: pendiente
+    nota: Pendiente para una fase siguiente.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.trabajo.ripte, desde: 1994-07}
+  - id: industria-historica
+    nombre: Salario industrial histórico (1970–1975 y 1985–1990)
+    estado: pendiente
+    nota: >-
+      Pendiente. Hay series de salarios de convenio de la industria hasta 1975 y de salario industrial en 1985–1990
+      (con valores a revisar), pero ninguna serie abierta para 1976–1984: la de ArgenData es CC BY-NC-ND, e ILOSTAT y
+      CEPAL no tienen esos años.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.trabajo.ripte, desde: 1994-07}
+validacion:
+  min: 0
+  var_min: -20
+  var_max: 40
+  umbral_revision_pct: 0.5
+quiebres: [q.salario.registrados, q.salario.hueco-1976-1984]
+transformaciones: [var_mensual, var_interanual, base_100, frecuencia, media_movil, real, en_dolares]
+fuentes: [f.trabajo.ripte, f.indec.salarios-privado-registrado-base-2012, f.indec.salarios-privado-registrado-base-2016]
+bibliografia: [DF1990-C4, FF1990-C5, FF1990-C8, OS2006-G4, DLB1993-A4, SCH1998c4-C1, CENDA2010-G3, CENDA2010-G14, DF2013-C1, DF2013-G4, DF2013-C2, CENDA2004-G2]
+licencia_derivado: CC-BY-4.0

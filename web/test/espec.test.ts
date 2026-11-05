@@ -3,14 +3,17 @@ import { join } from "node:path";
 import { transformar } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
 import { especificacion, filas, reservaSuperior, topeY, ubicarMarcadores, type Tema } from "../src/graficos/espec";
+import type { SerieExportada } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../src/lib/export";
+
+type Doc = DocumentoSerie & SerieExportada;
 import { numerarQuiebres } from "../src/lib/ficha";
 
-const leer = (s: string, v: string): DocumentoSerie =>
+const leer = (s: string, v: string): Doc =>
   JSON.parse(readFileSync(join(import.meta.dirname, "..", "..", "export", "series", s, `${v}.json`), "utf-8"));
 const tema: Tema = { fondo: "#fff", texto: "#000", secundario: "#555", linea: "#ddd", banda: "#eee", borde: "#777", serie: "#00f", fuente: "sans-serif" };
 
-function capas(doc: DocumentoSerie, opciones = {}) {
+function capas(doc: Doc, opciones = {}) {
   const resultado = transformar(doc, opciones);
   const spec = especificacion({
     resultado, tramos: doc.tramos, empalme: doc.empalme, quiebres: numerarQuiebres(doc), tema, esVariacion: false,

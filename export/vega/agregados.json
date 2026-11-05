@@ -1,0 +1,40 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Agregados monetarios M1, M2 y M3",
+    "subtitle": "Variante: M1 en pesos (desde 1970) · millones de pesos actuales"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/agregados/m1.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de pesos actuales",
+      "scale": {
+        "type": "log"
+      }
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "agregados",
+      "variante": "m1",
+      "version_datos": "2026-10-27T19:33:01Z",
+      "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m1». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/agregados/"
+    }
+  }
+}

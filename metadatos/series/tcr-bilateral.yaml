@@ -1,0 +1,69 @@
+id: tcr-bilateral
+codigo: CAM-04
+nombre: Tipo de cambio real bilateral con EE.UU.
+bloque: Cambiario
+prioridad: A
+definicion: >-
+  Tipo de cambio nominal oficial (pesos por dólar) multiplicado por el IPC de Estados Unidos y dividido por el IPC
+  argentino, como índice con diciembre de 2015 = 100. Un aumento es una depreciación real del peso frente al dólar.
+unidad: índice dic. 2015 = 100
+tipo: precio
+agregacion: promedio
+frecuencia: mensual
+cobertura: {desde: 1970-01, hasta: hoy}
+variante_por_defecto: oficial
+vista_inicial: {transformacion: nivel}
+variantes:
+  - id: oficial
+    nombre: Con el IPC oficial del INDEC
+    estado: publicada
+    empalme: derivar
+    operacion: tcr
+    operandos: [tc-oficial.pesos-actuales, ipc-eeuu.ocde, ipc.oficial]
+    base: 2015-12
+    metodo: >-
+      Tipo de cambio oficial en pesos actuales (CAM-01, valor de fin de mes) × IPC de Estados Unidos (OCDE) ÷ IPC
+      argentino (PRE-01, variante oficial), llevado a diciembre de 2015 = 100. El tipo de cambio es el de fin de
+      mes y los IPC, promedios del mes.
+    tramos:
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01, rol: insumo}
+      - {fuente: f.ocde.ipc-eeuu, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-historico-1943-2008, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-gba-base-2008, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-nu-base-2013, desde: 1970-01, rol: insumo}
+      - {fuente: f.caba.ipcba-base-2011-2012, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-gba-base-2016, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-nacional-base-2016, desde: 1970-01, rol: insumo}
+    advertencias: [q.tcr-bilateral.fin-de-mes, q.tc.mercados-desdoblados, q.ipc.2007-2015, q.ipc.emergencia-2016, q.ipc.cobertura, q.ipc-eeuu.octubre-2025]
+  - id: provincias
+    nombre: Con el IPC de provincias en 2007–2016
+    estado: publicada
+    empalme: derivar
+    operacion: tcr
+    operandos: [tc-oficial.pesos-actuales, ipc-eeuu.ocde, ipc.provincias]
+    base: 2015-12
+    metodo: >-
+      Igual que la variante oficial, pero con el IPC argentino de la variante «provincias» (San Luis y Ciudad de
+      Buenos Aires en 2007–2016).
+    tramos:
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01, rol: insumo}
+      - {fuente: f.ocde.ipc-eeuu, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-historico-1943-2008, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-gba-base-2008, desde: 1970-01, rol: insumo}
+      - {fuente: f.sanluis.ipc-base-2003, desde: 1970-01, rol: insumo}
+      - {fuente: f.caba.ipcba-base-2011-2012, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-gba-base-2016, desde: 1970-01, rol: insumo}
+      - {fuente: f.indec.ipc-nacional-base-2016, desde: 1970-01, rol: insumo}
+    advertencias: [q.tcr-bilateral.fin-de-mes, q.tc.mercados-desdoblados, q.ipc.provincias, q.ipc.emergencia-2016, q.ipc-eeuu.octubre-2025]
+validacion:
+  min: 0
+  var_min: -70      # marzo de 1990: −60 % (hiperinflación)
+  var_max: 250
+  umbral_revision_pct: 0.5
+  huecos_permitidos:
+    - {desde: 2025-10, hasta: 2025-10}
+quiebres: [q.tcr-bilateral.fin-de-mes, q.tc.mercados-desdoblados, q.ipc.2007-2015, q.ipc.emergencia-2016, q.ipc.cobertura, q.ipc.provincias, q.ipc-eeuu.octubre-2025]
+transformaciones: [var_mensual, var_interanual, base_100, frecuencia, media_movil]
+fuentes: [f.bcra.tc-historico-mensual, f.ocde.ipc-eeuu]
+bibliografia: [SCH1998c2-C1, DF1990-C4, FF1990-C5, FF1990-C8, DLB1993-A11, RAP2005-G3.5, DF2013-C1, DF2013-G3]
+licencia_derivado: CC-BY-4.0

@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.ibif-base-1970-australes",
+  "descargado": "2026-10-27T19:35:15Z",
+  "sha256": "8f440c2cbc7335cc0930fbb178df3effe6848d2e6c38c003e1117e8779dfc74a",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=201.1_I_AUSTRLES_1970_0_14&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4362,
+      "sha256": "5d58d06e15aeed905049262e643b5917654e8e1b79dcff47cf9eb5813fba4326"
+    }
+  ]
+}

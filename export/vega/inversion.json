@@ -1,0 +1,37 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {
+    "text": "Inversión bruta interna fija",
+    "subtitle": "Variante: A precios constantes, retropolada desde la base 2004 (desde 1993) · millones de pesos de 2004, a ritmo anual"
+  },
+  "data": {
+    "url": "https://vaiven.argentino.workers.dev/datos/descargas/csv/inversion/retropolada.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "interpolate": "linear"
+  },
+  "encoding": {
+    "x": {
+      "field": "fecha",
+      "type": "temporal",
+      "title": null
+    },
+    "y": {
+      "field": "valor",
+      "type": "quantitative",
+      "title": "millones de pesos de 2004, a ritmo anual"
+    }
+  },
+  "usermeta": {
+    "vaiven": {
+      "serie": "inversion",
+      "variante": "retropolada",
+      "version_datos": "2026-10-27T19:35:28Z",
+      "cita": "Vaivén (2026). Inversión bruta interna fija, variante «retropolada». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/inversion/"
+    }
+  }
+}

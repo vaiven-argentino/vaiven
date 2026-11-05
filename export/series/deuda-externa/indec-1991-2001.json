@@ -1,0 +1,143 @@
+{
+  "esquema": "1.2",
+  "id": "deuda-externa.indec-1991-2001",
+  "serie": "deuda-externa",
+  "codigo": "EXT-07",
+  "nombre": "Deuda externa total",
+  "variante": "indec-1991-2001",
+  "nombre_variante": "INDEC, derivada de la posición de inversión base 1991 (1991–2001)",
+  "es_variante_por_defecto": false,
+  "unidad": "millones de US$ corrientes",
+  "tipo": "stock",
+  "agregacion": "fin_de_periodo",
+  "frecuencia": "anual",
+  "moneda": "dolares",
+  "metodo": "Calculada por Vaivén: pasivos externos de la posición de inversión internacional base 1991 del INDEC menos la inversión directa y las acciones (de otras entidades financieras y del sector privado no financiero), que no son deuda. El INDEC no publica un total de deuda externa para estos años en datos.gob.ar.",
+  "empalme": "derivar",
+  "transformaciones": [
+    "var_interanual",
+    "base_100",
+    "frecuencia",
+    "media_movil",
+    "pct_pib"
+  ],
+  "insumos": {},
+  "auxiliar": false,
+  "tramos": [
+    {
+      "fuente": "f.indec.pii-1991-pasivos",
+      "desde": "1991",
+      "hasta": "hoy",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    },
+    {
+      "fuente": "f.indec.pii-1991-id-oef",
+      "desde": "1991",
+      "hasta": "hoy",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    },
+    {
+      "fuente": "f.indec.pii-1991-acciones-oef",
+      "desde": "1991",
+      "hasta": "hoy",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    },
+    {
+      "fuente": "f.indec.pii-1991-id-spnf",
+      "desde": "1991",
+      "hasta": "hoy",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    },
+    {
+      "fuente": "f.indec.pii-1991-acciones-spnf",
+      "desde": "1991",
+      "hasta": "hoy",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    }
+  ],
+  "cobertura": {
+    "desde": "1991",
+    "hasta": "2001"
+  },
+  "advertencias": [
+    {
+      "id": "q.deuda-externa.criterios",
+      "desde": "1970",
+      "hasta": null,
+      "tipo": "metodologia",
+      "descripcion": "El Banco Mundial y el INDEC registran la deuda externa con criterios distintos y sus cifras no coinciden: en 1993–2000 el Banco Mundial da entre 4 % menos y 10 % más que el INDEC, pero en 1991, 1992 y 2001 da entre 44 % y 66 % más, y entre 2006 y 2023 da entre 21 % menos y 6 % más (−13 % en 2006, −12 % en 2023). Las variantes no se unen: para comparar en el tiempo, conviene usar una sola."
+    },
+    {
+      "id": "q.deuda-externa.derivada-1991",
+      "desde": "1991",
+      "hasta": "2001",
+      "tipo": "metodologia",
+      "descripcion": "Serie calculada por Vaivén con la posición de inversión base 1991 del INDEC (pasivos externos menos inversión directa y acciones). No hay datos del INDEC para 2002–2005 en datos.gob.ar, así que no se une con la serie desde 2006."
+    }
+  ],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.indec.pii-1991-pasivos",
+      "organismo": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Posición de inversión internacional, base 1991. Pasivos externos, total",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_PE_1991_A_16",
+      "licencia": "CC-BY-4.0",
+      "id_api": "86.1_PE_1991_A_16"
+    },
+    {
+      "id": "f.indec.pii-1991-id-oef",
+      "organismo": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Posición de inversión internacional, base 1991. Pasivos externos de otras entidades financieras: inversión directa",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_IDO_1991_A_23",
+      "licencia": "CC-BY-4.0",
+      "id_api": "86.1_IDO_1991_A_23"
+    },
+    {
+      "id": "f.indec.pii-1991-acciones-oef",
+      "organismo": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Posición de inversión internacional, base 1991. Pasivos externos de otras entidades financieras: acciones",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_A_1991_A_8",
+      "licencia": "CC-BY-4.0",
+      "id_api": "86.1_A_1991_A_8"
+    },
+    {
+      "id": "f.indec.pii-1991-id-spnf",
+      "organismo": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Posición de inversión internacional, base 1991. Pasivos externos del sector privado no financiero: inversión directa",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_ID_1991_A_17",
+      "licencia": "CC-BY-4.0",
+      "id_api": "86.1_ID_1991_A_17"
+    },
+    {
+      "id": "f.indec.pii-1991-acciones-spnf",
+      "organismo": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Posición de inversión internacional, base 1991. Pasivos externos del sector privado no financiero: acciones",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_AV_1991_A_11",
+      "licencia": "CC-BY-4.0",
+      "id_api": "86.1_AV_1991_A_11"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). Deuda externa total, variante «indec-1991-2001». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/deuda-externa/indec-1991-2001/",
+  "version_datos": "2026-10-27T19:39:08Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1991", 39628.84583],
+    ["1992", 47823.54649],
+    ["1993", 67279.8275],
+    ["1994", 72124.1502],
+    ["1995", 89745.31952],
+    ["1996", 105812.3609],
+    ["1997", 122063.0634],
+    ["1998", 136381.3471],
+    ["1999", 139990.7942],
+    ["2000", 142232.6633],
+    ["2001", 104798.2235]
+  ]
+}
