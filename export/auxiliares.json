@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-28T03:05:25Z",
+  "version_datos": "2026-11-05T21:50:21Z",
   "auxiliares": [
     {
       "id": "ipc-eeuu",
@@ -44,7 +44,6 @@
             "cuenta-corriente.mbp5",
             "cuenta-corriente.mbp6",
             "deuda-externa.indec",
-            "deuda-externa.indec-1991-2001",
             "deuda-externa.privada",
             "deuda-externa.publica",
             "deuda-externa.total",
@@ -53,7 +52,6 @@
             "exportaciones.oficial",
             "fuga.activos-externos",
             "fuga.fae",
-            "fuga.variacion-activos",
             "importaciones.mensual",
             "importaciones.oficial",
             "reservas.brutas",
@@ -76,7 +74,6 @@
             "cuenta-corriente.mbp5",
             "cuenta-corriente.mbp6",
             "deuda-externa.indec",
-            "deuda-externa.indec-1991-2001",
             "deuda-externa.privada",
             "deuda-externa.publica",
             "deuda-externa.total",
@@ -85,7 +82,6 @@
             "exportaciones.oficial",
             "fuga.activos-externos",
             "fuga.fae",
-            "fuga.variacion-activos",
             "importaciones.mensual",
             "importaciones.oficial",
             "reservas.brutas",
@@ -121,9 +117,7 @@
             "base-monetaria.fin-de-mes",
             "base-monetaria.promedio-mensual",
             "resultado-fiscal.financiero",
-            "resultado-fiscal.financiero-devengado",
-            "resultado-fiscal.primario",
-            "resultado-fiscal.primario-devengado"
+            "resultado-fiscal.primario"
           ]
         },
         {
@@ -145,9 +139,7 @@
             "base-monetaria.fin-de-mes",
             "base-monetaria.promedio-mensual",
             "resultado-fiscal.financiero",
-            "resultado-fiscal.financiero-devengado",
-            "resultado-fiscal.primario",
-            "resultado-fiscal.primario-devengado"
+            "resultado-fiscal.primario"
           ]
         }
       ]

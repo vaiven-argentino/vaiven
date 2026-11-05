@@ -50,7 +50,7 @@
       "desde": "1970",
       "hasta": null,
       "tipo": "metodologia",
-      "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use."
+      "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (PA.NUS.ATLS): en 1980, 4,99 × 10⁻⁸ pesos actuales por dólar, contra 1,84 × 10⁻⁸ del oficial (PA.NUS.FCRF), 2,7 veces más. Con la «tablita», el oficial da un PIB en dólares de 224.289 millones y el Banco Mundial, 76.962; los cocientes con el PIB de esos años cambian mucho según cuál se use."
     }
   ],
   "excluidos": [],
@@ -81,8 +81,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). PIB en dólares, variante «trimestral». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/pib-dolares/trimestral/",
-  "version_datos": "2026-10-24T23:23:47Z",
+  "cita": "Vaivén (2026). PIB en dólares, variante «trimestral». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/pib-dolares/trimestral/",
+  "version_datos": "2026-11-05T21:49:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 57664.08206],

@@ -28,7 +28,7 @@
     "desde": "2026-06",
     "hasta": "2026-06",
     "tipo": "metodologia",
-    "descripcion": "En junio de 2026 la base monetaria promedio cae 56 % en un mes (de 41,4 a 18,2 billones de pesos) y se mantiene en ese nivel. La fuente no lo explica; puede ser un cambio de definición. A confirmar con el BCRA: Vaivén no ajusta ni recorta la serie.",
+    "descripcion": "En junio de 2026 la base monetaria promedio cae 56 % en un mes (de 41,4 a 18,2 billones de pesos) y se mantiene en ese nivel. La fuente no lo explica; puede ser un cambio de definición. Hasta que el BCRA lo aclare, Vaivén publica la variante hasta mayo de 2026 (decidido el 05/11/2026), para que las variaciones y el % del PIB de los meses siguientes no queden mal.",
     "afecta": [
       "base-monetaria.promedio-mensual"
     ],
@@ -131,15 +131,14 @@
     "id": "q.deuda-externa.criterios",
     "desde": "1970",
     "tipo": "metodologia",
-    "descripcion": "El Banco Mundial y el INDEC registran la deuda externa con criterios distintos y sus cifras no coinciden: en 1993–2000 el Banco Mundial da entre 4 % menos y 10 % más que el INDEC, pero en 1991, 1992 y 2001 da entre 44 % y 66 % más, y entre 2006 y 2023 da entre 21 % menos y 6 % más (−13 % en 2006, −12 % en 2023). Las variantes no se unen: para comparar en el tiempo, conviene usar una sola.",
+    "descripcion": "El Banco Mundial (Estadísticas de la Deuda Internacional) y el INDEC (deuda externa bruta, MBP6) registran la deuda externa con criterios distintos de cobertura y valuación, y sus cifras no coinciden: entre 2006 y 2023 el Banco Mundial da entre 21 % menos y 6 % más que el INDEC (−13 % en 2006, −12 % en 2023). Las variantes no se unen: para comparar en el tiempo, conviene usar una sola.",
     "afecta": [
       "deuda-externa.total",
       "deuda-externa.publica",
       "deuda-externa.privada",
-      "deuda-externa.indec-1991-2001",
       "deuda-externa.indec"
     ],
-    "fuente": "Comparación de DT.DOD.DECT.CD (Banco Mundial) con la posición de inversión base 1991 y el cuarto trimestre de la serie 161.1 del INDEC (27/10/2026).",
+    "fuente": "Comparación de DT.DOD.DECT.CD (Banco Mundial) con el cuarto trimestre de la serie 161.1 del INDEC (27/10/2026; corregida el 05/11/2026).",
     "hasta": null
   },
   {
@@ -147,7 +146,7 @@
     "desde": "1991",
     "hasta": "2001",
     "tipo": "metodologia",
-    "descripcion": "Serie calculada por Vaivén con la posición de inversión base 1991 del INDEC (pasivos externos menos inversión directa y acciones). No hay datos del INDEC para 2002–2005 en datos.gob.ar, así que no se une con la serie desde 2006.",
+    "descripcion": "Serie calculada por Vaivén con la posición de inversión base 1991 del INDEC (pasivos externos menos inversión directa y acciones). La posición de inversión valúa los títulos de deuda a precio de mercado, no a valor nominal: no es la deuda externa que publican el Ministerio de Economía y la bibliografía. Por eso la variante quedó pendiente (05/11/2026).",
     "afecta": [
       "deuda-externa.indec-1991-2001"
     ],
@@ -320,6 +319,18 @@
     "hasta": null
   },
   {
+    "id": "q.int.venezuela",
+    "desde": "2015",
+    "tipo": "metodologia",
+    "descripcion": "Venezuela: desde 2015 la información oficial de cuentas nacionales es escasa e irregular, y los valores del Banco Mundial para esos años son estimaciones con poca base, que pueden revisarse mucho. Conviene leerlos como orden de magnitud.",
+    "afecta": [
+      "int-pib.banco-mundial",
+      "int-pib-per-capita.banco-mundial"
+    ],
+    "fuente": "Banco Mundial, notas de los Indicadores del Desarrollo Mundial (revisión del 05/11/2026).",
+    "hasta": null
+  },
+  {
     "id": "q.inversion.base-2004",
     "desde": "2004-01",
     "hasta": "2004-01",
@@ -410,7 +421,7 @@
     "id": "q.pib-dolares.tipo-de-cambio",
     "desde": "1970",
     "tipo": "metodologia",
-    "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use.",
+    "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (PA.NUS.ATLS): en 1980, 4,99 × 10⁻⁸ pesos actuales por dólar, contra 1,84 × 10⁻⁸ del oficial (PA.NUS.FCRF), 2,7 veces más. Con la «tablita», el oficial da un PIB en dólares de 224.289 millones y el Banco Mundial, 76.962; los cocientes con el PIB de esos años cambian mucho según cuál se use.",
     "afecta": [
       "pib-dolares.anual",
       "pib-dolares.trimestral"
@@ -584,7 +595,7 @@
     "id": "q.tcr-bilateral.fin-de-mes",
     "desde": "1970-01",
     "tipo": "metodologia",
-    "descripcion": "El tipo de cambio nominal es el valor de fin de mes de la serie del BCRA (CAM-01), y los IPC son promedios del mes. En los meses de devaluación (por ejemplo, diciembre de 2015 o abril de 2002), el índice refleja el tipo de cambio del último día y no el promedio del mes.",
+    "descripcion": "El tipo de cambio nominal es el valor de fin de mes de la serie del BCRA (CAM-01), y los IPC son promedios del mes. En los meses de devaluación (por ejemplo, diciembre de 2015 o abril de 2002), el índice refleja el tipo de cambio del último día y no el promedio del mes. La base (diciembre de 2015 = 100) es justamente el mes de la salida del cepo, con el tipo de cambio ya devaluado del 31/12/2015: coincide con la base del ITCRM del BCRA (17/12/2015 = 100), pero un índice con base en otro mes da niveles distintos.",
     "afecta": [
       "tcr-bilateral.oficial",
       "tcr-bilateral.provincias"

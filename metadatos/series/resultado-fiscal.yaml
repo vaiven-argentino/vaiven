@@ -11,7 +11,7 @@ tipo: flujo
 agregacion: suma
 frecuencia: mensual
 moneda: pesos_actuales
-cobertura: {desde: 1970, hasta: hoy}
+cobertura: {desde: 1993, hasta: hoy}
 variante_por_defecto: primario
 # En pesos actuales, la línea queda pegada a 0 hasta los años de alta inflación: la ficha arranca en % del PIB
 # (las mensuales, en frecuencia anual). Decidido con Camilo el 28/10/2026.
@@ -47,7 +47,10 @@ variantes:
     advertencias: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
   - id: financiero-devengado
     nombre: Resultado financiero, base devengado, Sector Público Argentino (1970–1992)
-    estado: publicada
+    estado: pendiente
+    nota: >-
+      Pendiente (revisión del 05/11/2026). La fuente no documenta la unidad de cada tramo y Vaivén no publica
+      unidades inferidas: falta la nota de unidad del archivo de la ONP «Cuenta AIF 1961–2004».
     frecuencia: anual
     empalme: yuxtaponer
     metodo: >-
@@ -68,7 +71,10 @@ variantes:
     advertencias: [q.fiscal.devengado-unidad, q.fiscal.devengado-spa]
   - id: primario-devengado
     nombre: Resultado primario, base devengado, Sector Público Argentino (1970–1992)
-    estado: publicada
+    estado: pendiente
+    nota: >-
+      Pendiente (revisión del 05/11/2026). La fuente no documenta la unidad de cada tramo y Vaivén no publica
+      unidades inferidas: falta la nota de unidad del archivo de la ONP «Cuenta AIF 1961–2004».
     frecuencia: anual
     empalme: yuxtaponer
     metodo: >-
@@ -86,7 +92,7 @@ validacion:
   min: -100000000
   max: 100000000
   umbral_revision_pct: 1
-quiebres: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015, q.fiscal.devengado-unidad, q.fiscal.devengado-spa]
+quiebres: [q.fiscal.cobertura-spn, q.fiscal.sin-privatizaciones, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
 # Sin variaciones ni base 100: el resultado cambia de signo.
 transformaciones: [frecuencia, media_movil, real, en_dolares, pct_pib]
 fuentes:

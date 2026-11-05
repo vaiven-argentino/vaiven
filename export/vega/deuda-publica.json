@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
   "title": {
-    "text": "Deuda pública",
+    "text": "Deuda pública externa (Banco Mundial)",
     "subtitle": "Variante: Deuda externa pública y con garantía pública, de largo plazo, Banco Mundial (1970–2024) · millones de US$ corrientes"
   },
   "data": {
@@ -30,8 +30,8 @@
     "vaiven": {
       "serie": "deuda-publica",
       "variante": "externa-bm",
-      "version_datos": "2026-10-27T19:55:59Z",
-      "cita": "Vaivén (2026). Deuda pública, variante «externa-bm». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/deuda-publica/"
+      "version_datos": "2026-11-05T21:49:46Z",
+      "cita": "Vaivén (2026). Deuda pública externa (Banco Mundial), variante «externa-bm». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/deuda-publica/"
     }
   }
 }

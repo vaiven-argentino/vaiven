@@ -44,12 +44,12 @@ variantes:
       metodología; su serie propia es el PIB real (ACT-01), del INDEC.
     tramos:
       - {fuente: f.bm.crecimiento-pib, desde: 1961}
-    advertencias: [q.int.revisiones, q.int.agregados, q.int.argentina]
+    advertencias: [q.int.revisiones, q.int.agregados, q.int.argentina, q.int.venezuela]
 validacion:
   min: -40
   max: 70
   umbral_revision_pct: 5
-quiebres: [q.int.revisiones, q.int.agregados, q.int.argentina]
+quiebres: [q.int.revisiones, q.int.agregados, q.int.argentina, q.int.venezuela]
 transformaciones: [indice_desde_tasas, media_movil]
 fuentes: [f.bm.crecimiento-pib]
 bibliografia: [ARO2003-C4, DLB1993-A2, CENDA2004-C2, KUL2016-C6.1]

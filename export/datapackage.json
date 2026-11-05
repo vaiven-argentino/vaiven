@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-10-28T03:05:25Z",
-  "created": "2026-10-28T03:05:25Z",
+  "version": "2026-11-05T21:50:21Z",
+  "created": "2026-11-05T21:50:21Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -283,7 +283,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "Base monetaria total en promedio de saldos diarios de cada mes, según el BCRA, sin cambios. Empieza en enero de 2003.",
+      "description": "Base monetaria total en promedio de saldos diarios de cada mes, según el BCRA, sin cambios. Empieza en enero de 2003 y se publica hasta mayo de 2026 (ver la advertencia).",
       "schema": {
         "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
         "fields": [
@@ -586,64 +586,6 @@
     },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
-      "name": "deuda-externa.indec-1991-2001",
-      "title": "Deuda externa total · INDEC, derivada de la posición de inversión base 1991 (1991–2001)",
-      "path": "descargas/csv/deuda-externa/indec-1991-2001.csv",
-      "type": "table",
-      "format": "csv",
-      "mediatype": "text/csv",
-      "encoding": "utf-8",
-      "description": "Calculada por Vaivén: pasivos externos de la posición de inversión internacional base 1991 del INDEC menos la inversión directa y las acciones (de otras entidades financieras y del sector privado no financiero), que no son deuda. El INDEC no publica un total de deuda externa para estos años en datos.gob.ar.",
-      "schema": {
-        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
-        "fields": [
-          {
-            "name": "fecha",
-            "type": "string",
-            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
-          },
-          {
-            "name": "valor",
-            "type": "number",
-            "description": "millones de US$ corrientes"
-          }
-        ],
-        "primaryKey": [
-          "fecha"
-        ]
-      },
-      "sources": [
-        {
-          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): Posición de inversión internacional, base 1991. Pasivos externos, total",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_PE_1991_A_16"
-        },
-        {
-          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): Posición de inversión internacional, base 1991. Pasivos externos de otras entidades financieras: inversión directa",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_IDO_1991_A_23"
-        },
-        {
-          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): Posición de inversión internacional, base 1991. Pasivos externos de otras entidades financieras: acciones",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_A_1991_A_8"
-        },
-        {
-          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): Posición de inversión internacional, base 1991. Pasivos externos del sector privado no financiero: inversión directa",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_ID_1991_A_17"
-        },
-        {
-          "title": "INDEC (publicado por la Subsecretaría de Programación Macroeconómica): Posición de inversión internacional, base 1991. Pasivos externos del sector privado no financiero: acciones",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=86.1_AV_1991_A_11"
-        }
-      ],
-      "licenses": [
-        {
-          "name": "CC-BY-4.0",
-          "path": "https://creativecommons.org/licenses/by/4.0/",
-          "title": "Creative Commons Attribution 4.0"
-        }
-      ]
-    },
-    {
-      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "deuda-externa.privada",
       "title": "Deuda externa total · Banco Mundial, privada no garantizada, de largo plazo (1970–2024)",
       "path": "descargas/csv/deuda-externa/privada.csv",
@@ -771,7 +713,7 @@
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "deuda-publica.externa-bm",
-      "title": "Deuda pública · Deuda externa pública y con garantía pública, de largo plazo, Banco Mundial (1970–2024)",
+      "title": "Deuda pública externa (Banco Mundial) · Deuda externa pública y con garantía pública, de largo plazo, Banco Mundial (1970–2024)",
       "path": "descargas/csv/deuda-publica/externa-bm.csv",
       "type": "table",
       "format": "csv",
@@ -972,52 +914,6 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Balance cambiario. Formación de activos externos del sector privado no financiero, total (ingresos menos egresos)",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=182.1_C_K_FINC_CINC_0_M_56"
-        }
-      ],
-      "licenses": [
-        {
-          "name": "CC-BY-4.0",
-          "path": "https://creativecommons.org/licenses/by/4.0/",
-          "title": "Creative Commons Attribution 4.0"
-        }
-      ]
-    },
-    {
-      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
-      "name": "fuga.variacion-activos",
-      "title": "Fuga de capitales · Variación del stock de activos externos del sector privado (desde 1992)",
-      "path": "descargas/csv/fuga/variacion-activos.csv",
-      "type": "table",
-      "format": "csv",
-      "mediatype": "text/csv",
-      "encoding": "utf-8",
-      "description": "Variación anual del stock de activos externos del sector privado (variante «activos-externos»). Incluye los cambios de valor de los activos (precios y tipos de cambio), no solo las compras netas.",
-      "schema": {
-        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
-        "fields": [
-          {
-            "name": "fecha",
-            "type": "string",
-            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
-          },
-          {
-            "name": "valor",
-            "type": "number",
-            "description": "millones de US$"
-          }
-        ],
-        "primaryKey": [
-          "fecha"
-        ]
-      },
-      "sources": [
-        {
-          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Activos externos en millones de dólares. Activos externos del sector privado según el balance de pagos",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=336.1_ACTIVOS_SEGOS__27"
-        },
-        {
-          "title": "INDEC: Posición de inversión internacional. Activos de otros sectores, anual",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=144.3_ACVOSOTLES_0_A_30"
         }
       ],
       "licenses": [
@@ -1914,60 +1810,6 @@
     },
     {
       "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
-      "name": "resultado-fiscal.financiero-devengado",
-      "title": "Resultado primario y financiero · Resultado financiero, base devengado, Sector Público Argentino (1970–1992)",
-      "path": "descargas/csv/resultado-fiscal/financiero-devengado.csv",
-      "type": "table",
-      "format": "csv",
-      "mediatype": "text/csv",
-      "encoding": "utf-8",
-      "description": "Necesidad de financiamiento de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público Argentino (Secretaría de Hacienda), con el signo dado vuelta para que un déficit sea negativo, como en base caja. Hacienda no documenta la unidad de cada tramo y los rótulos se contradicen: Vaivén la infirió con el PIB nominal y la declara en el coeficiente de cada tramo, que lleva todo a millones de pesos actuales (1970–1976 en australes; 1977–1984 en miles de australes; 1985–1986 en millones de australes; 1987–1989 en miles de pesos; 1990–1992 en millones de pesos). En 1979, la fuente da una necesidad de financiamiento distinta de la diferencia entre erogaciones y recursos (1.047,42 contra 987,77 miles de australes). No se une con la serie en base caja.",
-      "schema": {
-        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
-        "fields": [
-          {
-            "name": "fecha",
-            "type": "string",
-            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
-          },
-          {
-            "name": "valor",
-            "type": "number",
-            "description": "millones de pesos corrientes"
-          }
-        ],
-        "primaryKey": [
-          "fecha"
-        ]
-      },
-      "sources": [
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Necesidad de financiamiento (déficit financiero)",
-          "path": "https://datos.gob.ar/dataset/sspm-cuenta-ahorro-inversion-financiamiento-base-devengado-sector-publico-argentino"
-        },
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Necesidad de financiamiento (déficit financiero)",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.2_NECES_FINANAN_DEVE_0_11_87"
-        },
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Necesidad de financiamiento (déficit financiero)",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.3_NECES_FINANAN_DEVE_0_11_41"
-        },
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Necesidad de financiamiento (déficit financiero)",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_NECES_FINANAN_DEVE_0_11_48"
-        }
-      ],
-      "licenses": [
-        {
-          "name": "CC-BY-4.0",
-          "path": "https://creativecommons.org/licenses/by/4.0/",
-          "title": "Creative Commons Attribution 4.0"
-        }
-      ]
-    },
-    {
-      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
       "name": "resultado-fiscal.primario",
       "title": "Resultado primario y financiero · Resultado primario, base caja (desde 1993)",
       "path": "descargas/csv/resultado-fiscal/primario.csv",
@@ -2006,60 +1848,6 @@
         {
           "title": "Secretaría de Hacienda, Ministerio de Economía: Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Superávit primario, metodología 2017, mensual",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=379.9_SUPERAVIT_017__23_94"
-        }
-      ],
-      "licenses": [
-        {
-          "name": "CC-BY-4.0",
-          "path": "https://creativecommons.org/licenses/by/4.0/",
-          "title": "Creative Commons Attribution 4.0"
-        }
-      ]
-    },
-    {
-      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
-      "name": "resultado-fiscal.primario-devengado",
-      "title": "Resultado primario y financiero · Resultado primario, base devengado, Sector Público Argentino (1970–1992)",
-      "path": "descargas/csv/resultado-fiscal/primario-devengado.csv",
-      "type": "table",
-      "format": "csv",
-      "mediatype": "text/csv",
-      "encoding": "utf-8",
-      "description": "Superávit primario total de la Cuenta Ahorro-Inversión-Financiamiento base devengado del Sector Público Argentino (Secretaría de Hacienda), en millones de pesos actuales, con la misma unidad inferida por tramo que el resultado financiero devengado. No se une con la serie en base caja.",
-      "schema": {
-        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
-        "fields": [
-          {
-            "name": "fecha",
-            "type": "string",
-            "description": "Período (anual): AAAA-MM-DD en diarias, AAAA en anuales, AAAA-MM en el resto."
-          },
-          {
-            "name": "valor",
-            "type": "number",
-            "description": "millones de pesos corrientes"
-          }
-        ],
-        "primaryKey": [
-          "fecha"
-        ]
-      },
-      "sources": [
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1961–1976. Superávit primario total",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.1_SUPERAVIT_TAL_DEVE_0_20_67"
-        },
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1977–1986. Superávit primario total",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.2_SUPERAVIT_TAL_DEVE_0_20_67"
-        },
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1987–1989. Superávit primario total",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.3_SUPERAVIT_TAL_DEVE_0_20_16"
-        },
-        {
-          "title": "Secretaría de Hacienda, Ministerio de Economía: Cuenta Ahorro-Inversión-Financiamiento, base devengado, Sector Público Argentino, 1990–1992. Superávit primario total",
-          "path": "https://apis.datos.gob.ar/series/api/series/?ids=439.4_SUPERAVIT_TAL_DEVE_0_20_28"
         }
       ],
       "licenses": [

@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-10-28T03:05:25Z",
+  "version_datos": "2026-11-05T21:50:21Z",
   "series": [
     {
       "id": "agregados",
@@ -204,7 +204,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "2003-01",
-            "hasta": "2026-08"
+            "hasta": "2026-05"
           },
           "archivo": "series/base-monetaria/promedio-mensual.json"
         }
@@ -455,8 +455,7 @@
       "variante_por_defecto": "total",
       "quiebres": [
         "q.deuda-externa.criterios",
-        "q.deuda-externa.componentes-bm",
-        "q.deuda-externa.derivada-1991"
+        "q.deuda-externa.componentes-bm"
       ],
       "variantes": [
         {
@@ -495,13 +494,11 @@
         {
           "id": "indec-1991-2001",
           "nombre": "INDEC, derivada de la posición de inversión base 1991 (1991–2001)",
-          "estado": "publicada",
+          "estado": "pendiente",
           "frecuencia": "anual",
-          "cobertura": {
-            "desde": "1991",
-            "hasta": "2001"
-          },
-          "archivo": "series/deuda-externa/indec-1991-2001.json"
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente (revisión del 05/11/2026). La posición de inversión internacional valúa los títulos de deuda a precio de mercado: en 2001, con los bonos argentinos derrumbados, la «deuda» derivada cae (104.798 millones, contra unos 140.000 a valor nominal). Falta la deuda externa a valor nominal de 1991–2005 de la Dirección Nacional de Cuentas Internacionales, que no está en datos.gob.ar."
         },
         {
           "id": "indec",
@@ -641,10 +638,10 @@
     {
       "id": "deuda-publica",
       "codigo": "FIS-04",
-      "nombre": "Deuda pública",
+      "nombre": "Deuda pública externa (Banco Mundial)",
       "bloque": "Fiscal",
       "prioridad": "A",
-      "definicion": "Stock de deuda del sector público. Por ahora solo hay una fuente abierta para la parte externa: la deuda pública total (interna y externa) queda pendiente de licencia.",
+      "definicion": "Stock de deuda externa pública y con garantía pública de largo plazo, según las Estadísticas de la Deuda Internacional del Banco Mundial. No es la deuda pública total: falta la deuda interna y la de corto plazo. La deuda pública total (Secretaría de Finanzas o FMI) queda pendiente de licencia; cuando se sume, la serie vuelve a llamarse «Deuda pública» (SPEC, sección 3).",
       "unidad": "millones de US$ corrientes",
       "tipo": "stock",
       "agregacion": "fin_de_periodo",
@@ -825,8 +822,7 @@
       "variante_por_defecto": "fae",
       "quiebres": [
         "q.fuga.mediciones",
-        "q.fuga.otros-sectores-2006",
-        "q.fuga.revaluaciones"
+        "q.fuga.otros-sectores-2006"
       ],
       "variantes": [
         {
@@ -854,13 +850,11 @@
         {
           "id": "variacion-activos",
           "nombre": "Variación del stock de activos externos del sector privado (desde 1992)",
-          "estado": "publicada",
+          "estado": "pendiente",
           "frecuencia": "anual",
-          "cobertura": {
-            "desde": "1992",
-            "hasta": "2024"
-          },
-          "archivo": "series/fuga/variacion-activos.json"
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente (revisión del 05/11/2026). Incluye las revaluaciones de los activos, que pueden dominar algunos años (en 2001 da solo 2.723 millones): falta contrastarla con las estimaciones de la bibliografía (Basualdo, Kulfas, CENDA) antes de publicarla."
         },
         {
           "id": "residual",
@@ -1142,7 +1136,8 @@
       "quiebres": [
         "q.int.revisiones",
         "q.int.agregados",
-        "q.int.argentina"
+        "q.int.argentina",
+        "q.int.venezuela"
       ],
       "variantes": [
         {
@@ -1299,7 +1294,8 @@
       "quiebres": [
         "q.int.revisiones",
         "q.int.agregados",
-        "q.int.argentina"
+        "q.int.argentina",
+        "q.int.venezuela"
       ],
       "variantes": [
         {
@@ -1904,9 +1900,7 @@
         "q.fiscal.cobertura-spn",
         "q.fiscal.sin-privatizaciones",
         "q.fiscal.metodologia-2007",
-        "q.fiscal.metodologia-2015",
-        "q.fiscal.devengado-unidad",
-        "q.fiscal.devengado-spa"
+        "q.fiscal.metodologia-2015"
       ],
       "variantes": [
         {
@@ -1934,24 +1928,20 @@
         {
           "id": "financiero-devengado",
           "nombre": "Resultado financiero, base devengado, Sector Público Argentino (1970–1992)",
-          "estado": "publicada",
+          "estado": "pendiente",
           "frecuencia": "anual",
-          "cobertura": {
-            "desde": "1970",
-            "hasta": "1992"
-          },
-          "archivo": "series/resultado-fiscal/financiero-devengado.json"
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente (revisión del 05/11/2026). La fuente no documenta la unidad de cada tramo y Vaivén no publica unidades inferidas: falta la nota de unidad del archivo de la ONP «Cuenta AIF 1961–2004»."
         },
         {
           "id": "primario-devengado",
           "nombre": "Resultado primario, base devengado, Sector Público Argentino (1970–1992)",
-          "estado": "publicada",
+          "estado": "pendiente",
           "frecuencia": "anual",
-          "cobertura": {
-            "desde": "1970",
-            "hasta": "1992"
-          },
-          "archivo": "series/resultado-fiscal/primario-devengado.json"
+          "cobertura": null,
+          "archivo": null,
+          "nota": "Pendiente (revisión del 05/11/2026). La fuente no documenta la unidad de cada tramo y Vaivén no publica unidades inferidas: falta la nota de unidad del archivo de la ONP «Cuenta AIF 1961–2004»."
         }
       ],
       "bibliografia": [

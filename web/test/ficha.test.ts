@@ -11,9 +11,6 @@ describe("vista inicial", () => {
     const mensual = doc("resultado-fiscal", "financiero");
     expect(medidaInicial(mensual)).toBe("pct_pib");
     expect(frecuenciaInicial(mensual)).toBe("anual");
-    const anual = doc("resultado-fiscal", "financiero-devengado");
-    expect(medidaInicial(anual)).toBe("pct_pib");
-    expect(frecuenciaInicial(anual)).toBeUndefined();
   });
   it("sin % del PIB inicial, la frecuencia es la de la serie", () => {
     expect(frecuenciaInicial(doc("salario-real", "ripte"))).toBeUndefined();

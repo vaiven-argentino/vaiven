@@ -33,12 +33,10 @@ variantes:
     estado: publicada
     agregacion: promedio
     empalme: yuxtaponer
-    metodo: Base monetaria total en promedio de saldos diarios de cada mes, según el BCRA, sin cambios. Empieza en enero de 2003.
+    metodo: Base monetaria total en promedio de saldos diarios de cada mes, según el BCRA, sin cambios. Empieza en enero de 2003 y se publica hasta mayo de 2026 (ver la advertencia).
     tramos:
-      - {fuente: f.bcra.base-monetaria-promedio, desde: 2003-01}
+      - {fuente: f.bcra.base-monetaria-promedio, desde: 2003-01, hasta: 2026-05}
     advertencias: [q.base-monetaria.caida-2026]
-    validacion:
-      var_excepciones: [2026-06]
 validacion:
   min: 0
   var_min: -40

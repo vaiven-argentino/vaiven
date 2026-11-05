@@ -3,7 +3,7 @@
   "id": "deuda-publica.externa-bm",
   "serie": "deuda-publica",
   "codigo": "FIS-04",
-  "nombre": "Deuda pública",
+  "nombre": "Deuda pública externa (Banco Mundial)",
   "variante": "externa-bm",
   "nombre_variante": "Deuda externa pública y con garantía pública, de largo plazo, Banco Mundial (1970–2024)",
   "es_variante_por_defecto": true,
@@ -82,8 +82,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Deuda pública, variante «externa-bm». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/deuda-publica/",
-  "version_datos": "2026-10-27T19:55:59Z",
+  "cita": "Vaivén (2026). Deuda pública externa (Banco Mundial), variante «externa-bm». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/deuda-publica/",
+  "version_datos": "2026-11-05T21:49:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 1963.191434],
