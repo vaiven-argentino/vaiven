@@ -588,7 +588,24 @@
   verificado: 2026-10-24
   nota: >-
     Los valores anteriores a 1992 están en pesos actuales (1970: 1,2 pesos). En 1993–2003 coinciden con la base 1993
-    del INDEC y desde 2004, con la base 2004 (verificado el 24/10/2026), así que Vaivén usa solo sus tasas de 1971–1993.
+    del INDEC y desde 2004, con la base 2004 (verificado el 24/10/2026). Vaivén usa sus tasas de 1971–1993 en el PIB
+    retropolado y sus niveles de 1970–1992 en el PIB publicado en cada base.
+
+- id: f.bm.pib-dolares
+  organismo: Banco Mundial (Indicadores del Desarrollo Mundial)
+  nombre: PIB en dólares corrientes (NY.GDP.MKTP.CD), Argentina
+  api: banco-mundial
+  id_api: NY.GDP.MKTP.CD
+  pais: ARG
+  url: https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?locations=AR
+  licencia: CC-BY-4.0
+  frecuencia: anual
+  unidad: dólares corrientes
+  cobertura: {desde: 1960, hasta: hoy}
+  verificado: 2026-11-05
+  nota: >-
+    Para la Argentina, en 1971–1981 y en 2012–2015 el Banco Mundial convierte con un factor alternativo
+    (PA.NUS.ATLS) y no con el tipo de cambio oficial (consultado el 05/11/2026).
 
 - id: f.indec.pib-nominal-base-1993-anual
   organismo: INDEC

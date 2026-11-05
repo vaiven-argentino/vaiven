@@ -35,11 +35,11 @@ def _factores(serie: pd.Series, signos: list[dict], fin_de_mes: bool) -> pd.Seri
     return pd.Series([factor_a_pesos_actuales(f, signos) for f in fechas], index=serie.index)
 
 
-def a_pesos_actuales(serie: pd.Series, signos: list[dict], fin_de_mes: bool = False) -> pd.Series:
+def a_pesos_actuales(serie: pd.Series, signos: list[dict], fin_de_mes: bool = True) -> pd.Series:
     """Pasa una serie en moneda de cada época a pesos actuales (divide por el factor de cada fecha)."""
     return serie / _factores(serie, signos, fin_de_mes)
 
 
-def a_moneda_de_epoca(serie: pd.Series, signos: list[dict], fin_de_mes: bool = False) -> pd.Series:
+def a_moneda_de_epoca(serie: pd.Series, signos: list[dict], fin_de_mes: bool = True) -> pd.Series:
     """Inversa de `a_pesos_actuales`."""
     return serie * _factores(serie, signos, fin_de_mes)

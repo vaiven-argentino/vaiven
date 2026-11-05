@@ -54,7 +54,12 @@ variantes:
       var_max: 250
   - id: indec-1991-2001
     nombre: INDEC, derivada de la posición de inversión base 1991 (1991–2001)
-    estado: publicada
+    estado: pendiente
+    nota: >-
+      Pendiente (revisión del 05/11/2026). La posición de inversión internacional valúa los títulos de deuda a precio
+      de mercado: en 2001, con los bonos argentinos derrumbados, la «deuda» derivada cae (104.798 millones, contra
+      unos 140.000 a valor nominal). Falta la deuda externa a valor nominal de 1991–2005 de la Dirección Nacional de
+      Cuentas Internacionales, que no está en datos.gob.ar.
     empalme: derivar
     operacion: resta
     operandos: [f.indec.pii-1991-pasivos, f.indec.pii-1991-id-oef, f.indec.pii-1991-acciones-oef, f.indec.pii-1991-id-spnf, f.indec.pii-1991-acciones-spnf]
@@ -86,7 +91,7 @@ validacion:
   var_min: -50
   var_max: 100
   umbral_revision_pct: 1
-quiebres: [q.deuda-externa.criterios, q.deuda-externa.componentes-bm, q.deuda-externa.derivada-1991]
+quiebres: [q.deuda-externa.criterios, q.deuda-externa.componentes-bm]
 transformaciones: [var_interanual, base_100, frecuencia, media_movil, pct_pib]
 fuentes: [f.bm.deuda-externa-total, f.bm.deuda-externa-publica, f.bm.deuda-externa-privada, f.indec.pii-1991-pasivos, f.indec.deuda-externa-bruta]
 bibliografia: [SCH1998c2-C3, DF1990-C5, FF1990-C3, OS2006-G2, BAS2000-G1, BAS2000-G3, BAS2000-G5, BAS2000-G6, DLB1993-A9, BRE2019-C4.1, RZ2017-G1, RZ2017-G7, BICI-G17, BICI-T18, BICI-T21]

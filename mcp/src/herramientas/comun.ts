@@ -1,6 +1,12 @@
 // Utilidades compartidas por las herramientas.
 import { indiceFin, indiceMes } from "@vaiven/transformaciones";
 
+/**
+ * «Uso en la bibliografía» (fichas del inventario con materiales de la cátedra): oculto hasta que la cátedra diga si
+ * quiere figurar, como en la web (revisión de la 4a, 05/11/2026).
+ */
+export const MOSTRAR_BIBLIOGRAFIA = false;
+
 /** Total de series del catálogo del MVP (SPEC, sección 3). */
 export const SERIES_DEL_MVP = 39;
 

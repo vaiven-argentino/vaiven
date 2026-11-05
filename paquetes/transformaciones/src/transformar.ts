@@ -66,6 +66,8 @@ export interface Disponibles {
   medidas: Medida[];
   /** Variantes del IPC para la medida real. */
   deflactores: OpcionInsumo[];
+  /** PIB que pueden dividir en % del PIB, sin repetir («cada-base», «retropolado», «banco-mundial»). */
+  denominadores: string[];
 }
 
 /**
@@ -77,8 +79,9 @@ export function disponibles(serie: SerieExportada, opciones: { pesosActuales?: b
   const insumos = serie.insumos ?? {};
   const medidas = (["real", "en_dolares", "pct_pib", "pesos_actuales"] as const).filter((m) => insumos[m]);
   const deflactores = insumos.real?.opciones ?? [];
+  const denominadores = [...new Set((insumos.pct_pib?.opciones ?? []).map((o) => o.denominador).filter((d): d is string => !!d))];
   if (serie.moneda === "moneda_de_epoca" && !opciones.pesosActuales) {
-    return { transformaciones: ["nivel"], frecuencias: [], mediaMovil: false, medidas, deflactores };
+    return { transformaciones: ["nivel"], frecuencias: [], mediaMovil: false, medidas, deflactores, denominadores };
   }
   const declaradas = new Set(serie.transformaciones);
   const puntos = puntosDe(serie);
@@ -97,7 +100,7 @@ export function disponibles(serie: SerieExportada, opciones: { pesosActuales?: b
   const frecuencias = declaradas.has("frecuencia")
     ? (["trimestral", "anual"] as const).filter((a) => PASO[a] > masGruesa && !(a === "trimestral" && frecs.has("semestral")))
     : [];
-  return { transformaciones, frecuencias: [...frecuencias], mediaMovil: declaradas.has("media_movil"), medidas, deflactores };
+  return { transformaciones, frecuencias: [...frecuencias], mediaMovil: declaradas.has("media_movil"), medidas, deflactores, denominadores };
 }
 
 // ── Transformar ────────────────────────────────────────────────────────────────
@@ -172,8 +175,13 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
   const desde = opciones.desde ? indiceMes(opciones.desde) : Number.NEGATIVE_INFINITY;
   const hasta = opciones.hasta ? indiceFin(opciones.hasta) : Number.POSITIVE_INFINITY;
   puntos = puntos.filter((p) => p.i >= desde && p.i <= hasta);
-  const primero = puntos.findIndex((p) => p.v !== null);
-  const ultimo = puntos.findLastIndex((p) => p.v !== null);
+  // Los extremos sin dato se recortan, salvo un dato excluido: se deja para que el gráfico y la tabla lo marquen.
+  // (Solo si el período conserva la frecuencia del dato: agregado a otra frecuencia, ya no es «el» dato excluido.)
+  const excluidos = new Map(serie.excluidos.length ? puntosDe(serie).filter((p) => p.v === null).map((p) => [p.i, p.f]) : []);
+  const fechasExcluidas = new Set(serie.excluidos.map((e) => indiceMes(e.fecha)));
+  const conDato = (p: Punto) => p.v !== null || (fechasExcluidas.has(p.i) && excluidos.get(p.i) === p.f);
+  const primero = puntos.findIndex(conDato);
+  const ultimo = puntos.findLastIndex(conDato);
   puntos = primero === -1 ? [] : puntos.slice(primero, ultimo + 1);
 
   const inicio = puntos[0]?.i;
@@ -330,17 +338,33 @@ function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opcione
   if (serie.tipo === "stock" && f !== "anual") {
     throw new ErrorTransformacion("En un stock, el % del PIB se calcula con el valor de fin de año y el PIB del año: pasá la serie a frecuencia anual.");
   }
-  const opcion = declarado.opciones.find((o) => o.frecuencia === f);
-  if (!opcion) throw new ErrorTransformacion(`No hay PIB ${f} para calcular el % del PIB.`);
+  // El PIB elegido (por defecto, el de la opción por defecto) en la frecuencia de la serie.
+  const denominador = opciones.denominador ?? declarado.opciones.find((o) => o.id === declarado.por_defecto)?.denominador;
+  const delDenominador = declarado.opciones.filter((o) => !denominador || !o.denominador || o.denominador === denominador);
+  if (!delDenominador.length) {
+    const hay = [...new Set(declarado.opciones.map((o) => o.denominador).filter(Boolean))];
+    throw new ErrorTransformacion(`«${denominador}» no es un PIB de esta variante. Opciones: ${hay.join(", ")}.`);
+  }
+  const opcion = delDenominador.find((o) => o.frecuencia === f);
+  if (!opcion) {
+    const frecs = delDenominador.map((o) => o.frecuencia).join(" o ");
+    throw new ErrorTransformacion(`No hay PIB ${f}${denominador ? ` «${denominador}»` : ""} para calcular el % del PIB (hay ${frecs}).`);
+  }
   const pib = insumo(insumos, opcion.id);
   const valores = enPeriodos(pib, puntos);
-  notas.push(`Dividida por el PIB ${f} («${opcion.id}») del mismo período.`);
+  notas.push(`Dividida por el PIB ${f}${opcion.denominador ? ` ${NOMBRE_DENOMINADOR[opcion.denominador] ?? opcion.denominador}` : ""} («${opcion.id}») del mismo período.`);
   extra.push(...pib.advertencias);
   return [puntos.map((p) => {
     const x = valores.get(p.i);
     return { ...p, v: p.v === null || x == null || x === 0 ? null : (p.v / x) * 100 };
   }), declarado.unidad];
 }
+
+const NOMBRE_DENOMINADOR: Record<string, string> = {
+  "cada-base": "publicado en cada base",
+  retropolado: "retropolado desde la base 2004",
+  "banco-mundial": "del Banco Mundial",
+};
 
 function deflactar(puntos: Punto[], ipc: Map<number, Valor>, ipcBase: number): Punto[] {
   return puntos.map((p) => {

@@ -4,22 +4,65 @@ nombre: PIB en dólares
 bloque: Auxiliares
 prioridad: auxiliar
 definicion: >-
-  PIB nominal en pesos dividido por el promedio del tipo de cambio oficial del período, en millones de dólares
-  corrientes. Lo usa la transformación % del PIB de las series en dólares.
+  PIB en millones de dólares corrientes: el PIB nominal en pesos dividido por el promedio del tipo de cambio
+  oficial del período (con el PIB de cada base o el retropolado), o el del Banco Mundial. Lo usa la transformación
+  % del PIB de las series en dólares.
 unidad: millones de US$ corrientes
 tipo: flujo
 agregacion: suma
 frecuencia: anual
 moneda: dolares
 cobertura: {desde: 1970, hasta: hoy}
-variante_por_defecto: anual
+variante_por_defecto: cada-base-anual
 variantes:
-  - id: anual
-    nombre: Anual
+  - id: cada-base-anual
+    nombre: Anual, con el PIB publicado en cada base
     estado: publicada
     empalme: derivar
     operacion: dividir_por_promedio
-    operandos: [pib-nominal.anual, tc-oficial.pesos-actuales]
+    operandos: [pib-nominal.cada-base-anual, tc-oficial.pesos-actuales]
+    metodo: >-
+      PIB nominal anual publicado en cada base (AUX-01) dividido por el promedio de los doce valores de fin de mes
+      del tipo de cambio oficial (CAM-01, en pesos actuales). Solo hay dato en los años con los doce meses del tipo
+      de cambio.
+    tramos:
+      - {fuente: f.bm.pib-nominal, desde: 1970, hasta: 1992, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-1993-anual, desde: 1993, hasta: 2003, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-2004-anual, desde: 2004, rol: insumo}
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01, rol: insumo}
+    advertencias: [q.pib-dolares.tipo-de-cambio, q.tc.mercados-desdoblados, q.pib-nominal.cada-base]
+  - id: cada-base-trimestral
+    nombre: Trimestral (desde 1993), con el PIB publicado en cada base
+    estado: publicada
+    frecuencia: trimestral
+    empalme: derivar
+    operacion: dividir_por_promedio
+    operandos: [pib-nominal.cada-base-trimestral, tc-oficial.pesos-actuales]
+    metodo: >-
+      PIB nominal trimestral publicado en cada base (el de cada trimestre, no a ritmo anual) dividido por el
+      promedio de los tres valores de fin de mes del tipo de cambio oficial (CAM-01).
+    tramos:
+      - {fuente: f.indec.pib-nominal-base-1993-trimestral, desde: 1993-01, hasta: 2003-10, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-2004-trimestral, desde: 2004-01, rol: insumo}
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1993-01, rol: insumo}
+    advertencias: [q.pib-dolares.tipo-de-cambio, q.pib-nominal.cada-base]
+  - id: banco-mundial
+    nombre: Anual, del Banco Mundial
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      PIB en dólares corrientes del Banco Mundial (NY.GDP.MKTP.CD), sin cambios salvo la unidad (millones). En
+      1971–1981 y en 2012–2015 el Banco Mundial no usa el tipo de cambio oficial sino un factor de conversión
+      alternativo (ver la advertencia).
+    tramos:
+      - {fuente: f.bm.pib-dolares, desde: 1970, coeficiente: 1.0e-6}
+    advertencias: [q.pib-dolares.banco-mundial]
+  - id: retropolada-anual
+    nombre: Anual, con el PIB retropolado
+    estado: publicada
+    empalme: derivar
+    operacion: dividir_por_promedio
+    operandos: [pib-nominal.retropolada-anual, tc-oficial.pesos-actuales]
     metodo: >-
       PIB nominal anual (pesos actuales) dividido por el promedio de los doce valores de fin de mes del tipo de
       cambio oficial (CAM-01, en pesos actuales). Solo hay dato en los años con los doce meses del tipo de cambio.
@@ -29,13 +72,13 @@ variantes:
       - {fuente: f.indec.pib-nominal-base-2004-anual, desde: 2005, rol: insumo}
       - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01, rol: insumo}
     advertencias: [q.pib-dolares.tipo-de-cambio, q.tc.mercados-desdoblados]
-  - id: trimestral
-    nombre: Trimestral (desde 1993)
+  - id: retropolada-trimestral
+    nombre: Trimestral (desde 1993), con el PIB retropolado
     estado: publicada
     frecuencia: trimestral
     empalme: derivar
     operacion: dividir_por_promedio
-    operandos: [pib-nominal.trimestral, tc-oficial.pesos-actuales]
+    operandos: [pib-nominal.retropolada-trimestral, tc-oficial.pesos-actuales]
     metodo: >-
       PIB nominal trimestral (el de cada trimestre, no a ritmo anual) dividido por el promedio de los tres valores
       de fin de mes del tipo de cambio oficial (CAM-01).
@@ -49,7 +92,7 @@ validacion:
   var_min: -75      # 2002: −64 % (salida de la Convertibilidad)
   var_max: 200
   umbral_revision_pct: 0.5
-quiebres: [q.pib-dolares.tipo-de-cambio, q.tc.mercados-desdoblados]
+quiebres: [q.pib-dolares.tipo-de-cambio, q.pib-dolares.banco-mundial, q.tc.mercados-desdoblados, q.pib-nominal.cada-base]
 transformaciones: []
-fuentes: [f.bm.pib-nominal, f.indec.pib-nominal-base-1993-anual, f.indec.pib-nominal-base-2004-anual, f.indec.pib-nominal-base-1993-trimestral, f.indec.pib-nominal-base-2004-trimestral, f.bcra.tc-historico-mensual]
+fuentes: [f.bm.pib-dolares, f.bm.pib-nominal, f.indec.pib-nominal-base-1993-anual, f.indec.pib-nominal-base-2004-anual, f.indec.pib-nominal-base-1993-trimestral, f.indec.pib-nominal-base-2004-trimestral, f.bcra.tc-historico-mensual]
 licencia_derivado: CC-BY-4.0

@@ -13,7 +13,14 @@ from pipeline.comun import ErrorPipeline, leer_yaml
 DEFLACTOR = "ipc"
 TIPO_DE_CAMBIO = "tc-oficial.pesos-actuales"
 PIB = {"pesos_actuales": "pib-nominal", "dolares": "pib-dolares"}
-FRECUENCIAS_PIB = ("anual", "trimestral")
+# Denominadores del % del PIB (revisión de la 4a, 05/11/2026): el PIB publicado en cada base va por defecto, porque
+# es el de los cuadros de la bibliografía. Cada uno, con las variantes de cada frecuencia.
+DENOMINADORES = {
+    "cada-base": ("cada-base-anual", "cada-base-trimestral"),
+    "retropolado": ("retropolada-anual", "retropolada-trimestral"),
+    "banco-mundial": ("banco-mundial",),
+}
+DENOMINADOR_POR_DEFECTO = "cada-base"
 SIGNOS = "signos-monetarios"
 ARCHIVO_SIGNOS = "auxiliares/signos-monetarios.json"
 
@@ -82,9 +89,11 @@ def insumos(doc: dict, unidades: dict, publicadas: Publicadas) -> dict:
         if o := publicadas.opcion(TIPO_DE_CAMBIO):
             salida["en_dolares"] = {"opciones": [_sin_frecuencia(o)], "por_defecto": o["id"], "unidad": unidad("en_dolares")}
     if "pct_pib" in declaradas and moneda in PIB:
-        opciones = [o for f in FRECUENCIAS_PIB if (o := publicadas.opcion(f"{PIB[moneda]}.{f}"))]
-        if opciones:
-            salida["pct_pib"] = {"opciones": opciones, "por_defecto": opciones[0]["id"], "unidad": "% del PIB"}
+        opciones = [{**o, "denominador": d} for d, variantes in DENOMINADORES.items() for v in variantes
+                    if (o := publicadas.opcion(f"{PIB[moneda]}.{v}"))]
+        defecto = next((o["id"] for o in opciones if o["denominador"] == DENOMINADOR_POR_DEFECTO), None)
+        if opciones and defecto:
+            salida["pct_pib"] = {"opciones": opciones, "por_defecto": defecto, "unidad": "% del PIB"}
     if "pesos_actuales" in declaradas and moneda == "moneda_de_epoca":
         # Los signos monetarios se exportan siempre (export/auxiliares/signos-monetarios.json).
         salida["pesos_actuales"] = {"opciones": [{"id": SIGNOS, "archivo": ARCHIVO_SIGNOS}], "por_defecto": SIGNOS,

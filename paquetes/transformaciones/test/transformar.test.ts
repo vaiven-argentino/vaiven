@@ -202,7 +202,7 @@ describe("período y advertencias", () => {
 describe("disponibles", () => {
   it("respeta lo que declara la variante", () => {
     expect(disponibles(serie(mensual("2000-01", [1, 2]), { transformaciones: [] }))).toEqual({
-      transformaciones: ["nivel"], frecuencias: [], mediaMovil: false, medidas: [], deflactores: [],
+      transformaciones: ["nivel"], frecuencias: [], mediaMovil: false, medidas: [], deflactores: [], denominadores: [],
     });
     expect(() => transformar(serie(mensual("2000-01", [1, 2]), { transformaciones: [] }), { transformacion: "var_mensual" }))
       .toThrow(ErrorTransformacion);

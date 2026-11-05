@@ -4,6 +4,13 @@ import { readFileSync, statSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Advertencia, DocumentoExportado, Excluido, InsumosCargados, Medida, SerieExportada, SignosMonetarios, Tramo } from "@vaiven/transformaciones";
 import { ESQUEMAS_SOPORTADOS } from "@vaiven/transformaciones";
+import { opcionesDelDenominador } from "./ficha";
+
+/**
+ * «Uso en la bibliografía» (fichas del inventario con materiales de la cátedra): oculto hasta que la cátedra diga si
+ * quiere figurar (SPEC, sección 12; revisión de la 4a, 05/11/2026). El inventario sigue en el repositorio.
+ */
+export const MOSTRAR_BIBLIOGRAFIA = false;
 
 export const RAIZ = join(process.cwd(), "..");
 export const EXPORT = join(RAIZ, "export");
@@ -81,7 +88,7 @@ interface MetaDocumento {
   cita: string;
   version_datos: string;
   desactualizada_desde: string | null;
-  vista_inicial?: { transformacion?: string; medida?: "real" | "en_dolares" | "pct_pib" };
+  vista_inicial?: { transformacion?: string; medida?: "real" | "en_dolares" | "pct_pib"; frecuencia?: "trimestral" | "anual"; desde?: string };
 }
 
 export type DocumentoSerie = MetaDocumento & DocumentoExportado;
@@ -133,11 +140,11 @@ export function descargaCompleta(ext: "zip" | "parquet"): { archivo: string; tam
  * Los insumos de una medida, leídos del export en el build (para la vista inicial de la ficha). El navegador los
  * pide a /datos/ recién cuando se elige la medida.
  */
-export function insumosDe(doc: SerieExportada, medida: Medida, deflactor?: string): InsumosCargados {
+export function insumosDe(doc: SerieExportada, medida: Medida, deflactor?: string, denominador?: string): InsumosCargados {
   const insumo = doc.insumos?.[medida];
   if (!insumo) return {};
   if (medida === "pesos_actuales") return { signos: leer<SignosMonetarios>(insumo.opciones[0].archivo) };
-  const ids = medida === "real" ? [deflactor ?? insumo.por_defecto] : insumo.opciones.map((o) => o.id);
+  const ids = medida === "real" ? [deflactor ?? insumo.por_defecto] : opcionesDelDenominador(insumo, denominador).map((o) => o.id);
   const series = Object.fromEntries(insumo.opciones.filter((o) => ids.includes(o.id)).map((o) => [o.id, leer<SerieExportada>(o.archivo)]));
   return { series };
 }

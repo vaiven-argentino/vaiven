@@ -1,10 +1,10 @@
 // Lógica de la ficha que se usa en el build y en el navegador: transformación inicial, quiebres numerados,
 // resumen del gráfico (texto alternativo) y filas de la tabla.
 import { PASO, disponibles, indiceFin, indiceMes, type Advertencia, type Resultado, type SerieExportada } from "@vaiven/transformaciones";
-import type { Transformacion } from "@vaiven/transformaciones";
+import type { Insumo, OpcionInsumo, SeriePorPais, Transformacion } from "@vaiven/transformaciones";
 import { fechaCorta, fechaLegible, numero } from "./formato";
 
-type ConVista = SerieExportada & { vista_inicial?: { transformacion?: string; medida?: string } };
+type ConVista = SerieExportada & { vista_inicial?: { transformacion?: string; medida?: string; frecuencia?: string; desde?: string } };
 
 export function transformacionInicial(serie: ConVista): Transformacion {
   const disp = disponibles(serie).transformaciones;
@@ -25,9 +25,27 @@ export function medidaInicial(serie: ConVista): "real" | "en_dolares" | "pct_pib
  * La frecuencia con que arranca la ficha: anual si la medida inicial es % del PIB y la serie es más fina que el PIB
  * (el resultado fiscal mensual). Es la misma regla que aplica el selector cuando se elige «% del PIB».
  */
-export function frecuenciaInicial(serie: ConVista): "anual" | undefined {
+export function frecuenciaInicial(serie: ConVista): "trimestral" | "anual" | undefined {
+  const frecuencias = disponibles(serie).frecuencias;
+  const pedida = serie.vista_inicial?.frecuencia as "trimestral" | "anual" | undefined;
+  if (pedida) return frecuencias.includes(pedida) ? pedida : undefined;
   if (medidaInicial(serie) !== "pct_pib" || ["anual", "trimestral"].includes(serie.frecuencia)) return undefined;
-  return disponibles(serie).frecuencias.includes("anual") ? "anual" : undefined;
+  return frecuencias.includes("anual") ? "anual" : undefined;
+}
+
+/** El primer período con que arranca la ficha (por ejemplo, el IPC desde 1991), si cae dentro de la serie. */
+export function desdeInicial(serie: ConVista): string | undefined {
+  const d = serie.vista_inicial?.desde;
+  if (!d || !serie.datos.length) return undefined;
+  const [primero, ultimo] = aniosDe(serie);
+  const anio = Number(d.slice(0, 4));
+  return anio > primero && anio <= ultimo ? d : undefined;
+}
+
+/** Las opciones de % del PIB de un denominador (por defecto, el de la opción por defecto); en las demás medidas, todas. */
+export function opcionesDelDenominador(insumo: Insumo, denominador?: string): OpcionInsumo[] {
+  const d = denominador ?? insumo.opciones.find((o) => o.id === insumo.por_defecto)?.denominador;
+  return insumo.opciones.filter((o) => !d || !o.denominador || o.denominador === d);
 }
 
 export const esVariacion = (t: string) => t.startsWith("var_") || t === "acumulada_anio";
@@ -96,6 +114,39 @@ export function filasTabla(r: Resultado, variacion: boolean): FilaTabla[] {
     valor: v === null && excluidos.has(f) ? "Excluido (ver nota)" : numero(v, variacion),
     excluido: excluidos.has(f),
   }));
+}
+
+export interface TablaDecadas {
+  /** Rótulo de cada década, con los años que tienen dato («1961–69», «1970–79», «2020–25»). */
+  decadas: string[];
+  filas: Array<{ id: string; nombre: string; valores: string[] }>;
+}
+
+/**
+ * Crecimiento promedio por década (SPEC 6.2: «una vista de tabla por década para comparar sin ruido anual»): el
+ * promedio geométrico de las tasas anuales de cada década, con al menos 5 años con dato; si no, «—».
+ */
+export function crecimientoPorDecada(doc: SeriePorPais, entidades: string[]): TablaDecadas {
+  const anios = [...new Set(entidades.flatMap((id) => doc.datos[id]?.map(([f]) => Number(f.slice(0, 4))) ?? []))].sort((a, b) => a - b);
+  const decadas = [...new Set(anios.map((a) => a - (a % 10)))];
+  const rotulo = (d: number) => {
+    const conDato = anios.filter((a) => a >= d && a < d + 10);
+    return `${conDato[0]}–${String(conDato[conDato.length - 1]).slice(2)}`;
+  };
+  const nombres = new Map(doc.entidades.map((e) => [e.id, e.nombre]));
+  return {
+    decadas: decadas.map(rotulo),
+    filas: entidades.map((id) => {
+      const porAnio = new Map((doc.datos[id] ?? []).map(([f, v]) => [Number(f.slice(0, 4)), v]));
+      const valores = decadas.map((d) => {
+        const tasas = Array.from({ length: 10 }, (_, k) => porAnio.get(d + k)).filter((v): v is number => v !== undefined);
+        if (tasas.length < 5) return "—";
+        const producto = tasas.reduce((p, g) => p * (1 + g / 100), 1);
+        return numero((producto ** (1 / tasas.length) - 1) * 100, true);
+      });
+      return { id, nombre: nombres.get(id) ?? id, valores };
+    }),
+  };
 }
 
 /** Años para el selector de período: del primero al último dato de la variante. */

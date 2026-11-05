@@ -254,8 +254,9 @@
   tipo: metodologia
   descripcion: >-
     En junio de 2026 la base monetaria promedio cae 56 % en un mes (de 41,4 a 18,2 billones de pesos) y se mantiene
-    en ese nivel. La fuente no lo explica; puede ser un cambio de definición. A confirmar con el BCRA: Vaivén no
-    ajusta ni recorta la serie.
+    en ese nivel. La fuente no lo explica; puede ser un cambio de definición. Hasta que el BCRA lo aclare, Vaivén
+    publica la variante hasta mayo de 2026 (decidido el 05/11/2026), para que las variaciones y el % del PIB de los
+    meses siguientes no queden mal.
   afecta: [base-monetaria.promedio-mensual]
   fuente: datos.gob.ar, 90.1_BMT_0_0_20 (24/10/2026).
 
@@ -333,6 +334,31 @@
   fuente: Comparación de REER_51_AR (Bruegel, versión del 11/10/2026) con 116.3_TCRMA_0_M_36 (24/10/2026).
 
 # ── Auxiliares ─────────────────────────────────────────────────────────────────
+- id: q.pib-nominal.cada-base
+  desde: 2004
+  hasta: 2004
+  tipo: cambio_de_base
+  descripcion: >-
+    PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que da un PIB 8 % mayor
+    (375.910 millones en 2003 con la base 1993; 485.115 en 2004 con la base 2004). Un cociente con el PIB salta en
+    ese año; antes de 2004 coincide con los cuadros de la bibliografía, que usan el PIB de cada época. Antes de 1993
+    es el PIB nominal del Banco Mundial.
+  afecta: [pib-nominal.cada-base-anual, pib-nominal.cada-base-trimestral, pib-dolares.cada-base-anual, pib-dolares.cada-base-trimestral]
+  fuente: INDEC (bases 1993 y 2004); Banco Mundial, NY.GDP.MKTP.CN.
+
+- id: q.pib-dolares.banco-mundial
+  desde: 1971
+  hasta: 2015
+  tipo: metodologia
+  descripcion: >-
+    El Banco Mundial convierte el PIB de la Argentina con un factor de conversión alternativo (PA.NUS.ATLS) en los
+    años en que considera que el tipo de cambio oficial no es representativo: en 1971–1981 (salvo 1975 y 1978),
+    entre 1,1 y 2,7 veces el oficial (PA.NUS.FCRF), y en 2012–2015, entre 6 % y 11 % más. En 1980 da 4,99 × 10⁻⁸
+    pesos actuales por dólar contra 1,84 × 10⁻⁸ del oficial: un PIB de 76.962 millones de dólares, contra 224.289
+    con el tipo de cambio oficial.
+  afecta: [pib-dolares.banco-mundial]
+  fuente: Banco Mundial, PA.NUS.ATLS y PA.NUS.FCRF de la Argentina (consultados el 05/11/2026).
+
 - id: q.pib-nominal.retropolado
   desde: 1970
   hasta: 2004
@@ -341,7 +367,7 @@
     Hasta 2004, el nivel del PIB nominal está retropolado desde la base 2004 con las tasas de la base 1993 y, antes
     de 1994, con las del Banco Mundial. No coincide con el PIB nominal publicado en cada base: la base 2004 da, en
     2004, un PIB 8 % mayor que la base 1993, y la diferencia llega a 22 % en 2012.
-  afecta: [pib-nominal.anual, pib-nominal.trimestral]
+  afecta: [pib-nominal.retropolada-anual, pib-nominal.retropolada-trimestral, pib-dolares.retropolada-anual, pib-dolares.retropolada-trimestral]
   fuente: Comparación de 2.3_OGP_1993_A_17 con 4.3_OGP_2004_A_17 en datos.gob.ar (24/10/2026).
 
 - id: q.pib-dolares.tipo-de-cambio
@@ -350,8 +376,11 @@
   descripcion: >-
     El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el
     promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de
-    cambio se use.
-  afecta: [pib-dolares.anual, pib-dolares.trimestral]
+    cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos
+    años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial).
+    Con la «tablita», el oficial da un PIB en dólares de 224.289 millones en 1980 y el Banco Mundial, 76.962; los
+    cocientes con el PIB de esos años cambian mucho según cuál se use.
+  afecta: [pib-dolares.cada-base-anual, pib-dolares.cada-base-trimestral, pib-dolares.retropolada-anual, pib-dolares.retropolada-trimestral]
   fuente: Vaivén (método de la variante).
 
 - id: q.ipc-eeuu.octubre-2025
@@ -369,7 +398,9 @@
   descripcion: >-
     El tipo de cambio nominal es el valor de fin de mes de la serie del BCRA (CAM-01), y los IPC son promedios del
     mes. En los meses de devaluación (por ejemplo, diciembre de 2015 o abril de 2002), el índice refleja el tipo
-    de cambio del último día y no el promedio del mes.
+    de cambio del último día y no el promedio del mes. La base (diciembre de 2015 = 100) es justamente el mes de la
+    salida del cepo, con el tipo de cambio ya devaluado del 31/12/2015: coincide con la base del ITCRM del BCRA
+    (17/12/2015 = 100), pero un índice con base en otro mes da niveles distintos.
   afecta: [tcr-bilateral.oficial, tcr-bilateral.provincias]
   fuente: Vaivén (método de la variante).
 
@@ -450,12 +481,12 @@
   desde: 1970
   tipo: metodologia
   descripcion: >-
-    El Banco Mundial y el INDEC registran la deuda externa con criterios distintos y sus cifras no coinciden: en
-    1993–2000 el Banco Mundial da entre 4 % menos y 10 % más que el INDEC, pero en 1991, 1992 y 2001 da entre 44 % y
-    66 % más, y entre 2006 y 2023 da entre 21 % menos y 6 % más (−13 % en 2006, −12 % en 2023). Las variantes no se
+    El Banco Mundial (Estadísticas de la Deuda Internacional) y el INDEC (deuda externa bruta, MBP6) registran la
+    deuda externa con criterios distintos de cobertura y valuación, y sus cifras no coinciden: entre 2006 y 2023 el
+    Banco Mundial da entre 21 % menos y 6 % más que el INDEC (−13 % en 2006, −12 % en 2023). Las variantes no se
     unen: para comparar en el tiempo, conviene usar una sola.
-  afecta: [deuda-externa.total, deuda-externa.publica, deuda-externa.privada, deuda-externa.indec-1991-2001, deuda-externa.indec]
-  fuente: Comparación de DT.DOD.DECT.CD (Banco Mundial) con la posición de inversión base 1991 y el cuarto trimestre de la serie 161.1 del INDEC (27/10/2026).
+  afecta: [deuda-externa.total, deuda-externa.publica, deuda-externa.privada, deuda-externa.indec]
+  fuente: Comparación de DT.DOD.DECT.CD (Banco Mundial) con el cuarto trimestre de la serie 161.1 del INDEC (27/10/2026; corregida el 05/11/2026).
 
 - id: q.deuda-externa.componentes-bm
   desde: 1970
@@ -473,8 +504,9 @@
   tipo: metodologia
   descripcion: >-
     Serie calculada por Vaivén con la posición de inversión base 1991 del INDEC (pasivos externos menos inversión
-    directa y acciones). No hay datos del INDEC para 2002–2005 en datos.gob.ar, así que no se une con la serie desde
-    2006.
+    directa y acciones). La posición de inversión valúa los títulos de deuda a precio de mercado, no a valor
+    nominal: no es la deuda externa que publican el Ministerio de Economía y la bibliografía. Por eso la variante
+    quedó pendiente (05/11/2026).
   afecta: [deuda-externa.indec-1991-2001]
   fuente: INDEC, posición de inversión internacional base 1991 (datos.gob.ar, dataset 86).
 
@@ -567,3 +599,13 @@
     países. Puede diferir del PIB real del INDEC (ACT-01), que es la serie propia de Vaivén para la Argentina.
   afecta: [int-pib.banco-mundial, int-pib-per-capita.banco-mundial]
   fuente: Banco Mundial; INDEC.
+
+- id: q.int.venezuela
+  desde: 2015
+  tipo: metodologia
+  descripcion: >-
+    Venezuela: desde 2015 la información oficial de cuentas nacionales es escasa e irregular, y los valores del
+    Banco Mundial para esos años son estimaciones con poca base, que pueden revisarse mucho. Conviene leerlos como
+    orden de magnitud.
+  afecta: [int-pib.banco-mundial, int-pib-per-capita.banco-mundial]
+  fuente: Banco Mundial, notas de los Indicadores del Desarrollo Mundial (revisión del 05/11/2026).

@@ -33,6 +33,9 @@ class Resultado:
     cambios: list[str] = field(default_factory=list)
     snapshots_nuevos: list[str] = field(default_factory=list)
     publicado: bool = False
+    # Variantes que no pasaron la validación (o dependen de una fuente que no la pasó): se conserva lo publicado
+    # antes y se publican las demás.
+    retenidas: dict[str, list[str]] = field(default_factory=dict)
 
     @property
     def errores(self) -> list[reglas.Problema]:
@@ -40,8 +43,14 @@ class Resultado:
 
     def informe(self) -> str:
         lineas = []
-        if self.errores:
+        if self.errores and not self.publicado:
             lineas.append("## La validación falló: no se publicó nada\n")
+            lineas += [p.como_texto() for p in self.errores]
+        elif self.retenidas:
+            lineas.append("## Variantes retenidas: se conserva lo publicado antes\n")
+            for vid, motivos in self.retenidas.items():
+                lineas.append(f"- {vid}: {motivos[0]}" + (f" (y {len(motivos) - 1} problemas más)" if len(motivos) > 1 else ""))
+            lineas.append("")
             lineas += [p.como_texto() for p in self.errores]
         otros = [p for p in self.problemas if p.severidad != "error"]
         if otros or self.avisos:
@@ -99,6 +108,98 @@ def _controlar_referencias(series: list[dict], fuentes: dict, quiebres: dict) ->
 
 def publicadas(serie: dict) -> list[dict]:
     return [v for v in serie["variantes"] if v.get("estado", "publicada") == "publicada"]
+
+
+def capa1_previa(rutas: Rutas, fuente: dict) -> pd.Series | None:
+    """La capa 1 publicada antes de esta corrida (para ver si la fuente perdió fechas)."""
+    if fuente.get("paises"):
+        return None
+    ruta = capa1.dir_capa1(rutas, fuente) / f"{fuente['id']}.csv"
+    return leer_csv_serie(ruta) if ruta.exists() else None
+
+
+# Más fechas perdidas que esto frena las variantes de la fuente: una fuente que recorta su historia.
+MAX_FECHAS_PERDIDAS = 12
+
+
+def historia_recortada(fid: str, previa: pd.Series, nueva: pd.Series) -> list[reglas.Problema]:
+    perdidas = sorted(set(previa.index) - set(nueva.index))
+    if len(perdidas) <= MAX_FECHAS_PERDIDAS:
+        return []
+    return [reglas.Problema(fid, "historia", f"La fuente perdió {len(perdidas)} fechas que ya tenía "
+                            f"(de {perdidas[0].date().isoformat()[:7]} a {perdidas[-1].date().isoformat()[:7]}).")]
+
+
+def cobertura_recortada(vid: str, serie: pd.Series, variante: dict) -> list[reglas.Problema]:
+    """La variante empieza más de un año después de lo que declaran sus tramos: la fuente recortó su historia."""
+    if not len(serie):
+        return []
+    declarado = min(a_fecha(t["desde"]) for t in variante["tramos"])
+    if serie.index.min() <= declarado + pd.DateOffset(months=12):
+        return []
+    return [reglas.Problema(vid, "historia", f"Empieza en {serie.index.min().date().isoformat()[:7]} y los tramos "
+                            f"declaran {declarado.date().isoformat()[:7]}: la fuente recortó su historia.")]
+
+
+def variantes_retenidas(todas: list[tuple[dict, dict]], errores: list[reglas.Problema],
+                        fuentes: set[str]) -> tuple[dict[str, list[str]], list[reglas.Problema]]:
+    """A qué variantes se atribuye cada error (por su fuente o por la variante) y cuáles no se pueden atribuir."""
+    vids = {f"{s['id']}.{v['id']}" for s, v in todas}
+    por_fuente: dict[str, list[str]] = {}
+    por_variante: dict[str, list[str]] = {}
+    sin_atribuir = []
+    for p in errores:
+        clave = p.serie.split("[")[0].split("#")[0]
+        if clave in vids:
+            por_variante.setdefault(clave, []).append(f"{p.regla}: {p.detalle}")
+        elif clave in fuentes:
+            por_fuente.setdefault(clave, []).append(f"{clave} · {p.regla}: {p.detalle}")
+        else:
+            sin_atribuir.append(p)
+    retenidas = dict(por_variante)
+    cambio = True
+    while cambio:
+        cambio = False
+        for s, v in todas:
+            vid = f"{s['id']}.{v['id']}"
+            if vid in retenidas:
+                continue
+            usadas = [t["fuente"] for t in v["tramos"]] + [c[k] for c in v.get("continuidad", []) for k in ("a", "b")]
+            usadas += [c[k] for c in v.get("coherencia", []) for k in ("mensual", "anual")] + derivadas.operandos_de(v)
+            motivos = [m for u in usadas for m in por_fuente.get(u, [])]
+            motivos += [f"depende de {u}, retenida" for u in usadas if u in retenidas]
+            if motivos:
+                retenidas[vid] = motivos
+                cambio = True
+    return retenidas, sin_atribuir
+
+
+def desactualizada_publicada(rutas: Rutas, nombre: str) -> str | None:
+    """`desactualizada_desde` del JSON publicado de una variante (operando de una derivada en una corrida parcial)."""
+    if nombre.startswith("f.") or "." not in nombre:
+        return None
+    serie, variante = nombre.split(".", 1)
+    for carpeta in ("series", "auxiliares"):
+        ruta = rutas.export / carpeta / serie / f"{variante}.json"
+        if ruta.exists():
+            return json.loads(ruta.read_text(encoding="utf-8")).get("desactualizada_desde")
+    return None
+
+
+def quitar_despublicadas(rutas: Rutas, series: list[dict]) -> list[str]:
+    """Borra el JSON y los CSV (descarga y capa 2) de las variantes exportadas que ya no están publicadas."""
+    vigentes = {f"{s['id']}.{v['id']}" for s in series for v in publicadas(s)}
+    quitadas = []
+    for carpeta in ("series", "auxiliares"):
+        for ruta in sorted((rutas.export / carpeta).glob("*/*.json")):
+            vid = f"{ruta.parent.name}.{ruta.stem}"
+            if vid in vigentes:
+                continue
+            csv = rutas.export / "descargas" / "csv" / ("auxiliares" if carpeta == "auxiliares" else "") / ruta.parent.name / f"{ruta.stem}.csv"
+            for archivo in (ruta, csv, rutas.capa2 / ruta.parent.name / f"{ruta.stem}.csv"):
+                archivo.unlink(missing_ok=True)
+            quitadas.append(vid)
+    return quitadas
 
 
 def fuentes_necesarias(meta: Metadatos) -> list[str]:
@@ -185,7 +286,10 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
     desactualizadas: dict[str, str] = {}
     for fid in fuentes_necesarias(meta):
         fuente = meta.fuentes[fid]
+        previa = capa1_previa(rutas, fuente)
         serie, desde = obtener_fuente(rutas, fuente, con_red, res)
+        if previa is not None and not isinstance(serie, dict):
+            res.problemas += historia_recortada(fid, previa, serie)
         if isinstance(serie, dict):
             # Fuente con dimensión pais: cada entidad es una serie de capa 1 «<fuente>#<ISO3>».
             for entidad, s_ent in serie.items():
@@ -241,7 +345,6 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                     res.problemas += validar_variante(f"{vid}[{ent}]", por_entidad[ent], frecuencia,
                                                       _reglas_variante(s, v), v, capa1_series)
                 construidas[vid] = (s, v, por_entidad)
-                escribir_csv_entidades(rutas.capa2 / s["id"] / f"{v['id']}.csv", por_entidad)
                 continue
             try:
                 serie = variantes.construir(v, capa1_series, meta.signos, meta.fuentes, disponibles, frecuencia)
@@ -249,8 +352,9 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                 res.problemas.append(reglas.Problema(vid, "construcción", str(e)))
                 continue
             res.problemas += validar_variante(vid, serie, frecuencia, _reglas_variante(s, v), v, capa1_series)
+            if v.get("empalme") != "derivar":
+                res.problemas += cobertura_recortada(vid, serie, v)
             construidas[vid] = (s, v, serie)
-            escribir_csv_serie(rutas.capa2 / s["id"] / f"{v['id']}.csv", serie)
         if not avance:
             for s, v in pendientes:
                 faltan = [n for n in derivadas.operandos_de(v) if operando(n) is None]
@@ -258,16 +362,34 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                                                      f"Faltan los operandos {', '.join(faltan)} (o hay una dependencia circular)."))
             break
 
-    if res.errores:
+    # Aislamiento: un error de una fuente o de una variante retiene esa variante (y las derivadas que dependen de
+    # ella); las demás se publican. Un error que no se puede atribuir frena todo, como antes.
+    todas = [(s, v) for s in meta.series for v in publicadas(s)]
+    retenidas, sin_atribuir = variantes_retenidas(todas, res.errores, set(meta.fuentes))
+    if sin_atribuir:
         return res
+    res.retenidas = retenidas
+    for vid in retenidas:
+        construidas.pop(vid, None)
+    for vid, (s, v, serie) in construidas.items():
+        if isinstance(serie, dict):
+            escribir_csv_entidades(rutas.capa2 / s["id"] / f"{v['id']}.csv", serie)
+        else:
+            escribir_csv_serie(rutas.capa2 / s["id"] / f"{v['id']}.csv", serie)
 
     # 5. Revisiones y export.
     documentos: dict[str, dict] = {}
     entradas_revision = []
     hubo_cambios = False
     nuevos: dict[str, dict] = {}
+    desact_variante: dict[str, str | None] = {}
     for vid, (s, v, serie) in construidas.items():
-        desde = min((desactualizadas[t["fuente"]] for t in v["tramos"] if t["fuente"] in desactualizadas), default=None)
+        # Las derivadas heredan la fecha de sus operandos (variantes o fuentes) que quedaron desactualizados.
+        fechas = [desactualizadas[t["fuente"]] for t in v["tramos"] if t["fuente"] in desactualizadas]
+        for o in derivadas.operandos_de(v):
+            fechas += [f for f in (desactualizadas.get(o), desact_variante.get(o), desactualizada_publicada(rutas, o)) if f]
+        desde = min(fechas, default=None)
+        desact_variante[vid] = desde
         nuevos[vid] = export_series.documento(s, v, serie, meta.fuentes, meta.quiebres, momento, desde)
     # Los insumos dependen de qué otras variantes quedan publicadas: se completan con todos los documentos armados.
     publicadas_export = export_insumos.Publicadas(nuevos, rutas.export, rutas.metadatos)
@@ -309,6 +431,28 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                                       "cambios": rev["sobre_umbral"]})
         export_series.escribir(rutas.export, doc)
         documentos[vid] = doc
+
+    # Las retenidas conservan su JSON anterior, marcado como desactualizado desde su última versión.
+    for vid in retenidas:
+        s = next(x for x, v in todas if f"{x['id']}.{v['id']}" == vid)
+        ruta = rutas.export / export_insumos.archivo(vid.split(".")[0], vid.split(".", 1)[1], bool(s.get("auxiliar")))
+        if not ruta.exists():
+            res.cambios.append(f"{vid}: retenida y sin versión anterior: no se publica")
+            continue
+        anterior = json.loads(ruta.read_text(encoding="utf-8"))
+        if not anterior.get("desactualizada_desde"):
+            anterior["desactualizada_desde"] = anterior["version_datos"][:10]
+            export_series.escribir(rutas.export, anterior)
+            hubo_cambios = True
+        documentos[vid] = anterior
+        res.cambios.append(f"{vid}: retenida; se conserva la versión del {anterior['version_datos'][:10]}")
+
+    # Variantes que dejaron de estar publicadas (pasaron a pendiente o se borraron de los metadatos): se quitan del
+    # export y de la capa 2, para que despublicar sea solo cambiar el `estado` en el YAML.
+    quitadas = quitar_despublicadas(rutas, cargar_metadatos(rutas).series if solo else meta.series)
+    if quitadas:
+        hubo_cambios = True
+        res.cambios += [f"{vid}: despublicada (se quitaron su JSON y sus CSV)" for vid in quitadas]
 
     ruta_catalogo = rutas.export / "catalogo.json"
     version_general = momento

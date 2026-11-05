@@ -1,6 +1,7 @@
 // Especificación de Vega-Lite de la ficha. Es una función pura (se prueba con Vitest) que recibe el resultado de
 // la transformación y dibuja: la serie, cortada donde no hay continuidad; los quiebres como bandas o reglas
-// numeradas; y los datos excluidos como una «×» sobre el eje.
+// numeradas; y los datos excluidos como una «×» sobre el eje. En las series con dimensión pais, las demás entidades
+// de la selección inicial van como líneas finas en tono secundario y la elegida queda resaltada (SPEC 6.2).
 import { PASO, indiceFin, indiceMes, type Resultado, type Tramo } from "@vaiven/transformaciones";
 import type { QuiebreNumerado } from "../lib/ficha";
 import { fechaCorta, fechaLegible, numero } from "../lib/formato";
@@ -28,6 +29,9 @@ export interface EntradaGrafico {
   alto: number;
   ancho: number;
   descripcion: string;
+  /** Series con dimensión pais: el nombre de la entidad resaltada y las demás de la selección, en tono secundario. */
+  nombre?: string;
+  otras?: Array<{ nombre: string; resultado: Resultado }>;
   /** Solo para exportar la imagen: título, subtítulo y pie impresos dentro del gráfico. */
   impreso?: { titulo: string; subtitulo: string; pie: string[] };
 }
@@ -39,6 +43,8 @@ export interface Fila {
   tramo: string;
   fecha: string;
   valor: string;
+  /** En las series con dimensión pais, el nombre de la entidad (para el tooltip). */
+  pais?: string;
 }
 
 // En escala logarítmica con valores muy chicos (el tipo de cambio de 1970 en pesos actuales es 3,5 × 10⁻¹¹), los
@@ -130,20 +136,30 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const marcadores = ubicarMarcadores([...rangos, ...reglas].map((q) => ({ n: q.n, i: q.medio })), ini, fin, e.ancho);
   const excluidos = e.resultado.excluidos.map((x) => ({ t: iso(indiceMes(x.fecha)), texto: `Dato excluido (${fechaCorta(x.fecha)}): ${x.motivo}` }));
 
+  const filasOtras = (e.otras ?? []).flatMap((o) => filas({ ...e, resultado: o.resultado }).map((f) => ({ ...f, pais: o.nombre })));
+  const todas = [...filasLinea, ...filasOtras];
   const tramosDistintos = new Set(filasLinea.map((f) => f.tramo)).size > 1 && e.empalme === "yuxtaponer";
   const ralo = filasLinea.length <= 160 || e.resultado.frecuencias.some((f) => f === "semestral" || f === "anual");
-  const positivos = filasLinea.every((f) => f.v > 0);
+  const positivos = todas.every((f) => f.v > 0);
   const log = e.log && positivos;
-  const minimo = Math.min(...filasLinea.map((f) => Math.abs(f.v)).filter((v) => v > 0));
-  const cero = e.esVariacion || filasLinea.every((f) => f.v >= 0);
-  const tope = topeY(filasLinea.map((f) => f.v), reservaSuperior(marcadores, barras.length > 0), e.alto, log, cero);
+  const minimo = Math.min(...todas.map((f) => Math.abs(f.v)).filter((v) => v > 0));
+  const cero = e.esVariacion || todas.every((f) => f.v >= 0);
+  const tope = topeY(todas.map((f) => f.v), reservaSuperior(marcadores, barras.length > 0), e.alto, log, cero);
+  // Con valores negativos, un margen abajo para que el mínimo no quede pegado al eje.
+  const negativos = !log && todas.some((f) => f.v < 0);
+  const minY = Math.min(...todas.map((f) => f.v));
+  const piso = negativos ? minY - (Math.max(...todas.map((f) => f.v), 0) - minY) * 0.08 : undefined;
   const y = {
     field: "v", type: "quantitative", title: null,
-    scale: { ...(log ? { type: "log" } : { zero: cero }), ...(tope === undefined ? {} : { domainMax: tope }) },
+    scale: {
+      ...(log ? { type: "log" } : { zero: cero }), ...(tope === undefined ? {} : { domainMax: tope }),
+      ...(piso === undefined ? {} : { domainMin: piso, nice: false }),
+    },
     axis: log && minimo < 0.01 ? { labelExpr: ROTULO_POTENCIA, values: potenciasDeDiez(minimo, Math.max(...filasLinea.map((f) => f.v))) }
       : { format: ",~r", tickCount: 6 },
   };
-  const tooltip = [{ field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" }];
+  const tooltip = [...(e.nombre ? [{ field: "pais", title: "País" }] : []), { field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" }];
+  if (e.nombre) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
 
   const capas: Record<string, unknown>[] = [];
   if (bandas.length) {
@@ -175,8 +191,20 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       encoding: { x: x("desde") },
     });
   }
+  if (negativos) {
+    // La línea del 0, más marcada que la grilla, cuando hay valores negativos.
+    capas.push({ data: { values: [{ v: 0 }] }, mark: { type: "rule", color: tema.borde, strokeWidth: 1.2 }, encoding: { y: { ...y, axis: null } } });
+  }
+  if (filasOtras.length) {
+    capas.push({
+      data: { values: filasOtras },
+      mark: { type: "line", color: tema.secundario, strokeWidth: 1.2, opacity: 0.75, interpolate: "linear" },
+      encoding: { x: x("t"), y, detail: [{ field: "pais", type: "nominal" }, { field: "segmento", type: "nominal" }] },
+    });
+    capas.push({ data: { values: filasOtras }, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
+  }
   capas.push({
-    data: { values: filasLinea }, mark: { type: "line", color: tema.serie, strokeWidth: 2, interpolate: "linear" },
+    data: { values: filasLinea }, mark: { type: "line", color: tema.serie, strokeWidth: filasOtras.length ? 2.6 : 2, interpolate: "linear" },
     encoding: { x: x("t"), y, detail: { field: "segmento", type: "nominal" } },
   });
   if (tramosDistintos || ralo) {

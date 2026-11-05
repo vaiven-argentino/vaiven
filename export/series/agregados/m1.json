@@ -55,19 +55,35 @@
     "pct_pib": {
       "opciones": [
         {
-          "id": "pib-nominal.anual",
-          "archivo": "auxiliares/pib-nominal/anual.json",
-          "nombre": "Anual, retropolado desde la base 2004",
-          "frecuencia": "anual"
+          "id": "pib-nominal.cada-base-anual",
+          "archivo": "auxiliares/pib-nominal/cada-base-anual.json",
+          "nombre": "Anual, publicado en cada base",
+          "frecuencia": "anual",
+          "denominador": "cada-base"
         },
         {
-          "id": "pib-nominal.trimestral",
-          "archivo": "auxiliares/pib-nominal/trimestral.json",
+          "id": "pib-nominal.cada-base-trimestral",
+          "archivo": "auxiliares/pib-nominal/cada-base-trimestral.json",
+          "nombre": "Trimestral (desde 1993), publicado en cada base",
+          "frecuencia": "trimestral",
+          "denominador": "cada-base"
+        },
+        {
+          "id": "pib-nominal.retropolada-anual",
+          "archivo": "auxiliares/pib-nominal/retropolada-anual.json",
+          "nombre": "Anual, retropolado desde la base 2004",
+          "frecuencia": "anual",
+          "denominador": "retropolado"
+        },
+        {
+          "id": "pib-nominal.retropolada-trimestral",
+          "archivo": "auxiliares/pib-nominal/retropolada-trimestral.json",
           "nombre": "Trimestral (desde 1993), retropolado desde la base 2004",
-          "frecuencia": "trimestral"
+          "frecuencia": "trimestral",
+          "denominador": "retropolado"
         }
       ],
-      "por_defecto": "pib-nominal.anual",
+      "por_defecto": "pib-nominal.cada-base-anual",
       "unidad": "% del PIB"
     }
   },
@@ -105,8 +121,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m1». Versión de datos 2026-10-27. https://vaiven.argentino.workers.dev/series/agregados/",
-  "version_datos": "2026-10-27T19:55:59Z",
+  "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m1». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/agregados/",
+  "version_datos": "2026-11-05T21:54:06Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 1.4225e-07],

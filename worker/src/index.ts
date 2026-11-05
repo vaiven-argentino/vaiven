@@ -16,8 +16,9 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/salud") {
+      // La fase sale de un solo lugar (`vaiven.fase` en package.json): se actualiza con cada despliegue de fase.
       return Response.json(
-        { estado: "ok", version: paquete.version, fase: 3 },
+        { estado: "ok", version: paquete.version, fase: paquete.vaiven.fase },
         { headers: { "cache-control": "no-store" } },
       );
     }

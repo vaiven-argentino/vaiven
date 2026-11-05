@@ -24,6 +24,10 @@
   ],
   "insumos": {},
   "auxiliar": false,
+  "vista_inicial": {
+    "transformacion": "var_interanual",
+    "desde": "1991"
+  },
   "tramos": [
     {
       "fuente": "f.indec.ipc-historico-1943-2008",
@@ -142,8 +146,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Inflación minorista (IPC), variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/ipc/",
-  "version_datos": "2026-10-24T23:04:00Z",
+  "cita": "Vaivén (2026). Inflación minorista (IPC), variante «oficial». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/ipc/",
+  "version_datos": "2026-11-05T21:59:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 6.137836334e-11],

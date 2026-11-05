@@ -13,6 +13,7 @@ export interface ArgsCitar {
   medida?: "real" | "en_dolares" | "pct_pib";
   deflactor?: string;
   base_real?: string;
+  denominador?: "cada-base" | "retropolado" | "banco-mundial";
   paises?: string[];
 }
 
@@ -21,19 +22,21 @@ export async function citar(repo: Repositorio, args: ArgsCitar) {
   exigirPublicada(serie, variante);
   const doc = await repo.documento(variante);
   const deflactor = args.medida === "real" ? (args.deflactor ? leerDeflactor(doc, args.deflactor) : doc.insumos?.real?.por_defecto) : undefined;
+  const paises = args.paises?.length ? [...new Set(args.paises.map((p) => p.trim().toUpperCase()))] : undefined;
   const tr = nombreTransformacion({
-    entidad: args.paises?.length ? [...new Set(args.paises.map((p) => p.trim().toUpperCase()))] : undefined,
     pesosActuales: args.pesos_actuales,
     frecuencia: args.frecuencia,
     medida: args.medida,
     deflactor,
     baseReal: args.base_real,
+    denominador: args.medida === "pct_pib"
+      ? args.denominador ?? doc.insumos?.pct_pib?.opciones.find((o) => o.id === doc.insumos?.pct_pib?.por_defecto)?.denominador : undefined,
     transformacion: args.transformacion,
   });
   const formatos = {
-    texto: () => textoCita(doc, tr),
-    apa: () => apa(doc, tr),
-    bibtex: () => bibtex(doc, tr),
+    texto: () => textoCita(doc, tr, paises),
+    apa: () => apa(doc, tr, paises),
+    bibtex: () => bibtex(doc, tr, paises),
   };
   const pedidos = args.formato ? [args.formato] : (["texto", "apa", "bibtex"] as const);
   const citas: Partial<Record<"texto" | "apa" | "bibtex", string>> = Object.fromEntries(pedidos.map((f) => [f, formatos[f]()]));

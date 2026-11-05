@@ -58,6 +58,7 @@ const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
               <dl class="datos">
                 <div><dt>Frecuencia</dt><dd>{s.frecuencia}</dd></div>
                 <div><dt>Cobertura</dt><dd>{defecto.cobertura ? `${fechaCorta(defecto.cobertura.desde)} – ${fechaCorta(defecto.cobertura.hasta)}` : "—"}</dd></div>
+                {defecto.cobertura && <div><dt>Último dato</dt><dd><strong>{fechaCorta(defecto.cobertura.hasta)}</strong></dd></div>}
                 <div><dt>Variantes</dt><dd>{publicadas} publicada{publicadas === 1 ? "" : "s"}{pendientes > 0 && `, ${pendientes} pendiente${pendientes === 1 ? "" : "s"}`}</dd></div>
               </dl>
             </article>

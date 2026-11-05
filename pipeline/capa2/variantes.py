@@ -51,8 +51,12 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
         serie = METODOS[metodo](tramos(variante, capa1, fuentes))
     excluir = [a_fecha(e["fecha"]) for e in variante.get("excluir", [])]
     if excluir:
-        # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos.
-        serie = serie.drop(index=excluir, errors="ignore")
+        # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos. Una fecha que
+        # no está en la serie es un error: mal escrita, o la fuente ya la corrigió y la exclusión sobra.
+        faltan = [f.date().isoformat()[:7] for f in excluir if f not in serie.index]
+        if faltan:
+            raise ErrorPipeline(f"{variante['id']}: `excluir` nombra fechas que no están en la serie: {', '.join(faltan)}.")
+        serie = serie.drop(index=excluir)
     if "invertir" in variante:
         # Índice dado vuelta (k ÷ valor), declarado: por ejemplo, para que un aumento del TCR sea depreciación.
         serie = float(variante["invertir"]) / serie
@@ -60,7 +64,12 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
         # Cambio de unidad declarado (por ejemplo, de fracción a porcentaje).
         serie = serie * float(variante["escala"])
     conversion = variante.get("conversion")
-    fin_de_mes = variante.get("fecha_conversion") == "fin_de_mes"
+    if conversion is not None and frecuencia not in (None, "mensual"):
+        # La fecha de conversión es el último día del mes del índice: en otras frecuencias no sería el del período.
+        raise ErrorPipeline(f"{variante['id']}: la conversión de signos monetarios solo está definida para series mensuales.")
+    # Criterio único de Vaivén (revisión de la 4a, 05/11/2026): el signo vigente el último día del período, como en
+    # la librería de transformaciones. `fecha_conversion: inicio` lo cambia al primer día.
+    fin_de_mes = variante.get("fecha_conversion", "fin_de_mes") == "fin_de_mes"
     if conversion == "a_pesos_actuales":
         serie = signos_monetarios.a_pesos_actuales(serie, signos, fin_de_mes)
     elif conversion == "a_moneda_de_epoca":

@@ -46,7 +46,7 @@
 | Esquema | Todo el export pasa a **1.2**. El 1.1 sigue publicado en `/esquemas/` y la web, el MCP y la librería leen las dos versiones (un ejemplo 1.1 fijo en las pruebas). |
 | Alcance | Las transformaciones nuevas llegan a la librería, a la ficha y al MCP. En el MCP van como parámetros de `obtener_serie`, que la SPEC 7.2 ya define; no se suman herramientas. |
 | Orden de las transformaciones | pesos actuales → frecuencia → real / en dólares / % del PIB → base 100, variación o índice desde tasas → media móvil → período. |
-| PIB nominal (AUX-01) | Retropolado desde la base 2004: tasas de la base 1993 para 1993–2003 y del Banco Mundial (NY.GDP.MKTP.CN) para 1970–1992. |
+| PIB nominal (AUX-01) | Retropolado desde la base 2004: tasas de variación de la base 1993 para 1994–2004 y del Banco Mundial (NY.GDP.MKTP.CN) para 1971–1993 (así lo dice también el `metodo` del export). Desde la revisión del 05/11/2026 ya no es el de por defecto: ver «Correcciones de la revisión». |
 | PIB en dólares (AUX-02) | PIB nominal en pesos actuales ÷ promedio del tipo de cambio oficial (CAM-01) del período, calculado en el pipeline. |
 | IPC de EE.UU. (AUX-04) | De la OCDE (CC BY 4.0), que lo toma del BLS. 2025-10 es un hueco permitido: el BLS no relevó ese mes. |
 | ACT-01 | Base 1960 para 1970–1980 (la base 1970 está vacía en la API), con aviso. |
@@ -196,3 +196,83 @@
 - La prueba manual de la fase 3 con Claude, sumando los parámetros nuevos (medida, deflactor, países).
 - `/salud` sigue diciendo `"fase": 3`. Se actualiza cuando se despliegue la 4a.
 - Medir la CPU de `/mcp` en producción con el catálogo grande.
+
+## 4a · Correcciones de la revisión
+
+*05/11/2026 · Respuesta a `REVISION_FASE4a.md` (revisión del 28/10/2026 hecha en Claude Chat). Las cifras de la sección 1 de la revisión se verificaron en el export y en datos.gob.ar antes de decidir.*
+
+### Decisiones tomadas con Camilo (05/11/2026)
+
+| Punto | Decisión | Qué se hizo |
+|---|---|---|
+| 1.1 Deuda INDEC 1991–2001 | Pendiente | La derivación da pasivos de la PII a **valor de mercado** (2001: 104.798 millones, contra unos 140.000 nominales). Pasa a `pendiente`; `q.deuda-externa.criterios` deja de atribuir la diferencia a «criterios distintos». En datos.gob.ar no hay deuda externa nominal de 1991–2005. |
+| 1.2 Resultado fiscal devengado | Pendiente | Las dos variantes pasan a `pendiente` hasta tener la nota de unidad de la ONP; FIS-01 queda en 1993–hoy. No hay una versión en % del PIB en datos.gob.ar. |
+| 1.3 y 1.4 PIB del % del PIB | El publicado en cada base, por defecto | AUX-01 y AUX-02 suman «cada base» (Banco Mundial hasta 1992, base 1993 en 1993–2003, base 2004 desde 2004) y AUX-02, el del Banco Mundial. El % del PIB deja elegir el denominador en la librería, la ficha y el MCP. El Banco Mundial ya publica el PIB nominal «de cada base» (236.505 en 1993, 268.697 en 2001). |
+| 1.5 FIS-04 | Renombrar | «Deuda pública externa (Banco Mundial)», hasta tener la total. |
+| 1.6 Cita | — | El país va aparte («País: Argentina.»), no como transformación. |
+| 1.7 Series internacionales | Selección inicial en la ficha | Las 5 entidades de la selección inicial, la elegida resaltada, más la tabla de crecimiento promedio por década. |
+| 2.1 Atraso de datos | Usar la API del BCRA, si la licencia lo permite | **No lo permite con claridad** (ver abajo): no se almacena. Se suma «Último dato» visible en la ficha, el catálogo y el MCP (`ultimo_dato`). Camilo decidió después (05/11/2026) que el tramo reciente se **consulte en vivo**, sin almacenarlo, como el riesgo país: va en una tanda aparte, con su plan. |
+| 2.3 Pesos actuales | El signo del último día del período | El pipeline lo usa por defecto, como la librería; solo en series mensuales. |
+| 2.4 Base monetaria promedio | Cortar en 2026-05 | Hasta que el BCRA aclare la caída de junio de 2026. |
+| 2.4 Fuga, variación de activos | Pendiente | Hasta contrastarla con la bibliografía. |
+| 2.5 IPC | Desde 1991 | `vista_inicial.desde`. |
+| 2.7 Uso en la bibliografía | Oculto hasta consultar a la cátedra | Interruptor `MOSTRAR_BIBLIOGRAFIA` en la web y en el MCP; el inventario sigue en el repositorio. |
+| 3 SPEC | v1.1 | Incorpora lo decidido en las fases 1 a 4a. |
+| 3 PR | PR encadenados | Te pregunto antes de abrir cada uno. |
+| 5 Agentes | Verificador en Sonnet, revisor de datos nuevo, regla en CLAUDE.md | `.claude/settings.json` no se crea (el modelo de la sesión se elige al abrirla). |
+
+### Lo que se hizo además
+
+- **Despublicar ahora borra:** una variante que pasa a `pendiente` se quita del export y de la capa 2 (antes conservaba su JSON viejo).
+- **Pipeline más robusto (2.2):**
+  - una falla de validación retiene solo la variante (y sus derivadas) y conserva su versión anterior marcada `desactualizada_desde`; el resto se publica (código de salida 3 y issue);
+  - frenan una fuente que pierde más de 12 fechas y una variante que empieza más de un año después de lo declarado;
+  - `excluir` con una fecha inexistente es un error;
+  - las derivadas heredan `desactualizada_desde`;
+  - `actualizar.yml` hace `pull --rebase` si el push falla, y las acciones de los tres workflows quedan fijadas por SHA.
+- **Ficha:**
+  - línea del 0 marcada y margen bajo el mínimo con valores negativos;
+  - el dato excluido del final del período se marca;
+  - botones de atajo de 44 px y placeholder con contraste suficiente;
+  - «Datos de esta serie» en la cabecera y «Última actualización del sitio» en el pie.
+- **Cita y licencias (2.6):** la cita en BibTeX y la imagen exportada dicen cuándo una fuente no es CC BY (Bruegel).
+- **Advertencias nuevas:** Venezuela desde 2015 (INT-01 e INT-02), base de diciembre de 2015 del TCR bilateral y factor de conversión alternativo del Banco Mundial (1971–1981 y 2012–2015).
+- **`/salud`** lee la fase de `worker/package.json` (`4a`).
+- **README, `mcp/PRUEBA_MANUAL.md`** (guion para la 4a) y los README del pipeline y los workflows, al día.
+
+### Contrastes del revisor de datos (05/11/2026)
+
+- **Deuda externa total (Banco Mundial):** reproduce `DT.DOD.DECT.CD` sin diferencias. Contra el INDEC, 2005: 130.788 contra 117.209 millones (+11,6 %, cobertura y valuación distintas). 1991–2001: sin cifras nacionales comprobadas.
+- **Deuda pública y privada (Banco Mundial):** son solo de largo plazo y no suman el total (lo explica `q.deuda-externa.componentes-bm`). La privada no garantizada da mucho menos que el relevamiento del BCRA (2005: 26.361 contra 47.541 millones): es otra definición.
+- **FAE:** coincide con los informes del BCRA (2007: 8.872 contra 8.880; 2010 y 2011, iguales; 2015, 2017–2019, dentro del 3 %).
+
+### Licencias consultadas (05/11/2026)
+
+- **API del BCRA:** no tiene términos propios; el aviso legal del sitio (<https://www.bcra.gob.ar/aviso-legal/>) permite reutilizar «con fines informativos, educativos o académicos» citando la fuente, pero **prohíbe el uso comercial sin autorización previa**, y la redistribución con CC BY 4.0 permite el uso comercial de terceros. **No está claro: no se usa** y se suma a la consulta al BCRA.
+- **INDEC:** su Política de difusión (2018, sección XI) dice que el material del sitio tiene licencia Creative Commons y permite «copiar, reutilizar o redistribuir el material en cualquier medio o formato» con atribución. No especifica la versión de CC. Bajar sus archivos directo es viable; no se implementó en esta tanda.
+
+### Diferencias con la SPEC
+
+La SPEC v1.1 las incorpora. Quedan como diferencias de esta tanda:
+- El esquema 1.2 cambió antes de publicarse: `denominador` en las opciones de `pct_pib` y `frecuencia` y `desde` en `vista_inicial`.
+- La ficha de las series internacionales compara países, algo que la SPEC dejaba para el explorador.
+
+### Pendientes
+
+**Consultas (tuyas):**
+- **BCRA:** licencia de la API para un repositorio CC BY (o autorización expresa), M2 desde 2019-08 y base monetaria promedio de junio de 2026.
+- **La cátedra:** si quiere figurar en los créditos y si se puede mostrar «Uso en la bibliografía».
+- Cavallo y Bertolotto, Secretaría de Finanzas y FMI, como antes.
+
+**Datos:**
+- La deuda externa nominal de 1991–2005 (DNCI), para volver a publicar una variante del INDEC.
+- Los valores de referencia de BAS2000-G1 y del resto de los casos de la bibliografía.
+- El contraste de la variación de activos externos con Basualdo, Kulfas y CENDA.
+- Bajar series del INDEC directo, ahora que su licencia lo permite.
+
+**Tanda aparte:** consulta en vivo del tramo reciente de las series del BCRA (reservas, tipo de cambio, base monetaria, tasas), sin almacenarlo, en la ficha y en el MCP.
+
+**Proceso:**
+- Prueba manual del MCP con el guion actualizado.
+- PR encadenados hacia `main`.
+- Despliegue de la 4a.

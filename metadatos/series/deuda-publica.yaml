@@ -1,11 +1,13 @@
 id: deuda-publica
 codigo: FIS-04
-nombre: Deuda pública
+nombre: Deuda pública externa (Banco Mundial)
 bloque: Fiscal
 prioridad: A
 definicion: >-
-  Stock de deuda del sector público. Por ahora solo hay una fuente abierta para la parte externa: la deuda pública
-  total (interna y externa) queda pendiente de licencia.
+  Stock de deuda externa pública y con garantía pública de largo plazo, según las Estadísticas de la Deuda
+  Internacional del Banco Mundial. No es la deuda pública total: falta la deuda interna y la de corto plazo. La
+  deuda pública total (Secretaría de Finanzas o FMI) queda pendiente de licencia; cuando se sume, la serie vuelve a
+  llamarse «Deuda pública» (SPEC, sección 3).
 unidad: millones de US$ corrientes
 tipo: stock
 agregacion: fin_de_periodo

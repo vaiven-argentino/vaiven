@@ -46,14 +46,18 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
         variantes = []
         for v in s["variantes"]:
             doc = documentos.get(f"{s['id']}.{v['id']}")
+            estado = v.get("estado", "publicada")
+            # Publicada en los metadatos pero sin JSON: la primera corrida no pasó la validación (quedó retenida).
+            sin_datos = estado == "publicada" and doc is None
             variantes.append({
                 "id": v["id"],
                 "nombre": v["nombre"],
-                "estado": v.get("estado", "publicada"),
+                "estado": "pendiente" if sin_datos else estado,
                 "frecuencia": v.get("frecuencia", s["frecuencia"]),
                 "cobertura": doc["cobertura"] if doc else None,
                 "archivo": f"series/{s['id']}/{v['id']}.json" if doc else None,
-                **({"nota": v["nota"]} if "nota" in v else {}),
+                **({"nota": v["nota"]} if "nota" in v else
+                   {"nota": "Todavía sin datos publicados: la última actualización no pasó la validación."} if sin_datos else {}),
             })
         entradas.append({
             "id": s["id"], "codigo": s["codigo"], "nombre": s["nombre"], "bloque": s["bloque"],

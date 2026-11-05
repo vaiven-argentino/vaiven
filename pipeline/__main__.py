@@ -3,7 +3,8 @@
 - `uv run python -m pipeline actualizar [--series ipc,reservas] [--sin-red] [--informe RUTA]`
 - `uv run --group descargas python -m pipeline descargas`
 
-Sale con código 0 si publicó (con o sin cambios), 1 si la validación falló y 2 ante un error del pipeline.
+`actualizar` sale con código 0 si publicó todo (con o sin cambios), 3 si publicó con variantes retenidas (las que no
+pasaron la validación conservan su versión anterior), 1 si no publicó nada y 2 ante un error del pipeline.
 """
 
 from __future__ import annotations
@@ -49,7 +50,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.informe:
         args.informe.write_text(informe, encoding="utf-8")
     print(informe)
-    return 0 if res.publicado else 1
+    # 0: todo publicado; 3: publicado, con variantes retenidas (hay que revisar); 1: no se publicó nada.
+    if not res.publicado:
+        return 1
+    return 3 if res.retenidas else 0
 
 
 if __name__ == "__main__":

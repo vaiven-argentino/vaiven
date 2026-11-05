@@ -98,14 +98,51 @@ def test_tramo_agregado_a_anual_solo_toma_los_anios_completos():
     assert list(r) == [1 + 2 + 3 + 4, 5 + 6 + 7 + 8]
 
 
-def test_valor_fuera_de_rango_frena_la_publicacion(repo):
+def test_valor_fuera_de_rango_retiene_la_variante(repo):
     shutil.rmtree(repo.snapshots / "f.prueba.nueva")
     _snapshot_datos_gob_ar(repo, "f.prueba.nueva", [["2000-03-01", 50], ["2000-04-01", 50.5], ["2000-05-01", 505.0]])
     res = ejecutar(repo, con_red=False)
-    assert not res.publicado
+    # La variante queda retenida; como no tenía versión anterior, no se publica y el catálogo la muestra sin datos.
+    assert res.publicado and list(res.retenidas) == ["prueba.oficial"]
     assert any(p.regla == "rango" for p in res.errores)
-    assert "2000-05-01" in res.informe()
-    assert not (repo.export / "series").exists()
+    assert "## Variantes retenidas" in res.informe() and "2000-05-01" in res.informe()
+    assert not (repo.export / "series" / "prueba" / "oficial.json").exists()
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    v = {x["id"]: x for x in catalogo["series"][0]["variantes"]}["oficial"]
+    assert v["estado"] == "pendiente" and v["archivo"] is None and "validación" in v["nota"]
+
+
+def test_una_variante_retenida_conserva_lo_publicado_y_las_demas_se_publican(repo):
+    otra = yaml.safe_load((repo.metadatos / "series" / "prueba.yaml").read_text(encoding="utf-8"))
+    otra.update({"id": "otra", "codigo": "PRE-98", "nombre": "Otra serie"})
+    otra["variantes"][0]["tramos"] = [{"fuente": "f.prueba.vieja", "desde": "2000-01"}]
+    otra["variantes"][0]["empalme"] = "yuxtaponer"
+    (repo.metadatos / "series" / "otra.yaml").write_text(yaml.safe_dump(otra, allow_unicode=True), encoding="utf-8")
+    assert ejecutar(repo, con_red=False).publicado
+    ruta = repo.export / "series" / "prueba" / "oficial.json"
+    antes = json.loads(ruta.read_text(encoding="utf-8"))
+    # La fuente nueva trae un salto fuera de rango: «prueba» queda retenida y «otra» (que no la usa) se publica.
+    shutil.rmtree(repo.snapshots / "f.prueba.nueva")
+    _snapshot_datos_gob_ar(repo, "f.prueba.nueva", [["2000-03-01", 50], ["2000-04-01", 50.5], ["2000-05-01", 505.0]])
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and list(res.retenidas) == ["prueba.oficial"]
+    despues = json.loads(ruta.read_text(encoding="utf-8"))
+    assert despues["datos"] == antes["datos"]
+    assert despues["desactualizada_desde"] == antes["version_datos"][:10]
+    assert (repo.export / "series" / "otra" / "oficial.json").exists()
+    assert "prueba.oficial: retenida; se conserva la versión del" in res.informe()
+
+
+def test_una_fuente_que_pierde_su_historia_retiene_sus_variantes(repo):
+    assert ejecutar(repo, con_red=False).publicado
+    # La fuente vieja «pierde» 13 fechas que ya tenía en capa 1 (se simula agrandando la capa 1 previa).
+    import pandas as pd
+    from pipeline.comun import escribir_csv_serie
+    larga = pd.Series(range(16), index=pd.date_range("1999-01-01", periods=16, freq="MS"), dtype=float)
+    escribir_csv_serie(repo.capa1 / "f.prueba.vieja.csv", larga)
+    res = ejecutar(repo, con_red=False)
+    assert any(p.regla == "historia" and p.serie == "f.prueba.vieja" for p in res.errores)
+    assert list(res.retenidas) == ["prueba.oficial"]
 
 
 def test_publicar_una_fuente_no_redistribuible_es_un_error(repo):
@@ -169,3 +206,22 @@ def test_insumos_encuentran_las_auxiliares_fuera_de_la_corrida(tmp_path):
     p = Publicadas({}, tmp_path / "export", tmp_path / "metadatos")
     assert p.opcion("pib-dolares.anual") == {"id": "pib-dolares.anual", "archivo": "auxiliares/pib-dolares/anual.json",
                                              "nombre": "Anual", "frecuencia": "anual"}
+
+
+def test_una_variante_que_pasa_a_pendiente_se_quita_del_export(repo):
+    assert ejecutar(repo, con_red=False).publicado
+    json_ = repo.export / "series" / "prueba" / "oficial.json"
+    csv = repo.export / "descargas" / "csv" / "prueba" / "oficial.csv"
+    assert json_.exists() and csv.exists()
+    # Una segunda variante publicada, para que la serie siga en el catálogo, y la original pasa a pendiente.
+    meta = yaml.safe_load((repo.metadatos / "series" / "prueba.yaml").read_text(encoding="utf-8"))
+    meta["variantes"].append({**meta["variantes"][0], "id": "copia", "nombre": "Copia"})
+    meta["variantes"][0].update({"estado": "pendiente", "nota": "Pendiente: prueba."})
+    meta["variante_por_defecto"] = "copia"
+    (repo.metadatos / "series" / "prueba.yaml").write_text(yaml.safe_dump(meta, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    assert not json_.exists() and not csv.exists() and not (repo.capa2 / "prueba" / "oficial.csv").exists()
+    assert "prueba.oficial: despublicada (se quitaron su JSON y sus CSV)" in res.cambios
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    assert {v["id"]: v["archivo"] for v in catalogo["series"][0]["variantes"]}["oficial"] is None
