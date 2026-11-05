@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.pib-nominal-base-2004-trimestral",
+  "unidad": "millones de pesos corrientes, a ritmo anual",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.indec.pib-nominal-base-2004-trimestral/2026-10-24",
+  "descargado": "2026-10-24T23:23:36Z",
+  "sha256": "d2f642a7f77f1e0328b2af6b63a3fd596a7da2f625329dbbcb1772bc8e013aa7",
+  "observaciones": 90,
+  "desde": "2004-01-01",
+  "hasta": "2026-04-01"
+}

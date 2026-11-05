@@ -20,7 +20,26 @@
     "frecuencia",
     "pct_pib"
   ],
-  "insumos": {},
+  "insumos": {
+    "pct_pib": {
+      "opciones": [
+        {
+          "id": "pib-dolares.anual",
+          "archivo": "auxiliares/pib-dolares/anual.json",
+          "nombre": "Anual",
+          "frecuencia": "anual"
+        },
+        {
+          "id": "pib-dolares.trimestral",
+          "archivo": "auxiliares/pib-dolares/trimestral.json",
+          "nombre": "Trimestral (desde 1993)",
+          "frecuencia": "trimestral"
+        }
+      ],
+      "por_defecto": "pib-dolares.anual",
+      "unidad": "% del PIB"
+    }
+  },
   "auxiliar": false,
   "tramos": [
     {
@@ -48,7 +67,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Exportaciones, variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/exportaciones/",
-  "version_datos": "2026-10-24T23:04:00Z",
+  "version_datos": "2026-10-24T23:24:27Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 1773.167],

@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.itcrm-base-2001",
+  "unidad": "índice dic. 2001 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.itcrm-base-2001/2026-10-24",
+  "descargado": "2026-10-24T23:19:30Z",
+  "sha256": "b478074eba156d1ac740030b94ba33fcd54cac8642caaeb4339cb56a2ee717c1",
+  "observaciones": 300,
+  "desde": "1991-01-01",
+  "hasta": "2015-12-01"
+}

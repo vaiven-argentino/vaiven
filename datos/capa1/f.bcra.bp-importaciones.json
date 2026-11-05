@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.bp-importaciones",
+  "unidad": "millones de US$",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.bcra.bp-importaciones/2026-10-24",
+  "descargado": "2026-10-24T23:07:17Z",
+  "sha256": "6a9be6891a7af6bc9bd0be4bc1fc9126e00eb8f02af35a39afb91e44e248c33f",
+  "observaciones": 129,
+  "desde": "1881-01-01",
+  "hasta": "2009-01-01"
+}

@@ -1,0 +1,11 @@
+{
+  "fuente": "f.indec.bp-mbp6-cuenta-corriente",
+  "unidad": "millones de US$",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.indec.bp-mbp6-cuenta-corriente/2026-10-24",
+  "descargado": "2026-10-24T23:07:16Z",
+  "sha256": "404c6ce23229f5cbe978ce114e4e018ceb571f1555318c7878e7ac46a36476c7",
+  "observaciones": 82,
+  "desde": "2006-01-01",
+  "hasta": "2026-04-01"
+}

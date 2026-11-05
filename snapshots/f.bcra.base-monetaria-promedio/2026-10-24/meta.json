@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.base-monetaria-promedio",
+  "descargado": "2026-10-24T23:14:12Z",
+  "sha256": "5886c41d7a863a95e83557177020b567a3af69a8cc02c7da77ee3bb87475518f",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=90.1_BMT_0_0_20&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 13147,
+      "sha256": "04f363e3016c88894972b8267666202f483a1bf9a2806b7323fccd108a9d1ba6"
+    }
+  ]
+}

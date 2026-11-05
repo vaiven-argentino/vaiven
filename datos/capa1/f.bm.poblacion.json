@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bm.poblacion",
+  "unidad": "personas",
+  "frecuencia": "anual",
+  "snapshot": "snapshots/f.bm.poblacion/2026-10-24",
+  "descargado": "2026-10-24T23:23:36Z",
+  "sha256": "dcec23484d85c05260ce3e973f2019a022d38bd73121cef64a88ba825e659615",
+  "observaciones": 66,
+  "desde": "1960-01-01",
+  "hasta": "2025-01-01"
+}

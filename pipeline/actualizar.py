@@ -8,8 +8,8 @@ from dataclasses import dataclass, field
 import pandas as pd
 
 from pipeline.capa1 import normalizar as capa1
-from pipeline.capa2 import signos_monetarios, variantes
-from pipeline.comun import ErrorPipeline, Rutas, a_fecha, ahora_utc, escribir_csv_serie, leer_yaml
+from pipeline.capa2 import derivadas, signos_monetarios, variantes
+from pipeline.comun import ErrorPipeline, Rutas, a_fecha, ahora_utc, escribir_csv_serie, leer_csv_serie, leer_yaml
 from pipeline.export import catalogo as export_generales
 from pipeline.export import insumos as export_insumos
 from pipeline.export import series as export_series
@@ -59,8 +59,13 @@ class Resultado:
 
 def cargar_metadatos(rutas: Rutas, solo: list[str] | None = None) -> Metadatos:
     series = []
-    for ruta in sorted((rutas.metadatos / "series").glob("*.yaml")):
+    # Las auxiliares (SPEC 2.6) tienen los mismos metadatos y la misma validación, pero no van al catálogo.
+    rutas_meta = [(r, False) for r in sorted((rutas.metadatos / "series").glob("*.yaml"))]
+    rutas_meta += [(r, True) for r in sorted((rutas.metadatos / "auxiliares").glob("*.yaml"))]
+    for ruta, auxiliar in rutas_meta:
         s = leer_yaml(ruta)
+        if auxiliar:
+            s["auxiliar"] = True
         if solo and s["id"] not in solo:
             continue
         series.append(s)
@@ -106,6 +111,7 @@ def fuentes_necesarias(meta: Metadatos) -> list[str]:
                 ids += [c["a"], c["b"]]
             for c in v.get("coherencia", []):
                 ids += [c["mensual"], c["anual"]]
+            ids += [o for o in derivadas.operandos_de(v) if o.startswith("f.")]
     series_ids = {s["id"] for s in meta.series}
     ids += [fid for fid, f in meta.fuentes.items() if f.get("auxiliar") and series_ids & set(f.get("para", []))]
     return list(dict.fromkeys(ids))
@@ -183,20 +189,46 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
         res.problemas += reglas.esquema(fid, serie)
         res.problemas += reglas.huecos(fid, serie, fuente["frecuencia"], fuente.get("huecos_permitidos"), fuente.get("meses"))
 
-    # 3-4. Capa 2 y validación.
+    # 3-4. Capa 2 y validación. Las derivadas (empalme: derivar) se arman cuando están sus operandos.
     construidas: dict[str, tuple[dict, dict, pd.Series]] = {}
-    for s in meta.series:
-        for v in publicadas(s):
+    pendientes = [(s, v) for s in meta.series for v in publicadas(s)]
+
+    def operando(nombre: str) -> pd.Series | None:
+        if nombre in capa1_series:
+            return capa1_series[nombre]
+        if nombre in construidas:
+            return construidas[nombre][2]
+        serie_id, _, var_id = nombre.partition(".")
+        ruta = rutas.capa2 / serie_id / f"{var_id}.csv"     # corrida parcial: lo ya armado
+        return leer_csv_serie(ruta) if ruta.exists() and not any(f"{s['id']}.{v['id']}" == nombre for s, v in pendientes) else None
+
+    while pendientes:
+        avance = False
+        for s, v in list(pendientes):
             vid = f"{s['id']}.{v['id']}"
+            frecuencia = v.get("frecuencia", s["frecuencia"])
+            disponibles = None
+            if v.get("empalme") == "derivar":
+                ops = {n: operando(n) for n in derivadas.operandos_de(v)}
+                if any(x is None for x in ops.values()):
+                    continue
+                disponibles = ops
+            pendientes.remove((s, v))
+            avance = True
             try:
-                serie = variantes.construir(v, capa1_series, meta.signos, meta.fuentes)
+                serie = variantes.construir(v, capa1_series, meta.signos, meta.fuentes, disponibles, frecuencia)
             except ErrorPipeline as e:
                 res.problemas.append(reglas.Problema(vid, "construcción", str(e)))
                 continue
-            frecuencia = v.get("frecuencia", s["frecuencia"])
             res.problemas += validar_variante(vid, serie, frecuencia, _reglas_variante(s, v), v, capa1_series)
             construidas[vid] = (s, v, serie)
             escribir_csv_serie(rutas.capa2 / s["id"] / f"{v['id']}.csv", serie)
+        if not avance:
+            for s, v in pendientes:
+                faltan = [n for n in derivadas.operandos_de(v) if operando(n) is None]
+                res.problemas.append(reglas.Problema(f"{s['id']}.{v['id']}", "construcción",
+                                                     f"Faltan los operandos {', '.join(faltan)} (o hay una dependencia circular)."))
+            break
 
     if res.errores:
         return res
@@ -261,7 +293,7 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                 if vid not in documentos and ruta.exists():
                     documentos[vid] = json.loads(ruta.read_text(encoding="utf-8"))
     export_generales.escribir_generales(rutas.export, series_generales, documentos, meta.fuentes, meta.quiebres,
-                                        version_general, rutas.inventario)
+                                        version_general, rutas.inventario, meta.signos)
     export_generales.agregar_revisiones(rutas.export / "revisiones.json", entradas_revision)
     res.publicado = True
     return res

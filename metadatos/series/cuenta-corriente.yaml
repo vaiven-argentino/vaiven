@@ -1,0 +1,55 @@
+id: cuenta-corriente
+codigo: EXT-04
+nombre: Cuenta corriente
+bloque: Sector externo
+prioridad: A
+definicion: >-
+  Saldo de la cuenta corriente del balance de pagos (bienes, servicios, rentas y transferencias), en millones de
+  dólares corrientes. Un valor negativo es un déficit.
+unidad: millones de US$ corrientes
+tipo: flujo
+agregacion: suma
+frecuencia: anual
+moneda: dolares
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: larga
+variantes:
+  - id: larga
+    nombre: Serie larga, anual (BCRA, MBP5 y MBP6)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Balance de pagos histórico del BCRA entre 1970 y 1991, balance de pagos del INDEC según el quinto manual del
+      FMI (MBP5) entre 1992 y 2005, y según el sexto manual (MBP6) desde 2006, unidos sin ajustar. El tramo MBP6
+      es la suma de los cuatro trimestres de cada año completo: el año en curso no entra hasta que se publique su
+      cuarto trimestre.
+    tramos:
+      - {fuente: f.bcra.bp-cuenta-corriente, desde: 1970, hasta: 1991}
+      - {fuente: f.indec.bp-mbp5-cuenta-corriente, desde: 1992, hasta: 2005}
+      - {fuente: f.indec.bp-mbp6-cuenta-corriente, desde: 2006, agregar: {a: anual, con: suma}}
+    advertencias: [q.cuenta-corriente.fuente-1992, q.cuenta-corriente.mbp6-2006]
+  - id: mbp5
+    nombre: INDEC, quinto manual (MBP5), anual 1992–2016
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: Balance de pagos del INDEC según el quinto manual del FMI (MBP5), sin cambios. Se discontinuó en 2016.
+    tramos:
+      - {fuente: f.indec.bp-mbp5-cuenta-corriente, desde: 1992}
+  - id: mbp6
+    nombre: INDEC, sexto manual (MBP6), trimestral desde 2006
+    estado: publicada
+    frecuencia: trimestral
+    empalme: yuxtaponer
+    metodo: Balance de pagos del INDEC según el sexto manual del FMI (MBP6), trimestral, sin cambios.
+    tramos:
+      - {fuente: f.indec.bp-mbp6-cuenta-corriente, desde: 2006-01}
+validacion:
+  min: -60000
+  max: 60000
+  umbral_revision_pct: 1
+quiebres: [q.cuenta-corriente.fuente-1992, q.cuenta-corriente.mbp6-2006]
+# Sin variaciones ni base 100: el saldo cambia de signo.
+transformaciones: [frecuencia, pct_pib, media_movil]
+fuentes: [f.bcra.bp-cuenta-corriente, f.indec.bp-mbp5-cuenta-corriente, f.indec.bp-mbp6-cuenta-corriente]
+bibliografia: [CB2019-C1, DF1990-C1, FF1990-C2, DLB1993-C11, RAP2005-C5.2, DF2013-C1, SW2015-G1]
+licencia_derivado: CC-BY-4.0

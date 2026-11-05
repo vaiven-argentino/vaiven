@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.pib-base-2004",
+  "descargado": "2026-10-24T23:10:57Z",
+  "sha256": "541ad4445c46e4d9baf9c69dacbef773ef3c6c067f139db74821a07053c7bdfa",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=4.2_OGP_2004_T_17&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6660,
+      "sha256": "88fc3de65f197322c5b7e6c1027e8a680a16861a9203a4e8ed3c02cadea2011e"
+    }
+  ]
+}

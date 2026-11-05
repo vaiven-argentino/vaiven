@@ -49,7 +49,7 @@ def _observacion_anterior(serie: pd.Series, fecha: pd.Timestamp) -> pd.Timestamp
     return anteriores[-1] if len(anteriores) else None
 
 
-def encadenar_tasas(tramos: list[Tramo], ancla: str = "ultimo") -> pd.Series:
+def encadenar_tasas(tramos: list[Tramo], ancla: str = "ultimo", enlace: str = "periodo") -> pd.Series:
     """Empalme por tasas de variación (retropolación).
 
     El primer tramo aporta sus niveles; cada tramo siguiente aporta solo sus tasas de variación,
@@ -62,6 +62,10 @@ def encadenar_tasas(tramos: list[Tramo], ancla: str = "ultimo") -> pd.Series:
     """
     if not tramos:
         raise ErrorPipeline("encadenar_tasas necesita al menos un tramo.")
+    if enlace == "anual":
+        return _encadenar_por_anio(tramos)
+    if enlace != "periodo":
+        raise ErrorPipeline(f"Enlace desconocido: {enlace}")
 
     resultado = tramos[0].recorte().copy()
     for tramo in tramos[1:]:
@@ -93,6 +97,38 @@ def encadenar_tasas(tramos: list[Tramo], ancla: str = "ultimo") -> pd.Series:
     fecha_ref = propio.index[0]
     factor = propio.loc[fecha_ref] / resultado.loc[fecha_ref]
     resultado = resultado * factor
+    resultado.index.name = "fecha"
+    resultado.name = "valor"
+    return resultado
+
+
+def _encadenar_por_anio(tramos: list[Tramo]) -> pd.Series:
+    """Retropolación enlazada en un año completo: para series trimestrales o mensuales sin desestacionalizar.
+
+    Cada tramo conserva sus tasas de variación. El enlace entre un tramo y el siguiente es el primer año del
+    tramo nuevo: el tramo viejo se reescala con el cociente entre los totales de ese año en las dos fuentes, así
+    que el crecimiento anual del año de enlace es el de la fuente vieja y el del año siguiente, el de la nueva.
+    Enlazar en un solo período mezclaría la estacionalidad distinta de cada base. El nivel es el del tramo más
+    reciente. Exige que cada tramo empiece en enero y que la fuente vieja tenga completo el año de enlace.
+    """
+    resultado = tramos[-1].recorte().copy()
+    for viejo, nuevo in zip(reversed(tramos[:-1]), reversed(tramos[1:])):
+        inicio = nuevo.recorte().index[0]
+        if inicio.month != 1:
+            raise ErrorPipeline(f"{nuevo.descripcion()}: con enlace anual, el tramo tiene que empezar en enero.")
+        anio = inicio.year
+        en_nuevo = resultado[resultado.index.year == anio]
+        en_viejo = viejo.serie[viejo.serie.index.year == anio]
+        if len(en_viejo) == 0 or len(en_viejo) != len(en_nuevo) or en_viejo.isna().any():
+            raise ErrorPipeline(
+                f"No se puede enlazar {viejo.descripcion()} con {nuevo.descripcion()}: la fuente vieja no tiene "
+                f"completo el año {anio} ({len(en_viejo)} observaciones contra {len(en_nuevo)})."
+            )
+        propio = viejo.recorte()
+        if propio.index[-1] >= inicio:
+            raise ErrorPipeline(f"Tramos superpuestos: {viejo.descripcion()} llega hasta el enlace ({inicio.date()}).")
+        factor = en_nuevo.sum() / en_viejo.sum()
+        resultado = pd.concat([propio * factor, resultado])
     resultado.index.name = "fecha"
     resultado.name = "valor"
     return resultado

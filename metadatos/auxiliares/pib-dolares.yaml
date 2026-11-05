@@ -1,0 +1,55 @@
+id: pib-dolares
+codigo: AUX-02
+nombre: PIB en dólares
+bloque: Auxiliares
+prioridad: auxiliar
+definicion: >-
+  PIB nominal en pesos dividido por el promedio del tipo de cambio oficial del período, en millones de dólares
+  corrientes. Lo usa la transformación % del PIB de las series en dólares.
+unidad: millones de US$ corrientes
+tipo: flujo
+agregacion: suma
+frecuencia: anual
+moneda: dolares
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: anual
+variantes:
+  - id: anual
+    nombre: Anual
+    estado: publicada
+    empalme: derivar
+    operacion: dividir_por_promedio
+    operandos: [pib-nominal.anual, tc-oficial.pesos-actuales]
+    metodo: >-
+      PIB nominal anual (pesos actuales) dividido por el promedio de los doce valores de fin de mes del tipo de
+      cambio oficial (CAM-01, en pesos actuales). Solo hay dato en los años con los doce meses del tipo de cambio.
+    tramos:
+      - {fuente: f.bm.pib-nominal, desde: 1970, hasta: 1993, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-1993-anual, desde: 1994, hasta: 2004, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-2004-anual, desde: 2005, rol: insumo}
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01, rol: insumo}
+    advertencias: [q.pib-dolares.tipo-de-cambio, q.tc.mercados-desdoblados]
+  - id: trimestral
+    nombre: Trimestral (desde 1993)
+    estado: publicada
+    frecuencia: trimestral
+    empalme: derivar
+    operacion: dividir_por_promedio
+    operandos: [pib-nominal.trimestral, tc-oficial.pesos-actuales]
+    metodo: >-
+      PIB nominal trimestral (el de cada trimestre, no a ritmo anual) dividido por el promedio de los tres valores
+      de fin de mes del tipo de cambio oficial (CAM-01).
+    tramos:
+      - {fuente: f.indec.pib-nominal-base-1993-trimestral, desde: 1993-01, hasta: 2003-10, rol: insumo}
+      - {fuente: f.indec.pib-nominal-base-2004-trimestral, desde: 2004-01, rol: insumo}
+      - {fuente: f.bcra.tc-historico-mensual, desde: 1993-01, rol: insumo}
+    advertencias: [q.pib-dolares.tipo-de-cambio]
+validacion:
+  min: 0
+  var_min: -75      # 2002: −64 % (salida de la Convertibilidad)
+  var_max: 200
+  umbral_revision_pct: 0.5
+quiebres: [q.pib-dolares.tipo-de-cambio, q.tc.mercados-desdoblados]
+transformaciones: []
+fuentes: [f.bm.pib-nominal, f.indec.pib-nominal-base-1993-anual, f.indec.pib-nominal-base-2004-anual, f.indec.pib-nominal-base-1993-trimestral, f.indec.pib-nominal-base-2004-trimestral, f.bcra.tc-historico-mensual]
+licencia_derivado: CC-BY-4.0

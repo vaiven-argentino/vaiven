@@ -1,0 +1,167 @@
+{
+  "esquema": "1.2",
+  "id": "pib-dolares.anual",
+  "serie": "pib-dolares",
+  "codigo": "AUX-02",
+  "nombre": "PIB en dólares",
+  "variante": "anual",
+  "nombre_variante": "Anual",
+  "es_variante_por_defecto": true,
+  "unidad": "millones de US$ corrientes",
+  "tipo": "flujo",
+  "agregacion": "suma",
+  "frecuencia": "anual",
+  "moneda": "dolares",
+  "metodo": "PIB nominal anual (pesos actuales) dividido por el promedio de los doce valores de fin de mes del tipo de cambio oficial (CAM-01, en pesos actuales). Solo hay dato en los años con los doce meses del tipo de cambio.",
+  "empalme": "derivar",
+  "transformaciones": [],
+  "insumos": {},
+  "auxiliar": true,
+  "tramos": [
+    {
+      "fuente": "f.bm.pib-nominal",
+      "desde": "1970",
+      "hasta": "1993",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    },
+    {
+      "fuente": "f.indec.pib-nominal-base-1993-anual",
+      "desde": "1994",
+      "hasta": "2004",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    },
+    {
+      "fuente": "f.indec.pib-nominal-base-2004-anual",
+      "desde": "2005",
+      "hasta": "hoy",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    },
+    {
+      "fuente": "f.bcra.tc-historico-mensual",
+      "desde": "1970-01",
+      "hasta": "hoy",
+      "frecuencia": "anual",
+      "rol": "insumo"
+    }
+  ],
+  "cobertura": {
+    "desde": "1970",
+    "hasta": "2025"
+  },
+  "advertencias": [
+    {
+      "id": "q.pib-dolares.tipo-de-cambio",
+      "desde": "1970",
+      "hasta": null,
+      "tipo": "metodologia",
+      "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use."
+    },
+    {
+      "id": "q.tc.mercados-desdoblados",
+      "desde": "1971-09",
+      "hasta": "1989-12",
+      "tipo": "metodologia",
+      "descripcion": "Mercados cambiarios desdoblados. En estos años hubo, por períodos, un mercado oficial o comercial y otro financiero o libre. La serie del BCRA no sigue siempre el mismo: comparada con las series diarias, coincide con el tipo único en 1970–1971 y 1982, con el financiero en septiembre de 1981, con el oficial en junio de 1987, y queda por encima del oficial en octubre de 1988 y enero de 1989 (15,11 y 17,51 australes, contra 12,36 y 13,94)."
+    }
+  ],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.bm.pib-nominal",
+      "organismo": "Banco Mundial (Indicadores del Desarrollo Mundial)",
+      "nombre": "PIB en moneda local a precios corrientes (NY.GDP.MKTP.CN), Argentina",
+      "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CN?locations=AR",
+      "licencia": "CC-BY-4.0",
+      "id_api": "NY.GDP.MKTP.CN"
+    },
+    {
+      "id": "f.indec.pib-nominal-base-1993-anual",
+      "organismo": "INDEC",
+      "nombre": "Oferta y demanda globales, base 1993. PIB a precios corrientes, anual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=2.3_OGP_1993_A_17",
+      "licencia": "CC-BY-4.0",
+      "id_api": "2.3_OGP_1993_A_17"
+    },
+    {
+      "id": "f.indec.pib-nominal-base-2004-anual",
+      "organismo": "INDEC",
+      "nombre": "Oferta y demanda globales, base 2004. PIB a precios corrientes, anual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=4.3_OGP_2004_A_17",
+      "licencia": "CC-BY-4.0",
+      "id_api": "4.3_OGP_2004_A_17"
+    },
+    {
+      "id": "f.bcra.tc-historico-mensual",
+      "organismo": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32",
+      "licencia": "CC-BY-4.0",
+      "id_api": "174.1_T_DE_CATES_0_0_32"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). PIB en dólares, variante «anual». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/pib-dolares/",
+  "version_datos": "2026-10-24T23:23:47Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1970", 34303.31873],
+    ["1971", 33299.62162],
+    ["1972", 30467.83016],
+    ["1973", 51350.86733],
+    ["1974", 70791.93313],
+    ["1975", 51322.61341],
+    ["1976", 44104.99769],
+    ["1977", 72720.99335],
+    ["1978", 94262.86547],
+    ["1979", 155833.1078],
+    ["1980", 224289.3579],
+    ["1981", 133979.6986],
+    ["1982", 88242.64044],
+    ["1983", 105283.4261],
+    ["1984", 114716.2241],
+    ["1985", 92081.59877],
+    ["1986", 112258.6101],
+    ["1987", 105129.6107],
+    ["1988", 106269.3451],
+    ["1989", 74188.11072],
+    ["1990", 146107.5382],
+    ["1991", 198698.3873],
+    ["1992", 245855.5007],
+    ["1993", 256559.1275],
+    ["1994", 279269.2619],
+    ["1995", 279911.3792],
+    ["1996", 295226.3595],
+    ["1997", 317691.4831],
+    ["1998", 324297.3144],
+    ["1999", 307564.0077],
+    ["2000", 308302.4434],
+    ["2001", 291480.5135],
+    ["2002", 105904.9803],
+    ["2003", 138266.3142],
+    ["2004", 164659.7934],
+    ["2005", 198734.835],
+    ["2006", 232555.3722],
+    ["2007", 287533.5808],
+    ["2008", 361558.0371],
+    ["2009", 332976.4846],
+    ["2010", 423632.822],
+    ["2011", 525806.1899],
+    ["2012", 576473.486],
+    ["2013", 603928.3268],
+    ["2014", 556297.2239],
+    ["2015", 630635.2831],
+    ["2016", 550567.3053],
+    ["2017", 636117.9236],
+    ["2018", 502946.0502],
+    ["2019", 437955.4405],
+    ["2020", 379994.8651],
+    ["2021", 482435.6858],
+    ["2022", 620045.7937],
+    ["2023", 611509.5125],
+    ["2024", 631749.4432],
+    ["2025", 673520.2523]
+  ]
+}

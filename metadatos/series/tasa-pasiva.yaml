@@ -1,0 +1,58 @@
+id: tasa-pasiva
+codigo: MON-03
+nombre: Tasa de interés pasiva
+bloque: Monetario
+prioridad: A
+definicion: Tasa de interés por depósitos en moneda nacional, en porcentaje nominal anual (promedio mensual).
+unidad: '% nominal anual'
+tipo: tasa
+agregacion: promedio
+frecuencia: mensual
+cobertura: {desde: 1970-01, hasta: hoy}
+variante_por_defecto: plazo-fijo
+variantes:
+  - id: plazo-fijo
+    nombre: Plazo fijo de 30 a 59 días (desde 1970)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Tasa por depósitos a plazo fijo de 30 a 59 días en moneda nacional, promedio mensual, nominal anual, según el
+      BCRA: del Panorama monetario y financiero entre 1970 y febrero de 1981 y de las series históricas de
+      estadísticas monetarias desde marzo de 1981. Las dos fuentes dan la misma serie donde se superponen
+      (diferencia máxima de 0,005 puntos). La fuente no tiene datos entre julio de 1982 y mayo de 1984 ni entre enero
+      y marzo de 1990.
+    tramos:
+      - {fuente: f.bcra.tasa-plazo-fijo-panorama, desde: 1970-01, hasta: 1981-02}
+      - {fuente: f.bcra.tasa-plazo-fijo, desde: 1981-03}
+    advertencias: [q.tasa.regulada-1977, q.tasa.nominal-anual, q.tasa.sin-datos-1982-1984]
+    validacion:
+      huecos_permitidos:
+        - {desde: 1982-07, hasta: 1984-05}
+        - {desde: 1990-01, hasta: 1990-03}
+  - id: badlar
+    nombre: BADLAR, bancos privados (desde 1999)
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      Tasa BADLAR de bancos privados (depósitos a plazo fijo de más de un millón de pesos, de 30 a 35 días),
+      promedio mensual, nominal anual, según el BCRA, sin cambios.
+    tramos:
+      - {fuente: f.bcra.badlar, desde: 1999-01}
+    advertencias: [q.tasa.nominal-anual]
+  - id: real
+    nombre: Tasa real (con cada variante del IPC)
+    estado: pendiente
+    nota: Pendiente hasta acordar el método (tasa real ex post y conversión de la tasa nominal anual a mensual).
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.bcra.tasa-plazo-fijo, desde: 1981-03}
+validacion:
+  min: 0
+  max: 20000
+  umbral_revision_pct: 0.5
+quiebres: [q.tasa.regulada-1977, q.tasa.nominal-anual, q.tasa.sin-datos-1982-1984]
+transformaciones: [frecuencia, media_movil]
+fuentes: [f.bcra.tasa-plazo-fijo-panorama, f.bcra.tasa-plazo-fijo, f.bcra.badlar]
+bibliografia: [FF1990-G4, FF1990-G5, RAP2005-G3.6, CENDA2010-G9, KIG2015-G3, KUL2016-G5.2, BICI-T3, BICI-G8, BICI-G10, BICI-G11, BICI-G12]
+licencia_derivado: CC-BY-4.0

@@ -87,3 +87,18 @@ def test_tramo_vacio_es_error():
     a = mensual("2000-01", [1, 2])
     with pytest.raises(ErrorPipeline, match="no tiene datos"):
         encadenar_tasas([t("a", a, "2001-01")])
+
+
+def test_encadenar_con_enlace_anual_respeta_el_crecimiento_anual_de_cada_fuente():
+    import pandas as pd
+    from pipeline.capa2.empalmes import Tramo, encadenar_tasas
+    trim = lambda desde, hasta: pd.date_range(desde, hasta, freq="QS")
+    # Fuente vieja con estacionalidad 1-2-3-4 y crecimiento de 10 % anual; nueva con estacionalidad plana.
+    vieja = pd.Series([v * 1.1 ** k for k in range(3) for v in (1, 2, 3, 4)], index=trim("1978-01", "1980-10"))
+    nueva = pd.Series([20.0] * 4 + [22.0] * 4, index=trim("1980-01", "1981-10"))
+    s = encadenar_tasas([Tramo("f.v", vieja, pd.Timestamp("1978-01-01"), pd.Timestamp("1979-10-01")),
+                         Tramo("f.n", nueva, pd.Timestamp("1980-01-01"))], enlace="anual")
+    anual = s.groupby(s.index.year).sum()
+    assert anual.loc[1980] / anual.loc[1979] == pytest.approx(1.1)      # tasa de la vieja en el año de enlace
+    assert anual.loc[1981] / anual.loc[1980] == pytest.approx(1.1)      # tasa de la nueva después
+    assert s.loc["1981-01-01"] == 22.0                                  # nivel del tramo más reciente

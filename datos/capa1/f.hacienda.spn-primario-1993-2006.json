@@ -1,0 +1,11 @@
+{
+  "fuente": "f.hacienda.spn-primario-1993-2006",
+  "unidad": "millones de pesos",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.hacienda.spn-primario-1993-2006/2026-10-24",
+  "descargado": "2026-10-24T23:16:49Z",
+  "sha256": "16470dcd0bc19ae5f7fde8acb5495d129e883fb4842b60658aed25a92c5691c1",
+  "observaciones": 168,
+  "desde": "1993-01-01",
+  "hasta": "2006-12-01"
+}

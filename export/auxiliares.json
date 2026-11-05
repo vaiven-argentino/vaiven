@@ -1,0 +1,152 @@
+{
+  "version_datos": "2026-10-24T23:24:27Z",
+  "auxiliares": [
+    {
+      "id": "ipc-eeuu",
+      "codigo": "AUX-04",
+      "nombre": "IPC de Estados Unidos",
+      "definicion": "Índice de precios al consumidor de Estados Unidos (CPI-U del BLS), sin desestacionalizar, según la OCDE. Lo usa el tipo de cambio real bilateral (CAM-04).",
+      "unidad": "índice 2015 = 100",
+      "variantes": [
+        {
+          "id": "ocde",
+          "nombre": "OCDE (dato de origen del BLS)",
+          "estado": "publicada",
+          "frecuencia": "mensual",
+          "cobertura": {
+            "desde": "1970-01",
+            "hasta": "2026-09"
+          },
+          "archivo": "auxiliares/ipc-eeuu/ocde.json",
+          "usada_por": []
+        }
+      ]
+    },
+    {
+      "id": "pib-dolares",
+      "codigo": "AUX-02",
+      "nombre": "PIB en dólares",
+      "definicion": "PIB nominal en pesos dividido por el promedio del tipo de cambio oficial del período, en millones de dólares corrientes. Lo usa la transformación % del PIB de las series en dólares.",
+      "unidad": "millones de US$ corrientes",
+      "variantes": [
+        {
+          "id": "anual",
+          "nombre": "Anual",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "auxiliares/pib-dolares/anual.json",
+          "usada_por": [
+            "cuenta-corriente.larga",
+            "cuenta-corriente.mbp5",
+            "cuenta-corriente.mbp6",
+            "exportaciones.mensual",
+            "exportaciones.oficial",
+            "importaciones.mensual",
+            "importaciones.oficial",
+            "reservas.brutas"
+          ]
+        },
+        {
+          "id": "trimestral",
+          "nombre": "Trimestral (desde 1993)",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-01"
+          },
+          "archivo": "auxiliares/pib-dolares/trimestral.json",
+          "usada_por": [
+            "cuenta-corriente.larga",
+            "cuenta-corriente.mbp5",
+            "cuenta-corriente.mbp6",
+            "exportaciones.mensual",
+            "exportaciones.oficial",
+            "importaciones.mensual",
+            "importaciones.oficial",
+            "reservas.brutas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pib-nominal",
+      "codigo": "AUX-01",
+      "nombre": "PIB nominal en pesos",
+      "definicion": "Producto interno bruto a precios corrientes, en millones de pesos (los valores anteriores a 1992, en pesos actuales). Lo usa la transformación % del PIB de las series en pesos.",
+      "unidad": "millones de pesos corrientes",
+      "variantes": [
+        {
+          "id": "anual",
+          "nombre": "Anual, retropolado desde la base 2004",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "auxiliares/pib-nominal/anual.json",
+          "usada_por": [
+            "base-monetaria.fin-de-mes",
+            "base-monetaria.promedio-mensual",
+            "resultado-fiscal.financiero",
+            "resultado-fiscal.primario"
+          ]
+        },
+        {
+          "id": "trimestral",
+          "nombre": "Trimestral (desde 1993), retropolado desde la base 2004",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "auxiliares/pib-nominal/trimestral.json",
+          "usada_por": [
+            "base-monetaria.fin-de-mes",
+            "base-monetaria.promedio-mensual",
+            "resultado-fiscal.financiero",
+            "resultado-fiscal.primario"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "poblacion",
+      "codigo": "AUX-03",
+      "nombre": "Población",
+      "definicion": "Población total de la Argentina a mitad de año, según el Banco Mundial.",
+      "unidad": "personas",
+      "variantes": [
+        {
+          "id": "banco-mundial",
+          "nombre": "Banco Mundial",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "auxiliares/poblacion/banco-mundial.json",
+          "usada_por": []
+        }
+      ]
+    },
+    {
+      "id": "signos-monetarios",
+      "codigo": "AUX-05",
+      "nombre": "Signos monetarios",
+      "definicion": "Equivalencias entre los signos monetarios argentinos desde 1970 (SPEC 4).",
+      "unidad": "unidades del signo por peso actual",
+      "archivo": "auxiliares/signos-monetarios.json",
+      "usada_por": [
+        "tc-oficial.moneda-de-epoca"
+      ]
+    }
+  ]
+}

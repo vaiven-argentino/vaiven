@@ -1,0 +1,142 @@
+{
+  "esquema": "1.2",
+  "id": "pib-nominal.anual",
+  "serie": "pib-nominal",
+  "codigo": "AUX-01",
+  "nombre": "PIB nominal en pesos",
+  "variante": "anual",
+  "nombre_variante": "Anual, retropolado desde la base 2004",
+  "es_variante_por_defecto": true,
+  "unidad": "millones de pesos corrientes",
+  "tipo": "flujo",
+  "agregacion": "suma",
+  "frecuencia": "anual",
+  "moneda": "pesos_actuales",
+  "metodo": "Base 2004 del INDEC desde 2004; hacia atrás, las tasas de variación de la base 1993 (1994–2004) y del PIB nominal del Banco Mundial (1971–1993), encadenadas. Así el % del PIB no salta en el cambio de base: la base 2004 da, en 2004, un PIB 8 % mayor que la base 1993.",
+  "empalme": "encadenar_tasas",
+  "transformaciones": [],
+  "insumos": {},
+  "auxiliar": true,
+  "tramos": [
+    {
+      "fuente": "f.bm.pib-nominal",
+      "desde": "1970",
+      "hasta": "1993",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.indec.pib-nominal-base-1993-anual",
+      "desde": "1994",
+      "hasta": "2004",
+      "frecuencia": "anual"
+    },
+    {
+      "fuente": "f.indec.pib-nominal-base-2004-anual",
+      "desde": "2005",
+      "hasta": "hoy",
+      "frecuencia": "anual"
+    }
+  ],
+  "cobertura": {
+    "desde": "1970",
+    "hasta": "2025"
+  },
+  "advertencias": [
+    {
+      "id": "q.pib-nominal.retropolado",
+      "desde": "1970",
+      "hasta": "2004",
+      "tipo": "cambio_de_base",
+      "descripcion": "Hasta 2004, el nivel del PIB nominal está retropolado desde la base 2004 con las tasas de la base 1993 y, antes de 1994, con las del Banco Mundial. No coincide con el PIB nominal publicado en cada base: la base 2004 da, en 2004, un PIB 8 % mayor que la base 1993, y la diferencia llega a 22 % en 2012."
+    }
+  ],
+  "excluidos": [],
+  "fuentes": [
+    {
+      "id": "f.bm.pib-nominal",
+      "organismo": "Banco Mundial (Indicadores del Desarrollo Mundial)",
+      "nombre": "PIB en moneda local a precios corrientes (NY.GDP.MKTP.CN), Argentina",
+      "url": "https://data.worldbank.org/indicator/NY.GDP.MKTP.CN?locations=AR",
+      "licencia": "CC-BY-4.0",
+      "id_api": "NY.GDP.MKTP.CN"
+    },
+    {
+      "id": "f.indec.pib-nominal-base-1993-anual",
+      "organismo": "INDEC",
+      "nombre": "Oferta y demanda globales, base 1993. PIB a precios corrientes, anual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=2.3_OGP_1993_A_17",
+      "licencia": "CC-BY-4.0",
+      "id_api": "2.3_OGP_1993_A_17"
+    },
+    {
+      "id": "f.indec.pib-nominal-base-2004-anual",
+      "organismo": "INDEC",
+      "nombre": "Oferta y demanda globales, base 2004. PIB a precios corrientes, anual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=4.3_OGP_2004_A_17",
+      "licencia": "CC-BY-4.0",
+      "id_api": "4.3_OGP_2004_A_17"
+    }
+  ],
+  "licencia": "CC-BY-4.0",
+  "cita": "Vaivén (2026). PIB nominal en pesos, variante «anual». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/pib-nominal/",
+  "version_datos": "2026-10-24T23:23:47Z",
+  "desactualizada_desde": null,
+  "datos": [
+    ["1970", 1.300667502e-06],
+    ["1971", 1.804007001e-06],
+    ["1972", 3.011237214e-06],
+    ["1973", 5.124816559e-06],
+    ["1974", 7.065034927e-06],
+    ["1975", 2.102644703e-05],
+    ["1976", 0.0001109056921],
+    ["1977", 0.0003076704027],
+    ["1978", 0.000767928144],
+    ["1979", 0.002093877526],
+    ["1980", 0.004161875943],
+    ["1981", 0.008099965977],
+    ["1982", 0.02368175095],
+    ["1983", 0.1186552986],
+    ["1984", 0.8571271233],
+    ["1985", 5.749076252],
+    ["1986", 10.81985904],
+    ["1987", 25.28542353],
+    ["1988", 120.3588891],
+    ["1989", 3515.595279],
+    ["1990", 74691.39109],
+    ["1991", 196040.7963],
+    ["1992", 245609.6452],
+    ["1993", 256302.5684],
+    ["1994", 278989.9926],
+    ["1995", 279631.4678],
+    ["1996", 294931.1331],
+    ["1997", 317373.7916],
+    ["1998", 323973.0171],
+    ["1999", 307256.4437],
+    ["2000", 307994.141],
+    ["2001", 291189.033],
+    ["2002", 338745.905],
+    ["2003", 407376.346],
+    ["2004", 485115.1947],
+    ["2005", 582538.1729],
+    ["2006", 715904.2717],
+    ["2007", 896980.1741],
+    ["2008", 1149646.091],
+    ["2009", 1247929.269],
+    ["2010", 1661720.926],
+    ["2011", 2179024.104],
+    ["2012", 2637913.848],
+    ["2013", 3348308.488],
+    ["2014", 4579086.425],
+    ["2015", 5954510.896],
+    ["2016", 8228159.557],
+    ["2017", 10660228.49],
+    ["2018", 14744810.68],
+    ["2019", 21558444.15],
+    ["2020", 27209814.14],
+    ["2021", 46219083.51],
+    ["2022", 82810045.47],
+    ["2023", 193946178.6],
+    ["2024", 584377011.0],
+    ["2025", 850239798.2]
+  ]
+}

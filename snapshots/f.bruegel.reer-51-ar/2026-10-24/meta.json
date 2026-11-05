@@ -1,0 +1,20 @@
+{
+  "fuente": "f.bruegel.reer-51-ar",
+  "descargado": "2026-10-24T23:19:32Z",
+  "sha256": "dffc18b8f4abc1b311f67787b0f66bdfb96a31bfc7945016a728de3ea1031b9c",
+  "licencia": "Bruegel, uso libre con atribución",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "REER_MONTHLY_51_REER_51_AR.csv",
+      "url": "https://www.bruegel.org/sites/default/files/2026-10/REER_database_ver11Oct2026.zip",
+      "bytes": 22745,
+      "sha256": "e6c288c6bcb32e24dffb8764a22a474921c947f5e2298ad76647a8a11ff5ab60",
+      "extraido_de": {
+        "archivo": "REER_database_ver11Oct2026.zip",
+        "bytes": 5493177,
+        "sha256": "6b3220e14f8535e826b493a4a10cef1d39b09566aa197e7b7efbc75fbea3d4d0"
+      }
+    }
+  ]
+}

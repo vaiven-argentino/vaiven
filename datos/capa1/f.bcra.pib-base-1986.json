@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.pib-base-1986",
+  "unidad": "millones de pesos de 1986",
+  "frecuencia": "trimestral",
+  "snapshot": "snapshots/f.bcra.pib-base-1986/2026-10-24",
+  "descargado": "2026-10-24T23:10:56Z",
+  "sha256": "86219728dbfed398b7d524fb9e4dfdc1bf6203187d8b348b8a3739a2ce21ebe4",
+  "observaciones": 68,
+  "desde": "1980-01-01",
+  "hasta": "1996-10-01"
+}

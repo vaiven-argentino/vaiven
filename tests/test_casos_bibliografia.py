@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 import yaml
 
-from pipeline.comun import RAIZ, leer_csv_serie
+from pipeline.comun import RAIZ
 
 EXPORT = RAIZ / "export" / "series"
 DIR_CASOS = RAIZ / "tests" / "casos_bibliografia"
@@ -52,16 +52,37 @@ def test_DF1990_C1_hiperinflacion_de_1989_y_austral():
     assert dd.loc[1986] < dd.loc[1985] < dd.loc[1984]   # el Plan Austral baja la inflación
 
 
+def test_DF1990_C1_estancamiento_y_viraje_al_superavit_comercial():
+    pib = serie("pib", "retropolada")
+    pib = pib.groupby(pib.index.year).mean()
+    crecimiento = (pib / pib.shift(1) - 1) * 100
+    assert pib.loc[1989] < pib.loc[1980]                         # la década perdida
+    assert (crecimiento.loc[1981:1982] < 0).all() and (crecimiento.loc[1988:1989] < 0).all()
+    saldo = anual("exportaciones", "oficial") - anual("importaciones", "oficial")
+    assert saldo.loc[1981] < saldo.loc[1982] and (saldo.loc[1982:1989] > 0).all()
+
+
 def test_OS2006_G3_deterioro_del_mercado_de_trabajo_en_los_ochenta():
     anual = promedio_anual(serie("desocupacion", "total-urbano"))
     assert anual.loc[1989] > 2 * anual.loc[1980]
 
 
+def anual(slug: str, variante: str) -> pd.Series:
+    s = serie(slug, variante)
+    s.index = s.index.year
+    return s
+
+
+def test_SCH1998c2_C8_atraso_cambiario_y_deficit_comercial_de_1980():
+    expo, impo = anual("exportaciones", "oficial"), anual("importaciones", "oficial")
+    saldo = expo - impo
+    assert impo.loc[1980] > 2 * impo.loc[1978]          # las importaciones se disparan con la «tablita»
+    assert (saldo.loc[1976:1979] > 0).all()
+    assert saldo.loc[1980] < 0                            # déficit comercial de 1980
+
+
 def test_CENDA2010_G5_de_deficits_a_superavits():
-    expo = serie("exportaciones", "oficial")
-    expo.index = expo.index.year
-    impo = leer_csv_serie(RAIZ / "datos" / "capa1" / "f.indec.ica-importaciones-mensual.csv")
-    impo = impo.groupby(impo.index.year).sum()
+    expo, impo = anual("exportaciones", "oficial"), anual("importaciones", "oficial")
     saldo = (expo - impo).dropna()
     assert (saldo.loc[1992:1994] < 0).all()
     assert (saldo.loc[2002:2009] > 0).all()
@@ -85,6 +106,11 @@ def _referencias(ficha: str) -> list[dict]:
         return [fila for fila in csv.DictReader(f) if fila.get("valor", "").strip()]
 
 
+def _fechas(slug: str, variante: str) -> list[str]:
+    doc = json.loads((EXPORT / slug / f"{variante}.json").read_text(encoding="utf-8"))
+    return [f for f, _ in doc["datos"]]
+
+
 def _clave(anio: str, indice) -> object:
     if isinstance(indice, pd.DatetimeIndex):
         return pd.Timestamp(anio if len(anio) > 4 else anio + "-01")
@@ -97,11 +123,14 @@ def test_valores_de_referencia(ficha):
     if not filas:
         pytest.skip("pendiente: faltan valores de referencia")
     caso = CASOS[ficha]
-    s = TRANSFORMACIONES[caso["transformacion"]](serie(caso["serie"], caso["variante"]))
-    if caso["transformacion"] == "nivel" and caso["serie"] == "exportaciones":
-        s.index = s.index.year
     fallas = []
     for fila in filas:
+        # Una ficha con varias series dice en `variable` cuál es cada valor (por ejemplo, «importaciones.oficial»).
+        slug, variante = (fila.get("variable") or "").strip().split(".") if (fila.get("variable") or "").strip() \
+            else (caso["serie"], caso["variante"])
+        s = TRANSFORMACIONES[caso["transformacion"]](serie(slug, variante))
+        if caso["transformacion"] == "nivel" and all(len(f) == 4 for f in _fechas(slug, variante)):
+            s.index = s.index.year
         clave = _clave(fila["anio"].strip(), s.index)
         esperado = float(fila["valor"])
         obtenido = float(s.loc[clave])

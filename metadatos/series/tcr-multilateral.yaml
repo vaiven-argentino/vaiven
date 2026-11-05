@@ -1,0 +1,70 @@
+id: tcr-multilateral
+codigo: CAM-03
+nombre: Tipo de cambio real multilateral
+bloque: Cambiario
+prioridad: A
+definicion: >-
+  Índice de tipo de cambio real multilateral: el peso contra una canasta de monedas de los socios comerciales,
+  ajustado por los precios de cada país. Un aumento es una depreciación real del peso.
+unidad: índice 17-12-2015 = 100
+tipo: precio
+agregacion: promedio
+frecuencia: mensual
+cobertura: {desde: 1991-01, hasta: hoy}
+variante_por_defecto: bcra
+vista_inicial: {transformacion: nivel}
+variantes:
+  - id: bcra
+    nombre: BCRA (desde 1991)
+    estado: publicada
+    empalme: encadenar_tasas
+    metodo: >-
+      ITCRM del BCRA: las tasas de variación mensual de la serie base diciembre 2001 entre 1991 y enero de 1997,
+      encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. La copia de datos.gob.ar llega
+      hasta diciembre de 2024. Antes de 1991 el BCRA no publica el índice.
+    tramos:
+      - {fuente: f.bcra.itcrm-base-2001, desde: 1991-01, hasta: 1997-01}
+      - {fuente: f.bcra.itcrm-base-2015, desde: 1997-02}
+    advertencias: [q.tcr.base-1997, q.tcr.ipc-2007-2015]
+  - id: bruegel
+    nombre: Bruegel, 51 socios (desde 1970), sin empalmar
+    estado: publicada
+    unidad: índice (100 ÷ REER de Bruegel; base sin declarar)
+    empalme: yuxtaponer
+    invertir: 100
+    metodo: >-
+      Tipo de cambio real efectivo de Bruegel (Darvas), con IPC y una canasta de 51 socios, mensual, dado vuelta
+      (100 ÷ valor) para que un aumento sea una depreciación real del peso, como en el índice del BCRA. Es otra
+      metodología y no se empalma con la serie del BCRA. Fuente: Darvas, Z. (2012), «Real effective exchange rates
+      for 178 countries: a new database», Bruegel Working Paper 2012/06, versión actualizada.
+    tramos:
+      - {fuente: f.bruegel.reer-51-ar, desde: 1970-01}
+    advertencias: [q.tcr.bruegel, q.tcr.ipc-2007-2015]
+    validacion:
+      var_max: 250      # abril de 1989: +214 % (hiperinflación)
+  - id: ipc-alternativo
+    nombre: BCRA con IPC alternativo en 2007–2015
+    estado: pendiente
+    nota: Pendiente. Recalcular el índice con otro IPC es una reconstrucción propia y falta acordar el método.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.bcra.itcrm-base-2015, desde: 1997-01}
+  - id: reconstruccion
+    nombre: Reconstrucción 1970–1990 con los socios principales
+    estado: pendiente
+    nota: Pendiente. No hay una serie abierta del BCRA antes de 1991 y la reconstrucción propia falta acordarla.
+    empalme: yuxtaponer
+    metodo: Pendiente.
+    tramos:
+      - {fuente: f.bcra.itcrm-base-2001, desde: 1991-01}
+validacion:
+  min: 0
+  var_min: -40
+  var_max: 120
+  umbral_revision_pct: 0.5
+quiebres: [q.tcr.base-1997, q.tcr.ipc-2007-2015, q.tcr.bruegel]
+transformaciones: [var_mensual, var_interanual, base_100, frecuencia, media_movil]
+fuentes: [f.bcra.itcrm-base-2001, f.bcra.itcrm-base-2015, f.bruegel.reer-51-ar]
+bibliografia: [DLB1993-A11, RL2023-G1, CENDA2010-G10, DF2013-C1, DF2013-G3, DF2013-C2]
+licencia_derivado: CC-BY-4.0

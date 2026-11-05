@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.base-monetaria-mensual",
+  "descargado": "2026-10-24T23:14:11Z",
+  "sha256": "a1ff5af676aa330f759a813a25d4e3b570fb4f272152942fc7c1946aa14afe97",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_AGADOS_BM_0_0_28&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 35930,
+      "sha256": "a748327c4c6d4c8959f3f6facf5f068a4e5bc7f0aabbabfa497173c1e9aeee75"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spn-financiero-2007-2014",
+  "descargado": "2026-10-24T23:16:52Z",
+  "sha256": "ccb7330c33410d3456290c8211b65270c9a7fae07d071b142d5fd2b2529702a3",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=379.8_RESULTADO_014__23_17&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6890,
+      "sha256": "570f4d4fb6876823055eee3dd5182f3a206aa6027fd86184a2754d8ed044a622"
+    }
+  ]
+}

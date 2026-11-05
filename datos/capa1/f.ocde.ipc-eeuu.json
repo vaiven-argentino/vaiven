@@ -1,0 +1,11 @@
+{
+  "fuente": "f.ocde.ipc-eeuu",
+  "unidad": "índice 2015 = 100",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.ocde.ipc-eeuu/2026-10-24",
+  "descargado": "2026-10-24T23:23:29Z",
+  "sha256": "7c2e6e911d428dcb7d557818a27f293f1a2a29a56558961fbbcfa14fbebfbed3",
+  "observaciones": 800,
+  "desde": "1960-01-01",
+  "hasta": "2026-09-01"
+}

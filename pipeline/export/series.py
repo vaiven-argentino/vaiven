@@ -80,7 +80,9 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         **({"vista_inicial": vista} if (vista := variante.get("vista_inicial", serie_meta.get("vista_inicial"))) else {}),
         "tramos": [
             {"fuente": t["fuente"], "desde": str(t["desde"]), "hasta": str(t.get("hasta", "hoy")),
-             "frecuencia": t.get("agregar", {}).get("a", fuentes[t["fuente"]]["frecuencia"]),
+             # En una derivada, los tramos son los insumos: la frecuencia es la del resultado.
+             "frecuencia": frecuencia if variante.get("empalme") == "derivar"
+             else t.get("agregar", {}).get("a", fuentes[t["fuente"]]["frecuencia"]),
              **({"rol": t["rol"]} if "rol" in t else {})}
             for t in variante["tramos"]
         ],

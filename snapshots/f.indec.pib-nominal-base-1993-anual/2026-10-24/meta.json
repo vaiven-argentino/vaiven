@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.pib-nominal-base-1993-anual",
+  "descargado": "2026-10-24T23:23:30Z",
+  "sha256": "71671cfb6412465dfbd3370eca04a73d0129d3919251032fa58d769ea3095081",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=2.3_OGP_1993_A_17&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4201,
+      "sha256": "1b7faa482e38cd2f9efe82e9eb711ed27620c709fc33981e9e2116ee5742b0bf"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+id: pib-nominal
+codigo: AUX-01
+nombre: PIB nominal en pesos
+bloque: Auxiliares
+prioridad: auxiliar
+definicion: >-
+  Producto interno bruto a precios corrientes, en millones de pesos (los valores anteriores a 1992, en pesos
+  actuales). Lo usa la transformación % del PIB de las series en pesos.
+unidad: millones de pesos corrientes
+tipo: flujo
+agregacion: suma
+frecuencia: anual
+moneda: pesos_actuales
+cobertura: {desde: 1970, hasta: hoy}
+variante_por_defecto: anual
+variantes:
+  - id: anual
+    nombre: Anual, retropolado desde la base 2004
+    estado: publicada
+    empalme: encadenar_tasas
+    metodo: >-
+      Base 2004 del INDEC desde 2004; hacia atrás, las tasas de variación de la base 1993 (1994–2004) y del PIB
+      nominal del Banco Mundial (1971–1993), encadenadas. Así el % del PIB no salta en el cambio de base: la base
+      2004 da, en 2004, un PIB 8 % mayor que la base 1993.
+    tramos:
+      - {fuente: f.bm.pib-nominal, desde: 1970, hasta: 1993}
+      - {fuente: f.indec.pib-nominal-base-1993-anual, desde: 1994, hasta: 2004}
+      - {fuente: f.indec.pib-nominal-base-2004-anual, desde: 2005}
+    advertencias: [q.pib-nominal.retropolado]
+  - id: trimestral
+    nombre: Trimestral (desde 1993), retropolado desde la base 2004
+    estado: publicada
+    frecuencia: trimestral
+    empalme: encadenar_tasas
+    enlace: anual
+    escala: 0.25
+    metodo: >-
+      Base 2004 del INDEC desde 2004 y base 1993 en 1993–2003, encadenadas con el enlace en 2004 (el tramo viejo se
+      reescala con el cociente de los totales de 2004). El INDEC publica los trimestres a ritmo anual: se dividen
+      por 4, para que cada trimestre sea el PIB de ese trimestre.
+    tramos:
+      - {fuente: f.indec.pib-nominal-base-1993-trimestral, desde: 1993-01, hasta: 2003-10}
+      - {fuente: f.indec.pib-nominal-base-2004-trimestral, desde: 2004-01}
+    advertencias: [q.pib-nominal.retropolado]
+validacion:
+  min: 0
+  var_min: -30
+  var_max: 6000
+  umbral_revision_pct: 0.5
+quiebres: [q.pib-nominal.retropolado]
+transformaciones: []
+fuentes: [f.bm.pib-nominal, f.indec.pib-nominal-base-1993-anual, f.indec.pib-nominal-base-2004-anual, f.indec.pib-nominal-base-1993-trimestral, f.indec.pib-nominal-base-2004-trimestral]
+licencia_derivado: CC-BY-4.0

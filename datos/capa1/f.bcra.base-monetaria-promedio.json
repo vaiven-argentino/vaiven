@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.base-monetaria-promedio",
+  "unidad": "millones de pesos",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.base-monetaria-promedio/2026-10-24",
+  "descargado": "2026-10-24T23:14:12Z",
+  "sha256": "5886c41d7a863a95e83557177020b567a3af69a8cc02c7da77ee3bb87475518f",
+  "observaciones": 284,
+  "desde": "2003-01-01",
+  "hasta": "2026-08-01"
+}

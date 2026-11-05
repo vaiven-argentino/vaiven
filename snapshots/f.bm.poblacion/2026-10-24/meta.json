@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bm.poblacion",
+  "descargado": "2026-10-24T23:23:36Z",
+  "sha256": "dcec23484d85c05260ce3e973f2019a022d38bd73121cef64a88ba825e659615",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://api.worldbank.org/v2/country/ARG/indicator/SP.POP.TOTL?format=json&per_page=20000",
+      "bytes": 13162,
+      "sha256": "783d3a14c5b6a215232160aeee9f8d0ce67e5d9e684db9d80591ec1f9ebe9d46"
+    }
+  ]
+}
