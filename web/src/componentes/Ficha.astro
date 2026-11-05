@@ -2,7 +2,7 @@
 // Ficha de serie (SPEC 6.1): todo lo que se lee está en el HTML del build. El gráfico y las transformaciones se
 // suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
 import { disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
-import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
+import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
 import { aniosDe, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
 import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
@@ -42,7 +42,9 @@ const NOMBRE_EMPALME: Record<string, string> = {
 const ARRANCA = { real: "a precios constantes", en_dolares: "en dólares", pct_pib: "en % del PIB" } as const;
 // En la cita, el país va con su nombre («entidad Argentina»); el MCP usa el código ISO3.
 const nombreEntidad = pais ? doc.entidades.find((e) => e.id === entidadInicial)?.nombre : undefined;
-const citaInicial = nombreTransformacion({ medida, transformacion: inicial, entidad: nombreEntidad });
+// En % del PIB, la cita dice qué PIB se usó (por defecto, el publicado en cada base).
+const denominadorInicial = medida === "pct_pib" ? base.insumos?.pct_pib?.opciones.find((o) => o.id === base.insumos?.pct_pib?.por_defecto)?.denominador : undefined;
+const citaInicial = nombreTransformacion({ medida, frecuencia, denominador: denominadorInicial, transformacion: inicial, entidad: nombreEntidad });
 const datosCliente = JSON.stringify(doc).replace(/</g, "\\u003c");
 const bibliografia = serie.bibliografia ?? [];
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
@@ -122,6 +124,14 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
           <label for="c-deflactor">IPC para deflactar</label>
           <select id="c-deflactor">
             {disp.deflactores.map((o) => <option value={o.id}>{o.nombre ?? o.id}</option>)}
+          </select>
+        </div>
+      )}
+      {disp.denominadores.length > 1 && (
+        <div class="campo" id="campo-denominador" hidden={medida !== "pct_pib"}>
+          <label for="c-denominador">PIB para dividir</label>
+          <select id="c-denominador">
+            {disp.denominadores.map((d) => <option value={d} selected={d === denominadorInicial}>{NOMBRE_DENOMINADOR[d] ?? d}</option>)}
           </select>
         </div>
       )}

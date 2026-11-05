@@ -40,6 +40,7 @@ describe("nombreTransformacion con medidas y entidades", () => {
       .toBe("a precios constantes, deflactada con el IPC «ipc.provincias», variación interanual (%)");
     expect(nombreTransformacion({ pesosActuales: true, frecuencia: "anual" })).toBe("en pesos actuales, frecuencia anual");
     expect(nombreTransformacion({ medida: "pct_pib", frecuencia: "anual" })).toBe("frecuencia anual, en % del PIB");
+    expect(nombreTransformacion({ medida: "pct_pib", denominador: "cada-base" })).toBe("en % del PIB (PIB publicado en cada base)");
     expect(nombreTransformacion({ entidad: "BRA", transformacion: "indice_desde_tasas" }))
       .toBe("entidad BRA, índice desde las tasas (año base = 100)");
     expect(nombreTransformacion({ entidad: ["ARG", "BRA", "WLD"] })).toBe("entidades ARG, BRA y WLD");

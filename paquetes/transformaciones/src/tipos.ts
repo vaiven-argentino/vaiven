@@ -39,6 +39,8 @@ export interface OpcionInsumo {
   archivo: string;
   nombre?: string;
   frecuencia?: "mensual" | "trimestral" | "anual";
+  /** Solo en % del PIB: qué PIB es («cada-base», «retropolado» o «banco-mundial»). */
+  denominador?: string;
 }
 
 export interface Insumo {
@@ -114,6 +116,8 @@ export interface Opciones {
   deflactor?: string;
   /** Precios de qué período (AAAA-MM o AAAA) en la medida real. Por defecto, el último con dato en las dos series. */
   baseReal?: string;
+  /** Qué PIB divide en % del PIB («cada-base», «retropolado» o «banco-mundial»). Por defecto, el de los insumos. */
+  denominador?: string;
   transformacion?: Transformacion;
   base?: Base;
   mediaMovil?: number;

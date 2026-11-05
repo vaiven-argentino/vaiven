@@ -23,19 +23,42 @@
     "pct_pib": {
       "opciones": [
         {
-          "id": "pib-dolares.anual",
-          "archivo": "auxiliares/pib-dolares/anual.json",
-          "nombre": "Anual",
-          "frecuencia": "anual"
+          "id": "pib-dolares.cada-base-anual",
+          "archivo": "auxiliares/pib-dolares/cada-base-anual.json",
+          "nombre": "Anual, con el PIB publicado en cada base",
+          "frecuencia": "anual",
+          "denominador": "cada-base"
         },
         {
-          "id": "pib-dolares.trimestral",
-          "archivo": "auxiliares/pib-dolares/trimestral.json",
-          "nombre": "Trimestral (desde 1993)",
-          "frecuencia": "trimestral"
+          "id": "pib-dolares.cada-base-trimestral",
+          "archivo": "auxiliares/pib-dolares/cada-base-trimestral.json",
+          "nombre": "Trimestral (desde 1993), con el PIB publicado en cada base",
+          "frecuencia": "trimestral",
+          "denominador": "cada-base"
+        },
+        {
+          "id": "pib-dolares.retropolada-anual",
+          "archivo": "auxiliares/pib-dolares/retropolada-anual.json",
+          "nombre": "Anual, con el PIB retropolado",
+          "frecuencia": "anual",
+          "denominador": "retropolado"
+        },
+        {
+          "id": "pib-dolares.retropolada-trimestral",
+          "archivo": "auxiliares/pib-dolares/retropolada-trimestral.json",
+          "nombre": "Trimestral (desde 1993), con el PIB retropolado",
+          "frecuencia": "trimestral",
+          "denominador": "retropolado"
+        },
+        {
+          "id": "pib-dolares.banco-mundial",
+          "archivo": "auxiliares/pib-dolares/banco-mundial.json",
+          "nombre": "Anual, del Banco Mundial",
+          "frecuencia": "anual",
+          "denominador": "banco-mundial"
         }
       ],
-      "por_defecto": "pib-dolares.anual",
+      "por_defecto": "pib-dolares.cada-base-anual",
       "unidad": "% del PIB"
     }
   },
@@ -108,8 +131,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Cuenta corriente, variante «larga». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/cuenta-corriente/",
-  "version_datos": "2026-10-24T23:24:27Z",
+  "cita": "Vaivén (2026). Cuenta corriente, variante «larga». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/cuenta-corriente/",
+  "version_datos": "2026-11-05T21:54:06Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", -159.0],

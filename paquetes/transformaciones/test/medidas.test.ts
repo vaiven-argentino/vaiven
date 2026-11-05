@@ -72,7 +72,7 @@ describe("real", () => {
 });
 
 describe("en dólares", () => {
-  const pib = doc("auxiliares/pib-nominal/anual.json");
+  const pib = doc("auxiliares/pib-nominal/retropolada-anual.json");
   const tc = doc("series/tc-oficial/pesos-actuales.json");
   const conInsumos: SerieExportada = {
     ...pib, transformaciones: ["en_dolares"],
@@ -81,7 +81,7 @@ describe("en dólares", () => {
   const r = comoMapa(transformar(conInsumos, { medida: "en_dolares" }, { series: { "tc-oficial.pesos-actuales": tc } }).datos);
 
   it("da lo mismo que el PIB en dólares del pipeline", () => {
-    for (const [f, v] of doc("auxiliares/pib-dolares/anual.json").datos) expect(r.get(f)! / v - 1).toBeCloseTo(0, 8);
+    for (const [f, v] of doc("auxiliares/pib-dolares/retropolada-anual.json").datos) expect(r.get(f)! / v - 1).toBeCloseTo(0, 8);
   });
   it("coincide con el PIB en dólares del Banco Mundial en 2004–2010 (NY.GDP.MKTP.CD, tolerancia 0,5 %)", () => {
     // Millones de US$ corrientes, consultados el 27/10/2026 en la API del Banco Mundial.
@@ -117,25 +117,36 @@ describe("% del PIB", () => {
   });
   it("con el export: exportaciones en % del PIB = exportaciones ÷ PIB en dólares", () => {
     const expo = doc("series/exportaciones/oficial.json");
-    const pd = doc("auxiliares/pib-dolares/anual.json");
-    const r = comoMapa(transformar(expo, { medida: "pct_pib" }, { series: { "pib-dolares.anual": pd } }).datos);
+    const pd = doc("auxiliares/pib-dolares/cada-base-anual.json");
+    const r = comoMapa(transformar(expo, { medida: "pct_pib" }, { series: { "pib-dolares.cada-base-anual": pd } }).datos);
     const e = comoMapa(expo.datos), p = comoMapa(pd.datos);
     expect(r.get("2010")).toBeCloseTo((e.get("2010")! / p.get("2010")!) * 100, 9);
   });
   it("cuenta corriente en % del PIB: coincide con el Banco Mundial (BN.CAB.XOKA.GD.ZS)", () => {
-    // Valores del Banco Mundial, consultados el 27/10/2026 (CC BY 4.0). En 2006–2012 las dos usan el INDEC (MBP6)
-    // y el mismo PIB: coinciden. En 1993–2001 la cuenta corriente de Vaivén es la MBP5 y el Banco Mundial publica la
-    // revisada: la diferencia es de hasta 0,4 p. p. Antes de 1990 no se compara: el PIB en dólares difiere (ver NOTAS_FASE4).
+    // Valores del Banco Mundial, consultados el 27/10/2026 (CC BY 4.0). Con el PIB publicado en cada base (el que
+    // usa el Banco Mundial desde 1993), 2006–2012 coincide; en 1993–2001 la cuenta corriente de Vaivén es la MBP5 y
+    // el Banco Mundial publica la revisada. Con el PIB en dólares del Banco Mundial coincide también 1980, cuando
+    // convierte con un factor alternativo (q.pib-dolares.banco-mundial).
     const BM: Record<string, number> = {
-      "1993": -3.466, "1995": -1.983, "1998": -4.844, "2001": -1.407,
+      "1980": -6.203, "1993": -3.466, "1995": -1.983, "1998": -4.844, "2001": -1.407,
       "2006": 2.794, "2007": 2.104, "2008": 1.499, "2009": 2.179, "2010": -0.383, "2011": -1.007, "2012": -0.392,
     };
     const cc = doc("series/cuenta-corriente/larga.json");
-    const pd = doc("auxiliares/pib-dolares/anual.json");
-    const r = comoMapa(transformar(cc, { medida: "pct_pib" }, { series: { "pib-dolares.anual": pd } }).datos);
+    const series = {
+      "pib-dolares.cada-base-anual": doc("auxiliares/pib-dolares/cada-base-anual.json"),
+      "pib-dolares.banco-mundial": doc("auxiliares/pib-dolares/banco-mundial.json"),
+    };
+    const cadaBase = comoMapa(transformar(cc, { medida: "pct_pib" }, { series }).datos);
+    const bm = comoMapa(transformar(cc, { medida: "pct_pib", denominador: "banco-mundial" }, { series }).datos);
     for (const [anio, v] of Object.entries(BM)) {
-      expect(Math.abs(r.get(anio)! - v), anio).toBeLessThan(Number(anio) >= 2006 ? 0.05 : 0.5);
+      if (anio !== "1980") expect(Math.abs(cadaBase.get(anio)! - v), anio).toBeLessThan(Number(anio) >= 2006 ? 0.05 : 0.5);
+      expect(Math.abs(bm.get(anio)! - v), `${anio} (Banco Mundial)`).toBeLessThan(Number(anio) >= 2006 || anio === "1980" ? 0.05 : 0.5);
     }
+  });
+  it("un denominador que la variante no tiene da error con los que hay", () => {
+    const cc = doc("series/cuenta-corriente/larga.json");
+    expect(() => transformar(cc, { medida: "pct_pib", denominador: "otro" }, {})).toThrow(/«otro» no es un PIB de esta variante. Opciones: cada-base, retropolado, banco-mundial/);
+    expect(disponibles(cc).denominadores).toEqual(["cada-base", "retropolado", "banco-mundial"]);
   });
 });
 

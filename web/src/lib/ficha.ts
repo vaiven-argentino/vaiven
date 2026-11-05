@@ -1,7 +1,7 @@
 // Lógica de la ficha que se usa en el build y en el navegador: transformación inicial, quiebres numerados,
 // resumen del gráfico (texto alternativo) y filas de la tabla.
 import { PASO, disponibles, indiceFin, indiceMes, type Advertencia, type Resultado, type SerieExportada } from "@vaiven/transformaciones";
-import type { Transformacion } from "@vaiven/transformaciones";
+import type { Insumo, OpcionInsumo, Transformacion } from "@vaiven/transformaciones";
 import { fechaCorta, fechaLegible, numero } from "./formato";
 
 type ConVista = SerieExportada & { vista_inicial?: { transformacion?: string; medida?: string } };
@@ -28,6 +28,12 @@ export function medidaInicial(serie: ConVista): "real" | "en_dolares" | "pct_pib
 export function frecuenciaInicial(serie: ConVista): "anual" | undefined {
   if (medidaInicial(serie) !== "pct_pib" || ["anual", "trimestral"].includes(serie.frecuencia)) return undefined;
   return disponibles(serie).frecuencias.includes("anual") ? "anual" : undefined;
+}
+
+/** Las opciones de % del PIB de un denominador (por defecto, el de la opción por defecto); en las demás medidas, todas. */
+export function opcionesDelDenominador(insumo: Insumo, denominador?: string): OpcionInsumo[] {
+  const d = denominador ?? insumo.opciones.find((o) => o.id === insumo.por_defecto)?.denominador;
+  return insumo.opciones.filter((o) => !d || !o.denominador || o.denominador === d);
 }
 
 export const esVariacion = (t: string) => t.startsWith("var_") || t === "acumulada_anio";

@@ -4,6 +4,7 @@ import { readFileSync, statSync, existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Advertencia, DocumentoExportado, Excluido, InsumosCargados, Medida, SerieExportada, SignosMonetarios, Tramo } from "@vaiven/transformaciones";
 import { ESQUEMAS_SOPORTADOS } from "@vaiven/transformaciones";
+import { opcionesDelDenominador } from "./ficha";
 
 export const RAIZ = join(process.cwd(), "..");
 export const EXPORT = join(RAIZ, "export");
@@ -133,11 +134,11 @@ export function descargaCompleta(ext: "zip" | "parquet"): { archivo: string; tam
  * Los insumos de una medida, leídos del export en el build (para la vista inicial de la ficha). El navegador los
  * pide a /datos/ recién cuando se elige la medida.
  */
-export function insumosDe(doc: SerieExportada, medida: Medida, deflactor?: string): InsumosCargados {
+export function insumosDe(doc: SerieExportada, medida: Medida, deflactor?: string, denominador?: string): InsumosCargados {
   const insumo = doc.insumos?.[medida];
   if (!insumo) return {};
   if (medida === "pesos_actuales") return { signos: leer<SignosMonetarios>(insumo.opciones[0].archivo) };
-  const ids = medida === "real" ? [deflactor ?? insumo.por_defecto] : insumo.opciones.map((o) => o.id);
+  const ids = medida === "real" ? [deflactor ?? insumo.por_defecto] : opcionesDelDenominador(insumo, denominador).map((o) => o.id);
   const series = Object.fromEntries(insumo.opciones.filter((o) => ids.includes(o.id)).map((o) => [o.id, leer<SerieExportada>(o.archivo)]));
   return { series };
 }

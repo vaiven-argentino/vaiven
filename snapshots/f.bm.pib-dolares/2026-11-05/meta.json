@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bm.pib-dolares",
+  "descargado": "2026-11-05T21:54:00Z",
+  "sha256": "dfe58d0ac5def4c8538bdb2099e42a1968b7e650b1f46287c1c65905d2d2c409",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://api.worldbank.org/v2/country/ARG/indicator/NY.GDP.MKTP.CD?format=json&per_page=20000",
+      "bytes": 13850,
+      "sha256": "57bc3a898ee0936dce5088d5193826cdcfa444bcf8c03f1dada4b2516fb0a78e"
+    }
+  ]
+}

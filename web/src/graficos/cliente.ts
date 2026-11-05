@@ -6,7 +6,7 @@ import {
 } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
+import { esVariacion, filasTabla, frecuenciaInicial, medidaInicial, opcionesDelDenominador, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
 import { especificacion, type Tema } from "./espec";
 
@@ -38,6 +38,8 @@ function iniciar(): void {
   const cMedida = $<HTMLSelectElement>("c-medida");
   const cDeflactor = $<HTMLSelectElement>("c-deflactor");
   const campoDeflactor = $<HTMLDivElement>("campo-deflactor");
+  const cDenominador = $<HTMLSelectElement>("c-denominador");
+  const campoDenominador = $<HTMLDivElement>("campo-denominador");
   const cPesos = $<HTMLInputElement>("c-pesos");
   const cBase = $<HTMLInputElement>("c-base");
   const campoBase = $<HTMLDivElement>("campo-base");
@@ -57,6 +59,7 @@ function iniciar(): void {
   if (cPesos && q.get("pa") === "1") cPesos.checked = true;
   if (cMedida) cMedida.value = q.get("m") ?? medidaInicial(serie) ?? "";
   if (cDeflactor && q.get("d") && [...cDeflactor.options].some((o) => o.value === q.get("d"))) cDeflactor.value = q.get("d")!;
+  if (cDenominador && q.get("pib") && [...cDenominador.options].some((o) => o.value === q.get("pib"))) cDenominador.value = q.get("pib")!;
   const disp = disponibles(serie, { pesosActuales: cPesos?.checked });
   const t = q.get("t") as Transformacion | null;
   cTransf.value = t && disp.transformaciones.includes(t) ? t : transformacionInicial(serie);
@@ -97,6 +100,7 @@ function iniciar(): void {
     }
     if (cMedia) cMedia.disabled = !d.mediaMovil;
     if (campoDeflactor) campoDeflactor.hidden = cMedida?.value !== "real";
+    if (campoDenominador) campoDenominador.hidden = cMedida?.value !== "pct_pib";
     // % del PIB pide la frecuencia del PIB: si la serie es más fina, pasa sola a anual.
     if (cMedida?.value === "pct_pib" && cFrec && !cFrec.value && !["anual", "trimestral"].includes(serie.frecuencia) && d.frecuencias.includes("anual")) {
       cFrec.value = "anual";
@@ -108,6 +112,10 @@ function iniciar(): void {
     if (cPesos?.checked) o.pesosActuales = true;
     if (cMedida?.value) o.medida = cMedida.value as "real" | "en_dolares" | "pct_pib";
     if (o.medida === "real" && cDeflactor?.value) o.deflactor = cDeflactor.value;
+    if (o.medida === "pct_pib") {
+      const insumo = serie.insumos?.pct_pib;
+      o.denominador = cDenominador?.value || insumo?.opciones.find((x) => x.id === insumo.por_defecto)?.denominador;
+    }
     if (cFrec?.value) o.frecuencia = cFrec.value as "trimestral" | "anual";
     if (cMedia?.value) o.mediaMovil = Number(cMedia.value);
     if (o.transformacion === "base_100") {
@@ -125,6 +133,7 @@ function iniciar(): void {
     if (cPesos?.checked) p.set("pa", "1");
     if (cMedida && cMedida.value !== (medidaInicial(serie) ?? "")) p.set("m", cMedida.value);
     if (cMedida?.value === "real" && cDeflactor && cDeflactor.selectedIndex > 0) p.set("d", cDeflactor.value);
+    if (cMedida?.value === "pct_pib" && cDenominador && cDenominador.selectedIndex > 0) p.set("pib", cDenominador.value);
     if (cTransf.value !== transformacionInicial(serie)) p.set("t", cTransf.value);
     const frecDefecto = (cMedida?.value ?? "") === (medidaInicial(serie) ?? "") ? (frecuenciaInicial(serie) ?? "") : "";
     if (cFrec && cFrec.value !== frecDefecto) p.set("f", cFrec.value || "original");
@@ -153,7 +162,8 @@ function iniciar(): void {
     }
     if (o.medida) {
       const insumo = serie.insumos?.[o.medida];
-      const ids = o.medida === "real" ? [o.deflactor ?? insumo?.por_defecto] : insumo?.opciones.map((x) => x.id) ?? [];
+      const ids = o.medida === "real" ? [o.deflactor ?? insumo?.por_defecto]
+        : insumo ? opcionesDelDenominador(insumo, o.denominador).map((x) => x.id) : [];
       for (const op of insumo?.opciones ?? []) {
         if (ids.includes(op.id) && !cargados.series[op.id]) pedidos.push(leer(op.archivo).then((s) => { cargados.series[op.id] = s; }));
       }

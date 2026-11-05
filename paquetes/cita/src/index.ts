@@ -28,6 +28,13 @@ export const NOMBRE_MEDIDA: Record<string, string> = {
   pct_pib: "En % del PIB",
 };
 
+/** Qué PIB divide en % del PIB (el valor de `denominador` en los insumos). */
+export const NOMBRE_DENOMINADOR: Record<string, string> = {
+  "cada-base": "PIB publicado en cada base",
+  retropolado: "PIB retropolado desde la base 2004",
+  "banco-mundial": "PIB en dólares del Banco Mundial",
+};
+
 /**
  * Lo que nombra la línea de la transformación en la cita, en el orden en que se aplica: pesos actuales →
  * frecuencia → medida → transformación → media móvil. En las series con dimensión pais, también la entidad.
@@ -41,6 +48,8 @@ export interface OpcionesCita {
   /** Variante del IPC con que se deflactó (medida real). */
   deflactor?: string;
   baseReal?: string;
+  /** PIB con que se calculó el % del PIB («cada-base», «retropolado» o «banco-mundial»). */
+  denominador?: string;
   transformacion?: string;
   mediaMovil?: number;
 }
@@ -58,7 +67,7 @@ export function nombreTransformacion(o: OpcionesCita): string | undefined {
   } else if (o.medida === "en_dolares") {
     partes.push("en dólares");
   } else if (o.medida === "pct_pib") {
-    partes.push("en % del PIB");
+    partes.push(`en % del PIB${o.denominador ? ` (${NOMBRE_DENOMINADOR[o.denominador] ?? o.denominador})` : ""}`);
   }
   if (o.transformacion && o.transformacion !== "nivel") {
     partes.push((NOMBRE_TRANSFORMACION[o.transformacion] ?? o.transformacion).toLowerCase());

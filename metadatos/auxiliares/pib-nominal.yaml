@@ -12,9 +12,35 @@ agregacion: suma
 frecuencia: anual
 moneda: pesos_actuales
 cobertura: {desde: 1970, hasta: hoy}
-variante_por_defecto: anual
+variante_por_defecto: cada-base-anual
 variantes:
-  - id: anual
+  - id: cada-base-anual
+    nombre: Anual, publicado en cada base
+    estado: publicada
+    empalme: yuxtaponer
+    metodo: >-
+      El PIB nominal tal como se publicó en cada base, sin empalmar: base 2004 del INDEC desde 2004, base 1993 en
+      1993–2003 y, antes, el del Banco Mundial (NY.GDP.MKTP.CN, que en 1993–2003 coincide con la base 1993). Es el
+      que usan los cuadros de la bibliografía en % del PIB. Salta 8 % en 2004 por el cambio de base.
+    tramos:
+      - {fuente: f.bm.pib-nominal, desde: 1970, hasta: 1992, coeficiente: 1.0e-6}
+      - {fuente: f.indec.pib-nominal-base-1993-anual, desde: 1993, hasta: 2003}
+      - {fuente: f.indec.pib-nominal-base-2004-anual, desde: 2004}
+    advertencias: [q.pib-nominal.cada-base]
+  - id: cada-base-trimestral
+    nombre: Trimestral (desde 1993), publicado en cada base
+    estado: publicada
+    frecuencia: trimestral
+    empalme: yuxtaponer
+    escala: 0.25
+    metodo: >-
+      El PIB nominal trimestral de cada base, sin empalmar: base 1993 en 1993–2003 y base 2004 desde 2004. El INDEC
+      publica los trimestres a ritmo anual: se dividen por 4, para que cada trimestre sea el PIB de ese trimestre.
+    tramos:
+      - {fuente: f.indec.pib-nominal-base-1993-trimestral, desde: 1993-01, hasta: 2003-10}
+      - {fuente: f.indec.pib-nominal-base-2004-trimestral, desde: 2004-01}
+    advertencias: [q.pib-nominal.cada-base]
+  - id: retropolada-anual
     nombre: Anual, retropolado desde la base 2004
     estado: publicada
     empalme: encadenar_tasas
@@ -27,7 +53,7 @@ variantes:
       - {fuente: f.indec.pib-nominal-base-1993-anual, desde: 1994, hasta: 2004}
       - {fuente: f.indec.pib-nominal-base-2004-anual, desde: 2005}
     advertencias: [q.pib-nominal.retropolado]
-  - id: trimestral
+  - id: retropolada-trimestral
     nombre: Trimestral (desde 1993), retropolado desde la base 2004
     estado: publicada
     frecuencia: trimestral
@@ -47,7 +73,7 @@ validacion:
   var_min: -30
   var_max: 6000
   umbral_revision_pct: 0.5
-quiebres: [q.pib-nominal.retropolado]
+quiebres: [q.pib-nominal.cada-base, q.pib-nominal.retropolado]
 transformaciones: []
 fuentes: [f.bm.pib-nominal, f.indec.pib-nominal-base-1993-anual, f.indec.pib-nominal-base-2004-anual, f.indec.pib-nominal-base-1993-trimestral, f.indec.pib-nominal-base-2004-trimestral]
 licencia_derivado: CC-BY-4.0

@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-05T21:50:21Z",
+  "version_datos": "2026-11-05T21:54:06Z",
   "auxiliares": [
     {
       "id": "ipc-eeuu",
@@ -26,19 +26,19 @@
       "id": "pib-dolares",
       "codigo": "AUX-02",
       "nombre": "PIB en dólares",
-      "definicion": "PIB nominal en pesos dividido por el promedio del tipo de cambio oficial del período, en millones de dólares corrientes. Lo usa la transformación % del PIB de las series en dólares.",
+      "definicion": "PIB en millones de dólares corrientes: el PIB nominal en pesos dividido por el promedio del tipo de cambio oficial del período (con el PIB de cada base o el retropolado), o el del Banco Mundial. Lo usa la transformación % del PIB de las series en dólares.",
       "unidad": "millones de US$ corrientes",
       "variantes": [
         {
-          "id": "anual",
-          "nombre": "Anual",
+          "id": "cada-base-anual",
+          "nombre": "Anual, con el PIB publicado en cada base",
           "estado": "publicada",
           "frecuencia": "anual",
           "cobertura": {
             "desde": "1970",
             "hasta": "2025"
           },
-          "archivo": "auxiliares/pib-dolares/anual.json",
+          "archivo": "auxiliares/pib-dolares/cada-base-anual.json",
           "usada_por": [
             "cuenta-corriente.larga",
             "cuenta-corriente.mbp5",
@@ -60,15 +60,105 @@
           ]
         },
         {
-          "id": "trimestral",
-          "nombre": "Trimestral (desde 1993)",
+          "id": "cada-base-trimestral",
+          "nombre": "Trimestral (desde 1993), con el PIB publicado en cada base",
           "estado": "publicada",
           "frecuencia": "trimestral",
           "cobertura": {
             "desde": "1993-01",
             "hasta": "2026-01"
           },
-          "archivo": "auxiliares/pib-dolares/trimestral.json",
+          "archivo": "auxiliares/pib-dolares/cada-base-trimestral.json",
+          "usada_por": [
+            "cuenta-corriente.larga",
+            "cuenta-corriente.mbp5",
+            "cuenta-corriente.mbp6",
+            "deuda-externa.indec",
+            "deuda-externa.privada",
+            "deuda-externa.publica",
+            "deuda-externa.total",
+            "deuda-publica.externa-bm",
+            "exportaciones.mensual",
+            "exportaciones.oficial",
+            "fuga.activos-externos",
+            "fuga.fae",
+            "importaciones.mensual",
+            "importaciones.oficial",
+            "reservas.brutas",
+            "saldo-comercial.mensual",
+            "saldo-comercial.oficial"
+          ]
+        },
+        {
+          "id": "banco-mundial",
+          "nombre": "Anual, del Banco Mundial",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "auxiliares/pib-dolares/banco-mundial.json",
+          "usada_por": [
+            "cuenta-corriente.larga",
+            "cuenta-corriente.mbp5",
+            "cuenta-corriente.mbp6",
+            "deuda-externa.indec",
+            "deuda-externa.privada",
+            "deuda-externa.publica",
+            "deuda-externa.total",
+            "deuda-publica.externa-bm",
+            "exportaciones.mensual",
+            "exportaciones.oficial",
+            "fuga.activos-externos",
+            "fuga.fae",
+            "importaciones.mensual",
+            "importaciones.oficial",
+            "reservas.brutas",
+            "saldo-comercial.mensual",
+            "saldo-comercial.oficial"
+          ]
+        },
+        {
+          "id": "retropolada-anual",
+          "nombre": "Anual, con el PIB retropolado",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "auxiliares/pib-dolares/retropolada-anual.json",
+          "usada_por": [
+            "cuenta-corriente.larga",
+            "cuenta-corriente.mbp5",
+            "cuenta-corriente.mbp6",
+            "deuda-externa.indec",
+            "deuda-externa.privada",
+            "deuda-externa.publica",
+            "deuda-externa.total",
+            "deuda-publica.externa-bm",
+            "exportaciones.mensual",
+            "exportaciones.oficial",
+            "fuga.activos-externos",
+            "fuga.fae",
+            "importaciones.mensual",
+            "importaciones.oficial",
+            "reservas.brutas",
+            "saldo-comercial.mensual",
+            "saldo-comercial.oficial"
+          ]
+        },
+        {
+          "id": "retropolada-trimestral",
+          "nombre": "Trimestral (desde 1993), con el PIB retropolado",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-01"
+          },
+          "archivo": "auxiliares/pib-dolares/retropolada-trimestral.json",
           "usada_por": [
             "cuenta-corriente.larga",
             "cuenta-corriente.mbp5",
@@ -99,15 +189,15 @@
       "unidad": "millones de pesos corrientes",
       "variantes": [
         {
-          "id": "anual",
-          "nombre": "Anual, retropolado desde la base 2004",
+          "id": "cada-base-anual",
+          "nombre": "Anual, publicado en cada base",
           "estado": "publicada",
           "frecuencia": "anual",
           "cobertura": {
             "desde": "1970",
             "hasta": "2025"
           },
-          "archivo": "auxiliares/pib-nominal/anual.json",
+          "archivo": "auxiliares/pib-nominal/cada-base-anual.json",
           "usada_por": [
             "agregados.m1",
             "agregados.m2-pesos",
@@ -121,7 +211,51 @@
           ]
         },
         {
-          "id": "trimestral",
+          "id": "cada-base-trimestral",
+          "nombre": "Trimestral (desde 1993), publicado en cada base",
+          "estado": "publicada",
+          "frecuencia": "trimestral",
+          "cobertura": {
+            "desde": "1993-01",
+            "hasta": "2026-04"
+          },
+          "archivo": "auxiliares/pib-nominal/cada-base-trimestral.json",
+          "usada_por": [
+            "agregados.m1",
+            "agregados.m2-pesos",
+            "agregados.m2-privado",
+            "agregados.m2-total",
+            "agregados.m3-total",
+            "base-monetaria.fin-de-mes",
+            "base-monetaria.promedio-mensual",
+            "resultado-fiscal.financiero",
+            "resultado-fiscal.primario"
+          ]
+        },
+        {
+          "id": "retropolada-anual",
+          "nombre": "Anual, retropolado desde la base 2004",
+          "estado": "publicada",
+          "frecuencia": "anual",
+          "cobertura": {
+            "desde": "1970",
+            "hasta": "2025"
+          },
+          "archivo": "auxiliares/pib-nominal/retropolada-anual.json",
+          "usada_por": [
+            "agregados.m1",
+            "agregados.m2-pesos",
+            "agregados.m2-privado",
+            "agregados.m2-total",
+            "agregados.m3-total",
+            "base-monetaria.fin-de-mes",
+            "base-monetaria.promedio-mensual",
+            "resultado-fiscal.financiero",
+            "resultado-fiscal.primario"
+          ]
+        },
+        {
+          "id": "retropolada-trimestral",
           "nombre": "Trimestral (desde 1993), retropolado desde la base 2004",
           "estado": "publicada",
           "frecuencia": "trimestral",
@@ -129,7 +263,7 @@
             "desde": "1993-01",
             "hasta": "2026-04"
           },
-          "archivo": "auxiliares/pib-nominal/trimestral.json",
+          "archivo": "auxiliares/pib-nominal/retropolada-trimestral.json",
           "usada_por": [
             "agregados.m1",
             "agregados.m2-pesos",
