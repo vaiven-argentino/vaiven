@@ -30,15 +30,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09   # v5.1.0
 
-      - uses: astral-sh/setup-uv@v10.3.2
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e   # v10.3.2
         with:
           enable-cache: true
 
       - name: Instalar dependencias
         run: uv sync --frozen
 
+      # Código 0: publicó todo; 3: publicó, con variantes retenidas (se publica y se abre el issue); 1 o 2: no publicó.
       - name: Correr el pipeline
         id: pipeline
         continue-on-error: true
@@ -47,7 +48,12 @@ jobs:
         run: |
           args=(actualizar --informe "$RUNNER_TEMP/informe.md")
           if [ -n "$SERIES" ]; then args+=(--series "$SERIES"); fi
+          set +e
           uv run python -m pipeline "${args[@]}"
+          codigo=$?
+          echo "codigo=$codigo" >> "$GITHUB_OUTPUT"
+          if [ "$codigo" -eq 0 ] || [ "$codigo" -eq 3 ]; then exit 0; fi
+          exit "$codigo"
 
       - name: Pruebas sobre los datos nuevos
         id: pruebas
@@ -71,16 +77,21 @@ jobs:
             sed -n '/^## Cambios publicados/,$p' "$RUNNER_TEMP/informe.md"
           } > "$RUNNER_TEMP/mensaje.txt"
           git commit -F "$RUNNER_TEMP/mensaje.txt"
-          git push
+          # Si alguien empujó a main mientras corría el pipeline, se trae y se reintenta una vez.
+          git push || { git pull --rebase origin "$GITHUB_REF_NAME" && git push; }
 
       - name: Abrir o comentar el issue de validación
-        if: steps.pipeline.outcome == 'failure' || steps.pruebas.outcome == 'failure'
+        if: steps.pipeline.outcome == 'failure' || steps.pruebas.outcome == 'failure' || steps.pipeline.outputs.codigo == '3'
         env:
           GH_TOKEN: ${{ github.token }}
           URL_RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           {
-            echo "La actualización del $(date -u +%Y-%m-%d) no se publicó."
+            if [ "${{ steps.pipeline.outputs.codigo }}" = "3" ] && [ "${{ steps.pruebas.outcome }}" = "success" ]; then
+              echo "La actualización del $(date -u +%Y-%m-%d) se publicó, pero algunas variantes quedaron retenidas: conservan su versión anterior, marcada como desactualizada."
+            else
+              echo "La actualización del $(date -u +%Y-%m-%d) no se publicó."
+            fi
             echo
             echo "Corrida: $URL_RUN"
             echo

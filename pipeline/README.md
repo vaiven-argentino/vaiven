@@ -13,7 +13,13 @@ uv run --group descargas python -m pipeline descargas    # Parquet y ZIP de desc
 uv run pytest                                            # pruebas
 ```
 
-`actualizar` sale con código 0 si publicó (con cambios o sin ellos), 1 si la validación falló (no se escribe nada en `export/`) y 2 si el pipeline se detuvo (por ejemplo, una fuente sin snapshots que no responde). Con `--informe RUTA` deja el resumen en Markdown; el workflow lo usa para el mensaje del commit o el issue.
+`actualizar` sale con código 0 si publicó todo (con cambios o sin ellos), 3 si publicó con variantes retenidas, 1 si no publicó nada y 2 si el pipeline se detuvo (por ejemplo, una fuente sin snapshots que no responde).
+
+**Fallas aisladas (desde la revisión de la 4a).** Un error de validación se atribuye a la fuente o a la variante que lo produjo:
+- la variante (y las derivadas que dependen de ella) queda **retenida**: conserva su JSON anterior, marcado con `desactualizada_desde`, y el resto se publica;
+- solo un error que no se puede atribuir frena toda la publicación;
+- también frena una fuente que **pierde más de 12 fechas** que ya tenía, y una variante que **empieza más de un año después** de lo que declaran sus tramos (la fuente recortó su historia);
+- una variante que pasa a `pendiente` se quita del export y de la capa 2. Con `--informe RUTA` deja el resumen en Markdown; el workflow lo usa para el mensaje del commit o el issue.
 
 ## Qué hace cada carpeta
 
@@ -36,8 +42,8 @@ En `metadatos/series/<slug>.yaml` (formato de la SPEC, 2.3), o en `metadatos/aux
 | `invertir` | Da vuelta un índice (`invertir: 100` publica 100 ÷ valor; lo usa la base de Bruegel, donde una suba es apreciación). |
 | `agregar` (en un tramo) | `{a: anual, con: suma}`: pasa el tramo a frecuencia anual, solo con los años completos. |
 | `escala` | Cambio de unidad declarado (por ejemplo, 100 para pasar de fracción a porcentaje). |
-| `conversion` y `fecha_conversion` | `a_moneda_de_epoca` o `a_pesos_actuales`; con `fin_de_mes`, se usa el signo vigente el último día del mes. |
-| `excluir` | Observaciones de la fuente con errores evidentes, una por una, con su `motivo`. No se corrigen: se excluyen. |
+| `conversion` y `fecha_conversion` | `a_moneda_de_epoca` o `a_pesos_actuales`, solo en series mensuales. Por defecto se usa el signo vigente el último día del mes, como en la librería de transformaciones; `fecha_conversion: inicio` usa el primero. |
+| `excluir` | Observaciones de la fuente con errores evidentes, una por una, con su `motivo`. No se corrigen: se excluyen. Una fecha que no está en la serie es un error. |
 | `continuidad` | Comparación de dos fuentes donde se superponen (tasas o niveles), con `tolerancia` y `excepciones` documentadas. |
 | `coherencia` | La agregación de una serie mensual tiene que dar la anual publicada. |
 | `validacion` | `min`, `max`, `var_min` y `var_max` (en %) y `umbral_revision_pct`. La de la variante pisa la de la serie. `var_excepciones` lista los períodos con una variación real fuera de rango, cada uno documentado con su quiebre (por ejemplo, la reforma financiera de julio de 1982). |
