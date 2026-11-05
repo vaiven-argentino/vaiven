@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 from pipeline.comun import ErrorPipeline, escribir_json
-from pipeline.export.series import URL_SITIO
+from pipeline.export.series import URL_SITIO, ruta_csv_relativa
 
 PERFIL_DATAPACKAGE = "https://datapackage.org/profiles/2.0/datapackage.json"
 PERFIL_RECURSO = "https://datapackage.org/profiles/2.0/dataresource.json"
@@ -80,7 +80,7 @@ def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_d
             "$schema": PERFIL_RECURSO,
             "name": vid,
             "title": f"{doc['nombre']} · {doc['nombre_variante']}",
-            "path": f"descargas/csv/{doc['serie']}/{doc['variante']}.csv",
+            "path": f"descargas/csv/{ruta_csv_relativa(doc)}",
             "type": "table",
             "format": "csv",
             "mediatype": "text/csv",
@@ -123,7 +123,7 @@ def especificacion_vega(serie_meta: dict, doc: dict) -> dict:
     return {
         "$schema": VEGA_LITE,
         "title": {"text": doc["nombre"], "subtitle": f"Variante: {doc['nombre_variante']} · {doc['unidad']}"},
-        "data": {"url": f"{URL_SITIO}/datos/descargas/csv/{doc['serie']}/{doc['variante']}.csv", "format": {"type": "csv"}},
+        "data": {"url": f"{URL_SITIO}/datos/descargas/csv/{ruta_csv_relativa(doc)}", "format": {"type": "csv"}},
         "mark": {"type": "line", "interpolate": "linear"},
         "encoding": {
             "x": {"field": "fecha", "type": tipo_fecha, "title": None},

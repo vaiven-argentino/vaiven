@@ -61,4 +61,4 @@ node mcp/scripts/probar-endpoint.mjs https://vaiven.argentino.workers.dev
 ```
 La prueba con Claude se hace a mano: ver [`PRUEBA_MANUAL.md`](PRUEBA_MANUAL.md).
 
-**Se llenó en:** fase 3 (`buscar_series`, `describir_serie`, `obtener_serie`, `citar`). **Fase 4:** `comparar_series`, `listar_periodos`, `periodo_en_fecha`, `especificacion_grafico` y `riesgo_pais`.
+**Se llenó en:** fase 3 (`buscar_series`, `describir_serie`, `obtener_serie`, `citar`). **Fase 4 (subfase 4d):** `comparar_series`, `listar_periodos`, `periodo_en_fecha` y `especificacion_grafico`. **Fase 5:** `riesgo_pais` (SPEC, sección 11).

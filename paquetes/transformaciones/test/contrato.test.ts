@@ -31,4 +31,15 @@ describe("contrato del export", () => {
       expect(transformar(serie, { transformacion: t }).datos.length).toBeGreaterThan(0);
     }
   });
+
+  it("un JSON 1.1 (contrato anterior) se sigue leyendo y transformando", () => {
+    const doc = leer(join(CONTRATO, "ejemplos", "serie-1.1.json"));
+    expect(doc.esquema).toBe("1.1");
+    expect(ESQUEMAS_SOPORTADOS).toContain("1.1");
+    const validar = new Ajv2020({ allErrors: true, strict: false }).compile(leer(join(CONTRATO, "serie-1.1.schema.json")));
+    expect(validar(doc), JSON.stringify(validar.errors)).toBe(true);
+    const serie = doc as SerieExportada;
+    expect(disponibles(serie).transformaciones).toContain("base_100");
+    expect(transformar(serie, { frecuencia: "anual" }).datos.length).toBeGreaterThan(0);
+  });
 });

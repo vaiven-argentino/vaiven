@@ -1,5 +1,5 @@
 {
-  "esquema": "1.1",
+  "esquema": "1.2",
   "id": "tc-oficial.moneda-de-epoca",
   "serie": "tc-oficial",
   "codigo": "CAM-01",
@@ -11,9 +11,18 @@
   "tipo": "precio",
   "agregacion": "promedio",
   "frecuencia": "mensual",
+  "moneda": "moneda_de_epoca",
   "metodo": "La serie en pesos equivalentes del BCRA convertida a la moneda vigente el último día de cada mes, con las equivalencias de metadatos/signos_monetarios.yaml. No se usa la versión «moneda de cada momento» de la fuente porque cambia de unidad en fechas que no son las de los cambios de signo (ver fuentes.yaml).",
   "empalme": "yuxtaponer",
-  "transformaciones": [],
+  "transformaciones": [
+    "pesos_actuales",
+    "var_mensual",
+    "var_interanual",
+    "base_100",
+    "frecuencia"
+  ],
+  "insumos": {},
+  "auxiliar": false,
   "tramos": [
     {
       "fuente": "f.bcra.tc-historico-mensual",
@@ -55,7 +64,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tipo de cambio nominal oficial, variante «moneda-de-epoca». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/tc-oficial/moneda-de-epoca/",
-  "version_datos": "2026-10-24T07:42:26Z",
+  "version_datos": "2026-10-24T23:04:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 3.5],

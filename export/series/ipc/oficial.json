@@ -1,5 +1,5 @@
 {
-  "esquema": "1.1",
+  "esquema": "1.2",
   "id": "ipc.oficial",
   "serie": "ipc",
   "codigo": "PRE-01",
@@ -11,6 +11,7 @@
   "tipo": "precio",
   "agregacion": "promedio",
   "frecuencia": "mensual",
+  "moneda": null,
   "metodo": "Encadenamiento de tasas de variación mensual entre los tramos oficiales del INDEC, retropolado desde el IPC Nacional base diciembre 2016. Desde febrero de 1993 se usa el IPC-GBA base 2008 en lugar del IPC histórico: dan las mismas tasas salvo en mayo y junio de 2004, donde el IPC-GBA coincide con lo publicado por el INDEC en su momento (0,7 % y 0,6 %). Entre noviembre de 2015 y abril de 2016, sin IPC oficial por la emergencia estadística, se usan las tasas del IPC de la Ciudad de Buenos Aires.",
   "empalme": "encadenar_tasas",
   "transformaciones": [
@@ -21,6 +22,8 @@
     "base_100",
     "frecuencia"
   ],
+  "insumos": {},
+  "auxiliar": false,
   "tramos": [
     {
       "fuente": "f.indec.ipc-historico-1943-2008",
@@ -140,7 +143,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Inflación minorista (IPC), variante «oficial». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/ipc/",
-  "version_datos": "2026-10-24T07:40:29Z",
+  "version_datos": "2026-10-24T23:04:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 6.137836334e-11],

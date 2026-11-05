@@ -1,4 +1,4 @@
-// Tipos del export (esquema 1.1) que usan las transformaciones. El contrato completo está en tests/contrato/.
+// Tipos del export (esquemas 1.1 y 1.2) que usan las transformaciones. El contrato completo está en tests/contrato/.
 
 export type Frecuencia = "diaria" | "mensual" | "trimestral" | "semestral" | "anual";
 export type TipoSerie = "precio" | "flujo" | "stock" | "tasa" | "cociente" | "tasa_de_variacion";
@@ -27,6 +27,24 @@ export interface Excluido {
   motivo: string;
 }
 
+export type Moneda = "pesos_actuales" | "moneda_de_epoca" | "dolares";
+export type Medida = "real" | "en_dolares" | "pct_pib" | "pesos_actuales";
+
+/** Una serie publicada que sirve de insumo a una medida (esquema 1.2). */
+export interface OpcionInsumo {
+  id: string;
+  archivo: string;
+  nombre?: string;
+  frecuencia?: "mensual" | "trimestral" | "anual";
+}
+
+export interface Insumo {
+  opciones: OpcionInsumo[];
+  por_defecto: string;
+  /** Unidad del resultado; «{base}» se reemplaza por la fecha base de la medida real. */
+  unidad: string;
+}
+
 /** Lo mínimo de `export/series/<slug>/<variante>.json` que hace falta para transformar. */
 export interface SerieExportada {
   id: string;
@@ -39,6 +57,10 @@ export interface SerieExportada {
   advertencias: Advertencia[];
   excluidos: Excluido[];
   datos: [string, number][];
+  /** Desde la 1.2. En los JSON 1.1 no está: se toma como null. */
+  moneda?: Moneda | null;
+  /** Desde la 1.2. En los JSON 1.1 no está: se toma como {}. */
+  insumos?: Partial<Record<Medida, Insumo>>;
 }
 
 export type Variacion = "var_mensual" | "var_interanual" | "var_dic_dic" | "acumulada_anio";

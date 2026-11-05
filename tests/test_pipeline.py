@@ -75,6 +75,29 @@ def test_corrida_completa_y_segunda_corrida_sin_cambios(repo):
     assert (repo.export / "series" / "prueba" / "oficial.json").read_text(encoding="utf-8") == antes
 
 
+def test_corrida_parcial_mantiene_el_catalogo_completo(repo):
+    otra = yaml.safe_load((repo.metadatos / "series" / "prueba.yaml").read_text(encoding="utf-8"))
+    otra.update({"id": "otra", "codigo": "PRE-98", "nombre": "Otra serie"})
+    (repo.metadatos / "series" / "otra.yaml").write_text(yaml.safe_dump(otra, allow_unicode=True), encoding="utf-8")
+    assert ejecutar(repo, con_red=False).publicado
+    res = ejecutar(repo, solo=["prueba"], con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    assert [s["id"] for s in catalogo["series"]] == ["otra", "prueba"]
+    paquete = json.loads((repo.export / "datapackage.json").read_text(encoding="utf-8"))
+    assert {r["name"] for r in paquete["resources"]} == {"otra.oficial", "prueba.oficial"}
+
+
+def test_tramo_agregado_a_anual_solo_toma_los_anios_completos():
+    import pandas as pd
+    from pipeline.capa2.empalmes import agregar_anual
+    fechas = pd.date_range("2006-01-01", "2008-04-01", freq="QS")   # 2008 tiene dos trimestres
+    s = pd.Series(range(1, len(fechas) + 1), index=fechas, dtype=float)
+    r = agregar_anual(s, "trimestral", "suma")
+    assert list(r.index.year) == [2006, 2007]
+    assert list(r) == [1 + 2 + 3 + 4, 5 + 6 + 7 + 8]
+
+
 def test_valor_fuera_de_rango_frena_la_publicacion(repo):
     shutil.rmtree(repo.snapshots / "f.prueba.nueva")
     _snapshot_datos_gob_ar(repo, "f.prueba.nueva", [["2000-03-01", 50], ["2000-04-01", 50.5], ["2000-05-01", 505.0]])

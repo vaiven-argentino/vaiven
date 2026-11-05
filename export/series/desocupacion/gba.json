@@ -1,5 +1,5 @@
 {
-  "esquema": "1.1",
+  "esquema": "1.2",
   "id": "desocupacion.gba",
   "serie": "desocupacion",
   "codigo": "TRA-01",
@@ -11,6 +11,7 @@
   "tipo": "tasa",
   "agregacion": "promedio",
   "frecuencia": "semestral (1974–2003) y trimestral (2003–hoy)",
+  "moneda": null,
   "metodo": "Igual que la variante del total urbano, pero para el Gran Buenos Aires, que tiene la misma cobertura geográfica en todo el período. La fuente publica fracciones; se multiplican por 100.",
   "empalme": "yuxtaponer",
   "transformaciones": [
@@ -18,6 +19,8 @@
     "frecuencia",
     "media_movil"
   ],
+  "insumos": {},
+  "auxiliar": false,
   "tramos": [
     {
       "fuente": "f.indec.eph-puntual-gba",
@@ -80,7 +83,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tasa de desocupación, variante «gba». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/desocupacion/gba/",
-  "version_datos": "2026-10-24T07:40:29Z",
+  "version_datos": "2026-10-24T23:04:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1974-05", 4.2],
