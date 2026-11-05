@@ -8,7 +8,7 @@ No compite con los agregadores generales (datos.gob.ar, ArgenData, Almanac, El T
 
 ## Estado
 
-🚧 **En construcción: fase 3 (MCP remoto).** Se actualizan y validan 5 series piloto (IPC, tipo de cambio oficial, reservas, exportaciones y desocupación), en [`export/`](export/). La web, en <https://vaiven.argentino.workers.dev>, tiene el catálogo y una ficha por serie y variante con gráfico, quiebres, descargas y cita. Los archivos de datos se pueden leer directamente en `/datos/` (API de solo lectura). El servidor MCP, en `https://vaiven.argentino.workers.dev/mcp`, permite que un asistente como Claude busque, describa, obtenga y cite las series ([cómo conectarlo](https://vaiven.argentino.workers.dev/agentes/); código en [`mcp/`](mcp/)).
+🚧 **En construcción: fase 4 (núcleo completo).** La subfase 4a publicó 22 series en [`export/`](export/): las 20 de prioridad A (actividad, precios, sector externo, cambiario, monetario, fiscal y trabajo) y el crecimiento del PIB y del PIB per cápita de países seleccionados, con sus variantes, quiebres y fuentes, más las series auxiliares que usan las medidas (PIB nominal y en dólares, IPC de EE.UU., población y signos monetarios). La web, en <https://vaiven.argentino.workers.dev>, tiene el catálogo y una ficha por serie y variante con gráfico, medidas (real, en dólares, % del PIB, pesos actuales), quiebres, descargas y cita. Los archivos de datos se pueden leer directamente en `/datos/` (API de solo lectura). El servidor MCP, en `https://vaiven.argentino.workers.dev/mcp`, permite que un asistente como Claude busque, describa, obtenga y cite las series ([cómo conectarlo](https://vaiven.argentino.workers.dev/agentes/); código en [`mcp/`](mcp/)). Hasta que se despliegue la 4a, el sitio publicado sigue en la fase 3.
 
 | Fase | Contenido |
 |---|---|
@@ -29,6 +29,7 @@ En [`docs/`](docs/):
 - [`NOTAS_FASE1.md`](docs/NOTAS_FASE1.md): decisiones, diferencias con la SPEC y pendientes de la fase 1.
 - [`NOTAS_FASE2.md`](docs/NOTAS_FASE2.md): lo mismo para la fase 2 (web mínima).
 - [`NOTAS_FASE3.md`](docs/NOTAS_FASE3.md): lo mismo para la fase 3 (MCP remoto).
+- [`NOTAS_FASE4.md`](docs/NOTAS_FASE4.md): lo mismo para la fase 4, por subfase (4a: datos del núcleo y correcciones de la revisión).
 - [`planificacion/`](docs/planificacion/): catálogo del MVP, inventario de gráficos de la bibliografía y resumen de variables.
 
 ## Licencias

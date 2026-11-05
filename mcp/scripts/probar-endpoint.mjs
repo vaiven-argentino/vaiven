@@ -4,6 +4,7 @@
 // Uso: node mcp/scripts/probar-endpoint.mjs [base]
 //   base: http://localhost:8787 (por defecto; con `npx wrangler dev --test-scheduled` en worker/)
 //         o https://vaiven.argentino.workers.dev (después del despliegue).
+import { readFileSync } from "node:fs";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 
 const base = (process.argv[2] ?? "http://localhost:8787").replace(/\/$/, "");
@@ -77,7 +78,9 @@ await intentar("HTTP de /mcp", async () => {
 await intentar("Sitio", async () => {
   const salud = await fetch(`${base}/salud`);
   const s = await salud.json();
-  chequear("/salud con fase 3", salud.ok && s.fase === 3, JSON.stringify(s));
+  // La fase esperada es la del package.json del Worker (la misma que lee /salud).
+  const { vaiven } = JSON.parse(readFileSync(new URL("../../worker/package.json", import.meta.url), "utf-8"));
+  chequear(`/salud con fase ${vaiven.fase}`, salud.ok && s.fase === vaiven.fase, JSON.stringify(s));
   const cat = await fetch(`${base}/datos/catalogo.json`);
   chequear("/datos/catalogo.json con CORS", cat.ok && cat.headers.get("access-control-allow-origin") === "*", `${cat.status}`);
   const ficha = await fetch(`${base}/series/ipc/`);

@@ -5,6 +5,9 @@
 - El detalle del catálogo está en `docs/planificacion/catalogo_mvp_propuesta.csv`.
 - Si algo de la SPEC resulta impracticable o desactualizado, **no se resuelve por cuenta propia**: se anota y se consulta.
 
+## Series que calcula Vaivén
+- Toda serie que calcula Vaivén (`derivar`, unidades inferidas, retropolaciones, empalmes) se contrasta con **al menos una cifra publicada** antes de publicarse (el subagente `revisor-datos` lo hace sin ver cómo se armó), y el método se aprueba explícitamente.
+
 ## Costo cero
 - Todo tiene que funcionar con planes gratuitos (GitHub público, Cloudflare Workers gratis). No se agregan servicios pagos ni dependencias que requieran tarjeta.
 

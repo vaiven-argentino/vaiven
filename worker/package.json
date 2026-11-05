@@ -1,6 +1,9 @@
 {
   "name": "vaiven-worker",
   "version": "0.0.0",
+  "vaiven": {
+    "fase": "4a"
+  },
   "private": true,
   "description": "Punto de entrada del Worker de Vaivén: assets estáticos, /salud, /mcp y el Cron del disparo diario.",
   "license": "MIT",
