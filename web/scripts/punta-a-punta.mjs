@@ -1,6 +1,7 @@
-// Prueba de punta a punta de la fase 2 (SPEC 11: «encontrar, graficar, descargar y citar cada serie piloto desde el
-// celular y la computadora»). Por cada serie, en 390 y 1280 px: la busca en el catálogo, abre la ficha, cambia de
-// variante y de transformación, baja el CSV, el PNG y el ZIP, y copia la cita.
+// Prueba de punta a punta (SPEC 11: «encontrar, graficar, descargar y citar cada serie desde el celular y la
+// computadora»; fase 2, ampliada en la 4a). Por cada serie publicada, en 390 y 1280 px: la busca en el catálogo, abre
+// la ficha, cambia de transformación, de medida (real, en dólares, % del PIB), de país y a pesos actuales cuando la
+// variante los ofrece, baja el CSV, el PNG y el ZIP, copia la cita y abre otra variante.
 //
 // Uso: node web/scripts/punta-a-punta.mjs --base http://localhost:8787 --salida <carpeta para las descargas>
 import { mkdirSync, readFileSync, statSync } from "node:fs";
@@ -52,9 +53,45 @@ for (const ancho of [390, 1280]) {
       await pagina.waitForTimeout(400);
       ok(await pagina.$("#grafico svg"), `${id}: el gráfico no se redibujó al cambiar la transformación`);
     }
+    // Medidas, país y pesos actuales (fase 4a): cada opción tiene que dibujar sin error.
+    const probadas = [];
+    const sinError = async (que) => {
+      await pagina.waitForTimeout(600);
+      const estado = await pagina.$eval("#estado-grafico", (e) => (e.dataset.tipo === "error" ? e.textContent : ""));
+      ok(!estado, `${id}: ${que} da error: «${estado}»`);
+      ok(await pagina.$("#grafico svg"), `${id}: el gráfico no se redibujó con ${que}`);
+      probadas.push(que);
+    };
+    const abrirPanel = async () => {
+      const panel = pagina.locator("#panel-opciones");
+      if (!(await panel.evaluate((d) => d.open))) await pagina.click("#panel-opciones > summary");
+    };
+    if (await pagina.$("#c-medida")) {
+      await abrirPanel();
+      await pagina.selectOption("#c-transformacion", "nivel");
+      for (const m of await pagina.$$eval("#c-medida option", (os) => os.map((o) => o.value).filter(Boolean))) {
+        await pagina.selectOption("#c-medida", m);
+        await sinError(`la medida ${m}`);
+        if (m === "real" && (await pagina.$$("#c-deflactor option")).length > 1) {
+          await pagina.selectOption("#c-deflactor", { index: 1 });
+          await sinError("la medida real con otro IPC");
+        }
+      }
+      await pagina.selectOption("#c-medida", "");
+    }
+    if (await pagina.$("#c-entidad")) {
+      await abrirPanel();
+      await pagina.selectOption("#c-entidad", { index: 1 });
+      await sinError("otro país");
+    }
+    if (await pagina.$("#c-pesos")) {
+      await abrirPanel();
+      await pagina.check("#c-pesos");
+      await sinError("pesos actuales");
+    }
     // Descargar
     const csv = await bajar(pagina, () => pagina.click(".lista-descargas a:text-is('CSV')"), "csv");
-    ok(csv.bytes > 100 && readFileSync(csv.ruta, "utf-8").startsWith("fecha,valor"), `${id}: CSV vacío o mal formado (${csv.bytes} bytes)`);
+    ok(csv.bytes > 100 && /^fecha,(pais,)?valor/.test(readFileSync(csv.ruta, "utf-8")), `${id}: CSV vacío o mal formado (${csv.bytes} bytes)`);
     const png = await bajar(pagina, () => pagina.click("#bajar-png"), "png");
     ok(png.bytes > 5000 && png.nombre.endsWith(".png"), `${id}: PNG vacío (${png.bytes} bytes)`);
     const zip = await bajar(pagina, () => pagina.click(".lista-descargas a:text-is('ZIP')"), "zip");
@@ -71,7 +108,7 @@ for (const ancho of [390, 1280]) {
       ok(await pagina.waitForSelector("#grafico[data-listo='1'] svg", { timeout: 15000 }).then(() => true, () => false), `${id}: no se dibujó la variante ${otraVariante.id}`);
       ok((await pagina.textContent("#cita-texto")).includes(`/series/${s.id}/${otraVariante.id}/`), `${id}: la cita de ${otraVariante.id} no apunta a su ficha`);
     }
-    console.log(`${id}: encontrar, graficar, descargar (CSV ${csv.bytes} B, PNG ${png.bytes} B, ZIP ${zip.bytes} B) y citar${otraVariante ? `; variante ${otraVariante.id}` : ""}`);
+    console.log(`${id}: encontrar, graficar${probadas.length ? ` (${probadas.join(", ")})` : ""}, descargar (CSV ${csv.bytes} B, PNG ${png.bytes} B, ZIP ${zip.bytes} B) y citar${otraVariante ? `; variante ${otraVariante.id}` : ""}`);
   }
   await contexto.close();
 }
@@ -80,4 +117,4 @@ if (fallas.length) {
   console.error(`\n${fallas.length} fallas:\n${fallas.join("\n")}`);
   process.exit(1);
 }
-console.log("\nTodo bien: las series piloto se pueden encontrar, graficar, descargar y citar en 390 y 1280 px.");
+console.log(`\nTodo bien: las ${catalogo.series.length} series se pueden encontrar, graficar, descargar y citar en 390 y 1280 px.`);

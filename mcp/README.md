@@ -6,15 +6,18 @@ Servidor MCP de Vaivén (SPEC, sección 7), en TypeScript con el SDK oficial v2 
 - **Datos:** lee el export ya publicado (no calcula empalmes) y transforma con `@vaiven/transformaciones`. La cita sale de `@vaiven/cita`, igual que en la ficha de la web.
 - **Instrucciones para conectarlo:** <https://vaiven.argentino.workers.dev/agentes/>.
 
-## Herramientas (fase 3)
+## Herramientas (fase 3, ampliadas en la 4a)
 | Herramienta | Parámetros | Devuelve |
 |---|---|---|
-| `buscar_series` | `texto?`, `bloque?`, `prioridad?`, `desde?`, `hasta?` | Series con id, código, nombre, bloque, frecuencia, cobertura y variantes (con su estado y nota). |
-| `describir_serie` | `id` | Definición, variantes (método, tramos, transformaciones, excluidos, cita), quiebres, fuentes, bibliografía y licencia. |
-| `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `frecuencia?`, `transformacion?`, `base?` | `datos` como `[fecha, valor]`, unidad resultante, tramos de frecuencia, advertencias por quiebres del rango, excluidos, notas, fuentes, versión de datos y cita. |
-| `citar` | `id`, `variante?`, `formato?`, `transformacion?`, `frecuencia?` | Cita en texto, APA y BibTeX (o el formato pedido), con la versión de datos y la URL de la variante. |
+| `buscar_series` | `texto?`, `bloque?`, `prioridad?`, `desde?`, `hasta?` | Series con id, código, nombre, bloque, frecuencia, cobertura, variantes (con su estado y nota) y, en las internacionales, los países. |
+| `describir_serie` | `id` | Definición, variantes (método, tramos, moneda, transformaciones, medidas y deflactores, excluidos, cita), países, quiebres, fuentes, bibliografía y licencia. |
+| `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `pesos_actuales?`, `frecuencia?`, `medida?`, `deflactor?`, `base_real?`, `transformacion?`, `base?`, `paises?` | `datos` como `[fecha, valor]` (en las series internacionales, un objeto por país), unidad resultante, tramos de frecuencia, advertencias por quiebres del rango (de la serie y de los insumos de la medida), excluidos, notas, fuentes, versión de datos y cita. |
+| `citar` | `id`, `variante?`, `formato?`, `transformacion?`, `frecuencia?`, `pesos_actuales?`, `medida?`, `deflactor?`, `base_real?`, `paises?` | Cita en texto, APA y BibTeX (o el formato pedido), con la versión de datos y la URL de la variante. |
 
 - `id` acepta el id de la serie (`ipc`), su código (`PRE-01`) o el de una variante (`ipc.provincias`).
+- **Medidas (fase 4a):** `medida` es `real`, `en_dolares` o `pct_pib`; `pesos_actuales: true` convierte las variantes en moneda de cada época. El MCP lee los insumos (IPC, tipo de cambio, PIB, signos monetarios) del mismo export, solo cuando se piden. `deflactor` acepta `ipc.provincias` o `provincias`.
+- **Países (fase 4a):** `paises` lleva códigos ISO3 o de agregados del Banco Mundial; si se omite, va la selección inicial de la serie. El límite de 10.000 observaciones suma todos los países.
+- `transformacion` suma `indice_desde_tasas` (con `base` = el año que vale 100).
 - Las respuestas van como JSON en un bloque de texto (sin `structuredContent`, para no duplicarlas). Los errores (variante pendiente, transformación que no corresponde, más de 10.000 observaciones) salen con `isError` y un mensaje en español que dice cómo seguir.
 - Las descripciones que lee el modelo están en `src/textos.ts`.
 
@@ -61,4 +64,4 @@ node mcp/scripts/probar-endpoint.mjs https://vaiven.argentino.workers.dev
 ```
 La prueba con Claude se hace a mano: ver [`PRUEBA_MANUAL.md`](PRUEBA_MANUAL.md).
 
-**Se llenó en:** fase 3 (`buscar_series`, `describir_serie`, `obtener_serie`, `citar`). **Fase 4 (subfase 4d):** `comparar_series`, `listar_periodos`, `periodo_en_fecha` y `especificacion_grafico`. **Fase 5:** `riesgo_pais` (SPEC, sección 11).
+**Se llenó en:** fase 3 (`buscar_series`, `describir_serie`, `obtener_serie`, `citar`); fase 4a (medidas, pesos actuales, índice desde tasas y países como parámetros). **Fase 4 (subfase 4d):** `comparar_series`, `listar_periodos`, `periodo_en_fecha` y `especificacion_grafico`. **Fase 5:** `riesgo_pais` (SPEC, sección 11).

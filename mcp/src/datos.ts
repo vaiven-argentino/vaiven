@@ -1,6 +1,6 @@
 // Lectura del export. El MCP no calcula empalmes: lee las variantes ya publicadas (SPEC 7.3).
 // La misma interfaz sirve para el Worker (static assets), la variante local (carpeta o URL) y las pruebas.
-import { ESQUEMAS_SOPORTADOS } from "@vaiven/transformaciones";
+import { ESQUEMAS_SOPORTADOS, type InsumosCargados, type SerieExportada, type SignosMonetarios } from "@vaiven/transformaciones";
 import type { Catalogo, DocumentoSerie, Quiebre, SerieCatalogo, VarianteCatalogo } from "./tipos";
 
 /** De dónde sale el export. `ruta` es relativa a la raíz del export (por ejemplo, «catalogo.json»). */
@@ -71,6 +71,27 @@ export class Repositorio {
       throw new Error(`${v.archivo}: esquema ${doc.esquema} sin soporte (soportados: ${ESQUEMAS_SOPORTADOS.join(", ")}).`);
     }
     return doc;
+  }
+
+  /**
+   * Los insumos que necesita una medida (esquema 1.2), leídos del export: el IPC elegido para la real, el tipo de
+   * cambio para dólares, el PIB para % del PIB y los signos monetarios para pesos actuales. Si la variante no declara
+   * la medida, no lee nada: la librería da el error con lo que sí admite.
+   */
+  async insumos(doc: DocumentoSerie, o: { pesosActuales?: boolean; medida?: "real" | "en_dolares" | "pct_pib"; deflactor?: string }): Promise<InsumosCargados> {
+    const declarados = doc.insumos ?? {};
+    const salida: InsumosCargados = {};
+    if (o.pesosActuales && declarados.pesos_actuales) {
+      salida.signos = await this.leer<SignosMonetarios>(declarados.pesos_actuales.opciones[0].archivo);
+    }
+    const insumo = o.medida ? declarados[o.medida] : undefined;
+    if (insumo) {
+      const ids = o.medida === "real" ? [o.deflactor ?? insumo.por_defecto] : insumo.opciones.map((x) => x.id);
+      const elegidas = insumo.opciones.filter((x) => ids.includes(x.id));
+      const series = await Promise.all(elegidas.map((x) => this.leer<SerieExportada>(x.archivo)));
+      salida.series = Object.fromEntries(elegidas.map((x, k) => [x.id, series[k]]));
+    }
+    return salida;
   }
 
   /**

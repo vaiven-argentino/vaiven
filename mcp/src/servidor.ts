@@ -34,7 +34,9 @@ function conJsonFijo<S extends StandardSchemaWithJSON>(esquema: S): S {
 const periodo = (descripcion: string) => z.string().regex(PERIODO, "Usá AAAA o AAAA-MM.").describe(descripcion);
 const id = z.string().min(1).describe(PARAMETRO.id);
 const frecuencia = z.enum(["trimestral", "anual"]);
-const TRANSFORMACIONES = ["nivel", "var_mensual", "var_interanual", "var_dic_dic", "acumulada_anio", "base_100"] as const;
+const TRANSFORMACIONES = ["nivel", "var_mensual", "var_interanual", "var_dic_dic", "acumulada_anio", "base_100", "indice_desde_tasas"] as const;
+const medida = z.enum(["real", "en_dolares", "pct_pib"]);
+const paises = z.array(z.string().regex(/^[A-Za-z0-9]{3}$/, "Usá códigos de tres letras (ISO3 o agregado del Banco Mundial).")).max(30);
 
 export const ESQUEMAS = {
   buscar_series: conJsonFijo(z.object({
@@ -50,9 +52,14 @@ export const ESQUEMAS = {
     variante: z.string().optional().describe(PARAMETRO.variante),
     desde: periodo(PARAMETRO.desde).optional(),
     hasta: periodo(PARAMETRO.hasta).optional(),
+    pesos_actuales: z.boolean().optional().describe(PARAMETRO.pesosActuales),
     frecuencia: frecuencia.optional().describe(PARAMETRO.frecuencia),
+    medida: medida.optional().describe(PARAMETRO.medida),
+    deflactor: z.string().optional().describe(PARAMETRO.deflactor),
+    base_real: periodo(PARAMETRO.baseReal).optional(),
     transformacion: z.enum(TRANSFORMACIONES).optional().describe(PARAMETRO.transformacion),
     base: z.string().optional().describe(PARAMETRO.base),
+    paises: paises.optional().describe(PARAMETRO.paises),
   })),
   citar: conJsonFijo(z.object({
     id,
@@ -60,6 +67,11 @@ export const ESQUEMAS = {
     formato: z.enum(["texto", "apa", "bibtex"]).optional().describe(PARAMETRO.formato),
     transformacion: z.enum(TRANSFORMACIONES).optional().describe(PARAMETRO.transformacionCita),
     frecuencia: frecuencia.optional().describe(PARAMETRO.frecuenciaCita),
+    pesos_actuales: z.boolean().optional().describe(PARAMETRO.comoEnObtener),
+    medida: medida.optional().describe(PARAMETRO.comoEnObtener),
+    deflactor: z.string().optional().describe(PARAMETRO.comoEnObtener),
+    base_real: periodo(PARAMETRO.comoEnObtener).optional(),
+    paises: paises.optional().describe(PARAMETRO.comoEnObtener),
   })),
 };
 

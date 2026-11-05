@@ -4,7 +4,7 @@
 import { disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
-import { aniosDe, esVariacion, filasTabla, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
+import { aniosDe, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
 import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta } from "../lib/formato";
 
 interface Props {
@@ -22,7 +22,8 @@ const dispOfrecidas = disponibles(base, { pesosActuales: base.moneda === "moneda
 const medidas = disp.medidas.filter((m) => m !== "pesos_actuales") as Array<"real" | "en_dolares" | "pct_pib">;
 const inicial = transformacionInicial(base);
 const medida = medidaInicial(base);
-const r = transformar(base, { transformacion: inicial, medida }, medida ? insumosDe(base, medida) : {});
+const frecuencia = frecuenciaInicial(base);
+const r = transformar(base, { transformacion: inicial, medida, frecuencia }, medida ? insumosDe(base, medida) : {});
 const variacion = esVariacion(inicial);
 const numerados = numerarQuiebres(base);
 const registro = leerQuiebres();
@@ -38,7 +39,10 @@ const NOMBRE_EMPALME: Record<string, string> = {
   yuxtaponer: "Tramos yuxtapuestos, sin empalmar: cada tramo conserva los valores de su fuente.",
   derivar: "Serie calculada por Vaivén a partir de otras series publicadas: los tramos de abajo son sus insumos.",
 };
-const citaInicial = nombreTransformacion({ medida, transformacion: inicial, entidad: entidadInicial });
+const ARRANCA = { real: "a precios constantes", en_dolares: "en dólares", pct_pib: "en % del PIB" } as const;
+// En la cita, el país va con su nombre («entidad Argentina»); el MCP usa el código ISO3.
+const nombreEntidad = pais ? doc.entidades.find((e) => e.id === entidadInicial)?.nombre : undefined;
+const citaInicial = nombreTransformacion({ medida, transformacion: inicial, entidad: nombreEntidad });
 const datosCliente = JSON.stringify(doc).replace(/</g, "\\u003c");
 const bibliografia = serie.bibliografia ?? [];
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
@@ -52,7 +56,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
     </div>
     <p class="definicion">{serie.definicion}</p>
     <dl class="datos-clave">
-      <div><dt>Unidad</dt><dd>{doc.unidad}</dd></div>
+      <div><dt>Unidad</dt><dd>{doc.unidad}{medida && `, como se publica (el gráfico arranca ${ARRANCA[medida]})`}</dd></div>
       <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
       <div><dt>Cobertura</dt><dd>{fechaCorta(doc.cobertura.desde)} – {fechaCorta(doc.cobertura.hasta)}</dd></div>
       <div><dt>Versión de datos</dt><dd><time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time></dd></div>
@@ -138,7 +142,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
           <label for="c-frecuencia">Frecuencia</label>
           <select id="c-frecuencia">
             <option value="">Original</option>
-            {dispOfrecidas.frecuencias.map((f) => <option value={f}>{f === "anual" ? "Anual" : "Trimestral"}</option>)}
+            {dispOfrecidas.frecuencias.map((f) => <option value={f} selected={f === frecuencia}>{f === "anual" ? "Anual" : "Trimestral"}</option>)}
           </select>
         </div>
       )}

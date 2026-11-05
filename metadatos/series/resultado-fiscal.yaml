@@ -13,6 +13,9 @@ frecuencia: mensual
 moneda: pesos_actuales
 cobertura: {desde: 1970, hasta: hoy}
 variante_por_defecto: primario
+# En pesos actuales, la línea queda pegada a 0 hasta los años de alta inflación: la ficha arranca en % del PIB
+# (las mensuales, en frecuencia anual). Decidido con Camilo el 28/10/2026.
+vista_inicial: {transformacion: nivel, medida: pct_pib}
 unidades_medida: {real: 'millones de pesos de {base}', en_dolares: millones de US$}
 variantes:
   - id: primario

@@ -61,6 +61,9 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
             "tipo": s["tipo"], "agregacion": s["agregacion"], "transformaciones": list(s.get("transformaciones", [])),
             "frecuencia": s["frecuencia"], "variante_por_defecto": s["variante_por_defecto"],
             "quiebres": s.get("quiebres", []), "variantes": variantes,
+            # Dimensión pais (SPEC 2.5): las entidades, para que buscar_series y el catálogo las muestren sin leer los datos.
+            **({"dimensiones": ["pais"], "entidades": s["entidades"], "entidades_por_defecto": s["entidades_por_defecto"]}
+               if "pais" in s.get("dimensiones", []) else {}),
             "bibliografia": bibliografia(s.get("bibliografia", []), inventario or {}, s["id"]),
         })
     return {"version_datos": version_datos, "series": entradas}

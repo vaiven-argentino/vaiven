@@ -122,6 +122,21 @@ describe("% del PIB", () => {
     const e = comoMapa(expo.datos), p = comoMapa(pd.datos);
     expect(r.get("2010")).toBeCloseTo((e.get("2010")! / p.get("2010")!) * 100, 9);
   });
+  it("cuenta corriente en % del PIB: coincide con el Banco Mundial (BN.CAB.XOKA.GD.ZS)", () => {
+    // Valores del Banco Mundial, consultados el 27/10/2026 (CC BY 4.0). En 2006–2012 las dos usan el INDEC (MBP6)
+    // y el mismo PIB: coinciden. En 1993–2001 la cuenta corriente de Vaivén es la MBP5 y el Banco Mundial publica la
+    // revisada: la diferencia es de hasta 0,4 p. p. Antes de 1990 no se compara: el PIB en dólares difiere (ver NOTAS_FASE4).
+    const BM: Record<string, number> = {
+      "1993": -3.466, "1995": -1.983, "1998": -4.844, "2001": -1.407,
+      "2006": 2.794, "2007": 2.104, "2008": 1.499, "2009": 2.179, "2010": -0.383, "2011": -1.007, "2012": -0.392,
+    };
+    const cc = doc("series/cuenta-corriente/larga.json");
+    const pd = doc("auxiliares/pib-dolares/anual.json");
+    const r = comoMapa(transformar(cc, { medida: "pct_pib" }, { series: { "pib-dolares.anual": pd } }).datos);
+    for (const [anio, v] of Object.entries(BM)) {
+      expect(Math.abs(r.get(anio)! - v), anio).toBeLessThan(Number(anio) >= 2006 ? 0.05 : 0.5);
+    }
+  });
 });
 
 describe("pesos actuales", () => {

@@ -33,7 +33,8 @@ export const NOMBRE_MEDIDA: Record<string, string> = {
  * frecuencia → medida → transformación → media móvil. En las series con dimensión pais, también la entidad.
  */
 export interface OpcionesCita {
-  entidad?: string;
+  /** Una entidad (la ficha) o varias (el MCP). */
+  entidad?: string | string[];
   pesosActuales?: boolean;
   frecuencia?: string;
   medida?: string;
@@ -47,7 +48,9 @@ export interface OpcionesCita {
 /** «frecuencia anual, variación interanual (%)», o `undefined` si la serie va tal cual se publica. */
 export function nombreTransformacion(o: OpcionesCita): string | undefined {
   const partes: string[] = [];
-  if (o.entidad) partes.push(`entidad ${o.entidad}`);
+  const entidades = typeof o.entidad === "string" ? [o.entidad] : (o.entidad ?? []);
+  if (entidades.length === 1) partes.push(`entidad ${entidades[0]}`);
+  else if (entidades.length > 1) partes.push(`entidades ${entidades.slice(0, -1).join(", ")} y ${entidades.at(-1)}`);
   if (o.pesosActuales) partes.push("en pesos actuales");
   if (o.frecuencia) partes.push(`frecuencia ${o.frecuencia}`);
   if (o.medida === "real") {

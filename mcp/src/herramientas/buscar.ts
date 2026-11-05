@@ -30,16 +30,51 @@ const SINONIMOS: Record<string, string[]> = {
   bcra: ["reservas", "banco central"],
   "banco central": ["reservas"],
   pbi: ["pib"],
+  producto: ["pib"],
+  "producto bruto": ["pib"],
+  crecimiento: ["pib"],
+  endeudamiento: ["deuda"],
+  fuga: ["fuga"],
+  "fuga de divisas": ["fuga"],
+  fae: ["fuga"],
+  atesoramiento: ["fuga"],
+  dolarizacion: ["fuga"],
+  "formacion de activos externos": ["fuga"],
+  salario: ["salario"],
+  salarios: ["salario"],
+  sueldo: ["salario"],
+  sueldos: ["salario"],
+  "poder adquisitivo": ["salario real"],
+  deficit: ["resultado primario"],
+  superavit: ["resultado primario", "saldo comercial"],
+  emision: ["base monetaria", "agregados"],
+  dinero: ["base monetaria", "agregados"],
+  "masa monetaria": ["agregados"],
+  tcr: ["tipo de cambio real"],
+  competitividad: ["tipo de cambio real"],
+  "atraso cambiario": ["tipo de cambio real"],
+  "balanza comercial": ["saldo comercial"],
+  "balanza de pagos": ["cuenta corriente"],
+  compras: ["importaciones"],
+  ibif: ["inversion"],
+  "formacion de capital": ["inversion"],
+  interes: ["tasa de interes"],
+  mundo: ["contexto internacional"],
+  "comparacion internacional": ["contexto internacional"],
 };
 
 const VACIAS = new Set(["de", "del", "la", "el", "los", "las", "en", "y", "e", "a", "por", "con", "para", "un", "una",
   "serie", "series", "dato", "datos", "argentina", "argentino", "argentinos", "tasa", "nivel", "evolucion"]);
 
-/** Dónde se busca: lo principal (id, código, nombre y bloque) pesa más que el resto (definición, unidad y variantes). */
+/**
+ * Dónde se busca: lo principal (id, código, nombre y bloque) pesa más que el resto (definición, unidad, variantes y,
+ * en las series con dimensión país, los países).
+ */
 function pajar(s: SerieCatalogo): { principal: string; resto: string } {
   return {
     principal: normalizar([s.id, s.codigo, s.nombre, s.bloque].join(" | ")),
-    resto: normalizar([s.definicion, s.unidad, ...s.variantes.map((v) => `${v.id} ${v.nombre}`)].join(" | ")),
+    resto: normalizar([s.definicion, s.unidad, ...s.variantes.map((v) => `${v.id} ${v.nombre}`),
+      ...(s.entidades ?? []).map((e) => e.nombre)].join(" | ")),
   };
 }
 
@@ -76,6 +111,7 @@ function resumen(s: SerieCatalogo) {
     frecuencia: s.frecuencia,
     cobertura: desde && hasta ? { desde, hasta } : null,
     variante_por_defecto: s.variante_por_defecto,
+    ...(s.entidades ? { paises: s.entidades, paises_por_defecto: s.entidades_por_defecto } : {}),
     variantes: s.variantes.map((v) => ({
       id: v.id, nombre: v.nombre, estado: v.estado, frecuencia: v.frecuencia, cobertura: v.cobertura,
       ...(v.nota ? { nota: v.nota } : {}),
@@ -102,8 +138,10 @@ export async function buscarSeries(repo: Repositorio, args: ArgsBuscar) {
     const busqueda = terminos(args.texto);
     const puntajes = series.map((s) => {
       const { principal, resto } = pajar(s);
+      // Un término que es justo el id de la serie desempata: «pbi» trae primero el PIB y después los internacionales.
       const puntaje = busqueda.reduce((suma, alternativas) =>
-        suma + (alternativas.some((t) => principal.includes(t)) ? 3 : alternativas.some((t) => resto.includes(t)) ? 1 : 0), 0);
+        suma + (alternativas.some((t) => principal.includes(t)) ? 3 : alternativas.some((t) => resto.includes(t)) ? 1 : 0) +
+        (alternativas.includes(s.id) ? 1 : 0), 0);
       return { s, puntaje };
     });
     const encontradas = puntajes.filter((p) => p.puntaje > 0).sort((a, b) => b.puntaje - a.puntaje).map((p) => p.s);

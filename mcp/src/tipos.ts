@@ -1,6 +1,6 @@
 // Tipos del export (esquemas 1.1 y 1.2) que lee el MCP: catalogo.json, quiebres.json y el JSON de cada variante.
 // El contrato completo está en tests/contrato/.
-import type { Advertencia, Excluido, SerieExportada, Tramo } from "@vaiven/transformaciones";
+import type { Advertencia, DocumentoExportado, Entidad } from "@vaiven/transformaciones";
 
 export type EstadoVariante = "publicada" | "pendiente" | "pendiente_licencia";
 
@@ -39,6 +39,10 @@ export interface SerieCatalogo {
   variante_por_defecto: string;
   quiebres: string[];
   variantes: VarianteCatalogo[];
+  /** Solo en las series con dimensión pais (SPEC 2.5). */
+  dimensiones?: ["pais"];
+  entidades?: Entidad[];
+  entidades_por_defecto?: string[];
   bibliografia?: FichaBibliografia[];
 }
 
@@ -56,7 +60,8 @@ export interface Fuente {
   id_api: string | null;
 }
 
-export interface DocumentoSerie extends SerieExportada {
+/** Lo que el JSON de una variante suma a lo que transforma la librería. */
+interface MetaDocumento {
   esquema: string;
   serie: string;
   codigo: string;
@@ -66,16 +71,18 @@ export interface DocumentoSerie extends SerieExportada {
   es_variante_por_defecto: boolean;
   metodo: string;
   empalme: string;
-  tramos: Tramo[];
   cobertura: { desde: string; hasta: string };
-  advertencias: Advertencia[];
-  excluidos: Excluido[];
   fuentes: Fuente[];
   licencia: string;
   cita: string;
   version_datos: string;
   desactualizada_desde: string | null;
+  /** Desde la 1.2: con qué transformación y medida arranca la ficha. */
+  vista_inicial?: { transformacion?: string; medida?: string };
 }
+
+/** Una variante exportada: con una sola serie o con dimensión pais. */
+export type DocumentoSerie = MetaDocumento & DocumentoExportado;
 
 export interface Quiebre extends Advertencia {
   afecta: string[];

@@ -34,7 +34,8 @@ class Publicadas:
         for carpeta in ("series", "auxiliares"):
             ruta = self.dir_metadatos / carpeta / f"{serie}.yaml"
             if ruta.exists():
-                return leer_yaml(ruta)
+                # Las auxiliares no lo declaran en el YAML: lo dice la carpeta (como en actualizar.py).
+                return {**leer_yaml(ruta), **({"auxiliar": True} if carpeta == "auxiliares" else {})}
         return None
 
     def opcion(self, vid: str) -> dict | None:

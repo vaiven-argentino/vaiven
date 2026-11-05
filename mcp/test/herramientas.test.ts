@@ -9,11 +9,16 @@ import { citar } from "../src/herramientas/citar";
 import { LIMITE_OBSERVACIONES } from "../src/herramientas/comun";
 import { describirSerie } from "../src/herramientas/describir";
 import { leerBase, obtenerSerie } from "../src/herramientas/obtener";
+import { transformar } from "@vaiven/transformaciones";
 import { EXPORT, repoCon, repoReal } from "./ayuda";
 
 const repo = repoReal();
 const documento = (s: string, v: string) => JSON.parse(readFileSync(join(EXPORT, "series", s, `${v}.json`), "utf-8"));
 const ids = (r: { series: Array<{ id: string }> }) => r.series.map((s) => s.id);
+// Los datos de una serie sin dimensión país (en las de país, `datos` es un objeto por país).
+type Pares = Array<[string, number | null]>;
+const pares = (r: { datos: unknown }) => r.datos as Pares;
+const porPais = (r: { datos: unknown }) => r.datos as Record<string, Pares>;
 // El catálogo crece por fases: lo esperado se calcula con el catálogo publicado, no con un número fijo.
 const catalogo = JSON.parse(readFileSync(join(EXPORT, "catalogo.json"), "utf-8")) as { series: Array<{ id: string; bloque: string; prioridad: string }> };
 const deBloque = (b: string) => catalogo.series.filter((s) => s.bloque === b).map((s) => s.id).sort();
@@ -45,6 +50,17 @@ describe("buscar_series", () => {
     expect(cb.estado).toBe("pendiente_licencia");
     expect(cb.nota).toBeTruthy();
   });
+  it("sinónimos de la fase 4a y búsqueda por país", async () => {
+    expect(ids(await buscarSeries(repo, { texto: "pbi" }))[0]).toBe("pib");
+    expect(ids(await buscarSeries(repo, { texto: "déficit" }))[0]).toBe("resultado-fiscal");
+    expect(ids(await buscarSeries(repo, { texto: "emisión" }))).toContain("base-monetaria");
+    expect(ids(await buscarSeries(repo, { texto: "tcr" })).slice(0, 2).sort()).toEqual(["tcr-bilateral", "tcr-multilateral"]);
+    expect(ids(await buscarSeries(repo, { texto: "sueldos" }))[0]).toBe("salario-real");
+    const brasil = await buscarSeries(repo, { texto: "Brasil" });
+    expect(ids(brasil).sort()).toEqual(["int-pib", "int-pib-per-capita"]);
+    expect(brasil.series[0].paises!.map((e) => e.id)).toContain("BRA");
+    expect(brasil.series[0].paises_por_defecto![0]).toBe("ARG");
+  });
   it("sin coincidencias, lista todo y lo avisa", async () => {
     const r = await buscarSeries(repo, { texto: "soja" });
     expect(r.total).toBe(catalogo.series.length);
@@ -70,6 +86,20 @@ describe("describir_serie", () => {
     expect(r.fuentes.length).toBeGreaterThan(0);
     expect(r.bibliografia.map((b) => b.id)).toEqual(["OS2006-G3"]);
   });
+  it("informa medidas, deflactores, pesos actuales y países", async () => {
+    const salario = await describirSerie(repo, { id: "salario-real" });
+    const ripte = salario.variantes.find((v) => v.id === "ripte")! as Record<string, unknown>;
+    expect(ripte.medidas).toEqual(["real", "en_dolares"]);
+    expect(ripte.deflactores).toEqual(["ipc.oficial", "ipc.provincias"]);
+    expect(ripte.vista_inicial).toEqual({ transformacion: "nivel", medida: "real" });
+    const tc = await describirSerie(repo, { id: "tc-oficial" });
+    const epoca = tc.variantes.find((v) => v.id === "moneda-de-epoca")! as Record<string, unknown>;
+    expect(epoca.transformaciones).toEqual(["nivel"]);
+    expect((epoca.con_pesos_actuales as { transformaciones: string[] }).transformaciones).toContain("var_interanual");
+    const int = await describirSerie(repo, { id: "INT-01" });
+    expect(int.paises!.length).toBeGreaterThan(5);
+    expect((int.variantes[0] as Record<string, unknown>).transformaciones).toEqual(["nivel", "indice_desde_tasas"]);
+  });
   it("una serie inexistente da un error que lista las publicadas", async () => {
     await expect(describirSerie(repo, { id: "pbi" })).rejects.toThrow(/No hay ninguna serie «pbi».*ipc \(PRE-01\)/);
   });
@@ -93,7 +123,7 @@ describe("obtener_serie", () => {
   });
   it("reservas: el dato excluido de marzo de 1979 va como null, con su motivo", async () => {
     const r = await obtenerSerie(repo, { id: "reservas", desde: "1979-01", hasta: "1979-06" });
-    expect(r.datos.find(([f]) => f === "1979-03")).toEqual(["1979-03", null]);
+    expect(pares(r).find(([f]) => f === "1979-03")).toEqual(["1979-03", null]);
     expect(r.excluidos[0].motivo).toContain("675,8");
     expect(r.notas.join(" ")).toContain("no los interpola");
   });
@@ -104,7 +134,7 @@ describe("obtener_serie", () => {
       { desde: "2003-07", hasta: "2004-10", frecuencia: "trimestral" },
     ]);
     expect(r.advertencias.map((a) => a.id)).toContain("q.desocupacion.eph-2003");
-    expect(r.datos.find(([f]) => f === "2002-05")![1]).toBe(21.5);
+    expect(pares(r).find(([f]) => f === "2002-05")![1]).toBe(21.5);
   });
   it("desocupación anual: 2003 mezcla frecuencias y queda sin dato", async () => {
     const r = await obtenerSerie(repo, { id: "desocupacion", frecuencia: "anual", desde: "2002", hasta: "2004" });
@@ -128,6 +158,59 @@ describe("obtener_serie", () => {
     await expect(obtenerSerie(repo, { id: "ipc", base: "2004" })).rejects.toThrow(ErrorHerramienta);
     expect(() => leerBase("enero")).toThrow(ErrorHerramienta);
     await expect(obtenerSerie(repo, { id: "ipc", desde: "2005", hasta: "2001" })).rejects.toThrow(/invertido/);
+  });
+  it("medida real: carga el IPC elegido y da lo mismo que la librería", async () => {
+    const r = await obtenerSerie(repo, { id: "salario-real", medida: "real", deflactor: "provincias", base_real: "2016", desde: "2017", hasta: "2017" });
+    const doc = documento("salario-real", "ripte");
+    const esperado = transformar(doc, { medida: "real", deflactor: "ipc.provincias", baseReal: "2016", desde: "2017", hasta: "2017" },
+      { series: { "ipc.provincias": documento("ipc", "provincias") } });
+    expect(pares(r)).toEqual(esperado.datos.map(([f, v]) => [f, v === null ? null : Number(v.toPrecision(6))]));
+    expect(r.unidad).toBe("pesos de 2016");
+    expect(r.deflactor).toBe("ipc.provincias");
+    expect(r.cita).toContain("a precios constantes de 2016, deflactada con el IPC «ipc.provincias»");
+  });
+  it("% del PIB y dólares: unidad, advertencias del insumo y reglas de los stocks", async () => {
+    const cc = await obtenerSerie(repo, { id: "cuenta-corriente", medida: "pct_pib", desde: "2001", hasta: "2002" });
+    expect(cc.unidad).toBe("% del PIB");
+    const [d2001, d2002] = pares(cc).map(([, v]) => v!);
+    expect(d2001).toBeLessThan(0);   // déficit en 2001, superávit tras la devaluación de 2002
+    expect(d2002).toBeGreaterThan(0);
+    expect(cc.advertencias.map((a) => a.id)).toContain("q.pib-dolares.tipo-de-cambio");
+    await expect(obtenerSerie(repo, { id: "reservas", medida: "pct_pib" })).rejects.toThrow(/frecuencia anual/);
+    const usd = await obtenerSerie(repo, { id: "resultado-fiscal", medida: "en_dolares", frecuencia: "anual", desde: "2018", hasta: "2018" });
+    expect(usd.unidad).toBe("millones de US$");
+  });
+  it("pesos actuales: 10.000 australes son 1 peso", async () => {
+    const r = await obtenerSerie(repo, { id: "tc-oficial.moneda-de-epoca", pesos_actuales: true, desde: "1991-04", hasta: "1991-04" });
+    expect(pares(r)[0][1]).toBeCloseTo(0.981, 3);
+    expect(r.unidad).toBe("pesos actuales por dólar");
+    await expect(obtenerSerie(repo, { id: "tc-oficial.moneda-de-epoca", transformacion: "var_interanual" }))
+      .rejects.toThrow(/Primero pasala a pesos actuales.*con pesos_actuales: transformaciones nivel, var_mensual, var_interanual/);
+  });
+  it("países: selección inicial por defecto, ISO3 sin distinguir mayúsculas e índice desde tasas", async () => {
+    const def = await obtenerSerie(repo, { id: "int-pib", desde: "2020", hasta: "2020" });
+    const doc = documento("int-pib", "banco-mundial");
+    expect(Object.keys(porPais(def))).toEqual(doc.entidades_por_defecto);
+    expect(def.n_observaciones).toBe(doc.entidades_por_defecto.length);
+    const r = await obtenerSerie(repo, { id: "int-pib", paises: ["arg", "BRA"], transformacion: "indice_desde_tasas", base: "2000", desde: "2000", hasta: "2002" });
+    expect(porPais(r).ARG[0]).toEqual(["2000", 100]);
+    expect(r.paises).toEqual([{ id: "ARG", nombre: "Argentina" }, { id: "BRA", nombre: "Brasil" }]);
+    expect(r.unidad).toBe("índice, 2000 = 100");
+    expect(r.cita).toContain("entidades ARG y BRA, índice desde las tasas");
+    await expect(obtenerSerie(repo, { id: "int-pib", paises: ["XXX"] })).rejects.toThrow(/no tiene XXX.*ARG \(Argentina\)/);
+    await expect(obtenerSerie(repo, { id: "ipc", paises: ["ARG"] })).rejects.toThrow(/no tiene dimensión país/);
+  });
+  it("deflactor sin medida real y medida que la variante no admite dan error", async () => {
+    await expect(obtenerSerie(repo, { id: "salario-real", deflactor: "provincias" })).rejects.toThrow(/solo se usan con medida «real»/);
+    await expect(obtenerSerie(repo, { id: "salario-real", medida: "real", deflactor: "cavallo" })).rejects.toThrow(/Deflactores: ipc.oficial, ipc.provincias/);
+    await expect(obtenerSerie(repo, { id: "ipc", medida: "real" })).rejects.toThrow(/no admite la medida «real».*ninguna medida/);
+  });
+  it(`el límite de ${LIMITE_OBSERVACIONES} observaciones suma todos los países`, async () => {
+    const real = documento("int-pib", "banco-mundial");
+    const largos = Object.fromEntries(Object.keys(real.datos).map((p) => [p, Array.from({ length: 600 }, (_, i) => [String(1400 + i), 1])]));
+    const grande = repoCon({ "series/int-pib/banco-mundial.json": { ...real, datos: largos } });
+    await expect(obtenerSerie(grande, { id: "int-pib", paises: Object.keys(largos) })).rejects.toThrow(/límite es 10000.*pedí menos países/);
+    expect((await obtenerSerie(grande, { id: "int-pib", paises: ["ARG"] })).n_observaciones).toBe(600);
   });
   it(`más de ${LIMITE_OBSERVACIONES} observaciones pide acotar`, async () => {
     const real = documento("reservas", "brutas");
@@ -153,6 +236,12 @@ describe("citar", () => {
     const r = await citar(repo, { id: "ipc.provincias", formato: "apa", transformacion: "var_interanual", frecuencia: "anual" });
     expect(r.apa).toBe(apa(doc, nombreTransformacion({ frecuencia: "anual", transformacion: "var_interanual" })));
     expect(r).not.toHaveProperty("bibtex");
+  });
+  it("con medida y países, la cita los nombra", async () => {
+    const r = await citar(repo, { id: "salario-real", medida: "real", deflactor: "provincias", formato: "texto" });
+    expect(r.texto).toContain("deflactada con el IPC «ipc.provincias»");
+    const int = await citar(repo, { id: "int-pib", paises: ["arg", "bra"], formato: "texto" });
+    expect(int.texto).toContain("entidades ARG y BRA");
   });
   it("una variante pendiente no se cita", async () => {
     await expect(citar(repo, { id: "desocupacion", variante: "empalmada" })).rejects.toThrow(/pendiente/);
