@@ -101,6 +101,22 @@ def publicadas(serie: dict) -> list[dict]:
     return [v for v in serie["variantes"] if v.get("estado", "publicada") == "publicada"]
 
 
+def quitar_despublicadas(rutas: Rutas, series: list[dict]) -> list[str]:
+    """Borra el JSON y los CSV (descarga y capa 2) de las variantes exportadas que ya no están publicadas."""
+    vigentes = {f"{s['id']}.{v['id']}" for s in series for v in publicadas(s)}
+    quitadas = []
+    for carpeta in ("series", "auxiliares"):
+        for ruta in sorted((rutas.export / carpeta).glob("*/*.json")):
+            vid = f"{ruta.parent.name}.{ruta.stem}"
+            if vid in vigentes:
+                continue
+            csv = rutas.export / "descargas" / "csv" / ("auxiliares" if carpeta == "auxiliares" else "") / ruta.parent.name / f"{ruta.stem}.csv"
+            for archivo in (ruta, csv, rutas.capa2 / ruta.parent.name / f"{ruta.stem}.csv"):
+                archivo.unlink(missing_ok=True)
+            quitadas.append(vid)
+    return quitadas
+
+
 def fuentes_necesarias(meta: Metadatos) -> list[str]:
     """Fuentes de las variantes publicadas, de sus controles de continuidad y las auxiliares (SPEC 2.6)."""
     ids = []
@@ -309,6 +325,13 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                                       "cambios": rev["sobre_umbral"]})
         export_series.escribir(rutas.export, doc)
         documentos[vid] = doc
+
+    # Variantes que dejaron de estar publicadas (pasaron a pendiente o se borraron de los metadatos): se quitan del
+    # export y de la capa 2, para que despublicar sea solo cambiar el `estado` en el YAML.
+    quitadas = quitar_despublicadas(rutas, cargar_metadatos(rutas).series if solo else meta.series)
+    if quitadas:
+        hubo_cambios = True
+        res.cambios += [f"{vid}: despublicada (se quitaron su JSON y sus CSV)" for vid in quitadas]
 
     ruta_catalogo = rutas.export / "catalogo.json"
     version_general = momento

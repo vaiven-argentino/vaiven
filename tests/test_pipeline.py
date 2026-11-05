@@ -169,3 +169,22 @@ def test_insumos_encuentran_las_auxiliares_fuera_de_la_corrida(tmp_path):
     p = Publicadas({}, tmp_path / "export", tmp_path / "metadatos")
     assert p.opcion("pib-dolares.anual") == {"id": "pib-dolares.anual", "archivo": "auxiliares/pib-dolares/anual.json",
                                              "nombre": "Anual", "frecuencia": "anual"}
+
+
+def test_una_variante_que_pasa_a_pendiente_se_quita_del_export(repo):
+    assert ejecutar(repo, con_red=False).publicado
+    json_ = repo.export / "series" / "prueba" / "oficial.json"
+    csv = repo.export / "descargas" / "csv" / "prueba" / "oficial.csv"
+    assert json_.exists() and csv.exists()
+    # Una segunda variante publicada, para que la serie siga en el catálogo, y la original pasa a pendiente.
+    meta = yaml.safe_load((repo.metadatos / "series" / "prueba.yaml").read_text(encoding="utf-8"))
+    meta["variantes"].append({**meta["variantes"][0], "id": "copia", "nombre": "Copia"})
+    meta["variantes"][0].update({"estado": "pendiente", "nota": "Pendiente: prueba."})
+    meta["variante_por_defecto"] = "copia"
+    (repo.metadatos / "series" / "prueba.yaml").write_text(yaml.safe_dump(meta, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    assert not json_.exists() and not csv.exists() and not (repo.capa2 / "prueba" / "oficial.csv").exists()
+    assert "prueba.oficial: despublicada (se quitaron su JSON y sus CSV)" in res.cambios
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    assert {v["id"]: v["archivo"] for v in catalogo["series"][0]["variantes"]}["oficial"] is None
