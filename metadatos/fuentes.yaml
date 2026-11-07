@@ -565,6 +565,9 @@
   columna: REER_51_AR
   url: https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database
   licencia: Bruegel, uso libre con atribución
+  cita_recomendada: >-
+    Bruegel Dataset (2012) 'Real effective exchange rates for 178 countries', version of {version}, available at
+    https://doi.org/10.64153/SZCG6180
   frecuencia: mensual
   unidad: índice (un aumento es apreciación)
   cobertura: {desde: 1962-05, hasta: hoy}
@@ -573,6 +576,7 @@
     Términos (24/10/2026): «Users can freely use our data in its unchanged form or after any transformation for any
     purpose and can freely distribute it, provided that proper attribution is made to the source, but not in any way
     that suggests that Bruegel endorses the user or their use of the data.» No es una licencia Creative Commons.
+    Verificado de nuevo el 07/11/2026 en la página del conjunto de datos, junto con la cita recomendada (con DOI).
     Cita: Darvas, Z. (2012), «Real effective exchange rates for 178 countries: a new database», Bruegel Working
     Paper 2012/06, actualizada; doi:10.64153/SZCG6180. El README no dice cuál es el período base.
 

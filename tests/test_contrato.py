@@ -109,10 +109,15 @@ def test_excluidos_no_figuran_en_los_datos():
     assert [e["fecha"] for e in reservas["excluidos"]] == ["1979-03"]
 
 
-def test_catalogo_trae_la_bibliografia_de_los_metadatos():
+def test_catalogo_trae_la_bibliografia_solo_si_se_publica():
+    # Hasta que la cátedra responda, el catálogo publicado no trae la bibliografía (segunda revisión de la 4a, 3.3).
     import yaml
+    from pipeline.export.catalogo import PUBLICAR_BIBLIOGRAFIA
     catalogo = json.loads((EXPORT / "catalogo.json").read_text(encoding="utf-8"))
     for s in catalogo["series"]:
+        if not PUBLICAR_BIBLIOGRAFIA:
+            assert "bibliografia" not in s, s["id"]
+            continue
         meta = yaml.safe_load((RAIZ / "metadatos" / "series" / f"{s['id']}.yaml").read_text(encoding="utf-8"))
         assert [b["id"] for b in s["bibliografia"]] == meta.get("bibliografia", [])
         for b in s["bibliografia"]:
@@ -160,3 +165,19 @@ def test_indice_de_auxiliares_y_signos_monetarios():
     por_id = {s["id"]: s["unidades_por_peso_actual"] for s in signos}
     # 1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188 = 10¹³ pesos moneda nacional (SPEC 4).
     assert por_id == {"peso": 1, "austral": 1e4, "peso-argentino": 1e7, "peso-ley-18188": 1e11, "peso-moneda-nacional": 1e13}
+
+
+def test_licencia_de_las_variantes_con_terminos_propios():
+    # Bruegel no es CC BY: la variante y su recurso del datapackage dicen «other-at» (segunda revisión de la 4a, 3.3).
+    paquete = json.loads((EXPORT / "datapackage.json").read_text(encoding="utf-8"))
+    licencias = {r["name"]: r["licenses"] for r in paquete["resources"]}
+    for ruta in ARCHIVOS:
+        doc = json.loads(ruta.read_text(encoding="utf-8"))
+        propias = [f for f in doc["fuentes"] if f["licencia"] != "CC-BY-4.0"]
+        if doc["licencia"] == "other-at":
+            assert propias, doc["id"]
+            if doc["id"] in licencias:
+                assert [x["name"] for x in licencias[doc["id"]]] == ["other-at"] * len(propias)
+    bruegel = json.loads((EXPORT / "series" / "tcr-multilateral" / "bruegel.json").read_text(encoding="utf-8"))
+    assert bruegel["licencia"] == "other-at"
+    assert "doi.org/10.64153/SZCG6180" in bruegel["fuentes"][0]["cita"]

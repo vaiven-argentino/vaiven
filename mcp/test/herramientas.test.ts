@@ -148,6 +148,8 @@ describe("obtener_serie", () => {
     const bruegel = r.fuentes.find((f) => f.descarga === "manual");
     expect(bruegel?.version).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(r.notas.some((n) => n.includes("se actualiza a mano") && n.includes(bruegel!.version!))).toBe(true);
+    expect(r.licencia).toBe("other-at");
+    expect(r.notas.some((n) => n.includes("no CC BY") && n.includes("fuentes[].cita"))).toBe(true);
   });
   it("base 100 con el promedio de un año", async () => {
     const r = await obtenerSerie(repo, { id: "exportaciones", transformacion: "base_100", base: "1993", desde: "1993", hasta: "1994" });

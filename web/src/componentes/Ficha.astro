@@ -363,6 +363,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
         <li>
           <p><strong>{f.organismo}</strong>: {f.nombre}.</p>
           <p class="secundario">Licencia {f.licencia.replace("CC-BY-4.0", "CC BY 4.0")}{f.id_api && <> · ID <code>{f.id_api}</code></>}{f.descarga === "manual" && f.version && <> · versión del {diaDeVersion(f.version)} (se actualiza a mano)</>} · <a href={f.url}>consultar en la fuente</a></p>
+          {f.cita && <p class="secundario">Cita recomendada por la fuente: {f.cita}</p>}
         </li>
       ))}
     </ul>

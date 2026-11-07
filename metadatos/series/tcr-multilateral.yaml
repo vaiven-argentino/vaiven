@@ -11,7 +11,9 @@ tipo: precio
 agregacion: promedio
 frecuencia: mensual
 cobertura: {desde: 1991-01, hasta: hoy}
-variante_por_defecto: bcra
+# Bruegel por defecto hasta que la del BCRA llegue a 2025 (la copia de datos.gob.ar termina en diciembre de 2024;
+# decidido el 07/11/2026, segunda revisión de la 4a).
+variante_por_defecto: bruegel
 vista_inicial: {transformacion: nivel}
 variantes:
   - id: bcra
@@ -31,6 +33,8 @@ variantes:
     estado: publicada
     unidad: índice (100 ÷ REER de Bruegel; base sin declarar)
     empalme: yuxtaponer
+    # Los datos son de Bruegel, con sus términos (uso libre con atribución, sin sugerir respaldo): no es CC BY.
+    licencia_derivado: other-at
     invertir: 100
     metodo: >-
       Tipo de cambio real efectivo de Bruegel (Darvas), con IPC y una canasta de 51 socios, mensual, dado vuelta

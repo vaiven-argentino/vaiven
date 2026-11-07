@@ -15,6 +15,11 @@ PERFIL_TABLA = "https://datapackage.org/profiles/2.0/tableschema.json"
 VEGA_LITE = "https://vega.github.io/schema/vega-lite/v6.json"
 
 
+# La bibliografía de cada serie (fichas del inventario: referencia, página del PDF, título del cuadro) no se publica en
+# el export hasta que la cátedra responda (segunda revisión de la 4a, 3.3). Los ids se siguen controlando contra el
+# inventario en cada corrida.
+PUBLICAR_BIBLIOGRAFIA = False
+
 CAMPOS_BIBLIOGRAFIA = {"referencia": "texto", "pagina": "pagina", "tipo": "tipo", "titulo_original": "titulo_original",
                        "periodo_cubierto": "periodo_cubierto"}
 
@@ -43,6 +48,7 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
     for s in series:
         if s.get("auxiliar"):
             continue
+        fichas = bibliografia(s.get("bibliografia", []), inventario or {}, s["id"])
         variantes = []
         for v in s["variantes"]:
             doc = documentos.get(f"{s['id']}.{v['id']}")
@@ -68,7 +74,7 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
             # Dimensión pais (SPEC 2.5): las entidades, para que buscar_series y el catálogo las muestren sin leer los datos.
             **({"dimensiones": ["pais"], "entidades": s["entidades"], "entidades_por_defecto": s["entidades_por_defecto"]}
                if "pais" in s.get("dimensiones", []) else {}),
-            "bibliografia": bibliografia(s.get("bibliografia", []), inventario or {}, s["id"]),
+            **({"bibliografia": fichas} if PUBLICAR_BIBLIOGRAFIA else {}),
         })
     return {"version_datos": version_datos, "series": entradas}
 
@@ -153,8 +159,7 @@ def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_d
                 "primaryKey": ["fecha", "pais"] if con_pais(doc) else ["fecha"],
             },
             "sources": [{"title": f"{f['organismo']}: {f['nombre']}", "path": f["url"]} for f in doc["fuentes"]],
-            "licenses": [{"name": "CC-BY-4.0", "path": "https://creativecommons.org/licenses/by/4.0/",
-                          "title": "Creative Commons Attribution 4.0"}],
+            "licenses": licencias_recurso(doc),
         })
     return {
         "$schema": PERFIL_DATAPACKAGE,
@@ -169,6 +174,18 @@ def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_d
         "contributors": [{"title": "Camilo Gómez Ortega von Zeschau", "roles": ["creator"]}],
         "resources": recursos,
     }
+
+
+CC_BY = {"name": "CC-BY-4.0", "path": "https://creativecommons.org/licenses/by/4.0/", "title": "Creative Commons Attribution 4.0"}
+
+
+def licencias_recurso(doc: dict) -> list[dict]:
+    """La licencia de un recurso: CC BY 4.0, u «other-at» (Open Definition: otra licencia, con atribución) cuando los
+    datos son de una fuente con términos propios, como Bruegel (segunda revisión de la 4a, 3.3)."""
+    if doc.get("licencia", "CC-BY-4.0") == "CC-BY-4.0":
+        return [CC_BY]
+    return [{"name": doc["licencia"], "title": f["licencia"], "path": f["url"]}
+            for f in doc["fuentes"] if f["licencia"] != "CC-BY-4.0"]
 
 
 def con_pais(doc: dict) -> bool:

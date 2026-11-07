@@ -162,6 +162,10 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   for (const f of manuales) {
     notas.push(`${f.organismo} se actualiza a mano (su sitio no deja descargar desde los servidores de Vaivén): la versión que usa Vaivén es del ${f.version}.`);
   }
+  if (doc.licencia !== "CC-BY-4.0") {
+    const propias = doc.fuentes.filter((f) => f.licencia !== "CC-BY-4.0");
+    notas.push(`Licencia «${doc.licencia}»: los datos son de ${propias.map((f) => f.organismo).join(" y ")}, con sus propios términos (${propias.map((f) => f.licencia).join("; ")}), no CC BY.${propias.some((f) => f.cita) ? " Citá también la fuente como recomienda (fuentes[].cita)." : ""}`);
+  }
   if (doc.desactualizada_desde) {
     notas.push(manuales.length
       ? `La versión de la fuente tiene más de 3 meses (desactualizada desde ${doc.desactualizada_desde}): puede haber una más nueva.`

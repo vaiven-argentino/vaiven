@@ -165,7 +165,22 @@ def test_revision_de_un_valor_publicado_queda_registrada(repo):
     assert revisiones[0]["cambios"][0]["fecha"] == "2000-05"
 
 
-def test_catalogo_con_bibliografia_del_inventario(repo):
+def test_catalogo_sin_bibliografia_hasta_que_responda_la_catedra(repo):
+    ruta = repo.inventario
+    ruta.parent.mkdir(parents=True)
+    ruta.write_text("id,texto,pagina,tipo,titulo_original,periodo_cubierto\nAB2000-G1,Obra,12,cuadro,T,1990\n", encoding="utf-8")
+    meta = repo.metadatos / "series" / "prueba.yaml"
+    serie = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    serie["bibliografia"] = ["AB2000-G1"]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    assert ejecutar(repo, con_red=False).publicado
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    assert "bibliografia" not in catalogo["series"][0]
+
+
+def test_catalogo_con_bibliografia_del_inventario(repo, monkeypatch):
+    from pipeline.export import catalogo as export_catalogo
+    monkeypatch.setattr(export_catalogo, "PUBLICAR_BIBLIOGRAFIA", True)
     ruta = repo.inventario
     ruta.parent.mkdir(parents=True)
     ruta.write_text("﻿id,texto,pagina,tipo,titulo_original,periodo_cubierto,otra\n"

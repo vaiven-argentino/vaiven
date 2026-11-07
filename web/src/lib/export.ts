@@ -69,6 +69,8 @@ export interface Fuente {
   /** Desde la 1.3: fuente de descarga manual (Bruegel) y fecha de la versión que usa Vaivén. */
   descarga?: "manual";
   version?: string;
+  /** Desde la 1.3: la cita que recomienda la fuente (Bruegel). */
+  cita?: string;
 }
 
 /** Los metadatos de una variante exportada; `datos` es una lista o, con dimensión pais, un objeto por entidad. */
