@@ -56,6 +56,10 @@ const bibliografia = MOSTRAR_BIBLIOGRAFIA ? serie.bibliografia ?? [] : [];
 // Visible en la cabecera: el último dato y su atraso (revisión de la 4a, 2.1).
 const ultimo = ultimoDato(doc.cobertura.hasta, doc.tramos.at(-1)?.frecuencia ?? doc.frecuencia, doc.version_datos);
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
+// Fuentes de descarga manual (Bruegel, que bloquea a GitHub Actions): la ficha dice qué versión usa Vaivén
+// (segunda revisión de la 4a, 2.3). «Bruegel (Zsolt Darvas)» → «Bruegel».
+const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
+  .map((f) => ({ nombre: f.organismo.replace(/\s*\(.*\)$/, ""), version: diaDeVersion(f.version!) }));
 ---
 <article class="ficha contenedor">
   <header class="cabeza">
@@ -69,12 +73,14 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
       <div><dt>Unidad</dt><dd>{doc.unidad}{medida && `, como se publica (el gráfico arranca ${ARRANCA[medida]})`}</dd></div>
       <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
       <div><dt>Cobertura</dt><dd>{fechaCorta(doc.cobertura.desde)} – {fechaCorta(doc.cobertura.hasta)}</dd></div>
-      <div class="ultimo-dato"><dt>Último dato</dt><dd><strong>{ultimo.texto}</strong>{ultimo.atraso && <span class="atraso"> · {ultimo.atraso} meses sin datos nuevos de la fuente</span>}</dd></div>
+      <div class="ultimo-dato"><dt>Último dato</dt><dd><strong>{ultimo.texto}</strong>{ultimo.atraso && <span class="atraso"> · {ultimo.atraso} meses sin datos nuevos de la fuente</span>}{manuales.map((m) => <span class="atraso"> · versión de {m.nombre} del {m.version}</span>)}</dd></div>
       <div><dt>Datos de esta serie</dt><dd><time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> <span class="secundario">(el pie dice la última actualización del sitio)</span></dd></div>
     </dl>
-    {doc.desactualizada_desde && (
-      <p class="alerta">La fuente no responde: la serie está desactualizada desde el {fechaCorta(doc.desactualizada_desde)}.</p>
-    )}
+    {doc.desactualizada_desde && (manuales.length ? (
+      <p class="alerta">La versión de {manuales.map((m) => m.nombre).join(" y ")} que usa Vaivén tiene más de 3 meses: puede haber una más nueva. Esta fuente se actualiza a mano.</p>
+    ) : (
+      <p class="alerta">La serie no se pudo actualizar desde el {diaDeVersion(doc.desactualizada_desde)}: la fuente no respondió o los datos nuevos no pasaron los controles. Se muestran los datos anteriores.</p>
+    ))}
   </header>
 
   <nav class="variantes" aria-labelledby="titulo-variantes">
@@ -353,7 +359,7 @@ const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${do
       {doc.fuentes.map((f) => (
         <li>
           <p><strong>{f.organismo}</strong>: {f.nombre}.</p>
-          <p class="secundario">Licencia {f.licencia.replace("CC-BY-4.0", "CC BY 4.0")}{f.id_api && <> · ID <code>{f.id_api}</code></>} · <a href={f.url}>consultar en la fuente</a></p>
+          <p class="secundario">Licencia {f.licencia.replace("CC-BY-4.0", "CC BY 4.0")}{f.id_api && <> · ID <code>{f.id_api}</code></>}{f.descarga === "manual" && f.version && <> · versión del {diaDeVersion(f.version)} (se actualiza a mano)</>} · <a href={f.url}>consultar en la fuente</a></p>
         </li>
       ))}
     </ul>

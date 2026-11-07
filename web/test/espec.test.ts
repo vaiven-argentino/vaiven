@@ -113,3 +113,32 @@ describe("escala logarítmica", () => {
     expect(v[0]).toBeLessThanOrEqual(3.5e-11);
   });
 });
+
+describe("eje Y (regresión de la línea del 0, revisión del 07/11/2026)", () => {
+  // Compila la especificación con Vega-Lite y cuenta los ejes Y con etiquetas: la capa de la línea del 0 no puede
+  // apagar el eje compartido.
+  async function ejesY(doc: Doc, opciones = {}) {
+    const { compile } = await import("vega-lite");
+    const resultado = transformar(doc, opciones);
+    const spec = especificacion({
+      resultado, tramos: doc.tramos, empalme: doc.empalme, quiebres: numerarQuiebres(doc), tema, esVariacion: false,
+      log: false, alto: 300, ancho: 800, descripcion: "prueba",
+    });
+    const vega = compile(spec as never).spec as { axes?: Array<{ scale: string; labels?: boolean; grid?: boolean }> };
+    const y = (vega.axes ?? []).filter((a) => a.scale === "y");
+    // Vega-Lite separa la grilla en un eje propio sin etiquetas: tiene que estar también.
+    expect(y.filter((a) => a.grid)).toHaveLength(1);
+    return y.filter((a) => a.labels !== false && !a.grid);
+  }
+  it("con valores negativos (IPC interanual) hay eje Y con etiquetas", async () => {
+    expect(await ejesY(leer("ipc", "oficial"), { transformacion: "var_interanual" })).toHaveLength(1);
+  });
+  it("con valores negativos (resultado fiscal) hay eje Y con etiquetas", async () => {
+    const doc = leer("resultado-fiscal", JSON.parse(readFileSync(join(import.meta.dirname, "..", "..", "export", "catalogo.json"), "utf-8"))
+      .series.find((s: { id: string }) => s.id === "resultado-fiscal").variante_por_defecto);
+    expect(await ejesY(doc)).toHaveLength(1);
+  });
+  it("sin valores negativos (reservas) hay eje Y con etiquetas", async () => {
+    expect(await ejesY(leer("reservas", "brutas"))).toHaveLength(1);
+  });
+});

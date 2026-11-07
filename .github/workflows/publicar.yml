@@ -37,7 +37,7 @@ env:
 jobs:
   desplegar:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     steps:
       # En workflow_run, head_sha es el commit en el que arrancó la actualización (antes del commit de datos):

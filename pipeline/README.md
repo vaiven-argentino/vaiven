@@ -9,6 +9,7 @@ uv sync                                                  # dependencias (una vez
 uv run python -m pipeline actualizar                     # todas las series, con descarga
 uv run python -m pipeline actualizar --series ipc        # solo algunas
 uv run python -m pipeline actualizar --sin-red           # con los últimos snapshots, sin descargar
+uv run python -m pipeline bajar-manual                   # fuentes de descarga manual (Bruegel): snapshot si hay versión nueva
 uv run --group descargas python -m pipeline descargas    # Parquet y ZIP de descarga completa (no se versionan)
 uv run pytest                                            # pruebas
 ```
@@ -19,15 +20,26 @@ uv run pytest                                            # pruebas
 - la variante (y las derivadas que dependen de ella) queda **retenida**: conserva su JSON anterior, marcado con `desactualizada_desde`, y el resto se publica;
 - solo un error que no se puede atribuir frena toda la publicación;
 - también frena una fuente que **pierde más de 12 fechas** que ya tenía, y una variante que **empieza más de un año después** de lo que declaran sus tramos (la fuente recortó su historia);
-- una variante que pasa a `pendiente` se quita del export y de la capa 2. Con `--informe RUTA` deja el resumen en Markdown; el workflow lo usa para el mensaje del commit o el issue.
+- una variante que pasa a `pendiente` se quita del export y de la capa 2. Con `--informe RUTA` deja el resumen en Markdown; el workflow lo usa entero para el mensaje del commit o el issue.
+
+**Fuentes que no responden (desde la segunda revisión de la 4a).** Si una descarga falla, se usa el último snapshot y las variantes que la usan quedan con `desactualizada_desde` igual al **primer día en que no respondió**, que se guarda en `snapshots/estado-fuentes.json` (se escribe al empezar a fallar y se borra al volver a responder). `--sin-red` no toca ese archivo y conserva la marca. Los errores no copian páginas HTML enteras: queda el código y el título (por ejemplo, «HTTP 403: página HTML «Just a moment...»»). Si la fuente lleva **más de 7 días** sin responder, el informe la lista en «Fuentes que necesitan atención» y, con `--atencion RUTA`, la deja en un JSON que el workflow usa para abrir un issue `fuente-caida` por fuente (y cerrarlo cuando se normaliza).
+
+**Fuentes de descarga manual** (`descarga: manual` en `fuentes.yaml`). Hoy, solo Bruegel: su sitio responde a los servidores de GitHub Actions con el desafío anti-bots de Cloudflare (HTTP 403), y no corresponde esquivarlo. La corrida automática no la descarga ni la marca como caída: usa el último snapshot. Para actualizarla, desde la Mac o una sesión de Claude Code:
+
+```bash
+uv run python -m pipeline bajar-manual f.bruegel.reer-51-ar   # guarda un snapshot si hay una versión nueva
+uv run python -m pipeline actualizar --sin-red --series tcr-multilateral   # opcional: ver cómo queda
+```
+
+y se sube el snapshot nuevo por un PR (la corrida diaria siguiente lo publica igual). El export dice la versión (`fuentes[].version`, esquema 1.3) y, si pasan **más de 92 días** sin una versión nueva, la variante queda desactualizada desde ese día y se abre el issue.
 
 ## Qué hace cada carpeta
 
-- `fuentes/`: un módulo por API (`datos_gob_ar.py`, `datos_gob_ar_csv.py`, `bcra.py`; desde la fase 4a, `banco_mundial.py` para la API v2 del Banco Mundial, `ocde.py` para el SDMX de la OCDE y `bruegel.py` para la base REER de Bruegel) y `base.py`, que descarga con reintentos y guarda el snapshot con su checksum. Si el checksum no cambió, no se guarda nada nuevo.
+- `fuentes/`: un módulo por API (`datos_gob_ar.py`, `datos_gob_ar_csv.py`, `bcra.py`; desde la fase 4a, `banco_mundial.py` para la API v2 del Banco Mundial, `ocde.py` para el SDMX de la OCDE y `bruegel.py` para la base REER de Bruegel) y `base.py`, que descarga con reintentos y guarda el snapshot con su checksum. Si el checksum no cambió, no se guarda nada nuevo. `estado.py` lleva desde cuándo no responde cada fuente; `../manuales.py`, el comando `bajar-manual`.
 - `capa1/`: normaliza cada snapshot a `datos/capa1/<fuente>.csv` (fecha ISO del inicio del período y valor), sin tocar el contenido. En las fuentes con varios países, una serie por entidad (`<fuente>#<ISO3>`) y el CSV en formato largo (`fecha,pais,valor`).
 - `capa2/`: arma cada variante según su YAML: `empalmes.py` (encadenamiento de tasas, yuxtaposición y tramos agregados a años completos), `derivadas.py` (variantes calculadas a partir de otras), `signos_monetarios.py` (moneda de cada época ↔ pesos actuales) y `variantes.py`. Las derivadas se arman después de sus operandos, en orden de dependencias.
 - `validacion/`: esquema con pandera, huecos, rangos plausibles, continuidad en las superposiciones, coherencia entre la serie mensual y la anual, y revisiones contra lo publicado.
-- `export/`: JSON y CSV por variante, `catalogo.json`, `auxiliares.json`, `quiebres.json`, `revisiones.json`, `datapackage.json`, Vega-Lite y descargas. `insumos.py` declara qué series publicadas necesita cada medida (esquema 1.2).
+- `export/`: JSON y CSV por variante, `catalogo.json`, `auxiliares.json`, `quiebres.json`, `revisiones.json`, `datapackage.json`, Vega-Lite y descargas. `insumos.py` declara qué series publicadas necesita cada medida (esquema 1.2; la 1.3 suma la versión de las fuentes manuales).
 
 ## Cómo se declara una variante
 

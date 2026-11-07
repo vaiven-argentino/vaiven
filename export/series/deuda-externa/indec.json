@@ -1,5 +1,5 @@
 {
-  "esquema": "1.2",
+  "esquema": "1.3",
   "id": "deuda-externa.indec",
   "serie": "deuda-externa",
   "codigo": "EXT-07",
@@ -98,8 +98,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Deuda externa total, variante «indec». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/deuda-externa/indec/",
-  "version_datos": "2026-11-05T21:54:06Z",
+  "cita": "Vaivén (2026). Deuda externa total, variante «indec». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/deuda-externa/indec/",
+  "version_datos": "2026-11-07T07:25:59Z",
   "desactualizada_desde": null,
   "datos": [
     ["2006-01", 130145.3212],

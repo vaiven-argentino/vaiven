@@ -143,6 +143,12 @@ describe("obtener_serie", () => {
     expect(r.datos).toEqual([["2002", 19.65], ["2003", null], ["2004", 13.5209]]);
     expect(r.notas.join(" ")).toContain("2003");
   });
+  it("Bruegel: dice que se actualiza a mano y qué versión usa (segunda revisión de la 4a)", async () => {
+    const r = await obtenerSerie(repo, { id: "tcr-multilateral", variante: "bruegel", desde: "2025" });
+    const bruegel = r.fuentes.find((f) => f.descarga === "manual");
+    expect(bruegel?.version).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(r.notas.some((n) => n.includes("se actualiza a mano") && n.includes(bruegel!.version!))).toBe(true);
+  });
   it("base 100 con el promedio de un año", async () => {
     const r = await obtenerSerie(repo, { id: "exportaciones", transformacion: "base_100", base: "1993", desde: "1993", hasta: "1994" });
     expect(r.datos).toEqual([["1993", 100], ["1994", 120.746]]);

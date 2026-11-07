@@ -276,3 +276,47 @@ La SPEC v1.1 las incorpora. Quedan como diferencias de esta tanda:
 - Prueba manual del MCP con el guion actualizado.
 - PR encadenados hacia `main`.
 - Despliegue de la 4a.
+
+## 4a · Correcciones de la segunda revisión
+
+*07/11/2026 · Respuesta a `REVISION_FASE4a_v2.md` (segunda revisión, hecha en Claude Chat sobre `main` en `8bb0f39`). Antes de empezar se verificó que `main` no había cambiado y que el entorno llega a apis.datos.gob.ar, api.worldbank.org y www.bruegel.org (las tres responden 200). Va en tres PR encadenados: este (eje Y, avisos de fuentes, Bruegel manual y Ubuntu 26), uno con los textos, la bibliografía y los menores, y uno con los tramos recientes de datos.gob.ar.*
+
+### Decisiones tomadas con Camilo (07/11/2026)
+
+| Punto | Decisión | Qué se hizo |
+|---|---|---|
+| 2.1 Eje Y | Corregir y que las pruebas lo vean | La capa de la línea del 0 repite la definición de `y` (con `axis: null` apagaba el eje **y** la grilla de todo el gráfico). Prueba unitaria que compila con Vega-Lite; la de punta a punta exige etiquetas en los dos ejes; el `revisor-visual` revisa siempre una lista fija de fichas. |
+| 2.3 Avisos de fuentes | Commit con avisos, issue a los 7 días, `--sin-red` conserva la marca | Ver «Lo que se hizo además». |
+| 2.3 Bruegel | Descarga manual, con comando que corra en la Mac | `descarga: manual` y `python -m pipeline bajar-manual`. La ficha y el MCP dicen «versión de Bruegel del 11/10/2026»; aviso e issue si pasan más de 3 meses. |
+| 2.2 TCR | Bruegel por defecto hasta que el BCRA llegue a 2025; después, el BCRA | En el segundo y el tercer PR. |
+| 2.2 Tramos recientes | Completar lo que falta, con contraste mes a mes antes de unir | En el tercer PR. |
+| 3.3 Bibliografía | Fuera del export hasta que conteste la cátedra; el inventario CSV queda | En el segundo PR. |
+| 3.6 IPC | Desde 1993 | En el segundo PR. |
+| 4 Ubuntu 26 | Fijar `ubuntu-26.04` | Los cuatro jobs. La corrida del 06/11 ya había usado esa imagen (`ubuntu-latest` migró) y pasó. |
+| PR | Encadenados, en ramas con sufijo `-2` y `-3` | Te pregunto antes de abrir cada uno. |
+
+### Lo que se hizo además
+
+- **Log de la corrida del 06/11** (esta sesión lee GitHub Actions; la revisión no podía): Bruegel respondió `HTTP 403` con «Just a moment...», el desafío de Cloudflare. El aviso estaba en el informe, pero antes de «## Cambios publicados», y el commit copiaba desde ahí.
+- **Fuentes que no responden:**
+  - el commit del bot lleva el informe entero;
+  - los errores no copian la página HTML: queda el código y el `<title>`;
+  - `snapshots/estado-fuentes.json` guarda desde qué día no responde cada fuente (solo cambia cuando una fuente empieza a fallar o vuelve); **`desactualizada_desde` pasa a ser ese día**, no el del último snapshot que cambió (Bruegel figuraba desde el 24/10 y falló el 06/11);
+  - `--sin-red` conserva la marca y no toca el estado;
+  - más de 7 días: sección «Fuentes que necesitan atención» del informe y un issue `fuente-caida` por fuente (`--atencion RUTA` deja el JSON que lee el workflow); se cierra solo cuando una corrida completa la ve normalizada. No cambia el código de salida.
+- **Bruegel manual:** la corrida automática no la descarga ni la marca como caída. La versión sale del nombre del zip (`REER_database_ver11Oct2026.zip`); los snapshots nuevos la guardan en `meta.json`. `bajar-manual` se probó desde esta sesión: «sin cambios (versión 2026-10-11)».
+- **Esquema 1.3:** `fuentes[].descarga` y `fuentes[].version`. Todos los JSON se regeneraron con la 1.3.
+- **Aviso de desactualizada:** la ficha y el MCP ya no dicen siempre «la fuente no responde»: también puede ser una variante retenida por la validación o una versión manual vieja.
+- **Fechas en el aviso:** «desactualizada desde el 06/11/2026» (antes, solo mes y año).
+
+### Diferencias con la SPEC
+
+La SPEC v1.2 incorpora lo de este PR (2.1, 2.5, 5.1, 5.2 e historial). Quedan como diferencias:
+- La SPEC 5.4 nombra `release.yml`, que todavía no existe (fase 5).
+- El snapshot de Bruegel sigue guardando solo la columna de la Argentina extraída del zip, no el zip (excepción ya anotada en la 4a).
+
+### Pendientes
+
+**Tuyos:**
+- Una corrida manual de «Actualizar datos» en `main` después del merge, para ver el informe nuevo en el commit y el runner fijado.
+- Prueba manual del MCP con el guion actualizado.

@@ -10,7 +10,7 @@ import pandas as pd
 from pipeline.comun import etiqueta_fecha, redondear
 
 URL_SITIO = "https://vaiven.argentino.workers.dev"
-VERSION_ESQUEMA = "1.2"
+VERSION_ESQUEMA = "1.3"
 
 
 def url_ficha(serie_meta: dict, variante: dict) -> str:
@@ -50,7 +50,9 @@ def _fuentes(variante: dict, fuentes: dict[str, dict]) -> list[dict]:
         vistas.add(fid)
         f = fuentes[fid]
         salida.append({"id": fid, "organismo": f["organismo"], "nombre": f["nombre"], "url": f["url"],
-                       "licencia": f["licencia"], "id_api": f.get("id_api")})
+                       "licencia": f["licencia"], "id_api": f.get("id_api"),
+                       # Fuentes de descarga manual (esquema 1.3): la versión de la fuente que usa Vaivén.
+                       **({"descarga": "manual", "version": f.get("version")} if f.get("descarga") == "manual" else {})})
     return salida
 
 

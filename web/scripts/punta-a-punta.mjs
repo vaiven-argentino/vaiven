@@ -1,7 +1,7 @@
 // Prueba de punta a punta (SPEC 11: «encontrar, graficar, descargar y citar cada serie desde el celular y la
 // computadora»; fase 2, ampliada en la 4a). Por cada serie publicada, en 390 y 1280 px: la busca en el catálogo, abre
 // la ficha, cambia de transformación, de medida (real, en dólares, % del PIB), de país y a pesos actuales cuando la
-// variante los ofrece, baja el CSV, el PNG y el ZIP, copia la cita y abre otra variante.
+// variante los ofrece (y en cada gráfico controla que los dos ejes tengan etiquetas), baja el CSV, el PNG y el ZIP, copia la cita y abre otra variante.
 //
 // Uso: node web/scripts/punta-a-punta.mjs --base http://localhost:8787 --salida <carpeta para las descargas>
 import { mkdirSync, readFileSync, statSync } from "node:fs";
@@ -19,6 +19,18 @@ mkdirSync(salida, { recursive: true });
 const catalogo = JSON.parse(readFileSync(join(import.meta.dirname, "..", "..", "export", "catalogo.json"), "utf-8"));
 const fallas = [];
 const ok = (cond, mensaje) => { if (!cond) fallas.push(mensaje); return cond; };
+// Los dos ejes con etiquetas (revisión del 07/11/2026: la línea del 0 había apagado el eje Y de los gráficos con
+// valores negativos y ninguna prueba lo vio).
+async function ejes(pagina) {
+  return pagina.$$eval("#grafico svg g.role-axis", (gs) => gs.map((g) => ({
+    eje: (g.getAttribute("aria-label") ?? "").slice(0, 6), etiquetas: g.querySelectorAll(".role-axis-label text").length,
+  })));
+}
+const conEjes = async (pagina, id, que) => {
+  const e = await ejes(pagina);
+  ok(e.some((x) => x.eje === "X-axis" && x.etiquetas >= 2), `${id}: ${que} sin etiquetas en el eje X`);
+  ok(e.some((x) => x.eje === "Y-axis" && x.etiquetas >= 2), `${id}: ${que} sin etiquetas en el eje Y`);
+};
 
 async function bajar(pagina, accion, nombre) {
   const [descarga] = await Promise.all([pagina.waitForEvent("download", { timeout: 15000 }), accion()]);
@@ -44,6 +56,7 @@ for (const ancho of [390, 1280]) {
     // Graficar
     const listo = await pagina.waitForSelector("#grafico[data-listo='1'] svg", { timeout: 15000 }).then(() => true, () => false);
     ok(listo, `${id}: no se dibujó el gráfico`);
+    if (listo) await conEjes(pagina, id, "el gráfico inicial");
     const opciones = await pagina.$$eval("#c-transformacion option", (os) => os.map((o) => o.value));
     if (opciones.length > 1) {
       const panel = pagina.locator("#panel-opciones");
@@ -52,6 +65,7 @@ for (const ancho of [390, 1280]) {
       await pagina.selectOption("#c-transformacion", opciones.includes("var_interanual") ? "var_interanual" : otra);
       await pagina.waitForTimeout(400);
       ok(await pagina.$("#grafico svg"), `${id}: el gráfico no se redibujó al cambiar la transformación`);
+      await conEjes(pagina, id, "el gráfico con otra transformación");
     }
     // Medidas, país y pesos actuales (fase 4a): cada opción tiene que dibujar sin error.
     const probadas = [];
@@ -60,6 +74,7 @@ for (const ancho of [390, 1280]) {
       const estado = await pagina.$eval("#estado-grafico", (e) => (e.dataset.tipo === "error" ? e.textContent : ""));
       ok(!estado, `${id}: ${que} da error: «${estado}»`);
       ok(await pagina.$("#grafico svg"), `${id}: el gráfico no se redibujó con ${que}`);
+      await conEjes(pagina, id, que);
       probadas.push(que);
     };
     const abrirPanel = async () => {

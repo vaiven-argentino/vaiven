@@ -1,5 +1,5 @@
 {
-  "esquema": "1.2",
+  "esquema": "1.3",
   "id": "fuga.fae",
   "serie": "fuga",
   "codigo": "EXT-08",
@@ -96,8 +96,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Fuga de capitales, variante «fae». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/fuga/",
-  "version_datos": "2026-11-05T21:54:06Z",
+  "cita": "Vaivén (2026). Fuga de capitales, variante «fae». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/fuga/",
+  "version_datos": "2026-11-07T07:25:59Z",
   "desactualizada_desde": null,
   "datos": [
     ["2003-01", 246.0326233],

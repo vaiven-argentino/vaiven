@@ -1,5 +1,5 @@
 {
-  "esquema": "1.2",
+  "esquema": "1.3",
   "id": "tasa-pasiva.badlar",
   "serie": "tasa-pasiva",
   "codigo": "MON-03",
@@ -53,8 +53,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tasa de interés pasiva, variante «badlar». Versión de datos 2026-10-24. https://vaiven.argentino.workers.dev/series/tasa-pasiva/badlar/",
-  "version_datos": "2026-10-24T23:15:18Z",
+  "cita": "Vaivén (2026). Tasa de interés pasiva, variante «badlar». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tasa-pasiva/badlar/",
+  "version_datos": "2026-11-07T07:25:59Z",
   "desactualizada_desde": null,
   "datos": [
     ["1999-01", 10.9554583],

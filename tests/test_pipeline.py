@@ -225,3 +225,149 @@ def test_una_variante_que_pasa_a_pendiente_se_quita_del_export(repo):
     assert "prueba.oficial: despublicada (se quitaron su JSON y sus CSV)" in res.cambios
     catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
     assert {v["id"]: v["archivo"] for v in catalogo["series"][0]["variantes"]}["oficial"] is None
+
+
+# --- Fuentes que no responden y fuentes de descarga manual (SPEC 5.2; revisión del 07/11/2026, punto 2.3) ---
+# Se corre el pipeline «con red» con la descarga reemplazada por una que devuelve lo del snapshot o falla a pedido.
+from datetime import date  # noqa: E402
+
+from pipeline import __main__ as cli  # noqa: E402
+from pipeline.fuentes import base, bruegel, datos_gob_ar  # noqa: E402
+from pipeline.fuentes.estado import ARCHIVO  # noqa: E402
+
+CAIDAS: set[str] = set()
+
+
+def _bajar_simulado(fuente):
+    if fuente["id"] in CAIDAS:
+        raise ErrorPipeline(f"No se pudo descargar https://ejemplo: HTTP 403: {base.resumen_respuesta('<!DOCTYPE html><title>Just a moment...</title>')}")
+    raise AssertionError("solo se simulan fuentes caídas")
+
+
+def _correr(repo, hoy, caidas=(), con_red=True):
+    CAIDAS.clear()
+    CAIDAS.update(caidas)
+    return ejecutar(repo, con_red=con_red, hoy=date.fromisoformat(hoy))
+
+
+def _doc(repo):
+    return json.loads((repo.export / "series" / "prueba" / "oficial.json").read_text(encoding="utf-8"))
+
+
+def _estado(repo):
+    ruta = repo.snapshots / ARCHIVO
+    return json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else {}
+
+
+def test_fuente_que_no_responde_marca_desde_cuando_y_avisa_a_la_semana(repo, monkeypatch):
+    # La fuente vieja «responde» devolviendo lo mismo que su snapshot; la nueva falla.
+    contenido = (repo.snapshots / "f.prueba.vieja" / "2026-01-01" / "pagina-001.json").read_bytes()
+    monkeypatch.setattr(datos_gob_ar, "bajar", lambda f: _bajar_simulado(f) if f["id"] in CAIDAS
+                        else [base.Archivo("pagina-001.json", "u", contenido if f["id"] == "f.prueba.vieja" else
+                                           (repo.snapshots / f["id"] / "2026-01-01" / "pagina-001.json").read_bytes())])
+    assert _correr(repo, "2026-01-05").publicado
+    assert _doc(repo)["desactualizada_desde"] is None and _estado(repo) == {}
+
+    # Día 1 de la caída: aviso sin HTML, marca en el estado y en la variante; todavía no pide atención.
+    res = _correr(repo, "2026-01-10", caidas={"f.prueba.nueva"})
+    assert res.publicado
+    aviso = next(a for a in res.avisos if a.startswith("f.prueba.nueva"))
+    assert "no respondió (desde el 2026-01-10)" in aviso and "Just a moment..." in aviso and "<title>" not in aviso
+    assert _estado(repo) == {"f.prueba.nueva": {"fallando_desde": "2026-01-10"}}
+    assert _doc(repo)["desactualizada_desde"] == "2026-01-10"
+    assert res.atencion == [] and "f.prueba.nueva" in res.consultadas
+
+    # Ocho días después sigue caída: la fecha no se mueve y pide atención (el workflow abre un issue).
+    res = _correr(repo, "2026-01-18", caidas={"f.prueba.nueva"})
+    assert _estado(repo)["f.prueba.nueva"]["fallando_desde"] == "2026-01-10"
+    assert [a["fuente"] for a in res.atencion] == ["f.prueba.nueva"]
+    assert "## Fuentes que necesitan atención" in res.informe()
+    # El informe entero va al mensaje del commit: el aviso tiene que estar.
+    assert "## Avisos" in res.informe() and "f.prueba.nueva: la fuente no respondió" in res.informe()
+
+    # Una corrida sin red no «arregla» la fuente: conserva la marca y no toca el estado.
+    res = _correr(repo, "2026-01-19", con_red=False)
+    assert _doc(repo)["desactualizada_desde"] == "2026-01-10" and res.consultadas == []
+    assert _estado(repo) == {"f.prueba.nueva": {"fallando_desde": "2026-01-10"}}
+
+    # Vuelve a responder: se borra la marca.
+    res = _correr(repo, "2026-01-20")
+    assert _estado(repo) == {} and not (repo.snapshots / ARCHIVO).exists()
+    assert _doc(repo)["desactualizada_desde"] is None and res.atencion == []
+
+
+def _hacer_manual(repo, version):
+    ruta = repo.metadatos / "fuentes.yaml"
+    fuentes = yaml.safe_load(ruta.read_text(encoding="utf-8"))
+    for f in fuentes:
+        if f["id"] == "f.prueba.nueva":
+            f["descarga"] = "manual"
+    ruta.write_text(yaml.safe_dump(fuentes, allow_unicode=True), encoding="utf-8")
+    meta = repo.snapshots / "f.prueba.nueva" / "2026-01-01" / "meta.json"
+    datos = json.loads(meta.read_text(encoding="utf-8"))
+    datos["version"] = version
+    meta.write_text(json.dumps(datos), encoding="utf-8")
+
+
+def test_fuente_manual_no_se_descarga_y_avisa_a_los_tres_meses(repo, monkeypatch):
+    _hacer_manual(repo, "2026-01-01")
+    contenido = (repo.snapshots / "f.prueba.vieja" / "2026-01-01" / "pagina-001.json").read_bytes()
+
+    def bajar(f):
+        assert f["id"] != "f.prueba.nueva", "una fuente manual no se descarga en la corrida automática"
+        return [base.Archivo("pagina-001.json", "u", contenido)]
+    monkeypatch.setattr(datos_gob_ar, "bajar", bajar)
+
+    res = _correr(repo, "2026-03-01")
+    assert res.publicado and res.atencion == [] and "f.prueba.nueva" not in res.consultadas
+    fuente = next(f for f in _doc(repo)["fuentes"] if f["id"] == "f.prueba.nueva")
+    assert fuente["descarga"] == "manual" and fuente["version"] == "2026-01-01"
+    assert _doc(repo)["desactualizada_desde"] is None
+
+    # Más de 92 días sin versión nueva: la variante queda desactualizada y pide atención (también sin red).
+    for con_red in (True, False):
+        res = _correr(repo, "2026-04-10", con_red=con_red)
+        assert _doc(repo)["desactualizada_desde"] == "2026-04-03"
+        assert [a["fuente"] for a in res.atencion] == ["f.prueba.nueva"]
+        assert "bajar-manual f.prueba.nueva" in res.atencion[0]["motivo"]
+
+
+def test_salida_para_el_workflow(repo, monkeypatch, tmp_path):
+    _hacer_manual(repo, "2025-01-01")
+    salida = tmp_path / "atencion.json"
+    codigo = cli.main(["actualizar", "--sin-red", "--raiz", str(repo.raiz), "--atencion", str(salida),
+                       "--informe", str(tmp_path / "informe.md")])
+    assert codigo == 0
+    datos = json.loads(salida.read_text(encoding="utf-8"))
+    assert [a["fuente"] for a in datos["atencion"]] == ["f.prueba.nueva"] and datos["consultadas"] == []
+
+
+def test_resumen_de_una_respuesta_de_error():
+    pagina = '<!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta ...>' + "x" * 5000
+    assert base.resumen_respuesta(pagina) == "página HTML «Just a moment...»"
+    assert base.resumen_respuesta('{"error": "límite"}') == '{"error": "límite"}'
+    assert len(base.resumen_respuesta("a" * 1000)) == 201
+
+
+def test_version_de_bruegel():
+    assert bruegel.version_de_archivo("REER_database_ver11Oct2026.zip") == "2026-10-11"
+    assert bruegel.version_de_archivo("REER_database_ver1Feb2027.zip") == "2027-02-01"
+    assert bruegel.version_de_archivo("otro.zip") is None
+    # Los snapshots anteriores al comando manual no guardaron la versión: sale del nombre del zip.
+    meta = {"archivos": [{"extraido_de": {"archivo": "REER_database_ver11Oct2026.zip"}}]}
+    assert bruegel.version_de_meta(meta) == "2026-10-11"
+    assert bruegel.version_de_meta({"version": "2026-12-01", **meta}) == "2026-12-01"
+
+
+def test_bajar_manual_guarda_la_version(repo, monkeypatch):
+    from pipeline.manuales import bajar_manuales
+    _hacer_manual(repo, "2026-01-01")
+    contenido = (repo.snapshots / "f.prueba.nueva" / "2026-01-01" / "pagina-001.json").read_bytes()
+    monkeypatch.setattr(datos_gob_ar, "bajar", lambda f: [base.Archivo("pagina-001.json", "u", contenido)])
+    salida = bajar_manuales(repo)
+    assert len(salida) == 1 and "f.prueba.nueva" in salida[0]
+    try:
+        bajar_manuales(repo, ["f.prueba.vieja"])
+        raise AssertionError("debería fallar")
+    except ErrorPipeline as e:
+        assert "No son fuentes de descarga manual" in str(e)
