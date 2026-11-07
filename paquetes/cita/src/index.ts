@@ -13,7 +13,7 @@ export interface DatosCita {
   fuentes?: Array<{ organismo: string; licencia: string }>;
 }
 
-/** Cómo se nombra la entidad en la cita: «País: Argentina.» o «Países: ARG, BRA y WLD.». */
+/** Cómo se nombra la entidad en la cita: «País: Argentina.» o «Países: Argentina, Brasil y Mundo.». */
 function lineaEntidad(entidad?: string | string[]): string {
   const lista = typeof entidad === "string" ? [entidad] : (entidad ?? []);
   if (!lista.length) return "";
@@ -90,7 +90,7 @@ export function urlDeCita(cita: string): string {
   return cita.slice(cita.lastIndexOf("https://")).trim();
 }
 
-/** `entidad`: el país o los países elegidos, en las series con dimensión pais (con su nombre en la ficha, ISO3 en el MCP). */
+/** `entidad`: el país o los países elegidos, en las series con dimensión pais (con su nombre, en la ficha y en el MCP). */
 export function textoCita(d: DatosCita, transformacion?: string, entidad?: string | string[]): string {
   return `${d.cita}${lineaEntidad(entidad)}${lineaTransformacion(transformacion)}`;
 }

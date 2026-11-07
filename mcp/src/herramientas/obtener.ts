@@ -2,7 +2,7 @@
 // @vaiven/transformaciones. Toda respuesta lleva advertencias, version_datos, fuentes y cita.
 import { nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
-  ErrorFecha, ErrorTransformacion, serieDeEntidad, tienePais, transformar,
+  ErrorFecha, ErrorTransformacion, atraso, serieDeEntidad, tienePais, transformar,
   type Advertencia, type Base, type Excluido, type Frecuencia, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
 import { ErrorHerramienta, exigirPublicada, type Repositorio } from "../datos";
@@ -205,6 +205,8 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     hasta: fechas.at(-1) ?? null,
     n_observaciones: total,
     ultimo_dato: doc.cobertura.hasta,
+    // Contra el calendario de la fuente y la fecha de hoy (segunda revisión de la 4a, 3.5); null si está al día.
+    atraso: atraso(doc, new Date().toISOString()),
     datos: paises.length ? Object.fromEntries(paises.map((p, k) => [p, listas[k]])) : listas[0],
     frecuencias,
     advertencias,
@@ -214,6 +216,6 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     licencia: doc.licencia,
     version_datos: doc.version_datos,
     desactualizada_desde: doc.desactualizada_desde,
-    cita: textoCita(doc, cita, paises.length ? paises : undefined),
+    cita: textoCita(doc, cita, paises.length ? paises.map((id) => nombres.get(id) ?? id) : undefined),
   };
 }

@@ -1,5 +1,6 @@
 // citar (SPEC 7.2): la misma cita que muestra la ficha de la web (@vaiven/cita), con la versión de datos.
 import { apa, bibtex, nombreTransformacion, textoCita, urlDeCita } from "@vaiven/cita";
+import { tienePais } from "@vaiven/transformaciones";
 import { exigirPublicada, type Repositorio } from "../datos";
 import { leerDeflactor } from "./obtener";
 
@@ -22,7 +23,10 @@ export async function citar(repo: Repositorio, args: ArgsCitar) {
   exigirPublicada(serie, variante);
   const doc = await repo.documento(variante);
   const deflactor = args.medida === "real" ? (args.deflactor ? leerDeflactor(doc, args.deflactor) : doc.insumos?.real?.por_defecto) : undefined;
-  const paises = args.paises?.length ? [...new Set(args.paises.map((p) => p.trim().toUpperCase()))] : undefined;
+  // La cita nombra los países por su nombre, como la ficha (segunda revisión de la 4a): «Países: Argentina y Brasil».
+  const nombres = new Map<string, string>(tienePais(doc) ? doc.entidades.map((e) => [e.id, e.nombre]) : []);
+  const paises = args.paises?.length
+    ? [...new Set(args.paises.map((p) => p.trim().toUpperCase()))].map((p) => nombres.get(p) ?? p) : undefined;
   const tr = nombreTransformacion({
     pesosActuales: args.pesos_actuales,
     frecuencia: args.frecuencia,

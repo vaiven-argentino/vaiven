@@ -211,7 +211,7 @@ describe("obtener_serie", () => {
     expect(porPais(r).ARG[0]).toEqual(["2000", 100]);
     expect(r.paises).toEqual([{ id: "ARG", nombre: "Argentina" }, { id: "BRA", nombre: "Brasil" }]);
     expect(r.unidad).toBe("índice, 2000 = 100");
-    expect(r.cita).toContain("Países: ARG y BRA. Transformación: índice desde las tasas");
+    expect(r.cita).toContain("Países: Argentina y Brasil. Transformación: índice desde las tasas");
     await expect(obtenerSerie(repo, { id: "int-pib", paises: ["XXX"] })).rejects.toThrow(/no tiene XXX.*ARG \(Argentina\)/);
     await expect(obtenerSerie(repo, { id: "ipc", paises: ["ARG"] })).rejects.toThrow(/no tiene dimensión país/);
   });
@@ -268,7 +268,7 @@ describe("citar", () => {
     const r = await citar(repo, { id: "salario-real", medida: "real", deflactor: "provincias", formato: "texto" });
     expect(r.texto).toContain("deflactada con el IPC «ipc.provincias»");
     const int = await citar(repo, { id: "int-pib", paises: ["arg", "bra"], formato: "texto" });
-    expect(int.texto).toContain("Países: ARG y BRA.");
+    expect(int.texto).toContain("Países: Argentina y Brasil.");
   });
   it("una variante pendiente no se cita", async () => {
     await expect(citar(repo, { id: "desocupacion", variante: "empalmada" })).rejects.toThrow(/pendiente/);
