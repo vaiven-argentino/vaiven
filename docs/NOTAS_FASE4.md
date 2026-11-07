@@ -288,10 +288,16 @@ La SPEC v1.1 las incorpora. Quedan como diferencias de esta tanda:
 | 2.1 Eje Y | Corregir y que las pruebas lo vean | La capa de la línea del 0 repite la definición de `y` (con `axis: null` apagaba el eje **y** la grilla de todo el gráfico). Prueba unitaria que compila con Vega-Lite; la de punta a punta exige etiquetas en los dos ejes; el `revisor-visual` revisa siempre una lista fija de fichas. |
 | 2.3 Avisos de fuentes | Commit con avisos, issue a los 7 días, `--sin-red` conserva la marca | Ver «Lo que se hizo además». |
 | 2.3 Bruegel | Descarga manual, con comando que corra en la Mac | `descarga: manual` y `python -m pipeline bajar-manual`. La ficha y el MCP dicen «versión de Bruegel del 11/10/2026»; aviso e issue si pasan más de 3 meses. |
-| 2.2 TCR | Bruegel por defecto hasta que el BCRA llegue a 2025; después, el BCRA | En el segundo y el tercer PR. |
+| 2.2 TCR | Bruegel por defecto hasta que el BCRA llegue a 2025; después, el BCRA | Segundo PR: `variante_por_defecto: bruegel`. El tercer PR la devuelve al BCRA. |
 | 2.2 Tramos recientes | Completar lo que falta, con contraste mes a mes antes de unir | En el tercer PR. |
-| 3.3 Bibliografía | Fuera del export hasta que conteste la cátedra; el inventario CSV queda | En el segundo PR. |
-| 3.6 IPC | Desde 1993 | En el segundo PR. |
+| 3.1 Textos del PIB | Corregir con cifras del mismo año | 2004: 447.643 (base 1993) y 485.115 (base 2004), +8,4 %. 1980 en dólares con el oficial: 206.965 con el PIB de cada base (224.289 era el retropolado). «Coincide con la bibliografía» queda solo para 1993–2003. |
+| 3.2 Quiebres por país | `entidades` en el quiebre | `q.int.venezuela` es solo de VEN: la ficha, la cita y el MCP lo avisan si Venezuela se ve. La lista «Quiebres» lo muestra con «solo Venezuela». |
+| 3.3 Bibliografía | Fuera del export hasta que conteste la cátedra; el inventario CSV queda | `PUBLICAR_BIBLIOGRAFIA = False` en el pipeline; los ids se siguen controlando. El historial de Git conserva las versiones viejas del catálogo. |
+| 3.3 Licencia de Bruegel | Campo legible por máquinas correcto | `licencia: other-at` en la variante y en el datapackage; cita recomendada de Bruegel (DOI) en la ficha y el MCP. |
+| 3.4 Base monetaria | Mantener el corte en mayo; cambiar el texto | Ya no es una hipótesis: el Informe Monetario Mensual de junio de 2026 del BCRA da 43,3 billones para junio (+4,5 %), contra 18,2 en datos.gob.ar. Es un error de la copia. |
+| 3.5 Atraso | Medir contra el desfase esperado y nombrar al intermediario | `desfase_esperado` por fuente; «con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó». |
+| 3.6 IPC | Desde 1993 | `vista_inicial.desde: '1993'`. |
+| 4 Menores | Todos | Catálogo con el trimestre; MCP estricto y con nombres de países; FIS-04 sin «(SPEC, sección 3)»; «Datos de esta serie: … · Sitio actualizado: …»; README. |
 | 4 Ubuntu 26 | Fijar `ubuntu-26.04` | Los cuatro jobs. La corrida del 06/11 ya había usado esa imagen (`ubuntu-latest` migró) y pasó. |
 | PR | Encadenados, en ramas con sufijo `-2` y `-3` | Te pregunto antes de abrir cada uno. |
 
@@ -308,6 +314,22 @@ La SPEC v1.1 las incorpora. Quedan como diferencias de esta tanda:
 - **Esquema 1.3:** `fuentes[].descarga` y `fuentes[].version`. Todos los JSON se regeneraron con la 1.3.
 - **Aviso de desactualizada:** la ficha y el MCP ya no dicen siempre «la fuente no responde»: también puede ser una variante retenida por la validación o una versión manual vieja.
 - **Fechas en el aviso:** «desactualizada desde el 06/11/2026» (antes, solo mes y año).
+- **Segundo PR:**
+  - el atraso se calcula en la librería (`atraso()`), así la ficha y el MCP dicen lo mismo; la ficha lo mide contra la última actualización del sitio y el MCP, contra el día de la consulta. Más de un año sin datos (los agregados del Panorama, hasta 2021) sigue diciendo «N meses sin datos nuevos»;
+  - el catálogo exporta `frecuencia_ultimo_dato` por variante;
+  - la ficha numera todos los quiebres (también los de un solo país), así el número del gráfico coincide con la lista;
+  - el MCP explica en `notas` que la licencia de Bruegel no es CC BY y pide citarla como recomienda;
+  - el esquema 1.3 suma `advertencias[].entidades`, `fuentes[].desfase_esperado`, `fuentes[].cita` y `licencia: other-at`. Si el primer PR se despliega antes que este, el 1.3 cambia después de publicarse (solo agrega campos opcionales y un valor de `licencia`), como pasó con el 1.2.
+
+### Contrastes del revisor de datos (07/11/2026)
+
+- **PIB 2004:** 447.643,43 (base 1993) y 485.115,19 (base 2004) en datos.gob.ar; +8,37 %. Coincide.
+- **PIB 1980 en dólares:** el del Banco Mundial (`NY.GDP.MKTP.CD`) es 76.961,92 = `NY.GDP.MKTP.CN` ÷ `PA.NUS.ATLS` (4,99 × 10⁻⁸). Con el oficial de Vaivén (promedio de fin de mes de 1980: 1,8556 × 10⁻⁸) da 206.964,56; con `PA.NUS.FCRF` (1,837 × 10⁻⁸) daría 209.040. El texto ahora dice cuál es cuál. El retropolado (224.289) es coherente: su PIB en pesos de 1980 es 8,4 % mayor.
+- **Base monetaria promedio:** datos.gob.ar coincide con el Informe Monetario Mensual del BCRA hasta mayo de 2026; en junio da 18.186 contra 43.272 miles de millones (circulación, 11.365 contra 26.728; cuenta corriente, 6.821 contra 16.544). Julio y agosto no se pudieron comprobar.
+
+### Licencias consultadas (07/11/2026)
+
+- **Bruegel:** la página del conjunto de datos (<https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database>) dice «Users can freely use our data in its unchanged form or after any transformation for any purpose and can freely distribute it, provided that proper attribution is made to the source, but not in any way that suggests that Bruegel endorses the user or their use of the data», y da la cita recomendada con DOI (`10.64153/SZCG6180`). Permite redistribuir.
 
 ### Diferencias con la SPEC
 
@@ -320,3 +342,6 @@ La SPEC v1.2 incorpora lo de este PR (2.1, 2.5, 5.1, 5.2 e historial). Quedan co
 **Tuyos:**
 - Una corrida manual de «Actualizar datos» en `main` después del merge, para ver el informe nuevo en el commit y el runner fijado.
 - Prueba manual del MCP con el guion actualizado.
+- **Consultas:** a datos.gob.ar, la base monetaria promedio desde junio de 2026 (no coincide con el Informe Monetario Mensual del BCRA); al BCRA, como antes (licencia de la API y M2 desde 2019-08); a la cátedra, la bibliografía (ahora también fuera del catálogo público) y el CSV del inventario.
+- **Datos:** cifras de un cuadro de los ochenta (por ejemplo, Damill y Frenkel 1990) para contrastar el PIB «de cada base» antes de 1993, y los valores de referencia de los casos de la bibliografía.
+- **Proyecto de Claude:** sumar la SPEC v1.2 como documento del proyecto (sin tocar los originales).
