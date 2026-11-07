@@ -443,3 +443,23 @@ def test_serie_diaria_pasada_a_mensual_descarta_el_mes_incompleto():
     completo = json.dumps({"data": [["2026-01-31", 94.47]]}).encode()
     df = datos_gob_ar.normalizar([("pagina-001.json", colapsada), (datos_gob_ar.ULTIMO_DIARIO, completo)])
     assert len(df) == 3
+
+
+def test_reemplazar_un_dato_con_otra_fuente_es_estricto(repo):
+    # Como marzo de 2026 en las reservas: la mensual trae un dato equivocado y la diaria, el correcto.
+    _con_tramo_que_completa(repo, [["2000-04-01", 99], ["2000-05-01", 51.5], ["2000-06-01", 52.0]])
+    meta = repo.metadatos / "series" / "prueba.yaml"
+    serie = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    serie["variantes"][0]["empalme"] = "yuxtaponer"
+    serie["variantes"][0]["tramos"] = [{"fuente": "f.prueba.nueva", "desde": "2000-03"}, {"fuente": "f.prueba.diaria", "completa": True}]
+    serie["variantes"][0]["reemplazar"] = [{"fecha": "2000-05", "fuente": "f.prueba.diaria", "motivo": "Prueba."}]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    datos = dict(json.loads((repo.export / "series" / "prueba" / "oficial.json").read_text(encoding="utf-8"))["datos"])
+    assert datos["2000-05"] == 51.5 and datos["2000-04"] == 50.5 and datos["2000-06"] == 52.0
+    # Si la fuente se corrige (da lo mismo que la otra), el reemplazo sobra: la variante queda retenida.
+    serie["variantes"][0]["reemplazar"] = [{"fecha": "2000-03", "fuente": "f.prueba.diaria", "motivo": "Prueba."}]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert "prueba.oficial" in res.retenidas and "reemplazar" in res.informe()

@@ -89,6 +89,20 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
         reciente = tramos({**variante, "tramos": completa}, capa1, fuentes)[0].recorte()
         serie = pd.concat([serie, reciente])
         serie.index.name, serie.name = "fecha", "valor"
+    for r in variante.get("reemplazar", []):
+        # Un dato de la fuente con un error comprobado se reemplaza por el de otra fuente declarada (por ejemplo, las
+        # reservas de marzo de 2026: la mensual trae el saldo del 30/03 y no el del 31/03). Como `excluir`, es
+        # estricto: si la fecha no está, si la otra fuente no la tiene o si ya dan lo mismo, el reemplazo sobra.
+        fecha = a_fecha(r["fecha"])
+        if r["fuente"] not in capa1:
+            raise ErrorPipeline(f"{variante['id']}: `reemplazar` usa {r['fuente']}, que no está en la capa 1.")
+        otra = capa1[r["fuente"]]
+        if fecha not in serie.index or fecha not in otra.index:
+            raise ErrorPipeline(f"{variante['id']}: `reemplazar` nombra {r['fecha']}, que no está en la serie o en {r['fuente']}.")
+        if abs(serie.loc[fecha] - otra.loc[fecha]) <= 1e-9 * max(1.0, abs(otra.loc[fecha])):
+            raise ErrorPipeline(f"{variante['id']}: el reemplazo de {r['fecha']} sobra: la serie ya da lo mismo que {r['fuente']}.")
+        serie = serie.copy()
+        serie.loc[fecha] = otra.loc[fecha]
     excluir = [a_fecha(e["fecha"]) for e in variante.get("excluir", [])]
     if excluir:
         # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos. Una fecha que
