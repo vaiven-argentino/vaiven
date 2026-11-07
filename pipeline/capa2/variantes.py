@@ -13,6 +13,37 @@ METODOS = {
 }
 
 
+def resolver_completa(variante: dict, capa1: dict[str, pd.Series]) -> dict:
+    """Copia de la variante con el tramo `completa: true` resuelto (segunda revisión de la 4a, 2.2).
+
+    Un tramo que completa toma solo las fechas posteriores al último dato del tramo anterior: por ejemplo, las
+    reservas de la serie diaria del BCRA para los meses que la mensual todavía no tiene. Su `desde` pasa a ser el mes
+    siguiente a ese último dato. Si no aporta nada (la mensual ya se puso al día), el tramo se quita, y también los
+    quiebres que dependen de él (`desde: tramo-completa` en quiebres.yaml), que se marcan en `_quitar_quiebres`.
+    """
+    if not any(t.get("completa") for t in variante["tramos"]):
+        return variante
+    nuevos = []
+    for k, t in enumerate(variante["tramos"]):
+        if not t.get("completa"):
+            nuevos.append(t)
+            continue
+        if k == 0 or k != len(variante["tramos"]) - 1:
+            raise ErrorPipeline(f"{variante['id']}: un tramo que completa tiene que ser el último y no el único.")
+        anterior = variante["tramos"][k - 1]
+        if anterior["fuente"] not in capa1 or t["fuente"] not in capa1:
+            raise ErrorPipeline(f"La variante {variante['id']} usa una fuente que no está en la capa 1.")
+        previa = capa1[anterior["fuente"]].loc[a_fecha(anterior["desde"]):]
+        if anterior.get("hasta") not in (None, "hoy"):
+            previa = previa.loc[: a_fecha(anterior["hasta"])]
+        propia = capa1[t["fuente"]]
+        aporta = propia[propia.index > previa.index[-1]]
+        if aporta.empty:
+            return {**variante, "tramos": nuevos, "_sin_completa": True}
+        nuevos.append({**t, "desde": aporta.index[0].strftime("%Y-%m")})
+    return {**variante, "tramos": nuevos}
+
+
 def tramos(variante: dict, capa1: dict[str, pd.Series], fuentes: dict[str, dict] | None = None) -> list[empalmes.Tramo]:
     salida = []
     for t in variante["tramos"]:
@@ -42,13 +73,22 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
     metodo = variante.get("empalme", "yuxtaponer")
     if metodo not in METODOS and metodo != "derivar":
         raise ErrorPipeline(f"Método de empalme desconocido en {variante['id']}: {metodo}")
+    variante = resolver_completa(variante, capa1)
+    # El tramo que completa se pega al final tal cual: no participa del empalme de los demás (en encadenar_tasas, el
+    # nivel sigue siendo el de la serie mensual, no el del tramo reciente).
+    completa = [t for t in variante["tramos"] if t.get("completa")]
+    principal = {**variante, "tramos": [t for t in variante["tramos"] if not t.get("completa")]}
     if metodo == "derivar":
         serie = derivadas.derivar(variante, operandos or {}, frecuencia or "mensual")
     elif metodo == "encadenar_tasas":
-        partes = tramos(variante, capa1, fuentes)
-        serie = empalmes.encadenar_tasas(partes, enlace=variante.get("enlace", "periodo"))
+        partes = tramos(principal, capa1, fuentes)
+        serie = empalmes.encadenar_tasas(partes, enlace=principal.get("enlace", "periodo"))
     else:
-        serie = METODOS[metodo](tramos(variante, capa1, fuentes))
+        serie = METODOS[metodo](tramos(principal, capa1, fuentes))
+    if completa:
+        reciente = tramos({**variante, "tramos": completa}, capa1, fuentes)[0].recorte()
+        serie = pd.concat([serie, reciente])
+        serie.index.name, serie.name = "fecha", "valor"
     excluir = [a_fecha(e["fecha"]) for e in variante.get("excluir", [])]
     if excluir:
         # Observaciones de la fuente con errores evidentes, documentadas una por una en los metadatos. Una fecha que

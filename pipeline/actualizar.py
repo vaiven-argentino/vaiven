@@ -149,7 +149,7 @@ def cobertura_recortada(vid: str, serie: pd.Series, variante: dict) -> list[regl
     """La variante empieza más de un año después de lo que declaran sus tramos: la fuente recortó su historia."""
     if not len(serie):
         return []
-    declarado = min(a_fecha(t["desde"]) for t in variante["tramos"])
+    declarado = min(a_fecha(t["desde"]) for t in variante["tramos"] if not t.get("completa"))
     if serie.index.min() <= declarado + pd.DateOffset(months=12):
         return []
     return [reglas.Problema(vid, "historia", f"Empieza en {serie.index.min().date().isoformat()[:7]} y los tramos "
@@ -450,7 +450,9 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
             fechas += [f for f in (desactualizadas.get(o), desact_variante.get(o), desactualizada_publicada(rutas, o)) if f]
         desde = min(fechas, default=None)
         desact_variante[vid] = desde
-        nuevos[vid] = export_series.documento(s, v, serie, meta.fuentes, meta.quiebres, momento, desde)
+        # El tramo que completa (series diarias del BCRA) se exporta con su `desde` real, o no se exporta si no aporta.
+        v_export = variantes.resolver_completa(v, capa1_series) if not isinstance(serie, dict) else v
+        nuevos[vid] = export_series.documento(s, v_export, serie, meta.fuentes, meta.quiebres, momento, desde)
     # Los insumos dependen de qué otras variantes quedan publicadas: se completan con todos los documentos armados.
     publicadas_export = export_insumos.Publicadas(nuevos, rutas.export, rutas.metadatos)
     for vid, (s, v, serie) in construidas.items():
