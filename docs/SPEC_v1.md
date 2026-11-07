@@ -1,6 +1,6 @@
-# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.1
+# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.2
 
-*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
+*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a · v1.2: 07/11/2026, segunda revisión de la 4a (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
 
 ---
 
@@ -37,7 +37,7 @@ Vaivén es una base histórica **curada** de series económicas argentinas desde
 ### 2.1 Capas
 | Capa | Qué guarda | Regla |
 |---|---|---|
-| **Snapshot** | El archivo tal como lo devolvió la fuente, con fecha de descarga, URL, checksum y licencia. | Nunca se modifica; si la fuente cambia, se guarda un snapshot nuevo. |
+| **Snapshot** | El archivo tal como lo devolvió la fuente, con fecha de descarga, URL, checksum, licencia y, si la fuente la declara, su versión. | Nunca se modifica; si la fuente cambia, se guarda un snapshot nuevo. Las fuentes de **descarga manual** (sección 5.1) se bajan fuera de la corrida automática. |
 | **Capa 1: series fuente** | Cada serie de cada fuente, normalizada (fecha ISO, valor numérico, unidad, frecuencia). Una serie fuente = un tramo publicado por un organismo. | Sin transformaciones de contenido: solo formato. |
 | **Capa 2: series curadas** | La serie de Vaivén, con una o más **variantes**. Cada variante declara qué tramos de capa 1 usa, cómo los une y qué advertencias tiene. | Toda operación queda documentada en los metadatos. |
 | **Export** | Lo que consumen la web y el MCP: JSON por serie y variante, archivos de descarga, `datapackage.json`, especificaciones de Vega-Lite. | Se regenera completo en cada actualización. |
@@ -133,8 +133,8 @@ La periodización de la cátedra (sección 6.4) se arma sobre estas tablas. Las 
 ### 2.5 Formato de exportación
 - `export/series/<slug>/<variante>.json`: metadatos resumidos + `datos: [["1970-01", 0.0123], ...]` + `version_datos`. En las series con dimensión `pais`, `datos` es un objeto por entidad: `{"ARG": [["1961", 5.4], ...], "BRA": [...]}`.
   - Fechas: `AAAA-MM` en mensuales, trimestrales (mes de inicio) y semestrales (mes de la onda); `AAAA` en anuales.
-  - Cada JSON declara su versión de esquema en `esquema`. La vigente es la **1.2** (`tests/contrato/serie-1.2.schema.json`, publicada en `/esquemas/`): suma `moneda`, `insumos` (qué series necesita cada medida, con su `denominador` en el % del PIB), `auxiliar`, `vista_inicial` (transformación, medida, frecuencia y período con que arranca la ficha) y los campos de la dimensión `pais`. Las versiones anteriores siguen publicadas y la web, el MCP y la librería las leen.
-  - `desactualizada_desde`: la fecha desde la que la variante no se actualiza (la fuente no respondió o la variante quedó retenida por la validación, sección 5.2).
+  - Cada JSON declara su versión de esquema en `esquema`. La vigente es la **1.3** (`tests/contrato/serie-1.3.schema.json`, publicada en `/esquemas/`): suma a cada fuente de descarga manual `descarga` y `version`. La 1.2 sumó `moneda`, `insumos` (qué series necesita cada medida, con su `denominador` en el % del PIB), `auxiliar`, `vista_inicial` (transformación, medida, frecuencia y período con que arranca la ficha) y los campos de la dimensión `pais`. Las versiones anteriores siguen publicadas y la web, el MCP y la librería las leen.
+  - `desactualizada_desde`: la fecha desde la que la variante no se actualiza: el primer día en que la fuente no respondió, la versión anterior si la variante quedó retenida por la validación, o la fecha en que la versión de una fuente de descarga manual cumplió 3 meses (sección 5.2).
 - `export/catalogo.json` (con las entidades de las series con `pais` y las fichas de la bibliografía), `export/periodos.json`, `export/eventos.json`, `export/quiebres.json`, `export/revisiones.json`.
 - `export/auxiliares/<slug>/<variante>.json` y su índice `export/auxiliares.json` (sección 2.6), más `export/auxiliares/signos-monetarios.json`.
 - `export/datapackage.json` (Frictionless Data Package v2) que describe todos los recursos.
@@ -255,7 +255,7 @@ Reglas:
 
 ### 5.1 Pasos
 1. **Disparo:** un Cron Trigger de Cloudflare llama a diario al `workflow_dispatch` de GitHub. El `schedule` propio de GitHub Actions queda como respaldo semanal. También se puede ejecutar a mano.
-2. **Snapshot:** descarga cada fuente; si el checksum no cambió, no hace nada más con ella.
+2. **Snapshot:** descarga cada fuente; si el checksum no cambió, no hace nada más con ella. Las fuentes de **descarga manual** (`descarga: manual` en `fuentes.yaml`; hoy, Bruegel, cuyo sitio bloquea a los servidores de GitHub Actions) no se descargan acá: se usa su último snapshot, y se bajan con `python -m pipeline bajar-manual` desde otra red.
 3. **Capa 1:** normaliza las fuentes que cambiaron.
 4. **Capa 2:** reconstruye las variantes afectadas.
 5. **Validación** (pandera y reglas propias):
@@ -265,10 +265,11 @@ Reglas:
    - continuidad en los puntos de empalme;
    - revisiones: compara contra la versión publicada y registra los valores históricos que cambiaron.
 6. **Export:** regenera los JSON, descargas, `datapackage.json` y especificaciones de Vega-Lite.
-7. **Publicación:** commit al repositorio con el resumen de cambios y despliegue del Worker (`wrangler deploy`).
+7. **Publicación:** commit al repositorio con el informe entero del pipeline (retenidas, avisos, cambios y snapshots) y despliegue del Worker (`wrangler deploy`).
 
 ### 5.2 Manejo de errores
-- Si una fuente no responde: se reintenta; si sigue fallando, se publica con los datos anteriores y la serie queda marcada como «desactualizada desde <fecha>».
+- Si una fuente no responde: se reintenta; si sigue fallando, se publica con los datos anteriores y la serie queda marcada como «desactualizada desde <fecha>», el primer día en que no respondió (se guarda en `snapshots/estado-fuentes.json`). Una corrida sin red conserva la marca. Si pasan **más de 7 días**, se abre un issue por fuente, que se cierra solo cuando vuelve a responder.
+- Una fuente de descarga manual sin versión nueva hace **más de 3 meses** queda desactualizada desde ese día y abre el mismo issue.
 - Si la validación falla: el error se atribuye a la fuente o a la variante que lo produjo. Esa variante (y las derivadas que dependen de ella) queda **retenida**: conserva su versión anterior, marcada «desactualizada desde <fecha>», y el resto se publica. Se abre un issue en GitHub con el detalle y se notifica por mail. Solo un error que no se puede atribuir frena toda la publicación.
 - Si una fuente recorta su historia (pierde más de 12 fechas que ya tenía, o la variante empieza más de un año después de lo declarado): se trata como un error de validación de esa fuente.
 - Una variante que pasa a `pendiente` en los metadatos se quita del export.
@@ -460,3 +461,7 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
   - SDK v2 del MCP, variante local sin `npx` hasta la fase 5 y parámetros de las medidas (7.1 y 7.2);
   - licencias de la OCDE y de Bruegel, y cita con los países aparte (9);
   - contraste de las series que calcula Vaivén (10) y subfases de la fase 4 (11).
+- **v1.2 (07/11/2026):** incorpora lo decidido en la segunda revisión de la 4a (`NOTAS_FASE4.md`, «4a · Correcciones de la segunda revisión»):
+  - snapshot con la versión de la fuente y fuentes de descarga manual (2.1 y 5.1);
+  - esquema 1.3 y `desactualizada_desde` como primer día sin respuesta (2.5);
+  - commit con el informe entero, issue por fuente a los 7 días y aviso de las fuentes manuales a los 3 meses (5.1 y 5.2).
