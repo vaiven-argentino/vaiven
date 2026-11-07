@@ -165,3 +165,18 @@ describe("quiebres de un solo país (segunda revisión de la 4a, 3.2)", () => {
     expect(numeros(["BRA", "VEN"])).toContain(venezuela.n);
   });
 });
+
+describe("eje X según el largo del período (segunda revisión de la 4a)", () => {
+  it("períodos largos: años enteros, con paso según el ancho", async () => {
+    const { marcasX } = await import("../src/graficos/espec");
+    expect(marcasX(56 * 12, 10)).toEqual({ tickCount: { interval: "year", step: 10 }, format: "%Y" });
+    expect(marcasX(5 * 12, 10)).toEqual({ tickCount: { interval: "year", step: 1 }, format: "%Y" });
+  });
+  it("períodos cortos: meses con «mes año», sin repetir el año", async () => {
+    const { marcasX } = await import("../src/graficos/espec");
+    const m = marcasX(32, 10) as { tickCount: { interval: string; step: number }; labelExpr: string };
+    expect(m.tickCount).toEqual({ interval: "month", step: 6 });
+    expect(m.labelExpr).toContain("utcmonth(datum.value)");
+    expect((marcasX(12, 5) as { tickCount: { step: number } }).tickCount.step).toBe(3);
+  });
+});

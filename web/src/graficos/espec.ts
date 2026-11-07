@@ -265,11 +265,31 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
         labelColor: tema.secundario, titleColor: tema.secundario, gridColor: tema.linea, domainColor: tema.borde,
         tickColor: tema.borde, labelFontSize: 12, labelFont: tema.fuente, labelOverlap: true, labelFlush: true,
       },
-      axisX: { grid: false, tickCount: e.ancho < 520 ? 5 : 10, format: "%Y", labelPadding: 6 },
+      axisX: { grid: false, labelPadding: 6, ...marcasX(fin - ini + 1, e.ancho < 520 ? 5 : 10) },
       legend: { labelColor: tema.texto, titleColor: tema.secundario, labelFontSize: 12, titleFontSize: 12, labelFont: tema.fuente, labelLimit: 320 },
       title: { color: tema.texto, subtitleColor: tema.secundario, anchor: "start", fontSize: 17, subtitleFontSize: 12, font: tema.fuente, subtitleFont: tema.fuente },
       text: { font: tema.fuente },
     },
+  };
+}
+
+const MESES_X = "['ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.']";
+
+/**
+ * Marcas del eje X según el largo del período (en meses): en años enteros si son 3 años o más, y en meses, con
+ * «mes año», si es más corto. Antes, con períodos cortos, el eje repetía el año («2024 2024 2024») porque ponía una
+ * marca por trimestre con solo el año (segunda revisión de la 4a, revisión visual).
+ */
+export function marcasX(meses: number, maximo: number): Record<string, unknown> {
+  if (meses >= 36) {
+    const anios = meses / 12;
+    const paso = [1, 2, 5, 10, 20, 25, 50].find((p) => anios / p <= maximo) ?? 50;
+    return { tickCount: { interval: "year", step: paso }, format: "%Y" };
+  }
+  const paso = [1, 2, 3, 6, 12].find((p) => meses / p <= maximo) ?? 12;
+  return {
+    tickCount: { interval: "month", step: paso },
+    labelExpr: `${MESES_X}[utcmonth(datum.value)] + ' ' + utcyear(datum.value)`,
   };
 }
 
