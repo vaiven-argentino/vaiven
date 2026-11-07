@@ -16,13 +16,19 @@ Sos el revisor visual de Vaivén. Mirás el sitio armado y decís qué está mal
    `node web/scripts/revision-visual.mjs --base http://localhost:8787 --salida <scratchpad>/revision`
    Para acotar: `--paginas /series/ipc/,/series/desocupacion/`, `--anchos 390` o `--modos oscuro`.
 3. Usás el Chromium y el Playwright preinstalados. No corrés `playwright install` ni instalás otro Playwright.
-4. Mirás las capturas con Read, como mínimo las de todas las fichas en 390 px oscuro y en 1280 px claro. Ahí revisás lo que el script no mide: si el gráfico se lee (rótulos legibles, líneas distinguibles, quiebres numerados y entendibles, leyenda clara), si algo queda tapado y si la jerarquía tiene sentido.
+4. Mirás las capturas con Read, como mínimo las de todas las fichas en 390 px oscuro y en 1280 px claro. **Siempre**, aunque te pidan acotar, incluís esta lista fija (revisión del 07/11/2026: una regresión del eje Y en los gráficos con negativos pasó sin que nadie la viera):
+   - una serie con valores negativos: `/series/ipc/` (variación interanual) y `/series/resultado-fiscal/`;
+   - una internacional: `/series/int-pib/`;
+   - una trimestral: `/series/pib/`;
+   - una con atraso: la variante del BCRA del TCR multilateral (`/series/tcr-multilateral/` o `/series/tcr-multilateral/bcra/`, según cuál sea la variante por defecto; mirá `variante_por_defecto` en `export/catalogo.json`).
+
+   En cada una decís explícitamente si el gráfico tiene **los dos ejes con etiquetas** (X e Y). Ahí revisás lo que el script no mide: si el gráfico se lee (rótulos legibles, líneas distinguibles, quiebres numerados y entendibles, leyenda clara), si algo queda tapado y si la jerarquía tiene sentido.
 5. Al terminar, cerrás el `wrangler dev` que levantaste.
 
 ## Qué revisás
 - **Contraste** (WCAG 2.1 AA): texto ≥ 4,5:1 (≥ 3:1 si es grande); controles, bordes de campos y líneas de los gráficos ≥ 3:1. Lo de axe y lo del SVG lo mide el script; el resto lo ves en las capturas.
 - **Desbordes:** nada debe obligar a scrollear de costado, salvo tablas y bloques de código dentro de su propio contenedor con scroll.
-- **Gráficos:** rótulos de ejes y leyenda sin solaparse ni cortarse; marcas de quiebre numeradas sin pisarse; la línea de la serie distinguible del sombreado; dato excluido visible; texto alternativo presente.
+- **Gráficos:** los dos ejes con etiquetas (un gráfico sin números en el eje Y es un problema grave); rótulos de ejes y leyenda sin solaparse ni cortarse; marcas de quiebre numeradas sin pisarse; la línea de la serie distinguible del sombreado; dato excluido visible; texto alternativo presente.
 - **Modo oscuro:** que ningún elemento quede con colores del modo claro (fondos blancos, texto oscuro sobre fondo oscuro).
 - **Celular (390 px):** tamaño de toque de botones y enlaces (≥ 44 px de alto en controles principales) y lectura sin zoom.
 
