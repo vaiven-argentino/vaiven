@@ -540,6 +540,39 @@
     "hasta": null
   },
   {
+    "id": "q.reservas.fin-de-mes",
+    "desde": "2026-01",
+    "tipo": "metodologia",
+    "descripcion": "El saldo del último día del mes suele quedar por debajo del de los días vecinos y se recupera al día siguiente: por ejemplo, 44.870 millones el 30/06/2026, contra 46.577 el 29/06 y 47.067 el 01/07; pasa lo mismo a fin de marzo, julio y agosto de 2026 (entre 1.300 y 2.000 millones menos). Es un dato real del BCRA, no un error; una explicación posible, no comprobada, es la salida transitoria de encajes de los bancos al cierre del mes. Las variaciones mensuales comparan saldos de fin de mes y no el nivel promedio.",
+    "afecta": [
+      "reservas.brutas"
+    ],
+    "fuente": "Serie diaria del BCRA (92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar), revisada el 07/11/2026.",
+    "hasta": null
+  },
+  {
+    "id": "q.reservas.marzo-2026",
+    "desde": "2026-03",
+    "hasta": "2026-03",
+    "tipo": "metodologia",
+    "descripcion": "Marzo de 2026 sale de la serie diaria del BCRA (saldo del 31/03: 42.052 millones de dólares) y no de la mensual, que trae 43.381: el saldo del 30/03, un día antes del cierre. El BCRA publica 42.052 para el 31/03.",
+    "afecta": [
+      "reservas.brutas"
+    ],
+    "fuente": "Comparación de 174.1_RRVAS_IDOS_0_0_36 con 92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar y con la serie diaria del BCRA (07/11/2026); decidido el 07/11/2026."
+  },
+  {
+    "id": "q.reservas.tramo-diario",
+    "desde": "tramo-completa",
+    "tipo": "cobertura",
+    "descripcion": "Desde este mes, los saldos de fin de mes salen de la serie diaria del BCRA en datos.gob.ar (el último dato de cada mes), porque la serie mensual que usa Vaivén llega con meses de atraso. Son provisorios: cuando la mensual publica esos meses, la reemplaza. En 2003–2026 las dos coinciden salvo en 14 meses; las diferencias grandes son junio de 2024 (+3,0 %: a la diaria le faltan días) y marzo de 2026 (−3,1 %: la mensual toma el dato del 30/03; ver q.reservas.marzo-2026).",
+    "afecta": [
+      "reservas.brutas"
+    ],
+    "fuente": "Comparación de 174.1_RRVAS_IDOS_0_0_36 con 92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar (07/11/2026).",
+    "hasta": null
+  },
+  {
     "id": "q.salario.hueco-1976-1984",
     "desde": "1976",
     "hasta": "1984",
@@ -598,6 +631,18 @@
     "fuente": "datos.gob.ar, 174.1_T_INTERD_0_0_41 y bcra_30 (24/10/2026)."
   },
   {
+    "id": "q.tc.marzo-2026",
+    "desde": "2026-03",
+    "hasta": "2026-03",
+    "tipo": "metodologia",
+    "descripcion": "Marzo de 2026 sale del tipo de cambio de valuación diario del BCRA (31/03: 1.382,76 pesos por dólar) y no de la serie mensual, que trae 1.394,92: el valor del 30/03, un día antes del cierre.",
+    "afecta": [
+      "tc-oficial.pesos-actuales",
+      "tc-oficial.moneda-de-epoca"
+    ],
+    "fuente": "Comparación de 174.1_T_DE_CATES_0_0_32 con 92.2_TIPO_CAMBIION_0_0_21_24 en datos.gob.ar y con la serie diaria del BCRA (07/11/2026); decidido el 07/11/2026."
+  },
+  {
     "id": "q.tc.mercados-desdoblados",
     "desde": "1971-09",
     "hasta": "1989-12",
@@ -622,6 +667,18 @@
       "tc-oficial.moneda-de-epoca"
     ],
     "fuente": "metadatos/signos_monetarios.yaml"
+  },
+  {
+    "id": "q.tc.tramo-diario",
+    "desde": "tramo-completa",
+    "tipo": "cobertura",
+    "descripcion": "Desde este mes, el valor de fin de mes sale de la serie diaria del tipo de cambio de valuación del BCRA en datos.gob.ar (el último dato de cada mes), porque la serie mensual llega con meses de atraso. Son provisorios: cuando la mensual publica esos meses, la reemplaza. En 2003–2026 coinciden salvo en junio de 2010 (−0,1 %), febrero de 2013 (+0,01 %) y marzo de 2026 (−0,9 %: la mensual toma el dato del 30/03; ver q.tc.marzo-2026).",
+    "afecta": [
+      "tc-oficial.pesos-actuales",
+      "tc-oficial.moneda-de-epoca"
+    ],
+    "fuente": "Comparación de 174.1_T_DE_CATES_0_0_32 con 92.2_TIPO_CAMBIION_0_0_21_24 en datos.gob.ar (07/11/2026).",
+    "hasta": null
   },
   {
     "id": "q.tcr-bilateral.fin-de-mes",
@@ -668,5 +725,16 @@
       "tcr-multilateral.bruegel"
     ],
     "fuente": "INDEC, advertencia sobre el IPC 2007–2015."
+  },
+  {
+    "id": "q.tcr.tramo-diario",
+    "desde": "tramo-completa",
+    "tipo": "cobertura",
+    "descripcion": "Desde este mes, el índice es el promedio mensual de la serie diaria del BCRA en datos.gob.ar, porque la mensual llega solo a diciembre de 2024. Se pega sin reescalar. Son provisorios: cuando la mensual publica esos meses, la reemplaza. Desde 2023 las dos difieren 0,03 % o menos; en 2020–2022, hasta 0,9 %.",
+    "afecta": [
+      "tcr-multilateral.bcra"
+    ],
+    "fuente": "Comparación de 116.3_TCRMA_0_M_36 con 116.4_TCRZE_2015_D_36_4 en datos.gob.ar (07/11/2026).",
+    "hasta": null
   }
 ]

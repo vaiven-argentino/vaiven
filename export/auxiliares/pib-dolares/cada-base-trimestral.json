@@ -42,7 +42,7 @@
   ],
   "cobertura": {
     "desde": "1993-01",
-    "hasta": "2026-01"
+    "hasta": "2026-04"
   },
   "advertencias": [
     {
@@ -90,7 +90,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). PIB en dólares, variante «cada-base-trimestral». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-dolares/cada-base-trimestral/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "version_datos": "2026-11-07T20:41:28Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 53209.93346],
@@ -225,6 +225,7 @@
     ["2025-04", 175937.2719],
     ["2025-07", 164759.8991],
     ["2025-10", 163297.0155],
-    ["2026-01", 172474.7092]
+    ["2026-01", 172969.6527],
+    ["2026-04", 197806.3615]
   ]
 }

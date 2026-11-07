@@ -71,7 +71,9 @@ describe("reservas: dato excluido", () => {
     expect(feb.segmento).not.toBe(abr.segmento);
   });
   it("el quiebre que cubre toda la serie no se dibuja", () => {
-    expect(capas(doc).filter((c) => c.mark.type === "rect" || c.mark.type === "rule")).toHaveLength(0);
+    // Solo con el quiebre general (reservas brutas); los del tramo diario de 2026 sí se dibujan.
+    const general = { ...doc, advertencias: doc.advertencias.filter((a) => a.id === "q.reservas.brutas") };
+    expect(capas(general).filter((c) => c.mark.type === "rect" || c.mark.type === "rule")).toHaveLength(0);
   });
 });
 
