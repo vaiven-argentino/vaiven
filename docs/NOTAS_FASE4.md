@@ -288,8 +288,10 @@ La SPEC v1.1 las incorpora. Quedan como diferencias de esta tanda:
 | 2.1 Eje Y | Corregir y que las pruebas lo vean | La capa de la línea del 0 repite la definición de `y` (con `axis: null` apagaba el eje **y** la grilla de todo el gráfico). Prueba unitaria que compila con Vega-Lite; la de punta a punta exige etiquetas en los dos ejes; el `revisor-visual` revisa siempre una lista fija de fichas. |
 | 2.3 Avisos de fuentes | Commit con avisos, issue a los 7 días, `--sin-red` conserva la marca | Ver «Lo que se hizo además». |
 | 2.3 Bruegel | Descarga manual, con comando que corra en la Mac | `descarga: manual` y `python -m pipeline bajar-manual`. La ficha y el MCP dicen «versión de Bruegel del 11/10/2026»; aviso e issue si pasan más de 3 meses. |
-| 2.2 TCR | Bruegel por defecto hasta que el BCRA llegue a 2025; después, el BCRA | Segundo PR: `variante_por_defecto: bruegel`. El tercer PR la devuelve al BCRA. |
-| 2.2 Tramos recientes | Completar lo que falta, con contraste mes a mes antes de unir | En el tercer PR. |
+| 2.2 TCR | Bruegel por defecto hasta que el BCRA llegue a 2025; después, el BCRA | Segundo PR: `variante_por_defecto: bruegel`. El tercer PR, con el BCRA hasta diciembre de 2025, la devuelve al BCRA. |
+| 2.2 Tramos recientes | Completar lo que falta, con contraste mes a mes antes de unir | Contraste mostrado y unión aprobada el 07/11/2026: reservas y tipo de cambio hasta agosto de 2026, TCR del BCRA hasta diciembre de 2025. La mensual manda; los meses de la diaria son provisorios. |
+| 2.2 Marzo de 2026 | Usar la diaria | La mensual trae los valores del 30/03; el fin de mes del BCRA es el del 31/03 (reservas 42.052, tipo de cambio 1.382,76). `reemplazar` con su quiebre (`q.reservas.marzo-2026`, `q.tc.marzo-2026`). |
+| 2.2 Saldo de fin de mes | Avisarlo con un quiebre | `q.reservas.fin-de-mes`: el saldo del último día cae y se recupera al siguiente (encajes, como hipótesis). |
 | 3.1 Textos del PIB | Corregir con cifras del mismo año | 2004: 447.643 (base 1993) y 485.115 (base 2004), +8,4 %. 1980 en dólares con el oficial: 206.965 con el PIB de cada base (224.289 era el retropolado). «Coincide con la bibliografía» queda solo para 1993–2003. |
 | 3.2 Quiebres por país | `entidades` en el quiebre | `q.int.venezuela` es solo de VEN: la ficha, la cita y el MCP lo avisan si Venezuela se ve. La lista «Quiebres» lo muestra con «solo Venezuela». |
 | 3.3 Bibliografía | Fuera del export hasta que conteste la cátedra; el inventario CSV queda | `PUBLICAR_BIBLIOGRAFIA = False` en el pipeline; los ids se siguen controlando. El historial de Git conserva las versiones viejas del catálogo. |
@@ -323,6 +325,10 @@ La SPEC v1.1 las incorpora. Quedan como diferencias de esta tanda:
 
 ### Contrastes del revisor de datos (07/11/2026)
 
+- **Tramos recientes (tercer PR):** los 8 valores nuevos de reservas y tipo de cambio coinciden exactamente con la serie diaria del BCRA (la misma fuente que copia datos.gob.ar: es un control de transcripción). El TCR de 2025 coincide con la planilla ITCRMSerie.xlsx del BCRA dentro del 0,02 %, salvo abril (82,49 contra 82,34, +0,18 %, probablemente por la versión de la planilla). Marzo de 2026: el BCRA da 42.052 al 31/03, como la diaria.
+- **Superposición mensual contra diaria:** reservas, 279 meses y 14 diferencias (las grandes, junio de 2024 y marzo de 2026); tipo de cambio, 3; TCR, hasta 0,9 % en 2020–2022 y 0,03 % o menos desde 2023. El detalle mes a mes se mostró antes de unir.
+- **Una regla para detectar meses «rellenados»** en la diaria (como junio de 2024) se probó y no se implementó: con 3 días hábiles iguales marca también la Semana Santa de 2018 y 2024; con 5, septiembre de 2022, que es correcto. Con «completa lo que falta», los meses de la diaria son provisorios y la mensual los corrige.
+
 - **PIB 2004:** 447.643,43 (base 1993) y 485.115,19 (base 2004) en datos.gob.ar; +8,37 %. Coincide.
 - **PIB 1980 en dólares:** el del Banco Mundial (`NY.GDP.MKTP.CD`) es 76.961,92 = `NY.GDP.MKTP.CN` ÷ `PA.NUS.ATLS` (4,99 × 10⁻⁸). Con el oficial de Vaivén (promedio de fin de mes de 1980: 1,8556 × 10⁻⁸) da 206.964,56; con `PA.NUS.FCRF` (1,837 × 10⁻⁸) daría 209.040. El texto ahora dice cuál es cuál. El retropolado (224.289) es coherente: su PIB en pesos de 1980 es 8,4 % mayor.
 - **Base monetaria promedio:** datos.gob.ar coincide con el Informe Monetario Mensual del BCRA hasta mayo de 2026; en junio da 18.186 contra 43.272 miles de millones (circulación, 11.365 contra 26.728; cuenta corriente, 6.821 contra 16.544). Julio y agosto no se pudieron comprobar.
@@ -336,12 +342,14 @@ La SPEC v1.1 las incorpora. Quedan como diferencias de esta tanda:
 La SPEC v1.2 incorpora lo de este PR (2.1, 2.5, 5.1, 5.2 e historial). Quedan como diferencias:
 - La SPEC 5.4 nombra `release.yml`, que todavía no existe (fase 5).
 - El snapshot de Bruegel sigue guardando solo la columna de la Argentina extraída del zip, no el zip (excepción ya anotada en la 4a).
+- La «tanda aparte» de consulta en vivo a la API del BCRA queda solo para lo que datos.gob.ar no tiene (base monetaria de fin de mes, tasas); reservas, tipo de cambio y TCR se completan con las diarias de datos.gob.ar.
+- Las derivadas que usan el tipo de cambio suman los meses que habilita el tramo nuevo (TCR bilateral hasta agosto de 2026 y PIB trimestral en dólares hasta el 2.º trimestre de 2026), con el mismo método ya contrastado.
 
 ### Pendientes
 
 **Tuyos:**
 - Una corrida manual de «Actualizar datos» en `main` después del merge, para ver el informe nuevo en el commit y el runner fijado.
 - Prueba manual del MCP con el guion actualizado.
-- **Consultas:** a datos.gob.ar, la base monetaria promedio desde junio de 2026 (no coincide con el Informe Monetario Mensual del BCRA); al BCRA, como antes (licencia de la API y M2 desde 2019-08); a la cátedra, la bibliografía (ahora también fuera del catálogo público) y el CSV del inventario.
+- **Consultas:** a datos.gob.ar, la base monetaria promedio desde junio de 2026 (no coincide con el Informe Monetario Mensual del BCRA) y las reservas y el tipo de cambio de marzo de 2026 en la serie mensual (traen el dato del 30/03); al BCRA, como antes (licencia de la API y M2 desde 2019-08); a la cátedra, la bibliografía (ahora también fuera del catálogo público) y el CSV del inventario.
 - **Datos:** cifras de un cuadro de los ochenta (por ejemplo, Damill y Frenkel 1990) para contrastar el PIB «de cada base» antes de 1993, y los valores de referencia de los casos de la bibliografía.
 - **Proyecto de Claude:** sumar la SPEC v1.2 como documento del proyecto (sin tocar los originales).

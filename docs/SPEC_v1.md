@@ -71,6 +71,8 @@ variantes:
     tramos:
       - {fuente: f.indec.ipc-historico-1943-2008, desde: 1970-01, hasta: 2006-12}
       - ...
+      # Un último tramo con `completa: true` (sin `desde`) solo agrega los meses posteriores al último dato del
+      # anterior, sin reescalar: por ejemplo, las series diarias del BCRA para los meses que la mensual no tiene.
     advertencias: [q.ipc.2007-2015, q.ipc.emergencia-2016]
   - id: cavallo-bertolotto
     nombre: Cavallo–Bertolotto (San Luis + PriceStats)
@@ -465,4 +467,5 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
   - snapshot con la versión de la fuente y fuentes de descarga manual (2.1 y 5.1);
   - esquema 1.3 y `desactualizada_desde` como primer día sin respuesta (2.5);
   - commit con el informe entero, issue por fuente a los 7 días y aviso de las fuentes manuales a los 3 meses (5.1 y 5.2);
+  - tramos que completan con series diarias pasadas a mensuales y reemplazo documentado de un dato con otra fuente (2.3);
   - quiebres por entidad (2.4), catálogo sin la bibliografía (2.5), atraso contra el calendario de la fuente (6.1), parámetros estrictos y cita con nombres de países en el MCP (7.2) y licencia `other-at` de Bruegel (9).
