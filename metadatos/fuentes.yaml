@@ -556,6 +556,9 @@
   organismo: Bruegel (Zsolt Darvas)
   nombre: Real effective exchange rates for 178 countries. REER mensual con IPC, canasta de 51 socios, Argentina
   api: bruegel
+  # El sitio responde a los servidores de GitHub Actions con el desafío anti-bots de Cloudflare (HTTP 403, 06/11/2026):
+  # se baja a mano con `uv run python -m pipeline bajar-manual f.bruegel.reer-51-ar` (revisión del 07/11/2026).
+  descarga: manual
   id_api: REER_MONTHLY_51/REER_51_AR
   url_pagina: https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database
   hoja: REER_MONTHLY_51

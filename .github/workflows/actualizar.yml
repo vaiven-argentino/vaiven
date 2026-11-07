@@ -46,7 +46,7 @@ jobs:
         env:
           SERIES: ${{ inputs.series }}
         run: |
-          args=(actualizar --informe "$RUNNER_TEMP/informe.md")
+          args=(actualizar --informe "$RUNNER_TEMP/informe.md" --atencion "$RUNNER_TEMP/atencion.json")
           if [ -n "$SERIES" ]; then args+=(--series "$SERIES"); fi
           set +e
           uv run python -m pipeline "${args[@]}"
@@ -71,10 +71,12 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # El informe entero: retenidas, fuentes que necesitan atención, avisos (por ejemplo, una fuente que no
+          # respondió), cambios y snapshots nuevos (revisión del 07/11/2026: los avisos quedaban afuera).
           {
             echo "Datos: actualización $(date -u +%Y-%m-%d)"
             echo
-            sed -n '/^## Cambios publicados/,$p' "$RUNNER_TEMP/informe.md"
+            cat "$RUNNER_TEMP/informe.md"
           } > "$RUNNER_TEMP/mensaje.txt"
           git commit -F "$RUNNER_TEMP/mensaje.txt"
           # Si alguien empujó a main mientras corría el pipeline, se trae y se reintenta una vez.
@@ -108,6 +110,37 @@ jobs:
             gh issue create --title "Validación fallida en la actualización de datos" --label validacion \
               --assignee "$RESPONSABLE" --body-file "$RUNNER_TEMP/issue.md"
           fi
+
+      # Una fuente que no responde hace más de 7 días, o una de descarga manual sin versión nueva hace más de 3 meses:
+      # un issue por fuente (SPEC 5.2). En las corridas completas se cierran los de las fuentes que se normalizaron.
+      - name: Abrir o cerrar los issues de fuentes
+        if: steps.pipeline.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          URL_RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SERIES: ${{ inputs.series }}
+        run: |
+          archivo="$RUNNER_TEMP/atencion.json"
+          [ -f "$archivo" ] || exit 0
+          gh label create fuente-caida --color D93F0B --description "Una fuente no responde o necesita una descarga manual" 2>/dev/null || true
+          abiertos=$(gh issue list --label fuente-caida --state open --limit 100 --json number,title)
+          for fuente in $(jq -r '.atencion[].fuente' "$archivo"); do
+            titulo="Fuente $fuente: necesita atención"
+            if [ -z "$(jq -r --arg t "$titulo" '.[] | select(.title == $t) | .number' <<< "$abiertos")" ]; then
+              motivo=$(jq -r --arg f "$fuente" '.atencion[] | select(.fuente == $f) | .motivo' "$archivo")
+              printf 'La fuente `%s` %s\n\nLas variantes que la usan siguen publicadas con los datos anteriores y figuran como desactualizadas.\n\nCorrida: %s\n' \
+                "$fuente" "$motivo" "$URL_RUN" > "$RUNNER_TEMP/issue-fuente.md"
+              gh issue create --title "$titulo" --label fuente-caida --assignee "$RESPONSABLE" --body-file "$RUNNER_TEMP/issue-fuente.md"
+            fi
+          done
+          # Solo una corrida completa sabe que una fuente se normalizó.
+          [ -z "$SERIES" ] || exit 0
+          jq -r '.[] | "\(.number)\t\(.title)"' <<< "$abiertos" | while IFS=$'\t' read -r numero titulo; do
+            fuente=$(sed -E 's/^Fuente (.+): necesita atención$/\1/' <<< "$titulo")
+            if ! jq -e --arg f "$fuente" '.atencion | any(.fuente == $f)' "$archivo" > /dev/null; then
+              gh issue close "$numero" --comment "Se normalizó en la corrida del $(date -u +%Y-%m-%d): $URL_RUN"
+            fi
+          done
 
       - name: Controlar que el disparo diario esté llegando
         if: github.event_name == 'schedule'

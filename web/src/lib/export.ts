@@ -66,6 +66,9 @@ export interface Fuente {
   url: string;
   licencia: string;
   id_api: string | null;
+  /** Desde la 1.3: fuente de descarga manual (Bruegel) y fecha de la versión que usa Vaivén. */
+  descarga?: "manual";
+  version?: string;
 }
 
 /** Los metadatos de una variante exportada; `datos` es una lista o, con dimensión pais, un objeto por entidad. */

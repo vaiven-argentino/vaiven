@@ -19,6 +19,27 @@ from pipeline.comun import ErrorPipeline
 from pipeline.fuentes.base import Archivo, descargar
 
 ENLACE = re.compile(r'href="([^"]*REER_database_ver[^"]*\.zip)"')
+# La versión va en el nombre del zip: REER_database_ver11Oct2026.zip.
+VERSION = re.compile(r"ver(\d{1,2})([A-Za-z]{3})(\d{4})")
+MESES = {m: i for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
+
+
+def version_de_archivo(nombre: str) -> str | None:
+    """Fecha de la versión (AAAA-MM-DD) según el nombre del zip, o None si no la tiene."""
+    m = VERSION.search(nombre)
+    if not m or m[2].lower() not in MESES:
+        return None
+    return f"{m[3]}-{MESES[m[2].lower()]:02d}-{int(m[1]):02d}"
+
+
+def version_de_meta(meta: dict) -> str | None:
+    """La versión de un snapshot: la que guardó `bajar-manual` o, en los anteriores, la del nombre del zip."""
+    if meta.get("version"):
+        return meta["version"]
+    for a in meta.get("archivos", []):
+        if (v := version_de_archivo((a.get("extraido_de") or {}).get("archivo", ""))):
+            return v
+    return None
 
 
 def ultima_version(url_pagina: str) -> str:
