@@ -20,6 +20,8 @@ export interface Advertencia {
   hasta: string | null;
   tipo: string;
   descripcion: string;
+  /** Desde la 1.3, en las series con dimensión pais: las entidades a las que se aplica (sin el campo, a todas). */
+  entidades?: string[];
 }
 
 export interface Excluido {

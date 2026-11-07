@@ -33,7 +33,9 @@ def _advertencias(variante: dict, quiebres: dict[str, dict], serie: pd.Series) -
     for qid in variante.get("advertencias", []):
         q = quiebres[qid]
         salida.append({"id": qid, "desde": _texto(q.get("desde")), "hasta": _texto(q.get("hasta")),
-                       "tipo": q.get("tipo"), "descripcion": q["descripcion"]})
+                       "tipo": q.get("tipo"), "descripcion": q["descripcion"],
+                       # Esquema 1.3: un quiebre de un solo país (por ejemplo, Venezuela desde 2015).
+                       **({"entidades": list(q["entidades"])} if q.get("entidades") else {})})
     return salida
 
 

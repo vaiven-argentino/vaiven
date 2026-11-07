@@ -216,6 +216,11 @@ describe("índice desde tasas y dimensión pais", () => {
     expect(() => serieDeEntidad(intPib, "XXX")).toThrow(ErrorTransformacion);
     expect(() => transformar(intPib as unknown as SerieExportada)).toThrow(/dimensión pais/);
   });
+  it("un quiebre de un solo país solo se avisa en ese país (Venezuela desde 2015)", () => {
+    const ids = (e: string) => transformar(serieDeEntidad(intPib, e), { desde: "2016" }).advertencias.map((a) => a.id);
+    expect(ids("ARG")).not.toContain("q.int.venezuela");
+    expect(ids("VEN")).toContain("q.int.venezuela");
+  });
 });
 
 describe("datos excluidos en los extremos", () => {

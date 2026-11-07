@@ -610,6 +610,8 @@
 
 - id: q.int.venezuela
   desde: 2015
+  # Solo se avisa cuando Venezuela está entre los países que se ven (segunda revisión de la 4a, 3.2).
+  entidades: [VEN]
   tipo: metodologia
   descripcion: >-
     Venezuela: desde 2015 la información oficial de cuentas nacionales es escasa e irregular, y los valores del

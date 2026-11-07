@@ -27,7 +27,10 @@ const frecuencia = frecuenciaInicial(base);
 const desde = desdeInicial(base);
 const r = transformar(base, { transformacion: inicial, medida, frecuencia, desde }, medida ? insumosDe(base, medida) : {});
 const variacion = esVariacion(inicial);
-const numerados = numerarQuiebres(base);
+// Todos los quiebres de la variante, también los de un solo país (la lista los muestra todos, con su país).
+const numerados = numerarQuiebres({ ...base, advertencias: doc.advertencias });
+const nombreEntidad = new Map(pais ? doc.entidades.map((e) => [e.id, e.nombre]) : []);
+const soloEn = (ids?: string[]) => ids?.length ? ` · solo ${ids.map((id) => nombreEntidad.get(id) ?? id).join(" y ")}` : "";
 const registro = leerQuiebres();
 const [primerAnio, ultimoAnio] = aniosDe(base);
 const atajos = [1983, 1991, 2003].filter((a) => a > primerAnio && a < ultimoAnio);
@@ -343,7 +346,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
           <li id={q.advertencia.id}>
             <span class="q-numero" aria-hidden="true">{q.n}</span>
             <div>
-              <p class="q-cabeza"><span class="q-tipo">{NOMBRE_TIPO_QUIEBRE[q.advertencia.tipo] ?? q.advertencia.tipo}</span> · {rangoQuiebre(q.advertencia)}{q.forma === "general" && " · vale para toda la serie"}</p>
+              <p class="q-cabeza"><span class="q-tipo">{NOMBRE_TIPO_QUIEBRE[q.advertencia.tipo] ?? q.advertencia.tipo}</span> · {rangoQuiebre(q.advertencia)}{q.forma === "general" && " · vale para toda la serie"}{soloEn(q.advertencia.entidades)}</p>
               <p class="lectura">{q.advertencia.descripcion}</p>
               {registro.get(q.advertencia.id)?.fuente && <p class="secundario q-fuente">Fuente: {registro.get(q.advertencia.id)!.fuente}</p>}
             </div>

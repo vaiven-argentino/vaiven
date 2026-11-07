@@ -106,7 +106,7 @@
       "desde": "2026-06",
       "hasta": "2026-06",
       "tipo": "metodologia",
-      "descripcion": "En junio de 2026 la base monetaria promedio cae 56 % en un mes (de 41,4 a 18,2 billones de pesos) y se mantiene en ese nivel. La fuente no lo explica; puede ser un cambio de definición. Hasta que el BCRA lo aclare, Vaivén publica la variante hasta mayo de 2026 (decidido el 05/11/2026), para que las variaciones y el % del PIB de los meses siguientes no queden mal."
+      "descripcion": "En la copia de datos.gob.ar, la base monetaria promedio de junio de 2026 cae 56 % en un mes (de 41,4 a 18,2 billones de pesos), con todos sus componentes en una proporción parecida (la circulación monetaria, de 25,4 a 11,4 billones; la cuenta corriente de los bancos en el BCRA, de 16,0 a 6,8), y en julio (21,5) y agosto (22,5) sigue en ese nivel. No es un dato real: el Informe Monetario Mensual de junio de 2026 del BCRA da 43,3 billones para junio (+4,5 % nominal; circulación, 26,7; cuenta corriente, 16,5) y coincide con datos.gob.ar hasta mayo. Es un error de la copia (la causa no se conoce). Hasta que datos.gob.ar lo corrija, Vaivén publica la variante hasta mayo de 2026 (decidido el 05/11/2026)."
     }
   ],
   "excluidos": [],
@@ -122,7 +122,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Base monetaria, variante «promedio-mensual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/base-monetaria/promedio-mensual/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:38:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["2003-01", 37409.12161],

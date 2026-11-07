@@ -195,6 +195,11 @@ describe("obtener_serie", () => {
     await expect(obtenerSerie(repo, { id: "tc-oficial.moneda-de-epoca", transformacion: "var_interanual" }))
       .rejects.toThrow(/Primero pasala a pesos actuales.*con pesos_actuales: transformaciones nivel, var_mensual, var_interanual/);
   });
+  it("países: el quiebre de Venezuela solo aparece si se pide Venezuela", async () => {
+    const ids = (r: { advertencias: Array<{ id: string }> }) => r.advertencias.map((a) => a.id);
+    expect(ids(await obtenerSerie(repo, { id: "int-pib", paises: ["ARG", "BRA"], desde: "2016" }))).not.toContain("q.int.venezuela");
+    expect(ids(await obtenerSerie(repo, { id: "int-pib", paises: ["ARG", "VEN"], desde: "2016" }))).toContain("q.int.venezuela");
+  });
   it("países: selección inicial por defecto, ISO3 sin distinguir mayúsculas e índice desde tasas", async () => {
     const def = await obtenerSerie(repo, { id: "int-pib", desde: "2020", hasta: "2020" });
     const doc = documento("int-pib", "banco-mundial");

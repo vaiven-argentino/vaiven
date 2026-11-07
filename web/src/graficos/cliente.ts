@@ -28,7 +28,9 @@ function iniciar(): void {
   const pais = tienePais(doc);
   // La serie que se ve: en las series con dimensión pais, la de la entidad elegida.
   let serie: SerieExportada & { vista_inicial?: DocumentoSerie["vista_inicial"] } = { ...serieDeEntidad(doc), vista_inicial: doc.vista_inicial };
-  let quiebres: QuiebreNumerado[] = numerarQuiebres(serie);
+  // Se numeran todos los quiebres de la variante (también los de un solo país), para que el número sea el mismo que
+  // en la lista «Quiebres»; el gráfico y los avisos muestran solo los de los países que se ven.
+  let quiebres: QuiebreNumerado[] = numerarQuiebres({ ...serie, advertencias: doc.advertencias });
   // Insumos de las medidas, pedidos a /datos/ la primera vez que se eligen.
   const cargados: InsumosCargados & { series: Record<string, SerieExportada> } = { series: {} };
 
@@ -83,7 +85,7 @@ function iniciar(): void {
 
   function elegirEntidad(id: string): void {
     serie = { ...serieDeEntidad(doc, id), vista_inicial: doc.vista_inicial };
-    quiebres = numerarQuiebres(serie);
+    quiebres = numerarQuiebres({ ...serie, advertencias: doc.advertencias });
   }
 
   function escalaLogInicial(): boolean {
@@ -198,7 +200,7 @@ function iniciar(): void {
     $("unidad-grafico")!.textContent = r.unidad;
     leyendaPaises();
     $("resumen-grafico")!.textContent = resumen(r, r.unidad, variacion, quiebres);
-    avisos(r);
+    avisos(r, ultimo.otras.map((x) => x.resultado));
     tabla(r, variacion);
     cita(o);
     guardarEnUrl();
@@ -219,8 +221,9 @@ function iniciar(): void {
     if (nodo) nodo.textContent = partes.join(" · ");
   }
 
-  function avisos(r: Resultado): void {
-    const ids = new Set(r.advertencias.map((a) => a.id));
+  function avisos(r: Resultado, otras: Resultado[] = []): void {
+    // Los quiebres de todos los países que se ven, no los de toda la serie (segunda revisión de la 4a, 3.2).
+    const ids = new Set([r, ...otras].flatMap((x) => x.advertencias.map((a) => a.id)));
     const cruzados = quiebres.filter((q) => ids.has(q.advertencia.id) && q.forma !== "general");
     const lineas: string[] = [];
     if (cruzados.length) {

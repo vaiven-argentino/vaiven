@@ -57,7 +57,7 @@
       "desde": "1970",
       "hasta": null,
       "tipo": "metodologia",
-      "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial). Con la «tablita», el oficial da un PIB en dólares de 224.289 millones en 1980 y el Banco Mundial, 76.962; los cocientes con el PIB de esos años cambian mucho según cuál se use."
+      "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial). Con la «tablita», el oficial da un PIB en dólares de 206.965 millones en 1980 con el PIB publicado en cada base (antes de 1993, el del Banco Mundial) y 224.289 con el PIB retropolado; el Banco Mundial da 76.962. Los cocientes con el PIB de esos años cambian mucho según cuál se use."
     },
     {
       "id": "q.tc.mercados-desdoblados",
@@ -104,7 +104,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). PIB en dólares, variante «retropolada-anual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-dolares/retropolada-anual/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:38:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 34303.31873],

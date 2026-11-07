@@ -108,6 +108,11 @@ def _controlar_referencias(series: list[dict], fuentes: dict, quiebres: dict) ->
             for q in v.get("advertencias", []):
                 if q not in quiebres:
                     raise ErrorPipeline(f"{s['id']}.{v['id']}: el quiebre {q} no está en quiebres.yaml")
+                # Un quiebre de un solo país solo tiene sentido en una serie con esa entidad.
+                ajenas = set(quiebres[q].get("entidades") or []) - {e["id"] for e in s.get("entidades", [])}
+                if ajenas:
+                    raise ErrorPipeline(f"{s['id']}.{v['id']}: el quiebre {q} nombra entidades que la serie no tiene: "
+                                        f"{', '.join(sorted(ajenas))}")
             if v.get("estado", "publicada") == "publicada":
                 for t in v["tramos"]:
                     if not fuentes[t["fuente"]].get("redistribuible", True):
