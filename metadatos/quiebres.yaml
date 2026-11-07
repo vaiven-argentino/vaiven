@@ -253,12 +253,17 @@
   hasta: 2026-06
   tipo: metodologia
   descripcion: >-
-    En junio de 2026 la base monetaria promedio cae 56 % en un mes (de 41,4 a 18,2 billones de pesos) y se mantiene
-    en ese nivel. La fuente no lo explica; puede ser un cambio de definición. Hasta que el BCRA lo aclare, Vaivén
-    publica la variante hasta mayo de 2026 (decidido el 05/11/2026), para que las variaciones y el % del PIB de los
-    meses siguientes no queden mal.
+    En la copia de datos.gob.ar, la base monetaria promedio de junio de 2026 cae 56 % en un mes (de 41,4 a 18,2
+    billones de pesos), con todos sus componentes en una proporción parecida (la circulación monetaria, de 25,4 a
+    11,4 billones; la cuenta corriente de los bancos en el BCRA, de 16,0 a 6,8), y en julio (21,5) y agosto (22,5)
+    sigue en ese nivel. No es un dato real: el Informe Monetario Mensual de junio de 2026 del BCRA da 43,3 billones
+    para junio (+4,5 % nominal; circulación, 26,7; cuenta corriente, 16,5) y coincide con datos.gob.ar hasta mayo. Es
+    un error de la copia (la causa no se conoce). Hasta que datos.gob.ar lo corrija, Vaivén publica la variante hasta
+    mayo de 2026 (decidido el 05/11/2026).
   afecta: [base-monetaria.promedio-mensual]
-  fuente: datos.gob.ar, 90.1_BMT_0_0_20 (24/10/2026).
+  fuente: >-
+    datos.gob.ar, 90.1_BMT_0_0_20, 90.1_BMCMT_0_0_42 y 90.1_BMCCB_0_0_36 (consultados el 07/11/2026); BCRA,
+    Informe Monetario Mensual, junio de 2026, cuadro de la base monetaria.
 
 # ── Resultado fiscal ───────────────────────────────────────────────────────────
 - id: q.fiscal.cobertura-spn
@@ -339,12 +344,13 @@
   hasta: 2004
   tipo: cambio_de_base
   descripcion: >-
-    PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que da un PIB 8 % mayor
-    (375.910 millones en 2003 con la base 1993; 485.115 en 2004 con la base 2004). Un cociente con el PIB salta en
-    ese año; antes de 2004 coincide con los cuadros de la bibliografía, que usan el PIB de cada época. Antes de 1993
-    es el PIB nominal del Banco Mundial.
+    PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que para el mismo año da un PIB
+    8,4 % mayor (447.643 millones de pesos con la base 1993 y 485.115 con la base 2004). Un cociente con el PIB
+    salta en ese año. En 1993–2003 es el PIB de la base 1993, el que usan los cuadros de la bibliografía de esos
+    años. Antes de 1993 es el PIB nominal del Banco Mundial; los cuadros de los ochenta usan las bases 1970 y 1986, y
+    falta contrastarlo con ellos.
   afecta: [pib-nominal.cada-base-anual, pib-nominal.cada-base-trimestral, pib-dolares.cada-base-anual, pib-dolares.cada-base-trimestral]
-  fuente: INDEC (bases 1993 y 2004); Banco Mundial, NY.GDP.MKTP.CN.
+  fuente: INDEC (bases 1993 y 2004; 2.3_OGP_1993_A_17 y 4.3_OGP_2004_A_17 en datos.gob.ar, consultados el 07/11/2026); Banco Mundial, NY.GDP.MKTP.CN.
 
 - id: q.pib-dolares.banco-mundial
   desde: 1971
@@ -353,9 +359,10 @@
   descripcion: >-
     El Banco Mundial convierte el PIB de la Argentina con un factor de conversión alternativo (PA.NUS.ATLS) en los
     años en que considera que el tipo de cambio oficial no es representativo: en 1971–1981 (salvo 1975 y 1978),
-    entre 1,1 y 2,7 veces el oficial (PA.NUS.FCRF), y en 2012–2015, entre 6 % y 11 % más. En 1980 da 4,99 × 10⁻⁸
-    pesos actuales por dólar contra 1,84 × 10⁻⁸ del oficial: un PIB de 76.962 millones de dólares, contra 224.289
-    con el tipo de cambio oficial.
+    entre 1,1 y 2,7 veces el oficial (PA.NUS.FCRF), y en 2012–2015, entre 6 % y 11 % más. En 1980 usa 4,99 × 10⁻⁸
+    pesos actuales por dólar (el oficial, según el propio Banco Mundial, es 1,84 × 10⁻⁸): un PIB de 76.962 millones
+    de dólares. Con el mismo PIB en pesos (el del Banco Mundial, que es el de la variante «cada base» antes de 1993)
+    y el tipo de cambio oficial de Vaivén (promedio de fin de mes del BCRA, 1,86 × 10⁻⁸), da 206.965.
   afecta: [pib-dolares.banco-mundial]
   fuente: Banco Mundial, PA.NUS.ATLS y PA.NUS.FCRF de la Argentina (consultados el 05/11/2026).
 
@@ -378,8 +385,9 @@
     promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de
     cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos
     años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial).
-    Con la «tablita», el oficial da un PIB en dólares de 224.289 millones en 1980 y el Banco Mundial, 76.962; los
-    cocientes con el PIB de esos años cambian mucho según cuál se use.
+    Con la «tablita», el oficial da un PIB en dólares de 206.965 millones en 1980 con el PIB publicado en cada base
+    (antes de 1993, el del Banco Mundial) y 224.289 con el PIB retropolado; el Banco Mundial da 76.962. Los cocientes
+    con el PIB de esos años cambian mucho según cuál se use.
   afecta: [pib-dolares.cada-base-anual, pib-dolares.cada-base-trimestral, pib-dolares.retropolada-anual, pib-dolares.retropolada-trimestral]
   fuente: Vaivén (método de la variante).
 
