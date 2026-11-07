@@ -1,6 +1,6 @@
 // Formato para la interfaz, en español rioplatense: números con coma decimal y punto de miles, y fechas
 // según la frecuencia de cada observación («mar. 1979», «2004, 3.er trimestre», «1990, 1.ª onda»).
-import type { Frecuencia } from "@vaiven/transformaciones";
+import type { Atraso, Frecuencia } from "@vaiven/transformaciones";
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
   "noviembre", "diciembre"];
@@ -22,21 +22,30 @@ export function fechaLegible(fecha: string, frecuencia: Frecuencia | string, lar
   return larga ? `${MESES[m - 1]} de ${anio}` : `${MESES_CORTOS[m - 1]} ${anio}`;
 }
 
-/** Fecha corta de la cobertura o de un quiebre, sin saber la frecuencia: «1970-01» → «ene. 1970». */
-/**
- * El último dato, en palabras («abril de 2026», «2.º trimestre de 2026», «2025») y, en las mensuales, cuántos meses
- * de atraso lleva respecto de la versión de datos, si son 3 o más (por ejemplo, las series del BCRA en datos.gob.ar).
- */
-export function ultimoDato(fecha: string, frecuencia: string, versionDatos: string): { texto: string; atraso: number | null } {
+/** El último dato, en palabras, según la frecuencia de su tramo: «abril de 2026», «2.º trimestre de 2026», «2025». */
+export function ultimoDato(fecha: string, frecuencia: string): string {
   const [anio, mes] = fecha.split("-");
-  if (!mes || frecuencia === "anual") return { texto: anio, atraso: null };
+  if (!mes || frecuencia === "anual") return anio;
   const m = Number(mes);
-  if (frecuencia === "trimestral") return { texto: `${TRIMESTRES[Math.floor((m - 1) / 3)]} trimestre de ${anio}`, atraso: null };
-  if (frecuencia === "semestral") return { texto: `${MESES[m - 1]} de ${anio}`, atraso: null };
-  const meses = (Number(versionDatos.slice(0, 4)) - Number(anio)) * 12 + Number(versionDatos.slice(5, 7)) - m;
-  return { texto: `${MESES[m - 1]} de ${anio}`, atraso: meses >= 3 ? meses : null };
+  if (frecuencia === "trimestral") return `${TRIMESTRES[Math.floor((m - 1) / 3)]} trimestre de ${anio}`;
+  return `${MESES[m - 1]} de ${anio}`;
 }
 
+/**
+ * El atraso en palabras (segunda revisión de la 4a, 3.5): contra el calendario habitual de la fuente y nombrando al
+ * intermediario cuando el atraso es de la copia de datos.gob.ar, no de la fuente. Por ejemplo, «con el calendario
+ * habitual ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó».
+ */
+export function textoAtraso(a: Atraso | null): string | null {
+  if (!a) return null;
+  if (a.tipo === "sin_datos_nuevos") return `${a.meses} meses sin datos nuevos`;
+  const esperado = fechaLegible(a.esperado, "mensual", true);
+  const uno = a.meses === 1;
+  const debe = uno ? `ya debería estar ${esperado}` : `ya deberían estar los datos hasta ${esperado}`;
+  return `con el calendario habitual de la fuente ${debe}${a.intermediario ? `: ${a.intermediario} todavía no ${uno ? "lo" : "los"} cargó` : ""}`;
+}
+
+/** Fecha corta de la cobertura o de un quiebre, sin saber la frecuencia: «1970-01» → «ene. 1970». */
 export function fechaCorta(fecha: string | null | undefined): string {
   if (!fecha) return "hoy";
   if (fecha === "hoy") return "hoy";

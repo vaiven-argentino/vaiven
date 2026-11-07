@@ -1,11 +1,11 @@
 ---
 // Ficha de serie (SPEC 6.1): todo lo que se lee está en el HTML del build. El gráfico y las transformaciones se
 // suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
-import { disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
+import { atraso, disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
 import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { MOSTRAR_BIBLIOGRAFIA, descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
+import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
 import { aniosDe, crecimientoPorDecada, desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
-import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, ultimoDato } from "../lib/formato";
+import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, textoAtraso, ultimoDato } from "../lib/formato";
 
 interface Props {
   serie: SerieCatalogo;
@@ -57,7 +57,10 @@ const datosCliente = JSON.stringify(doc).replace(/</g, "\\u003c");
 // «Uso en la bibliografía» queda oculto hasta consultar a la cátedra (revisión de la 4a, 05/11/2026).
 const bibliografia = MOSTRAR_BIBLIOGRAFIA ? serie.bibliografia ?? [] : [];
 // Visible en la cabecera: el último dato y su atraso (revisión de la 4a, 2.1).
-const ultimo = ultimoDato(doc.cobertura.hasta, doc.tramos.at(-1)?.frecuencia ?? doc.frecuencia, doc.version_datos);
+// El atraso se mide a la última actualización del sitio (la de la variante solo cambia cuando cambian sus datos).
+const ultimo = ultimoDato(doc.cobertura.hasta, doc.tramos.at(-1)?.frecuencia ?? doc.frecuencia);
+const versionSitio = [catalogo().version_datos, doc.version_datos].sort().at(-1)!;
+const atrasoTexto = textoAtraso(atraso(doc, versionSitio));
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
 // Fuentes de descarga manual (Bruegel, que bloquea a GitHub Actions): la ficha dice qué versión usa Vaivén
 // (segunda revisión de la 4a, 2.3). «Bruegel (Zsolt Darvas)» → «Bruegel».
@@ -76,8 +79,8 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
       <div><dt>Unidad</dt><dd>{doc.unidad}{medida && `, como se publica (el gráfico arranca ${ARRANCA[medida]})`}</dd></div>
       <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
       <div><dt>Cobertura</dt><dd>{fechaCorta(doc.cobertura.desde)} – {fechaCorta(doc.cobertura.hasta)}</dd></div>
-      <div class="ultimo-dato"><dt>Último dato</dt><dd><strong>{ultimo.texto}</strong>{ultimo.atraso && <span class="atraso"> · {ultimo.atraso} meses sin datos nuevos de la fuente</span>}{manuales.map((m) => <span class="atraso"> · versión de {m.nombre} del {m.version}</span>)}</dd></div>
-      <div><dt>Datos de esta serie</dt><dd><time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> <span class="secundario">(el pie dice la última actualización del sitio)</span></dd></div>
+      <div class="ultimo-dato"><dt>Último dato</dt><dd><strong>{ultimo}</strong>{atrasoTexto && <span class="atraso"> · {atrasoTexto}</span>}{manuales.map((m) => <span class="atraso"> · versión de {m.nombre} del {m.version}</span>)}</dd></div>
+      <div><dt>Actualización</dt><dd>Datos de esta serie: <time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> · Sitio actualizado: <time datetime={versionSitio}>{diaDeVersion(versionSitio)}</time></dd></div>
     </dl>
     {doc.desactualizada_desde && (manuales.length ? (
       <p class="alerta">La versión de {manuales.map((m) => m.nombre).join(" y ")} que usa Vaivén tiene más de 3 meses: puede haber una más nueva. Esta fuente se actualiza a mano.</p>

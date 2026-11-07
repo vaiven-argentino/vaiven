@@ -65,4 +65,4 @@ En `metadatos/series/<slug>.yaml` (formato de la SPEC, 2.3), o en `metadatos/aux
 | `vista_inicial` | Con qué transformación y medida arranca la ficha (por ejemplo, el salario real en términos reales). |
 | `dimensiones`, `entidades` y `entidades_por_defecto` | Series con dimensión pais (SPEC 2.5): cada tramo se arma y se valida por entidad. |
 
-En `metadatos/fuentes.yaml`, `redistribuible: false` hace que el snapshot guarde solo `meta.json` (los crudos van a `.crudos/`, fuera de Git) y el pipeline se niega a publicar una variante que use esa fuente.
+En `metadatos/fuentes.yaml`, `desfase_esperado` dice en cuántos meses suele salir un dato de una fuente mensual (va al export, esquema 1.3), `cita_recomendada` es la cita que pide la fuente y `descarga: manual` marca las que se bajan con `bajar-manual`. `redistribuible: false` hace que el snapshot guarde solo `meta.json` (los crudos van a `.crudos/`, fuera de Git) y el pipeline se niega a publicar una variante que use esa fuente.

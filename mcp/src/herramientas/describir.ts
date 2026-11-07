@@ -1,6 +1,6 @@
 // describir_serie (SPEC 7.2): metadatos completos de una serie, sin los datos.
 import { apa, bibtex, textoCita } from "@vaiven/cita";
-import { disponibles, serieDeEntidad } from "@vaiven/transformaciones";
+import { atraso, disponibles, serieDeEntidad } from "@vaiven/transformaciones";
 import type { Repositorio } from "../datos";
 import { MOSTRAR_BIBLIOGRAFIA } from "./comun";
 import type { DocumentoSerie, Fuente } from "../tipos";
@@ -66,6 +66,7 @@ export async function describirSerie(repo: Repositorio, args: ArgsDescribir) {
       ...base,
       cobertura: doc.cobertura,
       ultimo_dato: doc.cobertura.hasta,
+      atraso: atraso(doc, new Date().toISOString()),
       ...(doc.moneda ? { moneda: doc.moneda } : {}),
       metodo: doc.metodo,
       empalme: doc.empalme,

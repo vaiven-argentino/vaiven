@@ -22,6 +22,8 @@ export interface VarianteCatalogo {
   estado: "publicada" | "pendiente" | "pendiente_licencia";
   frecuencia: string;
   cobertura: { desde: string; hasta: string } | null;
+  /** La frecuencia del último tramo (segunda revisión de la 4a): «2.º trimestre de 2026» y no «abr. 2026». */
+  frecuencia_ultimo_dato?: string;
   archivo: string | null;
   nota?: string;
 }

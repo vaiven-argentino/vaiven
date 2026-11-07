@@ -2,6 +2,10 @@
 # `id_api` es el identificador en la API de la que se descarga (`api`).
 # `redistribuible: false` hace que el snapshot guarde solo meta.json y que la serie no se publique.
 # `verificado` es la fecha en que se confirmaron ID, cobertura y licencia contra la API.
+# `desfase_esperado` (mensuales): en cuántos meses suele salir un dato (1: el de agosto sale en septiembre). La ficha y
+# el MCP lo usan para decir cuándo una serie está más atrasada que lo normal (segunda revisión de la 4a, 3.5).
+# `descarga: manual`: la fuente no se baja en la corrida automática (`python -m pipeline bajar-manual`).
+# `cita_recomendada`: la cita que pide la fuente; `{version}` se completa con la fecha de su versión.
 
 # ── IPC (PRE-01) ───────────────────────────────────────────────────────────────
 - id: f.indec.ipc-historico-1943-2008
@@ -64,6 +68,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: índice dic. 2016 = 100
   cobertura: {desde: 2016-12, hasta: hoy}
   verificado: 2026-10-24
@@ -119,6 +124,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: pesos actuales por dólar
   cobertura: {desde: 1940-01, hasta: hoy}
   verificado: 2026-10-24
@@ -137,6 +143,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de US$
   cobertura: {desde: 1940-01, hasta: hoy}
   verificado: 2026-10-24
@@ -165,6 +172,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=74.3_IET_0_M_16
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de US$
   cobertura: {desde: 1992-01, hasta: hoy}
   verificado: 2026-10-24
@@ -177,6 +185,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=74.3_IIT_0_M_25
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de US$
   cobertura: {desde: 1992-01, hasta: hoy}
   verificado: 2026-10-24
@@ -377,6 +386,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_AGADOS_BM_0_0_28
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de pesos actuales (pesos equivalentes)
   cobertura: {desde: 1940-06, hasta: hoy}
   verificado: 2026-10-24
@@ -394,6 +404,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=90.1_BMT_0_0_20
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de pesos
   cobertura: {desde: 2003-01, hasta: hoy}
   verificado: 2026-10-24
@@ -424,6 +435,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_INTERD_0_0_41
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: '% nominal anual'
   cobertura: {desde: 1981-03, hasta: hoy}
   huecos_permitidos:
@@ -439,6 +451,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=89.1_TIB_0_0_20
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: '% nominal anual'
   cobertura: {desde: 1999-01, hasta: hoy}
   verificado: 2026-10-24
@@ -476,6 +489,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=379.9_SUPERAVIT_017__23_94
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de pesos
   cobertura: {desde: 2015-01, hasta: hoy}
   verificado: 2026-10-24
@@ -515,6 +529,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=379.9_RESULTADO_017__18_38
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de pesos
   cobertura: {desde: 2015-01, hasta: hoy}
   verificado: 2026-10-24
@@ -545,6 +560,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=116.3_TCRMA_0_M_36
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: índice 17-12-2015 = 100
   cobertura: {desde: 1997-01, hasta: hoy}
   verificado: 2026-10-24
@@ -569,6 +585,7 @@
     Bruegel Dataset (2012) 'Real effective exchange rates for 178 countries', version of {version}, available at
     https://doi.org/10.64153/SZCG6180
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: índice (un aumento es apreciación)
   cobertura: {desde: 1962-05, hasta: hoy}
   verificado: 2026-10-24
@@ -707,6 +724,7 @@
   url: https://datos.gob.ar/dataset/sspm-series-historicas-estadisticas-monetarias
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de pesos actuales (pesos equivalentes)
   cobertura: {desde: 1940-06, hasta: hoy}
   verificado: 2026-10-27
@@ -739,6 +757,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=bcra_3544
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: miles de pesos actuales (la metadata dice «miles de pesos corrientes»)
   cobertura: {desde: 1940-06, hasta: 2021-05}
   verificado: 2026-10-27
@@ -755,6 +774,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=bcra_3543
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: miles de pesos actuales (la metadata dice «miles de pesos corrientes»)
   cobertura: {desde: 1940-06, hasta: 2021-05}
   verificado: 2026-10-27
@@ -767,6 +787,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=bcra_3554
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: miles de pesos actuales (la metadata dice «miles de pesos corrientes»)
   cobertura: {desde: 1940-06, hasta: 2021-05}
   verificado: 2026-10-27
@@ -779,6 +800,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=90.1_AMTMA_0_0_39
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de pesos
   cobertura: {desde: 2009-06, hasta: hoy}
   verificado: 2026-10-27
@@ -1102,6 +1124,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=182.1_C_K_FINC_CINC_0_M_56
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 1
   unidad: millones de US$ (negativo = compra neta de activos externos)
   cobertura: {desde: 2003-01, hasta: hoy}
   verificado: 2026-10-27
@@ -1145,6 +1168,7 @@
   url: https://datos.gob.ar/dataset/sspm-remuneracion-imponible-promedio-trabajadores-estables-ripte
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 2
   unidad: pesos corrientes
   cobertura: {desde: 1994-07, hasta: hoy}
   verificado: 2026-10-27
@@ -1171,6 +1195,7 @@
   url: https://apis.datos.gob.ar/series/api/series/?ids=149.1_SOR_PRIADO_OCTU_0_25
   licencia: CC-BY-4.0
   frecuencia: mensual
+  desfase_esperado: 2
   unidad: índice oct. 2016 = 100
   cobertura: {desde: 2015-10, hasta: hoy}
   verificado: 2026-10-27

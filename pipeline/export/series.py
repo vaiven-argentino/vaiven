@@ -55,6 +55,7 @@ def _fuentes(variante: dict, fuentes: dict[str, dict]) -> list[dict]:
                        "licencia": f["licencia"], "id_api": f.get("id_api"),
                        # Fuentes de descarga manual (esquema 1.3): la versión de la fuente que usa Vaivén.
                        **({"descarga": "manual", "version": f.get("version")} if f.get("descarga") == "manual" else {}),
+                       **({"desfase_esperado": int(f["desfase_esperado"])} if "desfase_esperado" in f else {}),
                        # La cita que recomienda la fuente, con la fecha de su versión (Bruegel).
                        **({"cita": cita_fuente(f)} if f.get("cita_recomendada") else {})})
     return salida
