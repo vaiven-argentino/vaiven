@@ -77,12 +77,13 @@
       "nombre": "Series históricas de estadísticas monetarias. Tasa de interés por depósitos a plazo fijo de 30 a 59 días en moneda nacional",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_INTERD_0_0_41",
       "licencia": "CC-BY-4.0",
-      "id_api": "174.1_T_INTERD_0_0_41"
+      "id_api": "174.1_T_INTERD_0_0_41",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tasa de interés pasiva, variante «plazo-fijo». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tasa-pasiva/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 20.6],

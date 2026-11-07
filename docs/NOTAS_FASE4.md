@@ -84,7 +84,7 @@
   - `paises` admite hasta 30 códigos.
   - En las series por país, `datos` es un objeto por país, como en el export.
 - **Catálogo:** `catalogo.json` suma `dimensiones`, `entidades` y `entidades_por_defecto` en las series por país, para que `buscar_series` las muestre (y busque por nombre de país) sin leer los datos.
-- **Cita:** `@vaiven/cita` nombra varias entidades («entidades ARG, BRA y WLD»).
+- **Cita:** `@vaiven/cita` nombra varias entidades (hoy, «Países: Argentina, Brasil y Mundo.», en la ficha y en el MCP; ver las correcciones de la segunda revisión).
 
 ### Decisiones de diseño (revisables)
 

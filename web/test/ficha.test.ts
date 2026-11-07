@@ -19,8 +19,8 @@ describe("vista inicial", () => {
 });
 
 describe("período inicial y tabla por década", () => {
-  it("el IPC arranca en 1991; las series sin `desde` en la vista, en el primer dato", () => {
-    expect(desdeInicial(doc("ipc", "oficial"))).toBe("1991");
+  it("el IPC arranca en 1993; las series sin `desde` en la vista, en el primer dato", () => {
+    expect(desdeInicial(doc("ipc", "oficial"))).toBe("1993");
     expect(desdeInicial(doc("reservas", "brutas"))).toBeUndefined();
   });
   it("crecimiento promedio geométrico por década, con la década incompleta rotulada con sus años", () => {

@@ -85,12 +85,13 @@
       "nombre": "Intercambio Comercial Argentino. Importaciones totales, mensual",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=74.3_IIT_0_M_25",
       "licencia": "CC-BY-4.0",
-      "id_api": "74.3_IIT_0_M_25"
+      "id_api": "74.3_IIT_0_M_25",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Importaciones, variante «mensual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/importaciones/mensual/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1992-01", 902.946207],

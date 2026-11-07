@@ -99,12 +99,13 @@
       "nombre": "Series históricas de estadísticas monetarias. Reservas internacionales del BCRA, saldos",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36",
       "licencia": "CC-BY-4.0",
-      "id_api": "174.1_RRVAS_IDOS_0_0_36"
+      "id_api": "174.1_RRVAS_IDOS_0_0_36",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/reservas/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 589.5],
