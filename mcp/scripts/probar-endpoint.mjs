@@ -44,7 +44,8 @@ for (const [era, modo] of [["2026-07-28", { pin: "2026-07-28" }], ["2025 (initia
     chequear(`MCP ${era}: buscar_series «desempleo»`, b.series[0]?.id === "desocupacion", b.series.map((s) => s.id).join(", "));
 
     const d = texto(await c.callTool({ name: "describir_serie", arguments: { id: "PRE-01" } }));
-    chequear(`MCP ${era}: describir_serie PRE-01`, d.id === "ipc" && d.bibliografia.length > 0, `${d.variantes.length} variantes`);
+    // La bibliografía está oculta hasta que responda la cátedra (MOSTRAR_BIBLIOGRAFIA, revisión de la 4a).
+    chequear(`MCP ${era}: describir_serie PRE-01`, d.id === "ipc" && d.variantes.length > 0 && !("bibliografia" in d), `${d.variantes.length} variantes`);
 
     const o = texto(await c.callTool({ name: "obtener_serie", arguments: { id: "reservas", desde: "1979-02", hasta: "1979-04" } }));
     chequear(`MCP ${era}: obtener_serie con el excluido de 1979`, o.datos[1][1] === null && o.excluidos.length === 1, JSON.stringify(o.datos));
@@ -60,6 +61,10 @@ for (const [era, modo] of [["2026-07-28", { pin: "2026-07-28" }], ["2025 (initia
 
     const ct = texto(await c.callTool({ name: "citar", arguments: { id: "reservas", formato: "bibtex" } }));
     chequear(`MCP ${era}: citar en BibTeX`, ct.bibtex?.startsWith("@misc{vaiven_reservas_brutas_"));
+
+    // Segunda revisión de la 4a: un parámetro mal escrito da error en lugar de ignorarse.
+    const mal = await c.callTool({ name: "obtener_serie", arguments: { id: "int-pib", entidades: ["ARG"] } });
+    chequear(`MCP ${era}: parámetro desconocido da isError`, mal.isError === true, mal.content[0].text.slice(0, 80));
 
     const err = await c.callTool({ name: "obtener_serie", arguments: { id: "ipc", variante: "cavallo-bertolotto" } });
     chequear(`MCP ${era}: variante pendiente da isError`, err.isError === true, err.content[0].text.slice(0, 80));
