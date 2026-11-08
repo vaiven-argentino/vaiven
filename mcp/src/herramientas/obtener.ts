@@ -2,7 +2,7 @@
 // @vaiven/transformaciones. Toda respuesta lleva advertencias, version_datos, fuentes y cita.
 import { nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
-  ErrorFecha, ErrorTransformacion, serieDeEntidad, tienePais, transformar,
+  ErrorFecha, ErrorTransformacion, atraso, serieDeEntidad, tienePais, transformar,
   type Advertencia, type Base, type Excluido, type Frecuencia, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
 import { ErrorHerramienta, exigirPublicada, type Repositorio } from "../datos";
@@ -162,6 +162,10 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   for (const f of manuales) {
     notas.push(`${f.organismo} se actualiza a mano (su sitio no deja descargar desde los servidores de Vaivén): la versión que usa Vaivén es del ${f.version}.`);
   }
+  if (doc.licencia !== "CC-BY-4.0") {
+    const propias = doc.fuentes.filter((f) => f.licencia !== "CC-BY-4.0");
+    notas.push(`Licencia «${doc.licencia}»: los datos son de ${propias.map((f) => f.organismo).join(" y ")}, con sus propios términos (${propias.map((f) => f.licencia).join("; ")}), no CC BY.${propias.some((f) => f.cita) ? " Citá también la fuente como recomienda (fuentes[].cita)." : ""}`);
+  }
   if (doc.desactualizada_desde) {
     notas.push(manuales.length
       ? `La versión de la fuente tiene más de 3 meses (desactualizada desde ${doc.desactualizada_desde}): puede haber una más nueva.`
@@ -201,6 +205,8 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     hasta: fechas.at(-1) ?? null,
     n_observaciones: total,
     ultimo_dato: doc.cobertura.hasta,
+    // Contra el calendario de la fuente y la fecha de hoy (segunda revisión de la 4a, 3.5); null si está al día.
+    atraso: atraso(doc, new Date().toISOString()),
     datos: paises.length ? Object.fromEntries(paises.map((p, k) => [p, listas[k]])) : listas[0],
     frecuencias,
     advertencias,
@@ -210,6 +216,6 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     licencia: doc.licencia,
     version_datos: doc.version_datos,
     desactualizada_desde: doc.desactualizada_desde,
-    cita: textoCita(doc, cita, paises.length ? paises : undefined),
+    cita: textoCita(doc, cita, paises.length ? paises.map((id) => nombres.get(id) ?? id) : undefined),
   };
 }

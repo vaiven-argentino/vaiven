@@ -61,6 +61,8 @@ export interface Fuente {
   /** Desde la 1.3: fuente de descarga manual (Bruegel) y fecha de la versión que usa Vaivén. */
   descarga?: "manual";
   version?: string;
+  /** Desde la 1.3: la cita que recomienda la fuente (Bruegel). */
+  cita?: string;
 }
 
 /** Lo que el JSON de una variante suma a lo que transforma la librería. */

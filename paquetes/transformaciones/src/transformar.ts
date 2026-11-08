@@ -47,7 +47,11 @@ export function serieDeEntidad(doc: DocumentoExportado, entidad?: string): Serie
     throw new ErrorTransformacion(`La serie ${doc.id} no tiene la entidad «${id}». Entidades: ${Object.keys(doc.datos).join(", ")}.`);
   }
   const { datos, entidades: _e, entidades_por_defecto: _d, dimensiones: _x, ...resto } = doc;
-  return { ...resto, datos: datos[id], excluidos: doc.excluidos.filter((e) => !e.pais || e.pais === id) };
+  return {
+    ...resto, datos: datos[id], excluidos: doc.excluidos.filter((e) => !e.pais || e.pais === id),
+    // Un quiebre de un país (por ejemplo, el de Venezuela desde 2015) no se avisa en los demás.
+    advertencias: doc.advertencias.filter((a) => !a.entidades || a.entidades.includes(id)),
+  };
 }
 
 /** Transforma varias entidades con las mismas opciones. */

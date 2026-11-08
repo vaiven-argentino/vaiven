@@ -12,7 +12,9 @@ export const INSTRUCCIONES =
   "a % del PIB o a pesos actuales, pedilo con `medida` o `pesos_actuales` de obtener_serie en lugar de calcularlo por " +
   "tu cuenta: Vaivén usa el IPC y el tipo de cambio publicados y, para el % del PIB, el PIB publicado en cada base " +
   "(u otro, si lo pedís con `denominador`), y suma sus advertencias. Algunas fuentes llevan meses de atraso: cada " +
-  "respuesta dice el último dato de la serie (`ultimo_dato`); mencionalo si el usuario pregunta por meses recientes.";
+  "respuesta dice el último dato de la serie (`ultimo_dato`); mencionalo si el usuario pregunta por meses recientes. " +
+  "`atraso` dice si la serie está más atrasada que lo normal para su fuente (`esperado`: el mes que ya debería estar; " +
+  "`intermediario`: datos.gob.ar, si el atraso es de esa copia y no del organismo).";
 
 export const DESCRIPCION = {
   buscar_series:

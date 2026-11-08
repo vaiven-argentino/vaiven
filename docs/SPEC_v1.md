@@ -106,7 +106,7 @@ transformaciones: [nivel, indice_desde_tasas, media_movil]
 | Archivo | Contenido |
 |---|---|
 | `fuentes.yaml` | Una entrada por serie fuente: organismo, conjunto de datos, ID en la API, URL, licencia, frecuencia, cobertura, fecha de último acceso. |
-| `quiebres.yaml` | Una entrada por quiebre: id, fecha o rango, tipo (cambio de base, cobertura, intervención, metodología, signo monetario), descripción, series y variantes afectadas, fuente. |
+| `quiebres.yaml` | Una entrada por quiebre: id, fecha o rango, tipo (cambio de base, cobertura, intervención, metodología, signo monetario), descripción, series y variantes afectadas, fuente y, en las series con dimensión `pais`, las `entidades` a las que se aplica (sin el campo, a todas; por ejemplo, el de Venezuela desde 2015 solo se avisa si Venezuela está entre los países que se ven). |
 | `periodos.yaml` | Gobiernos, ministros de Economía, planes de estabilización y regímenes cambiarios, con fechas de inicio y fin y fuente. |
 | `eventos.yaml` | Hitos puntuales (por ejemplo, la sanción de la Convertibilidad o el default de 2001), con fecha, descripción y fuente. |
 | `glosario.yaml` | Definiciones de conceptos (balanza de pagos, FAE, reservas netas, etc.), reutilizando el material de la cátedra cuando corresponda. |
@@ -133,9 +133,9 @@ La periodización de la cátedra (sección 6.4) se arma sobre estas tablas. Las 
 ### 2.5 Formato de exportación
 - `export/series/<slug>/<variante>.json`: metadatos resumidos + `datos: [["1970-01", 0.0123], ...]` + `version_datos`. En las series con dimensión `pais`, `datos` es un objeto por entidad: `{"ARG": [["1961", 5.4], ...], "BRA": [...]}`.
   - Fechas: `AAAA-MM` en mensuales, trimestrales (mes de inicio) y semestrales (mes de la onda); `AAAA` en anuales.
-  - Cada JSON declara su versión de esquema en `esquema`. La vigente es la **1.3** (`tests/contrato/serie-1.3.schema.json`, publicada en `/esquemas/`): suma a cada fuente de descarga manual `descarga` y `version`. La 1.2 sumó `moneda`, `insumos` (qué series necesita cada medida, con su `denominador` en el % del PIB), `auxiliar`, `vista_inicial` (transformación, medida, frecuencia y período con que arranca la ficha) y los campos de la dimensión `pais`. Las versiones anteriores siguen publicadas y la web, el MCP y la librería las leen.
+  - Cada JSON declara su versión de esquema en `esquema`. La vigente es la **1.3** (`tests/contrato/serie-1.3.schema.json`, publicada en `/esquemas/`): suma a las fuentes `descarga` y `version` (descarga manual), `desfase_esperado` y `cita` (la que recomienda la fuente); a las advertencias, `entidades`; y acepta `licencia: other-at` (sección 9). La 1.2 sumó `moneda`, `insumos` (qué series necesita cada medida, con su `denominador` en el % del PIB), `auxiliar`, `vista_inicial` (transformación, medida, frecuencia y período con que arranca la ficha) y los campos de la dimensión `pais`. Las versiones anteriores siguen publicadas y la web, el MCP y la librería las leen.
   - `desactualizada_desde`: la fecha desde la que la variante no se actualiza: el primer día en que la fuente no respondió, la versión anterior si la variante quedó retenida por la validación, o la fecha en que la versión de una fuente de descarga manual cumplió 3 meses (sección 5.2).
-- `export/catalogo.json` (con las entidades de las series con `pais` y las fichas de la bibliografía), `export/periodos.json`, `export/eventos.json`, `export/quiebres.json`, `export/revisiones.json`.
+- `export/catalogo.json` (con las entidades de las series con `pais` y la frecuencia del último dato de cada variante; las fichas de la bibliografía no se publican hasta que la cátedra responda, sección 12), `export/periodos.json`, `export/eventos.json`, `export/quiebres.json`, `export/revisiones.json`.
 - `export/auxiliares/<slug>/<variante>.json` y su índice `export/auxiliares.json` (sección 2.6), más `export/auxiliares/signos-monetarios.json`.
 - `export/datapackage.json` (Frictionless Data Package v2) que describe todos los recursos.
 - `export/descargas/vaiven_<version>.parquet` y `.zip` con CSV por serie, para descarga completa.
@@ -309,7 +309,7 @@ vaiven/
 |---|---|
 | **Inicio** | Qué es Vaivén, accesos a catálogo y explorador, series destacadas, última actualización. |
 | **Catálogo** | Las 39 series por bloque, con filtros (bloque, prioridad, frecuencia, fuente) y búsqueda. |
-| **Ficha de serie** | Último dato bien visible (y su atraso, si la fuente lleva meses sin publicar); gráfico con quiebres y períodos marcados; selector de variante; transformaciones y medidas (con su IPC o su PIB); tabla; descargas; metodología; quiebres; fuentes; uso en la bibliografía (fichas del inventario: oculto hasta que la cátedra responda, sección 12); cómo citar. En las series internacionales, la selección inicial de países con el elegido resaltado y la tabla por década (como en el explorador, 6.2). |
+| **Ficha de serie** | Último dato bien visible (y su atraso respecto del calendario habitual de la fuente, que nombra al intermediario si el atraso es de la copia de datos.gob.ar; la versión de las fuentes de descarga manual); gráfico con quiebres y períodos marcados; selector de variante; transformaciones y medidas (con su IPC o su PIB); tabla; descargas; metodología; quiebres; fuentes; uso en la bibliografía (fichas del inventario: oculto hasta que la cátedra responda, sección 12); cómo citar. En las series internacionales, la selección inicial de países con el elegido resaltado y la tabla por década (como en el explorador, 6.2). |
 | **Explorador** | Hasta 4 series a la vez, transformaciones por serie, período, frecuencia, sombreado por gobierno, plan o régimen, eventos, dos ejes cuando hace falta. En las series internacionales, selector de países y agregados. |
 | **Períodos** | Línea de tiempo de gobiernos, ministros de Economía, planes y regímenes cambiarios; desde cada período, accesos a gráficos ya filtrados. |
 | **Metodología** | Capas, empalmes, quiebres, variantes, glosario, revisiones. |
@@ -354,8 +354,8 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 | Herramienta | Parámetros | Devuelve |
 |---|---|---|
 | `buscar_series` | `texto?`, `bloque?`, `prioridad?`, `desde?`, `hasta?` | Lista de series con id, nombre, bloque, cobertura, variantes y, si corresponde, entidades disponibles. |
-| `describir_serie` | `id` | Metadatos completos: definición, variantes (con su último dato, sus transformaciones, medidas, deflactores y PIB disponibles), quiebres, fuentes, licencias, países y cita. La bibliografía, cuando la cátedra lo confirme. |
-| `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `pesos_actuales?`, `frecuencia?`, `medida?` (real, en_dolares, pct_pib), `deflactor?`, `base_real?`, `denominador?`, `transformacion?`, `base?`, `paises?` (códigos ISO3; solo series internacionales; por defecto, la selección inicial) | Datos (por país en las internacionales), unidad resultante, último dato, advertencias por quiebres en el rango, versión de datos y cita. |
+| `describir_serie` | `id` | Metadatos completos: definición, variantes (con su último dato, sus transformaciones, medidas, deflactores y PIB disponibles), quiebres, fuentes, licencias, países y cita. La bibliografía, cuando la cátedra lo confirme. Los parámetros de todas las herramientas son estrictos: uno desconocido da error. |
+| `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `pesos_actuales?`, `frecuencia?`, `medida?` (real, en_dolares, pct_pib), `deflactor?`, `base_real?`, `denominador?`, `transformacion?`, `base?`, `paises?` (códigos ISO3; solo series internacionales; por defecto, la selección inicial) | Datos (por país en las internacionales), unidad resultante, último dato y su atraso, advertencias por quiebres en el rango (las de un solo país, si ese país se pidió), versión de datos y cita (con los países por su nombre). |
 | `comparar_series` | `ids[]` (hasta 4) y los mismos parámetros por serie | Series alineadas en fecha, con advertencias y citas. |
 | `listar_periodos` | `tipo?` (gobierno, ministro, plan, régimen, cátedra) | Períodos con fechas y fuente. |
 | `periodo_en_fecha` | `fecha` | Gobierno, ministro, plan y régimen vigentes en esa fecha. |
@@ -382,7 +382,7 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 
 ## 9. Licencias, citación y créditos
 - **Código:** MIT. **Datos derivados (capa 2 y export):** CC BY 4.0.
-- **Banco Mundial (INT-01 e INT-02, deuda externa, PIB):** CC BY 4.0; se redistribuye con atribución al Banco Mundial y el código del indicador. **OCDE:** CC BY 4.0. **Bruegel (TCR multilateral, variante `bruegel`):** uso libre con atribución y sin sugerir respaldo (no es una licencia CC formal); la cita lo dice.
+- **Banco Mundial (INT-01 e INT-02, deuda externa, PIB):** CC BY 4.0; se redistribuye con atribución al Banco Mundial y el código del indicador. **OCDE:** CC BY 4.0. **Bruegel (TCR multilateral, variante `bruegel`):** uso libre con atribución y sin sugerir respaldo (no es una licencia CC formal); la cita lo dice. Esa variante declara `licencia: other-at` (Open Definition: otra licencia, con atribución) en su JSON y en el `datapackage.json`, y la ficha muestra la cita que recomienda Bruegel (con DOI y la fecha de la versión).
 - **Series de terceros:** conservan su licencia, que figura en `fuentes.yaml`, en la ficha y en cada descarga. Las que no permiten redistribución (el riesgo país) no se descargan.
 - **Cita sugerida:** incluye nombre de la serie, variante, versión de datos, DOI (desde la fase 5) y URL. Formatos: APA, texto y BibTeX. Si hubo transformación, una línea la nombra («calculada por Vaivén»); en las internacionales, los países van aparte. Si una fuente no es CC BY, la cita lo dice. La genera un paquete compartido (`paquetes/cita`), así que la ficha y el MCP dan la misma.
 - **Créditos:** organismos fuente, autores de series académicas usadas como variantes y la cátedra, si da su conformidad.
@@ -464,4 +464,5 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 - **v1.2 (07/11/2026):** incorpora lo decidido en la segunda revisión de la 4a (`NOTAS_FASE4.md`, «4a · Correcciones de la segunda revisión»):
   - snapshot con la versión de la fuente y fuentes de descarga manual (2.1 y 5.1);
   - esquema 1.3 y `desactualizada_desde` como primer día sin respuesta (2.5);
-  - commit con el informe entero, issue por fuente a los 7 días y aviso de las fuentes manuales a los 3 meses (5.1 y 5.2).
+  - commit con el informe entero, issue por fuente a los 7 días y aviso de las fuentes manuales a los 3 meses (5.1 y 5.2);
+  - quiebres por entidad (2.4), catálogo sin la bibliografía (2.5), atraso contra el calendario de la fuente (6.1), parámetros estrictos y cita con nombres de países en el MCP (7.2) y licencia `other-at` de Bruegel (9).

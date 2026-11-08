@@ -109,12 +109,13 @@
       "nombre": "Agregados monetarios. M2 privado, promedio mensual",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=90.1_AMTMA_0_0_39",
       "licencia": "CC-BY-4.0",
-      "id_api": "90.1_AMTMA_0_0_39"
+      "id_api": "90.1_AMTMA_0_0_39",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m2-privado». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/agregados/m2-privado/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["2009-06", 146103.3442],

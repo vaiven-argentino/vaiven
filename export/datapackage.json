@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-11-07T07:25:59Z",
-  "created": "2026-11-07T07:25:59Z",
+  "version": "2026-11-07T07:45:19Z",
+  "created": "2026-11-07T07:45:19Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -2678,9 +2678,9 @@
       ],
       "licenses": [
         {
-          "name": "CC-BY-4.0",
-          "path": "https://creativecommons.org/licenses/by/4.0/",
-          "title": "Creative Commons Attribution 4.0"
+          "name": "other-at",
+          "title": "Bruegel, uso libre con atribución",
+          "path": "https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database"
         }
       ]
     }

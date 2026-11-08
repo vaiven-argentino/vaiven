@@ -35,7 +35,7 @@
       "desde": "1971",
       "hasta": "2015",
       "tipo": "metodologia",
-      "descripcion": "El Banco Mundial convierte el PIB de la Argentina con un factor de conversión alternativo (PA.NUS.ATLS) en los años en que considera que el tipo de cambio oficial no es representativo: en 1971–1981 (salvo 1975 y 1978), entre 1,1 y 2,7 veces el oficial (PA.NUS.FCRF), y en 2012–2015, entre 6 % y 11 % más. En 1980 da 4,99 × 10⁻⁸ pesos actuales por dólar contra 1,84 × 10⁻⁸ del oficial: un PIB de 76.962 millones de dólares, contra 224.289 con el tipo de cambio oficial."
+      "descripcion": "El Banco Mundial convierte el PIB de la Argentina con un factor de conversión alternativo (PA.NUS.ATLS) en los años en que considera que el tipo de cambio oficial no es representativo: en 1971–1981 (salvo 1975 y 1978), entre 1,1 y 2,7 veces el oficial (PA.NUS.FCRF), y en 2012–2015, entre 6 % y 11 % más. En 1980 usa 4,99 × 10⁻⁸ pesos actuales por dólar (el oficial, según el propio Banco Mundial, es 1,84 × 10⁻⁸): un PIB de 76.962 millones de dólares. Con el mismo PIB en pesos (el del Banco Mundial, que es el de la variante «cada base» antes de 1993) y el tipo de cambio oficial de Vaivén (promedio de fin de mes del BCRA, 1,86 × 10⁻⁸), da 206.965."
     }
   ],
   "excluidos": [],
@@ -51,7 +51,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). PIB en dólares, variante «banco-mundial». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-dolares/banco-mundial/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:38:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 31584.21037],

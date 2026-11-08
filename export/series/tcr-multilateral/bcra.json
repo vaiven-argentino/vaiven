@@ -6,7 +6,7 @@
   "nombre": "Tipo de cambio real multilateral",
   "variante": "bcra",
   "nombre_variante": "BCRA (desde 1991)",
-  "es_variante_por_defecto": true,
+  "es_variante_por_defecto": false,
   "unidad": "índice 17-12-2015 = 100",
   "tipo": "precio",
   "agregacion": "promedio",
@@ -76,12 +76,13 @@
       "nombre": "Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, promedio mensual",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=116.3_TCRMA_0_M_36",
       "licencia": "CC-BY-4.0",
-      "id_api": "116.3_TCRMA_0_M_36"
+      "id_api": "116.3_TCRMA_0_M_36",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-multilateral/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-multilateral/bcra/",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1991-01", 109.1230511],

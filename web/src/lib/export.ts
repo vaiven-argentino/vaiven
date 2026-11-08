@@ -22,6 +22,8 @@ export interface VarianteCatalogo {
   estado: "publicada" | "pendiente" | "pendiente_licencia";
   frecuencia: string;
   cobertura: { desde: string; hasta: string } | null;
+  /** La frecuencia del último tramo (segunda revisión de la 4a): «2.º trimestre de 2026» y no «abr. 2026». */
+  frecuencia_ultimo_dato?: string;
   archivo: string | null;
   nota?: string;
 }
@@ -69,6 +71,8 @@ export interface Fuente {
   /** Desde la 1.3: fuente de descarga manual (Bruegel) y fecha de la versión que usa Vaivén. */
   descarga?: "manual";
   version?: string;
+  /** Desde la 1.3: la cita que recomienda la fuente (Bruegel). */
+  cita?: string;
 }
 
 /** Los metadatos de una variante exportada; `datos` es una lista o, con dimensión pais, un objeto por entidad. */

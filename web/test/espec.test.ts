@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { transformar } from "@vaiven/transformaciones";
+import { serieDeEntidad, transformar } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
 import { especificacion, filas, reservaSuperior, topeY, ubicarMarcadores, type Tema } from "../src/graficos/espec";
 import type { SerieExportada } from "@vaiven/transformaciones";
@@ -140,5 +140,26 @@ describe("eje Y (regresión de la línea del 0, revisión del 07/11/2026)", () =
   });
   it("sin valores negativos (reservas) hay eje Y con etiquetas", async () => {
     expect(await ejesY(leer("reservas", "brutas"))).toHaveLength(1);
+  });
+});
+
+describe("quiebres de un solo país (segunda revisión de la 4a, 3.2)", () => {
+  const doc = leer("int-pib", "banco-mundial") as Doc & { entidades_por_defecto: string[] };
+  const quiebres = numerarQuiebres({ ...serieDeEntidad(doc, "ARG"), advertencias: doc.advertencias });
+  const venezuela = quiebres.find((q) => q.advertencia.id === "q.int.venezuela")!;
+  const numeros = (otros: string[]) => {
+    const spec = especificacion({
+      resultado: transformar(serieDeEntidad(doc, "ARG"), { desde: "2000" }), tramos: doc.tramos, empalme: doc.empalme, quiebres,
+      tema, esVariacion: true, log: false, alto: 300, ancho: 800, descripcion: "prueba",
+      otras: otros.map((e) => ({ nombre: e, resultado: transformar(serieDeEntidad(doc, e), { desde: "2000" }) })),
+    }) as { layer: Array<{ mark: { type: string; text?: string }; data?: { values: Array<Record<string, unknown>> } }> };
+    return spec.layer.filter((c) => c.mark.type === "text" && !c.mark.text).flatMap((c) => c.data?.values.map((v) => Number(v.n)) ?? []);
+  };
+  it("con la Argentina y Brasil no se marca el quiebre de Venezuela", () => {
+    expect(venezuela.advertencia.entidades).toEqual(["VEN"]);
+    expect(numeros(["BRA"])).not.toContain(venezuela.n);
+  });
+  it("si Venezuela está entre los países que se ven, sí", () => {
+    expect(numeros(["BRA", "VEN"])).toContain(venezuela.n);
   });
 });

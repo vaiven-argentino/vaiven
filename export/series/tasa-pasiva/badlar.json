@@ -49,12 +49,13 @@
       "nombre": "Principales tasas de interés. Tasa BADLAR (depósitos a plazo fijo de más de un millón de pesos, bancos privados), promedio mensual",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=89.1_TIB_0_0_20",
       "licencia": "CC-BY-4.0",
-      "id_api": "89.1_TIB_0_0_20"
+      "id_api": "89.1_TIB_0_0_20",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tasa de interés pasiva, variante «badlar». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tasa-pasiva/badlar/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1999-01", 10.9554583],

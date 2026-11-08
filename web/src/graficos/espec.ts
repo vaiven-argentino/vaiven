@@ -117,7 +117,8 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const dominioX = [iso(ini), iso(fin)];
   const x = (campo: string) => ({ field: campo, type: "temporal", scale: { type: "utc", domain: dominioX }, title: null });
 
-  const ids = new Set(e.resultado.advertencias.map((a) => a.id));
+  // Los quiebres de la entidad resaltada y de las demás que se ven (un quiebre de un solo país, solo si ese país está).
+  const ids = new Set([e.resultado, ...(e.otras ?? []).map((o) => o.resultado)].flatMap((r) => r.advertencias.map((a) => a.id)));
   const visibles = e.quiebres.filter((q) => ids.has(q.advertencia.id) && q.forma !== "general");
   // Un quiebre largo (más de un tercio de lo visible) no se sombrea: taparía la serie. Se marca arriba del
   // gráfico con una línea punteada que muestra su rango.
