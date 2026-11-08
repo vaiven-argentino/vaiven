@@ -17,4 +17,12 @@ describe("precalentamiento del Worker", () => {
     expect(obtener.properties.transformacion.description).toContain("var_interanual");
     expect(obtener.properties.id.description).toContain("TRA-01");
   });
+  it("un parámetro mal escrito da error en lugar de ignorarse (segunda revisión de la 4a)", async () => {
+    const validar = (args: unknown) => ESQUEMAS.obtener_serie["~standard"].validate(args) as { issues?: Array<{ message: string }> };
+    expect(validar({ id: "int-pib", paises: ["ARG"] }).issues).toBeUndefined();
+    const mal = validar({ id: "int-pib", entidades: ["ARG"] });
+    expect(mal.issues?.length).toBeGreaterThan(0);
+    const json = ESQUEMAS.citar["~standard"].jsonSchema.input({ target: "draft-2020-12" }) as { additionalProperties?: boolean };
+    expect(json.additionalProperties).toBe(false);
+  });
 });

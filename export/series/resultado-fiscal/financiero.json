@@ -168,12 +168,13 @@
       "nombre": "Esquema Ahorro-Inversión-Financiamiento, Sector Público Nacional, base caja. Resultado financiero, metodología 2017, mensual",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=379.9_RESULTADO_017__18_38",
       "licencia": "CC-BY-4.0",
-      "id_api": "379.9_RESULTADO_017__18_38"
+      "id_api": "379.9_RESULTADO_017__18_38",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Resultado primario y financiero, variante «financiero». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/resultado-fiscal/financiero/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 0.0],

@@ -12,7 +12,7 @@
   "agregacion": "promedio",
   "frecuencia": "mensual",
   "moneda": null,
-  "metodo": "ITCRM del BCRA: las tasas de variación mensual de la serie base diciembre 2001 entre 1991 y enero de 1997, encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. La copia de datos.gob.ar llega hasta diciembre de 2024. Antes de 1991 el BCRA no publica el índice.",
+  "metodo": "ITCRM del BCRA: las tasas de variación mensual de la serie base diciembre 2001 entre 1991 y enero de 1997, encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. Los meses que la copia mensual de datos.gob.ar todavía no tiene (hoy, 2025) son el promedio mensual de la serie diaria del BCRA, sin reescalar. Antes de 1991 el BCRA no publica el índice.",
   "empalme": "encadenar_tasas",
   "transformaciones": [
     "var_mensual",
@@ -38,11 +38,17 @@
       "desde": "1997-02",
       "hasta": "hoy",
       "frecuencia": "mensual"
+    },
+    {
+      "fuente": "f.bcra.itcrm-diario",
+      "desde": "2025-01",
+      "hasta": "hoy",
+      "frecuencia": "mensual"
     }
   ],
   "cobertura": {
     "desde": "1991-01",
-    "hasta": "2024-12"
+    "hasta": "2025-12"
   },
   "advertencias": [
     {
@@ -58,6 +64,13 @@
       "hasta": "2015-12",
       "tipo": "intervencion",
       "descripcion": "Entre 2007 y 2015, el índice depende de qué inflación argentina se use para deflactar, y la oficial del INDEC de esos años está en duda (ver el IPC). La variante recalculada con un IPC alternativo queda pendiente."
+    },
+    {
+      "id": "q.tcr.tramo-diario",
+      "desde": "2025-01",
+      "hasta": null,
+      "tipo": "cobertura",
+      "descripcion": "Desde este mes, el índice es el promedio mensual de la serie diaria del BCRA en datos.gob.ar, porque la mensual llega solo a diciembre de 2024. Se pega sin reescalar. Son provisorios: cuando la mensual publica esos meses, la reemplaza. Desde 2023 las dos difieren 0,03 % o menos; en 2020–2022, hasta 0,9 %."
     }
   ],
   "excluidos": [],
@@ -76,12 +89,22 @@
       "nombre": "Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, promedio mensual",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=116.3_TCRMA_0_M_36",
       "licencia": "CC-BY-4.0",
-      "id_api": "116.3_TCRMA_0_M_36"
+      "id_api": "116.3_TCRMA_0_M_36",
+      "desfase_esperado": 1
+    },
+    {
+      "id": "f.bcra.itcrm-diario",
+      "organismo": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, valores diarios, promedio mensual",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=116.4_TCRZE_2015_D_36_4",
+      "licencia": "CC-BY-4.0",
+      "id_api": "116.4_TCRZE_2015_D_36_4",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-multilateral/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T20:37:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1991-01", 109.1230511],
@@ -491,6 +514,18 @@
     ["2024-09", 86.04323009],
     ["2024-10", 84.03863353],
     ["2024-11", 81.74579002],
-    ["2024-12", 79.77304213]
+    ["2024-12", 79.77304213],
+    ["2025-01", 79.70826634],
+    ["2025-02", 81.05028775],
+    ["2025-03", 80.51702087],
+    ["2025-04", 82.48978089],
+    ["2025-05", 83.89084841],
+    ["2025-06", 86.11646807],
+    ["2025-07", 91.77364226],
+    ["2025-08", 95.04769291],
+    ["2025-09", 99.10403056],
+    ["2025-10", 98.89817077],
+    ["2025-11", 96.00734446],
+    ["2025-12", 94.70234564]
   ]
 }

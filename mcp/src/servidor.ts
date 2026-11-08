@@ -39,16 +39,18 @@ const medida = z.enum(["real", "en_dolares", "pct_pib"]);
 const denominador = z.enum(["cada-base", "retropolado", "banco-mundial"]);
 const paises = z.array(z.string().regex(/^[A-Za-z0-9]{3}$/, "Usá códigos de tres letras (ISO3 o agregado del Banco Mundial).")).max(30);
 
+// Esquemas estrictos (segunda revisión de la 4a): un parámetro mal escrito (por ejemplo, `entidades` en lugar de
+// `paises`) da un error que el agente ve, en lugar de ignorarse sin aviso.
 export const ESQUEMAS = {
-  buscar_series: conJsonFijo(z.object({
+  buscar_series: conJsonFijo(z.strictObject({
     texto: z.string().optional().describe(PARAMETRO.texto),
     bloque: z.string().optional().describe(PARAMETRO.bloque),
     prioridad: z.enum(["A", "B"]).optional().describe(PARAMETRO.prioridad),
     desde: periodo(PARAMETRO.desdeBusqueda).optional(),
     hasta: periodo(PARAMETRO.hastaBusqueda).optional(),
   })),
-  describir_serie: conJsonFijo(z.object({ id })),
-  obtener_serie: conJsonFijo(z.object({
+  describir_serie: conJsonFijo(z.strictObject({ id })),
+  obtener_serie: conJsonFijo(z.strictObject({
     id,
     variante: z.string().optional().describe(PARAMETRO.variante),
     desde: periodo(PARAMETRO.desde).optional(),
@@ -63,7 +65,7 @@ export const ESQUEMAS = {
     base: z.string().optional().describe(PARAMETRO.base),
     paises: paises.optional().describe(PARAMETRO.paises),
   })),
-  citar: conJsonFijo(z.object({
+  citar: conJsonFijo(z.strictObject({
     id,
     variante: z.string().optional().describe(PARAMETRO.variante),
     formato: z.enum(["texto", "apa", "bibtex"]).optional().describe(PARAMETRO.formato),

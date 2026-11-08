@@ -98,12 +98,13 @@
       "nombre": "Remuneración imponible promedio de los trabajadores estables (RIPTE), total país, mensual",
       "url": "https://datos.gob.ar/dataset/sspm-remuneracion-imponible-promedio-trabajadores-estables-ripte",
       "licencia": "CC-BY-4.0",
-      "id_api": "158.1_REPTE_0_0_5"
+      "id_api": "158.1_REPTE_0_0_5",
+      "desfase_esperado": 2
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Salario real, variante «ripte». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/salario-real/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1994-07", 874.87],

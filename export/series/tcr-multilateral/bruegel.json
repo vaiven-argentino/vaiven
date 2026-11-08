@@ -64,12 +64,14 @@
       "licencia": "Bruegel, uso libre con atribución",
       "id_api": "REER_MONTHLY_51/REER_51_AR",
       "descarga": "manual",
-      "version": "2026-10-11"
+      "version": "2026-10-11",
+      "desfase_esperado": 1,
+      "cita": "Bruegel Dataset (2012) 'Real effective exchange rates for 178 countries', version of 11 October 2026, available at https://doi.org/10.64153/SZCG6180"
     }
   ],
-  "licencia": "CC-BY-4.0",
+  "licencia": "other-at",
   "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bruegel». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-multilateral/bruegel/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T20:37:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 0.7411160948],

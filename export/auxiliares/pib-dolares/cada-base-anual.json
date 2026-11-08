@@ -57,7 +57,7 @@
       "desde": "1970",
       "hasta": null,
       "tipo": "metodologia",
-      "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial). Con la «tablita», el oficial da un PIB en dólares de 224.289 millones en 1980 y el Banco Mundial, 76.962; los cocientes con el PIB de esos años cambian mucho según cuál se use."
+      "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial). Con la «tablita», el oficial da un PIB en dólares de 206.965 millones en 1980 con el PIB publicado en cada base (antes de 1993, el del Banco Mundial) y 224.289 con el PIB retropolado; el Banco Mundial da 76.962. Los cocientes con el PIB de esos años cambian mucho según cuál se use."
     },
     {
       "id": "q.tc.mercados-desdoblados",
@@ -71,7 +71,7 @@
       "desde": "2004",
       "hasta": "2004",
       "tipo": "cambio_de_base",
-      "descripcion": "PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que da un PIB 8 % mayor (375.910 millones en 2003 con la base 1993; 485.115 en 2004 con la base 2004). Un cociente con el PIB salta en ese año; antes de 2004 coincide con los cuadros de la bibliografía, que usan el PIB de cada época. Antes de 1993 es el PIB nominal del Banco Mundial."
+      "descripcion": "PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que para el mismo año da un PIB 8,4 % mayor (447.643 millones de pesos con la base 1993 y 485.115 con la base 2004). Un cociente con el PIB salta en ese año. En 1993–2003 es el PIB de la base 1993, el que usan los cuadros de la bibliografía de esos años. Antes de 1993 es el PIB nominal del Banco Mundial; los cuadros de los ochenta usan las bases 1970 y 1986, y falta contrastarlo con ellos."
     }
   ],
   "excluidos": [],
@@ -106,12 +106,13 @@
       "nombre": "Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32",
       "licencia": "CC-BY-4.0",
-      "id_api": "174.1_T_DE_CATES_0_0_32"
+      "id_api": "174.1_T_DE_CATES_0_0_32",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). PIB en dólares, variante «cada-base-anual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-dolares/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 31653.62536],

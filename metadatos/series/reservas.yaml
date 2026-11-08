@@ -16,15 +16,23 @@ variantes:
     nombre: Reservas brutas
     estado: publicada
     empalme: yuxtaponer
-    metodo: Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.
+    metodo: >-
+      Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.
+      Los meses que la copia mensual de datos.gob.ar todavía no tiene son el último dato del mes de la serie diaria
+      del BCRA (provisorios hasta que llegue la mensual).
     tramos:
       - {fuente: f.bcra.reservas-mensual, desde: 1970-01}
+      # Los meses que la mensual todavía no tiene, de la serie diaria (segunda revisión de la 4a, 2.2).
+      - {fuente: f.bcra.reservas-diaria, completa: true}
     excluir:
       - fecha: 1979-03
         motivo: >-
           La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos.
           Se excluye hasta confirmar el valor; no se corrige por cuenta propia.
-    advertencias: [q.reservas.brutas]
+    # El dato de marzo de 2026 de la mensual es el del 30/03; se usa el del 31/03 de la diaria (decidido el 07/11/2026).
+    reemplazar:
+      - {fecha: 2026-03, fuente: f.bcra.reservas-diaria, motivo: La mensual trae el saldo del 30/03 y no el del 31/03.}
+    advertencias: [q.reservas.brutas, q.reservas.tramo-diario, q.reservas.marzo-2026, q.reservas.fin-de-mes]
   - id: netas
     nombre: Reservas netas
     estado: pendiente
@@ -39,8 +47,8 @@ validacion:
   var_min: -60
   var_max: 150
   umbral_revision_pct: 0.5
-quiebres: [q.reservas.brutas]
+quiebres: [q.reservas.brutas, q.reservas.tramo-diario, q.reservas.marzo-2026, q.reservas.fin-de-mes]
 transformaciones: [var_mensual, var_interanual, base_100, frecuencia, pct_pib]
-fuentes: [f.bcra.reservas-mensual]
+fuentes: [f.bcra.reservas-mensual, f.bcra.reservas-diaria]
 bibliografia: [CENDA2010-G8]
 licencia_derivado: CC-BY-4.0

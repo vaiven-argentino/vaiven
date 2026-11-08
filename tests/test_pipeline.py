@@ -165,7 +165,22 @@ def test_revision_de_un_valor_publicado_queda_registrada(repo):
     assert revisiones[0]["cambios"][0]["fecha"] == "2000-05"
 
 
-def test_catalogo_con_bibliografia_del_inventario(repo):
+def test_catalogo_sin_bibliografia_hasta_que_responda_la_catedra(repo):
+    ruta = repo.inventario
+    ruta.parent.mkdir(parents=True)
+    ruta.write_text("id,texto,pagina,tipo,titulo_original,periodo_cubierto\nAB2000-G1,Obra,12,cuadro,T,1990\n", encoding="utf-8")
+    meta = repo.metadatos / "series" / "prueba.yaml"
+    serie = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    serie["bibliografia"] = ["AB2000-G1"]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    assert ejecutar(repo, con_red=False).publicado
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    assert "bibliografia" not in catalogo["series"][0]
+
+
+def test_catalogo_con_bibliografia_del_inventario(repo, monkeypatch):
+    from pipeline.export import catalogo as export_catalogo
+    monkeypatch.setattr(export_catalogo, "PUBLICAR_BIBLIOGRAFIA", True)
     ruta = repo.inventario
     ruta.parent.mkdir(parents=True)
     ruta.write_text("﻿id,texto,pagina,tipo,titulo_original,periodo_cubierto,otra\n"
@@ -371,3 +386,80 @@ def test_bajar_manual_guarda_la_version(repo, monkeypatch):
         raise AssertionError("debería fallar")
     except ErrorPipeline as e:
         assert "No son fuentes de descarga manual" in str(e)
+
+
+# --- Tramo que completa (segunda revisión de la 4a, 2.2): la serie diaria del BCRA pasada a mensual completa los
+# meses que la mensual todavía no tiene, sin reescalar la historia. ---
+
+def _con_tramo_que_completa(repo, filas_diaria):
+    ruta = repo.metadatos / "fuentes.yaml"
+    fuentes = yaml.safe_load(ruta.read_text(encoding="utf-8"))
+    fuentes.append({"id": "f.prueba.diaria", "organismo": "Prueba", "nombre": "Diaria", "api": "datos.gob.ar", "id_api": "3",
+                    "url": "https://ejemplo", "licencia": "CC-BY-4.0", "frecuencia": "mensual", "unidad": "índice",
+                    "colapsar": {"a": "month", "con": "end_of_period"}})
+    ruta.write_text(yaml.safe_dump(fuentes, allow_unicode=True), encoding="utf-8")
+    ruta = repo.metadatos / "quiebres.yaml"
+    quiebres = yaml.safe_load(ruta.read_text(encoding="utf-8"))
+    quiebres.append({"id": "q.prueba.diaria", "desde": "tramo-completa", "tipo": "cobertura", "descripcion": "Tramo diario."})
+    ruta.write_text(yaml.safe_dump(quiebres, allow_unicode=True), encoding="utf-8")
+    meta = repo.metadatos / "series" / "prueba.yaml"
+    serie = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    serie["variantes"][0]["tramos"].append({"fuente": "f.prueba.diaria", "completa": True})
+    serie["variantes"][0]["advertencias"].append("q.prueba.diaria")
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    _snapshot_datos_gob_ar(repo, "f.prueba.diaria", filas_diaria)
+
+
+def test_tramo_que_completa_agrega_solo_los_meses_que_faltan(repo):
+    # La diaria difiere de la nueva en 2000-04 y 2000-05 (como marzo de 2026 en las reservas): manda la mensual.
+    _con_tramo_que_completa(repo, [["2000-04-01", 99], ["2000-05-01", 99], ["2000-06-01", 52.0], ["2000-07-01", 53.0]])
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    doc = json.loads((repo.export / "series" / "prueba" / "oficial.json").read_text(encoding="utf-8"))
+    datos = dict(doc["datos"])
+    assert datos["2000-05"] == 51.005 and datos["2000-06"] == 52.0 and datos["2000-07"] == 53.0
+    # encadenar_tasas sigue anclado en la mensual: el tramo reciente no reescala la historia.
+    assert datos["2000-01"] == pytest.approx(50 / 1.21)
+    assert doc["tramos"][-1] == {"fuente": "f.prueba.diaria", "desde": "2000-06", "hasta": "hoy", "frecuencia": "mensual"}
+    q = next(a for a in doc["advertencias"] if a["id"] == "q.prueba.diaria")
+    assert q["desde"] == "2000-06"
+
+
+def test_tramo_que_completa_desaparece_si_la_mensual_se_pone_al_dia(repo):
+    _con_tramo_que_completa(repo, [["2000-04-01", 99], ["2000-05-01", 99]])
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    doc = json.loads((repo.export / "series" / "prueba" / "oficial.json").read_text(encoding="utf-8"))
+    assert doc["datos"][-1] == ["2000-05", 51.005]
+    assert [t["fuente"] for t in doc["tramos"]] == ["f.prueba.vieja", "f.prueba.nueva"]
+    assert "q.prueba.diaria" not in [a["id"] for a in doc["advertencias"]]
+
+
+def test_serie_diaria_pasada_a_mensual_descarta_el_mes_incompleto():
+    colapsada = json.dumps({"data": [["2025-11-01", 96.0], ["2025-12-01", 94.7], ["2026-01-01", 94.1]], "count": 3}).encode()
+    ultimo = json.dumps({"data": [["2026-01-28", 94.47]]}).encode()
+    df = datos_gob_ar.normalizar([("pagina-001.json", colapsada), (datos_gob_ar.ULTIMO_DIARIO, ultimo)])
+    assert [d.strftime("%Y-%m") for d in df["fecha"]] == ["2025-11", "2025-12"]
+    completo = json.dumps({"data": [["2026-01-31", 94.47]]}).encode()
+    df = datos_gob_ar.normalizar([("pagina-001.json", colapsada), (datos_gob_ar.ULTIMO_DIARIO, completo)])
+    assert len(df) == 3
+
+
+def test_reemplazar_un_dato_con_otra_fuente_es_estricto(repo):
+    # Como marzo de 2026 en las reservas: la mensual trae un dato equivocado y la diaria, el correcto.
+    _con_tramo_que_completa(repo, [["2000-04-01", 99], ["2000-05-01", 51.5], ["2000-06-01", 52.0]])
+    meta = repo.metadatos / "series" / "prueba.yaml"
+    serie = yaml.safe_load(meta.read_text(encoding="utf-8"))
+    serie["variantes"][0]["empalme"] = "yuxtaponer"
+    serie["variantes"][0]["tramos"] = [{"fuente": "f.prueba.nueva", "desde": "2000-03"}, {"fuente": "f.prueba.diaria", "completa": True}]
+    serie["variantes"][0]["reemplazar"] = [{"fecha": "2000-05", "fuente": "f.prueba.diaria", "motivo": "Prueba."}]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    datos = dict(json.loads((repo.export / "series" / "prueba" / "oficial.json").read_text(encoding="utf-8"))["datos"])
+    assert datos["2000-05"] == 51.5 and datos["2000-04"] == 50.5 and datos["2000-06"] == 52.0
+    # Si la fuente se corrige (da lo mismo que la otra), el reemplazo sobra: la variante queda retenida.
+    serie["variantes"][0]["reemplazar"] = [{"fecha": "2000-03", "fuente": "f.prueba.diaria", "motivo": "Prueba."}]
+    meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert "prueba.oficial" in res.retenidas and "reemplazar" in res.informe()

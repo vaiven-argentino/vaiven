@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.reservas-diaria",
+  "unidad": "millones de US$",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.reservas-diaria/2026-11-07",
+  "descargado": "2026-11-07T20:37:01Z",
+  "sha256": "24f14e7e969ee8169b980b9dbf4c34c10fcda5fe57be73a2b2bceb9b8ce7bda4",
+  "observaciones": 283,
+  "desde": "2003-02-01",
+  "hasta": "2026-08-01"
+}

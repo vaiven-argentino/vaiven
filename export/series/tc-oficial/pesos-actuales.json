@@ -12,7 +12,7 @@
   "agregacion": "promedio",
   "frecuencia": "mensual",
   "moneda": "pesos_actuales",
-  "metodo": "Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188).",
+  "metodo": "Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188). Los meses que la copia mensual de datos.gob.ar todavía no tiene son el último dato del mes del tipo de cambio de valuación diario del BCRA (provisorios hasta que llegue la mensual).",
   "empalme": "yuxtaponer",
   "transformaciones": [
     "var_mensual",
@@ -29,11 +29,17 @@
       "desde": "1970-01",
       "hasta": "hoy",
       "frecuencia": "mensual"
+    },
+    {
+      "fuente": "f.bcra.tc-valuacion-diaria",
+      "desde": "2026-05",
+      "hasta": "hoy",
+      "frecuencia": "mensual"
     }
   ],
   "cobertura": {
     "desde": "1970-01",
-    "hasta": "2026-04"
+    "hasta": "2026-08"
   },
   "advertencias": [
     {
@@ -42,6 +48,20 @@
       "hasta": "1989-12",
       "tipo": "metodologia",
       "descripcion": "Mercados cambiarios desdoblados. En estos años hubo, por períodos, un mercado oficial o comercial y otro financiero o libre. La serie del BCRA no sigue siempre el mismo: comparada con las series diarias, coincide con el tipo único en 1970–1971 y 1982, con el financiero en septiembre de 1981, con el oficial en junio de 1987, y queda por encima del oficial en octubre de 1988 y enero de 1989 (15,11 y 17,51 australes, contra 12,36 y 13,94)."
+    },
+    {
+      "id": "q.tc.tramo-diario",
+      "desde": "2026-05",
+      "hasta": null,
+      "tipo": "cobertura",
+      "descripcion": "Desde este mes, el valor de fin de mes sale de la serie diaria del tipo de cambio de valuación del BCRA en datos.gob.ar (el último dato de cada mes), porque la serie mensual llega con meses de atraso. Son provisorios: cuando la mensual publica esos meses, la reemplaza. En 2003–2026 coinciden salvo en junio de 2010 (−0,1 %), febrero de 2013 (+0,01 %) y marzo de 2026 (−0,9 %: la mensual toma el dato del 30/03; ver q.tc.marzo-2026)."
+    },
+    {
+      "id": "q.tc.marzo-2026",
+      "desde": "2026-03",
+      "hasta": "2026-03",
+      "tipo": "metodologia",
+      "descripcion": "Marzo de 2026 sale del tipo de cambio de valuación diario del BCRA (31/03: 1.382,76 pesos por dólar) y no de la serie mensual, que trae 1.394,92: el valor del 30/03, un día antes del cierre."
     }
   ],
   "excluidos": [],
@@ -52,12 +72,22 @@
       "nombre": "Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32",
       "licencia": "CC-BY-4.0",
-      "id_api": "174.1_T_DE_CATES_0_0_32"
+      "id_api": "174.1_T_DE_CATES_0_0_32",
+      "desfase_esperado": 1
+    },
+    {
+      "id": "f.bcra.tc-valuacion-diaria",
+      "organismo": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Reservas internacionales y pasivos del BCRA. Tipo de cambio de valuación, valor diario, último dato del mes",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_TIPO_CAMBIION_0_0_21_24",
+      "licencia": "CC-BY-4.0",
+      "id_api": "92.2_TIPO_CAMBIION_0_0_21_24",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tipo de cambio nominal oficial, variante «pesos-actuales». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tc-oficial/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T20:41:28Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 3.5e-11],
@@ -734,7 +764,11 @@
     ["2025-12", 1459.4167],
     ["2026-01", 1447.6657],
     ["2026-02", 1408.9662],
-    ["2026-03", 1394.9234],
-    ["2026-04", 1381.0954]
+    ["2026-03", 1382.7578],
+    ["2026-04", 1381.0954],
+    ["2026-05", 1410.2904],
+    ["2026-06", 1483.0198],
+    ["2026-07", 1488.4531],
+    ["2026-08", 1509.4686]
   ]
 }

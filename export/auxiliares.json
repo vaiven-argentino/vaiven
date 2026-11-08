@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T20:41:28Z",
   "auxiliares": [
     {
       "id": "ipc-eeuu",
@@ -66,7 +66,7 @@
           "frecuencia": "trimestral",
           "cobertura": {
             "desde": "1993-01",
-            "hasta": "2026-01"
+            "hasta": "2026-04"
           },
           "archivo": "auxiliares/pib-dolares/cada-base-trimestral.json",
           "usada_por": [
@@ -156,7 +156,7 @@
           "frecuencia": "trimestral",
           "cobertura": {
             "desde": "1993-01",
-            "hasta": "2026-01"
+            "hasta": "2026-04"
           },
           "archivo": "auxiliares/pib-dolares/retropolada-trimestral.json",
           "usada_por": [

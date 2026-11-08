@@ -1,0 +1,11 @@
+{
+  "fuente": "f.bcra.tc-valuacion-diaria",
+  "unidad": "pesos actuales por dólar",
+  "frecuencia": "mensual",
+  "snapshot": "snapshots/f.bcra.tc-valuacion-diaria/2026-11-07",
+  "descargado": "2026-11-07T20:37:03Z",
+  "sha256": "cf2770e8bd99182e0f19c2d4e8beebacbda1411e9c6d9d676f94798412764235",
+  "observaciones": 283,
+  "desde": "2003-02-01",
+  "hasta": "2026-08-01"
+}

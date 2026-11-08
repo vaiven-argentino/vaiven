@@ -41,7 +41,7 @@
       "desde": "2004",
       "hasta": "2004",
       "tipo": "cambio_de_base",
-      "descripcion": "PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que da un PIB 8 % mayor (375.910 millones en 2003 con la base 1993; 485.115 en 2004 con la base 2004). Un cociente con el PIB salta en ese año; antes de 2004 coincide con los cuadros de la bibliografía, que usan el PIB de cada época. Antes de 1993 es el PIB nominal del Banco Mundial."
+      "descripcion": "PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que para el mismo año da un PIB 8,4 % mayor (447.643 millones de pesos con la base 1993 y 485.115 con la base 2004). Un cociente con el PIB salta en ese año. En 1993–2003 es el PIB de la base 1993, el que usan los cuadros de la bibliografía de esos años. Antes de 1993 es el PIB nominal del Banco Mundial; los cuadros de los ochenta usan las bases 1970 y 1986, y falta contrastarlo con ellos."
     }
   ],
   "excluidos": [],
@@ -65,7 +65,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). PIB nominal en pesos, variante «cada-base-trimestral». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-nominal/cada-base-trimestral/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:38:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 53156.72353],

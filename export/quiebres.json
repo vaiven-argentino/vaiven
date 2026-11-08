@@ -28,11 +28,11 @@
     "desde": "2026-06",
     "hasta": "2026-06",
     "tipo": "metodologia",
-    "descripcion": "En junio de 2026 la base monetaria promedio cae 56 % en un mes (de 41,4 a 18,2 billones de pesos) y se mantiene en ese nivel. La fuente no lo explica; puede ser un cambio de definición. Hasta que el BCRA lo aclare, Vaivén publica la variante hasta mayo de 2026 (decidido el 05/11/2026), para que las variaciones y el % del PIB de los meses siguientes no queden mal.",
+    "descripcion": "En la copia de datos.gob.ar, la base monetaria promedio de junio de 2026 cae 56 % en un mes (de 41,4 a 18,2 billones de pesos), con todos sus componentes en una proporción parecida (la circulación monetaria, de 25,4 a 11,4 billones; la cuenta corriente de los bancos en el BCRA, de 16,0 a 6,8), y en julio (21,5) y agosto (22,5) sigue en ese nivel. No es un dato real: el Informe Monetario Mensual de junio de 2026 del BCRA da 43,3 billones para junio (+4,5 % nominal; circulación, 26,7; cuenta corriente, 16,5) y coincide con datos.gob.ar hasta mayo. Es un error de la copia (la causa no se conoce). Hasta que datos.gob.ar lo corrija, Vaivén publica la variante hasta mayo de 2026 (decidido el 05/11/2026).",
     "afecta": [
       "base-monetaria.promedio-mensual"
     ],
-    "fuente": "datos.gob.ar, 90.1_BMT_0_0_20 (24/10/2026)."
+    "fuente": "datos.gob.ar, 90.1_BMT_0_0_20, 90.1_BMCMT_0_0_42 y 90.1_BMCCB_0_0_36 (consultados el 07/11/2026); BCRA, Informe Monetario Mensual, junio de 2026, cuadro de la base monetaria."
   },
   {
     "id": "q.base-monetaria.reforma-1982",
@@ -321,6 +321,9 @@
   {
     "id": "q.int.venezuela",
     "desde": "2015",
+    "entidades": [
+      "VEN"
+    ],
     "tipo": "metodologia",
     "descripcion": "Venezuela: desde 2015 la información oficial de cuentas nacionales es escasa e irregular, y los valores del Banco Mundial para esos años son estimaciones con poca base, que pueden revisarse mucho. Conviene leerlos como orden de magnitud.",
     "afecta": [
@@ -422,7 +425,7 @@
     "desde": "1971",
     "hasta": "2015",
     "tipo": "metodologia",
-    "descripcion": "El Banco Mundial convierte el PIB de la Argentina con un factor de conversión alternativo (PA.NUS.ATLS) en los años en que considera que el tipo de cambio oficial no es representativo: en 1971–1981 (salvo 1975 y 1978), entre 1,1 y 2,7 veces el oficial (PA.NUS.FCRF), y en 2012–2015, entre 6 % y 11 % más. En 1980 da 4,99 × 10⁻⁸ pesos actuales por dólar contra 1,84 × 10⁻⁸ del oficial: un PIB de 76.962 millones de dólares, contra 224.289 con el tipo de cambio oficial.",
+    "descripcion": "El Banco Mundial convierte el PIB de la Argentina con un factor de conversión alternativo (PA.NUS.ATLS) en los años en que considera que el tipo de cambio oficial no es representativo: en 1971–1981 (salvo 1975 y 1978), entre 1,1 y 2,7 veces el oficial (PA.NUS.FCRF), y en 2012–2015, entre 6 % y 11 % más. En 1980 usa 4,99 × 10⁻⁸ pesos actuales por dólar (el oficial, según el propio Banco Mundial, es 1,84 × 10⁻⁸): un PIB de 76.962 millones de dólares. Con el mismo PIB en pesos (el del Banco Mundial, que es el de la variante «cada base» antes de 1993) y el tipo de cambio oficial de Vaivén (promedio de fin de mes del BCRA, 1,86 × 10⁻⁸), da 206.965.",
     "afecta": [
       "pib-dolares.banco-mundial"
     ],
@@ -432,7 +435,7 @@
     "id": "q.pib-dolares.tipo-de-cambio",
     "desde": "1970",
     "tipo": "metodologia",
-    "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial). Con la «tablita», el oficial da un PIB en dólares de 224.289 millones en 1980 y el Banco Mundial, 76.962; los cocientes con el PIB de esos años cambian mucho según cuál se use.",
+    "descripcion": "El tipo de cambio es el promedio de los valores de fin de mes de la serie oficial del BCRA (CAM-01), no el promedio diario. En los años de mercados desdoblados o de cepo, el PIB en dólares depende mucho de qué tipo de cambio se use. Antes de 1990 difiere mucho del PIB en dólares del Banco Mundial, que para la Argentina de esos años no usa el tipo de cambio oficial sino un factor de conversión alternativo (ver q.pib-dolares.banco-mundial). Con la «tablita», el oficial da un PIB en dólares de 206.965 millones en 1980 con el PIB publicado en cada base (antes de 1993, el del Banco Mundial) y 224.289 con el PIB retropolado; el Banco Mundial da 76.962. Los cocientes con el PIB de esos años cambian mucho según cuál se use.",
     "afecta": [
       "pib-dolares.cada-base-anual",
       "pib-dolares.cada-base-trimestral",
@@ -447,14 +450,14 @@
     "desde": "2004",
     "hasta": "2004",
     "tipo": "cambio_de_base",
-    "descripcion": "PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que da un PIB 8 % mayor (375.910 millones en 2003 con la base 1993; 485.115 en 2004 con la base 2004). Un cociente con el PIB salta en ese año; antes de 2004 coincide con los cuadros de la bibliografía, que usan el PIB de cada época. Antes de 1993 es el PIB nominal del Banco Mundial.",
+    "descripcion": "PIB publicado en cada base: en 2004 la serie pasa de la base 1993 a la base 2004, que para el mismo año da un PIB 8,4 % mayor (447.643 millones de pesos con la base 1993 y 485.115 con la base 2004). Un cociente con el PIB salta en ese año. En 1993–2003 es el PIB de la base 1993, el que usan los cuadros de la bibliografía de esos años. Antes de 1993 es el PIB nominal del Banco Mundial; los cuadros de los ochenta usan las bases 1970 y 1986, y falta contrastarlo con ellos.",
     "afecta": [
       "pib-nominal.cada-base-anual",
       "pib-nominal.cada-base-trimestral",
       "pib-dolares.cada-base-anual",
       "pib-dolares.cada-base-trimestral"
     ],
-    "fuente": "INDEC (bases 1993 y 2004); Banco Mundial, NY.GDP.MKTP.CN."
+    "fuente": "INDEC (bases 1993 y 2004; 2.3_OGP_1993_A_17 y 4.3_OGP_2004_A_17 en datos.gob.ar, consultados el 07/11/2026); Banco Mundial, NY.GDP.MKTP.CN."
   },
   {
     "id": "q.pib-nominal.retropolado",
@@ -537,6 +540,39 @@
     "hasta": null
   },
   {
+    "id": "q.reservas.fin-de-mes",
+    "desde": "2026-01",
+    "tipo": "metodologia",
+    "descripcion": "El saldo del último día del mes suele quedar por debajo del de los días vecinos y se recupera al día siguiente: por ejemplo, 44.870 millones el 30/06/2026, contra 46.577 el 29/06 y 47.067 el 01/07; pasa lo mismo a fin de marzo, julio y agosto de 2026 (entre 1.300 y 2.000 millones menos). Es un dato real del BCRA, no un error; una explicación posible, no comprobada, es la salida transitoria de encajes de los bancos al cierre del mes. Las variaciones mensuales comparan saldos de fin de mes y no el nivel promedio.",
+    "afecta": [
+      "reservas.brutas"
+    ],
+    "fuente": "Serie diaria del BCRA (92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar), revisada el 07/11/2026.",
+    "hasta": null
+  },
+  {
+    "id": "q.reservas.marzo-2026",
+    "desde": "2026-03",
+    "hasta": "2026-03",
+    "tipo": "metodologia",
+    "descripcion": "Marzo de 2026 sale de la serie diaria del BCRA (saldo del 31/03: 42.052 millones de dólares) y no de la mensual, que trae 43.381: el saldo del 30/03, un día antes del cierre. El BCRA publica 42.052 para el 31/03.",
+    "afecta": [
+      "reservas.brutas"
+    ],
+    "fuente": "Comparación de 174.1_RRVAS_IDOS_0_0_36 con 92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar y con la serie diaria del BCRA (07/11/2026); decidido el 07/11/2026."
+  },
+  {
+    "id": "q.reservas.tramo-diario",
+    "desde": "tramo-completa",
+    "tipo": "cobertura",
+    "descripcion": "Desde este mes, los saldos de fin de mes salen de la serie diaria del BCRA en datos.gob.ar (el último dato de cada mes), porque la serie mensual que usa Vaivén llega con meses de atraso. Son provisorios: cuando la mensual publica esos meses, la reemplaza. En 2003–2026 las dos coinciden salvo en 14 meses; las diferencias grandes son junio de 2024 (+3,0 %: a la diaria le faltan días) y marzo de 2026 (−3,1 %: la mensual toma el dato del 30/03; ver q.reservas.marzo-2026).",
+    "afecta": [
+      "reservas.brutas"
+    ],
+    "fuente": "Comparación de 174.1_RRVAS_IDOS_0_0_36 con 92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar (07/11/2026).",
+    "hasta": null
+  },
+  {
     "id": "q.salario.hueco-1976-1984",
     "desde": "1976",
     "hasta": "1984",
@@ -595,6 +631,18 @@
     "fuente": "datos.gob.ar, 174.1_T_INTERD_0_0_41 y bcra_30 (24/10/2026)."
   },
   {
+    "id": "q.tc.marzo-2026",
+    "desde": "2026-03",
+    "hasta": "2026-03",
+    "tipo": "metodologia",
+    "descripcion": "Marzo de 2026 sale del tipo de cambio de valuación diario del BCRA (31/03: 1.382,76 pesos por dólar) y no de la serie mensual, que trae 1.394,92: el valor del 30/03, un día antes del cierre.",
+    "afecta": [
+      "tc-oficial.pesos-actuales",
+      "tc-oficial.moneda-de-epoca"
+    ],
+    "fuente": "Comparación de 174.1_T_DE_CATES_0_0_32 con 92.2_TIPO_CAMBIION_0_0_21_24 en datos.gob.ar y con la serie diaria del BCRA (07/11/2026); decidido el 07/11/2026."
+  },
+  {
     "id": "q.tc.mercados-desdoblados",
     "desde": "1971-09",
     "hasta": "1989-12",
@@ -619,6 +667,18 @@
       "tc-oficial.moneda-de-epoca"
     ],
     "fuente": "metadatos/signos_monetarios.yaml"
+  },
+  {
+    "id": "q.tc.tramo-diario",
+    "desde": "tramo-completa",
+    "tipo": "cobertura",
+    "descripcion": "Desde este mes, el valor de fin de mes sale de la serie diaria del tipo de cambio de valuación del BCRA en datos.gob.ar (el último dato de cada mes), porque la serie mensual llega con meses de atraso. Son provisorios: cuando la mensual publica esos meses, la reemplaza. En 2003–2026 coinciden salvo en junio de 2010 (−0,1 %), febrero de 2013 (+0,01 %) y marzo de 2026 (−0,9 %: la mensual toma el dato del 30/03; ver q.tc.marzo-2026).",
+    "afecta": [
+      "tc-oficial.pesos-actuales",
+      "tc-oficial.moneda-de-epoca"
+    ],
+    "fuente": "Comparación de 174.1_T_DE_CATES_0_0_32 con 92.2_TIPO_CAMBIION_0_0_21_24 en datos.gob.ar (07/11/2026).",
+    "hasta": null
   },
   {
     "id": "q.tcr-bilateral.fin-de-mes",
@@ -665,5 +725,16 @@
       "tcr-multilateral.bruegel"
     ],
     "fuente": "INDEC, advertencia sobre el IPC 2007–2015."
+  },
+  {
+    "id": "q.tcr.tramo-diario",
+    "desde": "tramo-completa",
+    "tipo": "cobertura",
+    "descripcion": "Desde este mes, el índice es el promedio mensual de la serie diaria del BCRA en datos.gob.ar, porque la mensual llega solo a diciembre de 2024. Se pega sin reescalar. Son provisorios: cuando la mensual publica esos meses, la reemplaza. Desde 2023 las dos difieren 0,03 % o menos; en 2020–2022, hasta 0,9 %.",
+    "afecta": [
+      "tcr-multilateral.bcra"
+    ],
+    "fuente": "Comparación de 116.3_TCRMA_0_M_36 con 116.4_TCRZE_2015_D_36_4 en datos.gob.ar (07/11/2026).",
+    "hasta": null
   }
 ]

@@ -30,10 +30,20 @@ def cita(serie_meta: dict, variante: dict, version_datos: str) -> str:
 
 def _advertencias(variante: dict, quiebres: dict[str, dict], serie: pd.Series) -> list[dict]:
     salida = []
+    completa = next((t for t in variante["tramos"] if t.get("completa")), None)
     for qid in variante.get("advertencias", []):
         q = quiebres[qid]
-        salida.append({"id": qid, "desde": _texto(q.get("desde")), "hasta": _texto(q.get("hasta")),
-                       "tipo": q.get("tipo"), "descripcion": q["descripcion"]})
+        desde = q.get("desde")
+        if desde == "tramo-completa":
+            # Quiebre de fuente del tramo reciente (segunda revisión de la 4a, 2.2): empieza donde empieza ese tramo,
+            # que se corre solo cuando la serie mensual se pone al día. Si el tramo no aporta datos, no hay quiebre.
+            if completa is None:
+                continue
+            desde = completa["desde"]
+        salida.append({"id": qid, "desde": _texto(desde), "hasta": _texto(q.get("hasta")),
+                       "tipo": q.get("tipo"), "descripcion": q["descripcion"],
+                       # Esquema 1.3: un quiebre de un solo país (por ejemplo, Venezuela desde 2015).
+                       **({"entidades": list(q["entidades"])} if q.get("entidades") else {})})
     return salida
 
 
@@ -52,8 +62,24 @@ def _fuentes(variante: dict, fuentes: dict[str, dict]) -> list[dict]:
         salida.append({"id": fid, "organismo": f["organismo"], "nombre": f["nombre"], "url": f["url"],
                        "licencia": f["licencia"], "id_api": f.get("id_api"),
                        # Fuentes de descarga manual (esquema 1.3): la versión de la fuente que usa Vaivén.
-                       **({"descarga": "manual", "version": f.get("version")} if f.get("descarga") == "manual" else {})})
+                       **({"descarga": "manual", "version": f.get("version")} if f.get("descarga") == "manual" else {}),
+                       **({"desfase_esperado": int(f["desfase_esperado"])} if "desfase_esperado" in f else {}),
+                       # La cita que recomienda la fuente, con la fecha de su versión (Bruegel).
+                       **({"cita": cita_fuente(f)} if f.get("cita_recomendada") else {})})
     return salida
+
+
+MESES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+            "November", "December"]
+
+
+def cita_fuente(f: dict) -> str:
+    """`cita_recomendada` de fuentes.yaml con `{version}` completado («11 October 2026», como la escribe Bruegel)."""
+    texto = " ".join(str(f["cita_recomendada"]).split())
+    if "{version}" in texto:
+        a, m, d = (f.get("version") or "").split("-") if f.get("version") else ("", "", "")
+        texto = texto.replace("{version}", f"{int(d)} {MESES_EN[int(m) - 1]} {a}" if a else "sin fecha")
+    return texto
 
 
 def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict, quiebres: dict,
@@ -94,7 +120,8 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         "excluidos": [{"fecha": str(e["fecha"]), "motivo": " ".join(str(e["motivo"]).split())}
                       for e in variante.get("excluir", [])],
         "fuentes": _fuentes(variante, fuentes),
-        "licencia": serie_meta.get("licencia_derivado", "CC-BY-4.0"),
+        # Por variante si la declara (Bruegel: «other-at», sección 9 de la SPEC); si no, la de la serie.
+        "licencia": variante.get("licencia_derivado", serie_meta.get("licencia_derivado", "CC-BY-4.0")),
         "cita": cita(serie_meta, variante, version_datos),
         "version_datos": version_datos,
         "desactualizada_desde": desactualizada_desde,

@@ -1,0 +1,21 @@
+{
+  "fuente": "f.bcra.itcrm-diario",
+  "descargado": "2026-11-07T20:37:06Z",
+  "sha256": "4628ba6a4634292521e4f7c648684dc4605cdd47b01e86511589d85e8c11b4b5",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=116.4_TCRZE_2015_D_36_4&format=json&limit=5000&start=0&metadata=full&collapse=month&collapse_aggregation=avg&end_date=2026-10-31",
+      "bytes": 15871,
+      "sha256": "7f47e27ac1aa5e227fb9f61736141c8cb3f5fe39a4b63b8398289f5149479baa"
+    },
+    {
+      "nombre": "ultimo-diario.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=116.4_TCRZE_2015_D_36_4&format=json&limit=1&sort=desc&metadata=none&end_date=2026-10-31",
+      "bytes": 294,
+      "sha256": "2e3cd7804bae437b4c4b85000f6586685a97d79edd55a35399c5dba565231bfa"
+    }
+  ]
+}

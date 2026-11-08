@@ -95,12 +95,13 @@
       "nombre": "Índice de salarios, base octubre 2016. Empleo registrado, sector privado, mensual",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=149.1_SOR_PRIADO_OCTU_0_25",
       "licencia": "CC-BY-4.0",
-      "id_api": "149.1_SOR_PRIADO_OCTU_0_25"
+      "id_api": "149.1_SOR_PRIADO_OCTU_0_25",
+      "desfase_esperado": 2
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Salario real, variante «indice-salarios». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/salario-real/indice-salarios/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["2001-10", 4.374567927],

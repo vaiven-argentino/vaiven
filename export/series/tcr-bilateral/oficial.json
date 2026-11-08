@@ -86,7 +86,7 @@
   ],
   "cobertura": {
     "desde": "1970-01",
-    "hasta": "2026-04"
+    "hasta": "2026-08"
   },
   "advertencias": [
     {
@@ -140,7 +140,8 @@
       "nombre": "Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32",
       "licencia": "CC-BY-4.0",
-      "id_api": "174.1_T_DE_CATES_0_0_32"
+      "id_api": "174.1_T_DE_CATES_0_0_32",
+      "desfase_esperado": 1
     },
     {
       "id": "f.ocde.ipc-eeuu",
@@ -196,12 +197,13 @@
       "nombre": "IPC Nacional base diciembre 2016 = 100, nivel general",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26",
       "licencia": "CC-BY-4.0",
-      "id_api": "148.3_INIVELNAL_DICI_M_26"
+      "id_api": "148.3_INIVELNAL_DICI_M_26",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tipo de cambio real bilateral con EE.UU., variante «oficial». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-bilateral/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T20:41:28Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 50.28406887],
@@ -877,7 +879,11 @@
     ["2025-12", 109.0041838],
     ["2026-01", 105.4865527],
     ["2026-02", 100.2470781],
-    ["2026-03", 97.00765064],
-    ["2026-04", 94.42424543]
+    ["2026-03", 96.16161402],
+    ["2026-04", 94.42424543],
+    ["2026-05", 94.98699008],
+    ["2026-06", 97.69312038],
+    ["2026-07", 96.01161756],
+    ["2026-08", 96.08261949]
   ]
 }

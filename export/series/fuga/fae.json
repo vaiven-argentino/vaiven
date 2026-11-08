@@ -92,12 +92,13 @@
       "nombre": "Balance cambiario. Formación de activos externos del sector privado no financiero, total (ingresos menos egresos)",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=182.1_C_K_FINC_CINC_0_M_56",
       "licencia": "CC-BY-4.0",
-      "id_api": "182.1_C_K_FINC_CINC_0_M_56"
+      "id_api": "182.1_C_K_FINC_CINC_0_M_56",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Fuga de capitales, variante «fae». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/fuga/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["2003-01", 246.0326233],

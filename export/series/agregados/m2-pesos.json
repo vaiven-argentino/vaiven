@@ -117,12 +117,13 @@
       "nombre": "Panorama monetario y financiero. M2 en moneda nacional, total, saldo de fin de mes",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=bcra_3544",
       "licencia": "CC-BY-4.0",
-      "id_api": "bcra_3544"
+      "id_api": "bcra_3544",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m2-pesos». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/agregados/m2-pesos/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:43:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 2.0835e-07],

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { transformar } from "@vaiven/transformaciones";
+import { serieDeEntidad, transformar } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
 import { especificacion, filas, reservaSuperior, topeY, ubicarMarcadores, type Tema } from "../src/graficos/espec";
 import type { SerieExportada } from "@vaiven/transformaciones";
@@ -71,7 +71,9 @@ describe("reservas: dato excluido", () => {
     expect(feb.segmento).not.toBe(abr.segmento);
   });
   it("el quiebre que cubre toda la serie no se dibuja", () => {
-    expect(capas(doc).filter((c) => c.mark.type === "rect" || c.mark.type === "rule")).toHaveLength(0);
+    // Solo con el quiebre general (reservas brutas); los del tramo diario de 2026 sí se dibujan.
+    const general = { ...doc, advertencias: doc.advertencias.filter((a) => a.id === "q.reservas.brutas") };
+    expect(capas(general).filter((c) => c.mark.type === "rect" || c.mark.type === "rule")).toHaveLength(0);
   });
 });
 
@@ -140,5 +142,41 @@ describe("eje Y (regresión de la línea del 0, revisión del 07/11/2026)", () =
   });
   it("sin valores negativos (reservas) hay eje Y con etiquetas", async () => {
     expect(await ejesY(leer("reservas", "brutas"))).toHaveLength(1);
+  });
+});
+
+describe("quiebres de un solo país (segunda revisión de la 4a, 3.2)", () => {
+  const doc = leer("int-pib", "banco-mundial") as Doc & { entidades_por_defecto: string[] };
+  const quiebres = numerarQuiebres({ ...serieDeEntidad(doc, "ARG"), advertencias: doc.advertencias });
+  const venezuela = quiebres.find((q) => q.advertencia.id === "q.int.venezuela")!;
+  const numeros = (otros: string[]) => {
+    const spec = especificacion({
+      resultado: transformar(serieDeEntidad(doc, "ARG"), { desde: "2000" }), tramos: doc.tramos, empalme: doc.empalme, quiebres,
+      tema, esVariacion: true, log: false, alto: 300, ancho: 800, descripcion: "prueba",
+      otras: otros.map((e) => ({ nombre: e, resultado: transformar(serieDeEntidad(doc, e), { desde: "2000" }) })),
+    }) as { layer: Array<{ mark: { type: string; text?: string }; data?: { values: Array<Record<string, unknown>> } }> };
+    return spec.layer.filter((c) => c.mark.type === "text" && !c.mark.text).flatMap((c) => c.data?.values.map((v) => Number(v.n)) ?? []);
+  };
+  it("con la Argentina y Brasil no se marca el quiebre de Venezuela", () => {
+    expect(venezuela.advertencia.entidades).toEqual(["VEN"]);
+    expect(numeros(["BRA"])).not.toContain(venezuela.n);
+  });
+  it("si Venezuela está entre los países que se ven, sí", () => {
+    expect(numeros(["BRA", "VEN"])).toContain(venezuela.n);
+  });
+});
+
+describe("eje X según el largo del período (segunda revisión de la 4a)", () => {
+  it("períodos largos: años enteros, con paso según el ancho", async () => {
+    const { marcasX } = await import("../src/graficos/espec");
+    expect(marcasX(56 * 12, 10)).toEqual({ tickCount: { interval: "year", step: 10 }, format: "%Y" });
+    expect(marcasX(5 * 12, 10)).toEqual({ tickCount: { interval: "year", step: 1 }, format: "%Y" });
+  });
+  it("períodos cortos: meses con «mes año», sin repetir el año", async () => {
+    const { marcasX } = await import("../src/graficos/espec");
+    const m = marcasX(32, 10) as { tickCount: { interval: string; step: number }; labelExpr: string };
+    expect(m.tickCount).toEqual({ interval: "month", step: 6 });
+    expect(m.labelExpr).toContain("utcmonth(datum.value)");
+    expect((marcasX(12, 5) as { tickCount: { step: number } }).tickCount.step).toBe(3);
   });
 });

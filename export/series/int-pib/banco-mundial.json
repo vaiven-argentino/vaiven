@@ -59,7 +59,10 @@
       "desde": "2015",
       "hasta": null,
       "tipo": "metodologia",
-      "descripcion": "Venezuela: desde 2015 la información oficial de cuentas nacionales es escasa e irregular, y los valores del Banco Mundial para esos años son estimaciones con poca base, que pueden revisarse mucho. Conviene leerlos como orden de magnitud."
+      "descripcion": "Venezuela: desde 2015 la información oficial de cuentas nacionales es escasa e irregular, y los valores del Banco Mundial para esos años son estimaciones con poca base, que pueden revisarse mucho. Conviene leerlos como orden de magnitud.",
+      "entidades": [
+        "VEN"
+      ]
     }
   ],
   "excluidos": [],
@@ -75,7 +78,7 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Crecimiento del PIB, países seleccionados, variante «banco-mundial». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/int-pib/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T07:38:15Z",
   "desactualizada_desde": null,
   "dimensiones": [
     "pais"

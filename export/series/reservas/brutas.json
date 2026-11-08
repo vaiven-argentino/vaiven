@@ -12,7 +12,7 @@
   "agregacion": "fin_de_periodo",
   "frecuencia": "mensual",
   "moneda": "dolares",
-  "metodo": "Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.",
+  "metodo": "Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979. Los meses que la copia mensual de datos.gob.ar todavía no tiene son el último dato del mes de la serie diaria del BCRA (provisorios hasta que llegue la mensual).",
   "empalme": "yuxtaponer",
   "transformaciones": [
     "var_mensual",
@@ -71,11 +71,17 @@
       "desde": "1970-01",
       "hasta": "hoy",
       "frecuencia": "mensual"
+    },
+    {
+      "fuente": "f.bcra.reservas-diaria",
+      "desde": "2026-05",
+      "hasta": "hoy",
+      "frecuencia": "mensual"
     }
   ],
   "cobertura": {
     "desde": "1970-01",
-    "hasta": "2026-04"
+    "hasta": "2026-08"
   },
   "advertencias": [
     {
@@ -84,6 +90,27 @@
       "hasta": null,
       "tipo": "metodologia",
       "descripcion": "Son reservas brutas: incluyen activos que no son de libre disponibilidad, como los encajes de los depósitos en dólares, los swaps de monedas con otros bancos centrales y los préstamos de organismos. No hay una definición oficial única de reservas netas."
+    },
+    {
+      "id": "q.reservas.tramo-diario",
+      "desde": "2026-05",
+      "hasta": null,
+      "tipo": "cobertura",
+      "descripcion": "Desde este mes, los saldos de fin de mes salen de la serie diaria del BCRA en datos.gob.ar (el último dato de cada mes), porque la serie mensual que usa Vaivén llega con meses de atraso. Son provisorios: cuando la mensual publica esos meses, la reemplaza. En 2003–2026 las dos coinciden salvo en 14 meses; las diferencias grandes son junio de 2024 (+3,0 %: a la diaria le faltan días) y marzo de 2026 (−3,1 %: la mensual toma el dato del 30/03; ver q.reservas.marzo-2026)."
+    },
+    {
+      "id": "q.reservas.marzo-2026",
+      "desde": "2026-03",
+      "hasta": "2026-03",
+      "tipo": "metodologia",
+      "descripcion": "Marzo de 2026 sale de la serie diaria del BCRA (saldo del 31/03: 42.052 millones de dólares) y no de la mensual, que trae 43.381: el saldo del 30/03, un día antes del cierre. El BCRA publica 42.052 para el 31/03."
+    },
+    {
+      "id": "q.reservas.fin-de-mes",
+      "desde": "2026-01",
+      "hasta": null,
+      "tipo": "metodologia",
+      "descripcion": "El saldo del último día del mes suele quedar por debajo del de los días vecinos y se recupera al día siguiente: por ejemplo, 44.870 millones el 30/06/2026, contra 46.577 el 29/06 y 47.067 el 01/07; pasa lo mismo a fin de marzo, julio y agosto de 2026 (entre 1.300 y 2.000 millones menos). Es un dato real del BCRA, no un error; una explicación posible, no comprobada, es la salida transitoria de encajes de los bancos al cierre del mes. Las variaciones mensuales comparan saldos de fin de mes y no el nivel promedio."
     }
   ],
   "excluidos": [
@@ -99,12 +126,22 @@
       "nombre": "Series históricas de estadísticas monetarias. Reservas internacionales del BCRA, saldos",
       "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36",
       "licencia": "CC-BY-4.0",
-      "id_api": "174.1_RRVAS_IDOS_0_0_36"
+      "id_api": "174.1_RRVAS_IDOS_0_0_36",
+      "desfase_esperado": 1
+    },
+    {
+      "id": "f.bcra.reservas-diaria",
+      "organismo": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica)",
+      "nombre": "Reservas internacionales y pasivos del BCRA. Reservas internacionales, valor diario, último dato del mes",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_RESERVAS_IRES_0_0_32_40",
+      "licencia": "CC-BY-4.0",
+      "id_api": "92.2_RESERVAS_IRES_0_0_32_40",
+      "desfase_esperado": 1
     }
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/reservas/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "version_datos": "2026-11-07T20:41:28Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 589.5],
@@ -780,7 +817,11 @@
     ["2025-12", 41167.0],
     ["2026-01", 44503.0],
     ["2026-02", 45566.0],
-    ["2026-03", 43381.0],
-    ["2026-04", 44516.0]
+    ["2026-03", 42052.0],
+    ["2026-04", 44516.0],
+    ["2026-05", 48193.0],
+    ["2026-06", 44870.0],
+    ["2026-07", 47599.0],
+    ["2026-08", 48259.0]
   ]
 }
