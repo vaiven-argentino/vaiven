@@ -1,5 +1,5 @@
 {
-  "esquema": "1.2",
+  "esquema": "1.3",
   "id": "ipc.provincias",
   "serie": "ipc",
   "codigo": "PRE-01",
@@ -138,8 +138,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Inflación minorista (IPC), variante «provincias». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/ipc/provincias/",
-  "version_datos": "2026-11-05T21:59:15Z",
+  "cita": "Vaivén (2026). Inflación minorista (IPC), variante «provincias». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/ipc/provincias/",
+  "version_datos": "2026-11-07T07:25:59Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 2.22808898e-11],

@@ -4,8 +4,9 @@ Lo que consumen la web y el MCP, y que funciona además como API pública de sol
 
 Se regenera completo en cada actualización. No se edita a mano.
 
-En el sitio se sirve bajo `/datos/` (por ejemplo, `https://vaiven.argentino.workers.dev/datos/series/ipc/oficial.json`). Cada JSON de serie declara su versión de esquema en `esquema`; el contrato vigente es el 1.2 (`tests/contrato/serie-1.2.schema.json`, publicado en `/esquemas/serie-1.2.json`).
+En el sitio se sirve bajo `/datos/` (por ejemplo, `https://vaiven.argentino.workers.dev/datos/series/ipc/oficial.json`). Cada JSON de serie declara su versión de esquema en `esquema`; el contrato vigente es el 1.3 (`tests/contrato/serie-1.3.schema.json`, publicado en `/esquemas/serie-1.3.json`).
 - La 1.1 agrega a la 1.0 `empalme`, `transformaciones`, `excluidos` (observaciones de la fuente quitadas a propósito, con su motivo) y la frecuencia de cada tramo.
+- La 1.3 agrega a cada fuente, solo en las de descarga manual (Bruegel), `descarga: "manual"` y `version` (fecha de la versión de la fuente que usa Vaivén). `desactualizada_desde` pasa a ser el primer día en que la fuente no respondió.
 - La 1.2 agrega a la 1.1 `moneda` (`pesos_actuales`, `moneda_de_epoca`, `dolares` o `null`), `insumos` (qué series publicadas necesita cada medida y en qué unidad queda), `auxiliar`, `vista_inicial` y, en las series con dimensión pais, `dimensiones`, `entidades`, `entidades_por_defecto` y `datos` como objeto por entidad (`{"ARG": [[fecha, valor], …], …}`). El `empalme` suma `derivar`.
 - La web, el MCP y la librería leen las dos versiones (`ESQUEMAS_SOPORTADOS`).
 
@@ -13,4 +14,4 @@ En las series con dimensión pais, el CSV es largo (`fecha,pais,valor`), el Parq
 
 Las descargas completas (`descargas/vaiven_<versión>.zip` y `.parquet`) se generan con `python -m pipeline descargas` y no se versionan.
 
-**Se llenó en:** fase 1 (5 series piloto); fase 4a (22 series, auxiliares y esquema 1.2).
+**Se llenó en:** fase 1 (5 series piloto); fase 4a (22 series, auxiliares y esquema 1.2; esquema 1.3 en la segunda revisión).

@@ -1,5 +1,5 @@
 {
-  "esquema": "1.2",
+  "esquema": "1.3",
   "id": "saldo-comercial.mensual",
   "serie": "saldo-comercial",
   "codigo": "EXT-03",
@@ -104,8 +104,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Saldo comercial, variante «mensual». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/saldo-comercial/mensual/",
-  "version_datos": "2026-11-05T21:54:06Z",
+  "cita": "Vaivén (2026). Saldo comercial, variante «mensual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/saldo-comercial/mensual/",
+  "version_datos": "2026-11-07T07:25:59Z",
   "desactualizada_desde": null,
   "datos": [
     ["1992-01", -177.148033],

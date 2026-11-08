@@ -40,7 +40,7 @@ def descargar(url: str, params: dict | None = None, timeout: float = 60.0) -> by
             r = httpx.get(url, params=params, timeout=timeout, headers={"User-Agent": AGENTE}, follow_redirects=True)
             if r.status_code == 200:
                 return r.content
-            ultimo_error = f"HTTP {r.status_code}: {r.text[:300]}"
+            ultimo_error = f"HTTP {r.status_code}: {resumen_respuesta(r.text)}"
             if 400 <= r.status_code < 500 and r.status_code != 429:
                 break
         except httpx.HTTPError as e:
@@ -49,6 +49,18 @@ def descargar(url: str, params: dict | None = None, timeout: float = 60.0) -> by
             time.sleep(espera)
             espera *= 2
     raise ErrorPipeline(f"No se pudo descargar {url} (params={params}): {ultimo_error}")
+
+
+def resumen_respuesta(texto: str, largo: int = 200) -> str:
+    """Lo justo de una respuesta de error para el informe: el `<title>` si es una página HTML (por ejemplo, el desafío
+    de Cloudflare, «Just a moment...»), o los primeros caracteres si no lo es. Nunca la página entera."""
+    import re
+
+    if re.match(r"\s*(<!doctype|<html)", texto, re.I):
+        titulo = re.search(r"<title[^>]*>(.*?)</title>", texto, re.I | re.S)
+        return f"página HTML «{' '.join(titulo.group(1).split())}»" if titulo else "página HTML sin título"
+    texto = " ".join(texto.split())
+    return texto if len(texto) <= largo else texto[:largo] + "…"
 
 
 def checksum(archivos: list[Archivo]) -> str:
@@ -71,7 +83,7 @@ def leer_meta(dir_snapshot: Path) -> dict:
     return json.loads((dir_snapshot / "meta.json").read_text(encoding="utf-8"))
 
 
-def guardar_snapshot(dir_snapshots: Path, fuente: dict, archivos: list[Archivo]) -> tuple[Path, bool]:
+def guardar_snapshot(dir_snapshots: Path, fuente: dict, archivos: list[Archivo], version: str | None = None) -> tuple[Path, bool]:
     """Guarda el snapshot si el contenido cambió. Devuelve (carpeta del snapshot vigente, si es nuevo).
 
     Si la fuente no permite redistribuir (`redistribuible: false`), se guarda solo `meta.json`
@@ -101,6 +113,8 @@ def guardar_snapshot(dir_snapshots: Path, fuente: dict, archivos: list[Archivo])
             "sha256": suma,
             "licencia": fuente.get("licencia"),
             "redistribuible": redistribuible,
+            # Versión que declara la fuente (por ejemplo, la fecha de la base de Bruegel), si la declara.
+            **({"version": version} if version else {}),
             "archivos": [
                 {"nombre": a.nombre, "url": a.url, "bytes": len(a.contenido), "sha256": hashlib.sha256(a.contenido).hexdigest(),
                  **({"extraido_de": a.origen} if a.origen else {})}

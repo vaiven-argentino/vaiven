@@ -192,8 +192,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   if (negativos) {
-    // La línea del 0, más marcada que la grilla, cuando hay valores negativos.
-    capas.push({ data: { values: [{ v: 0 }] }, mark: { type: "rule", color: tema.borde, strokeWidth: 1.2 }, encoding: { y: { ...y, axis: null } } });
+    // La línea del 0, más marcada que la grilla, cuando hay valores negativos. Repite la definición de `y` tal cual: un
+    // `axis: null` (o un `datum` sin eje) en esta capa apaga el eje Y o la grilla de todo el gráfico, porque las capas
+    // comparten el eje (revisión del 07/11/2026; lo controla web/test/espec.test.ts).
+    capas.push({ data: { values: [{ v: 0 }] }, mark: { type: "rule", color: tema.borde, strokeWidth: 1.2 }, encoding: { y } });
   }
   if (filasOtras.length) {
     capas.push({

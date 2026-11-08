@@ -1,5 +1,5 @@
 {
-  "esquema": "1.2",
+  "esquema": "1.3",
   "id": "pib-nominal.cada-base-anual",
   "serie": "pib-nominal",
   "codigo": "AUX-01",
@@ -78,8 +78,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). PIB nominal en pesos, variante «cada-base-anual». Versión de datos 2026-11-05. https://vaiven.argentino.workers.dev/series/pib-nominal/",
-  "version_datos": "2026-11-05T21:53:52Z",
+  "cita": "Vaivén (2026). PIB nominal en pesos, variante «cada-base-anual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-nominal/",
+  "version_datos": "2026-11-07T07:25:59Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 1.200199962e-06],

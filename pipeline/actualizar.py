@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
+from datetime import date
 
 import pandas as pd
 
@@ -15,6 +16,7 @@ from pipeline.export import catalogo as export_generales
 from pipeline.export import insumos as export_insumos
 from pipeline.export import series as export_series
 from pipeline.fuentes import base
+from pipeline.fuentes import estado as estado_fuentes
 from pipeline.validacion import reglas, revisiones
 
 
@@ -36,6 +38,11 @@ class Resultado:
     # Variantes que no pasaron la validación (o dependen de una fuente que no la pasó): se conserva lo publicado
     # antes y se publican las demás.
     retenidas: dict[str, list[str]] = field(default_factory=dict)
+    # Fuentes que necesitan que alguien las mire: no responden hace más de una semana, o son de descarga manual y no
+    # tienen versión nueva hace más de 3 meses. El workflow abre un issue por cada una (SPEC 5.2).
+    atencion: list[dict] = field(default_factory=list)
+    # Fuentes que se intentaron descargar en esta corrida (para cerrar los issues de las que volvieron a responder).
+    consultadas: list[str] = field(default_factory=list)
 
     @property
     def errores(self) -> list[reglas.Problema]:
@@ -52,6 +59,9 @@ class Resultado:
                 lineas.append(f"- {vid}: {motivos[0]}" + (f" (y {len(motivos) - 1} problemas más)" if len(motivos) > 1 else ""))
             lineas.append("")
             lineas += [p.como_texto() for p in self.errores]
+        if self.atencion:
+            lineas.append("\n## Fuentes que necesitan atención\n")
+            lineas += [f"- {a['fuente']}: {a['motivo']}" for a in self.atencion]
         otros = [p for p in self.problemas if p.severidad != "error"]
         if otros or self.avisos:
             lineas.append("\n## Avisos\n")
@@ -219,27 +229,66 @@ def fuentes_necesarias(meta: Metadatos) -> list[str]:
     return list(dict.fromkeys(ids))
 
 
-def obtener_fuente(rutas: Rutas, fuente: dict, con_red: bool, res: Resultado) -> tuple[pd.Series, str | None]:
-    """Snapshot y capa 1 de una fuente. Devuelve la serie y, si quedó desactualizada, desde cuándo."""
-    dir_fuente = rutas.snapshots / fuente["id"]
+def obtener_fuente(rutas: Rutas, fuente: dict, con_red: bool, res: Resultado,
+                   estado: estado_fuentes.EstadoFuentes | None = None, hoy: date | None = None) -> tuple[pd.Series, str | None]:
+    """Snapshot y capa 1 de una fuente. Devuelve la serie y, si quedó desactualizada, desde cuándo.
+
+    - Si la fuente no responde, se usa el último snapshot y la variante queda desactualizada desde el primer día en que
+      no respondió (`snapshots/estado-fuentes.json`). Una corrida sin red conserva esa marca: no la «arregla».
+    - Las fuentes de descarga manual (`descarga: manual`, por ejemplo Bruegel, que bloquea a los servidores de GitHub)
+      no se descargan acá: se usa el último snapshot, que se baja con `python -m pipeline bajar-manual`. Quedan
+      desactualizadas recién si su versión tiene más de 3 meses.
+    """
+    estado = estado or estado_fuentes.EstadoFuentes(rutas.snapshots)
+    hoy = hoy or ahora_utc().date()
+    fid = fuente["id"]
+    dir_fuente = rutas.snapshots / fid
+    manual = fuente.get("descarga") == "manual"
     desactualizada = None
     snapshot = None
-    if con_red:
+    if con_red and not manual:
+        res.consultadas.append(fid)
         try:
             archivos = capa1.modulo(fuente).bajar(fuente)
             snapshot, nuevo = base.guardar_snapshot(rutas.snapshots, fuente, archivos)
             if nuevo:
                 res.snapshots_nuevos.append(snapshot.relative_to(rutas.raiz).as_posix())
+            estado.respondio(fid)
         except ErrorPipeline as e:
             snapshot = base.ultimo_snapshot(dir_fuente)
             if snapshot is None:
-                raise ErrorPipeline(f"{fuente['id']}: la fuente no respondió y no hay snapshots anteriores. {e}")
-            desactualizada = base.leer_meta(snapshot)["descargado"][:10]
-            res.avisos.append(f"{fuente['id']}: la fuente no respondió; se usan los datos del {desactualizada}. {e}")
+                raise ErrorPipeline(f"{fid}: la fuente no respondió y no hay snapshots anteriores. {e}")
+            desactualizada = estado.fallo(fid, hoy)
+            descargado = base.leer_meta(snapshot)["descargado"][:10]
+            res.avisos.append(f"{fid}: la fuente no respondió (desde el {desactualizada}); se usan los datos descargados "
+                              f"el {descargado}. {e}")
+            dias = estado_fuentes.dias_desde(desactualizada, hoy)
+            if dias > estado_fuentes.DIAS_SIN_RESPONDER:
+                res.atencion.append({"fuente": fid, "desde": desactualizada,
+                                     "motivo": f"no responde desde el {desactualizada} ({dias} días). Último error: {e}"})
     else:
         snapshot = base.ultimo_snapshot(dir_fuente)
         if snapshot is None:
-            raise ErrorPipeline(f"{fuente['id']}: no hay snapshots y se pidió correr sin red.")
+            if manual:
+                raise ErrorPipeline(f"{fid}: es de descarga manual y no tiene snapshots: corré "
+                                    f"`uv run python -m pipeline bajar-manual {fid}`.")
+            raise ErrorPipeline(f"{fid}: no hay snapshots y se pidió correr sin red.")
+        if not manual:
+            desactualizada = estado.fallando_desde(fid)
+    if manual:
+        meta = base.leer_meta(snapshot)
+        mod = capa1.modulo(fuente)
+        version = mod.version_de_meta(meta) if hasattr(mod, "version_de_meta") else None
+        version = version or meta.get("version") or meta["descargado"][:10]
+        fuente["version"] = version
+        dias = estado_fuentes.dias_desde(version, hoy)
+        if dias > estado_fuentes.DIAS_VERSION_MANUAL:
+            desactualizada = estado_fuentes.vencimiento_manual(version)
+            res.avisos.append(f"{fid}: la versión que tiene Vaivén es del {version} ({dias} días); "
+                              f"fijate si hay una nueva con `uv run python -m pipeline bajar-manual {fid}`.")
+            res.atencion.append({"fuente": fid, "desde": desactualizada,
+                                 "motivo": f"es de descarga manual y su versión es del {version} ({dias} días): "
+                                           f"corré `uv run python -m pipeline bajar-manual {fid}`."})
     if fuente.get("paises"):
         return capa1.normalizar_paises(rutas, fuente, snapshot), desactualizada
     return capa1.normalizar(rutas, fuente, snapshot), desactualizada
@@ -276,10 +325,13 @@ def _sin_version(doc: dict) -> dict:
     return {k: v for k, v in doc.items() if k not in ("version_datos", "cita")}
 
 
-def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: bool = True) -> Resultado:
+def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: bool = True,
+             hoy: date | None = None) -> Resultado:
     res = Resultado()
     meta = cargar_metadatos(rutas, solo)
     momento = ahora_utc().isoformat().replace("+00:00", "Z")
+    hoy = hoy or ahora_utc().date()
+    estado = estado_fuentes.EstadoFuentes(rutas.snapshots)
 
     # 1-2. Snapshot y capa 1.
     capa1_series: dict[str, pd.Series] = {}
@@ -287,7 +339,7 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
     for fid in fuentes_necesarias(meta):
         fuente = meta.fuentes[fid]
         previa = capa1_previa(rutas, fuente)
-        serie, desde = obtener_fuente(rutas, fuente, con_red, res)
+        serie, desde = obtener_fuente(rutas, fuente, con_red, res, estado, hoy)
         if previa is not None and not isinstance(serie, dict):
             res.problemas += historia_recortada(fid, previa, serie)
         if isinstance(serie, dict):
@@ -305,6 +357,9 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
             desactualizadas[fid] = desde
         res.problemas += reglas.esquema(fid, serie)
         res.problemas += reglas.huecos(fid, serie, fuente["frecuencia"], fuente.get("huecos_permitidos"), fuente.get("meses"))
+
+    if con_red:
+        estado.guardar()
 
     # 3-4. Capa 2 y validación. Las derivadas (empalme: derivar) se arman cuando están sus operandos.
     construidas: dict[str, tuple[dict, dict, pd.Series]] = {}

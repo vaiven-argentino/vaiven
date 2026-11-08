@@ -157,7 +157,16 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   }
   if (paises.length) notas.push("`datos` va por país (ISO3 o código del agregado del Banco Mundial), cada uno con sus observaciones.");
   if (transformada) notas.push("Los valores transformados se redondean a 6 cifras significativas.");
-  if (doc.desactualizada_desde) notas.push(`La serie está desactualizada desde ${doc.desactualizada_desde}: la fuente no respondió.`);
+  // Fuentes de descarga manual (Bruegel): qué versión usa Vaivén; avisar si tiene más de 3 meses.
+  const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version);
+  for (const f of manuales) {
+    notas.push(`${f.organismo} se actualiza a mano (su sitio no deja descargar desde los servidores de Vaivén): la versión que usa Vaivén es del ${f.version}.`);
+  }
+  if (doc.desactualizada_desde) {
+    notas.push(manuales.length
+      ? `La versión de la fuente tiene más de 3 meses (desactualizada desde ${doc.desactualizada_desde}): puede haber una más nueva.`
+      : `La serie no se pudo actualizar desde ${doc.desactualizada_desde}: la fuente no respondió o los datos nuevos no pasaron los controles. Los datos son los anteriores.`);
+  }
 
   const pctPib = doc.insumos?.pct_pib;
   const denominadorUsado = args.medida === "pct_pib"
