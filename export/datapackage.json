@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-11-07T07:45:19Z",
-  "created": "2026-11-07T07:45:19Z",
+  "version": "2026-11-07T20:41:28Z",
+  "created": "2026-11-07T20:41:28Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -1967,7 +1967,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979.",
+      "description": "Serie histórica mensual del BCRA (saldos de fin de mes), sin cambios, salvo el dato excluido de marzo de 1979. Los meses que la copia mensual de datos.gob.ar todavía no tiene son el último dato del mes de la serie diaria del BCRA (provisorios hasta que llegue la mensual).",
       "schema": {
         "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
         "fields": [
@@ -1990,6 +1990,10 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Reservas internacionales del BCRA, saldos",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Reservas internacionales y pasivos del BCRA. Reservas internacionales, valor diario, último dato del mes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_RESERVAS_IRES_0_0_32_40"
         }
       ],
       "licenses": [
@@ -2404,6 +2408,10 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Reservas internacionales y pasivos del BCRA. Tipo de cambio de valuación, valor diario, último dato del mes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_TIPO_CAMBIION_0_0_21_24"
         }
       ],
       "licenses": [
@@ -2423,7 +2431,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188).",
+      "description": "Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188). Los meses que la copia mensual de datos.gob.ar todavía no tiene son el último dato del mes del tipo de cambio de valuación diario del BCRA (provisorios hasta que llegue la mensual).",
       "schema": {
         "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
         "fields": [
@@ -2446,6 +2454,10 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Series históricas de estadísticas monetarias. Tipo de cambio en pesos equivalentes",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_DE_CATES_0_0_32"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Reservas internacionales y pasivos del BCRA. Tipo de cambio de valuación, valor diario, último dato del mes",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_TIPO_CAMBIION_0_0_21_24"
         }
       ],
       "licenses": [
@@ -2605,7 +2617,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "ITCRM del BCRA: las tasas de variación mensual de la serie base diciembre 2001 entre 1991 y enero de 1997, encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. La copia de datos.gob.ar llega hasta diciembre de 2024. Antes de 1991 el BCRA no publica el índice.",
+      "description": "ITCRM del BCRA: las tasas de variación mensual de la serie base diciembre 2001 entre 1991 y enero de 1997, encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. Los meses que la copia mensual de datos.gob.ar todavía no tiene (hoy, 2025) son el promedio mensual de la serie diaria del BCRA, sin reescalar. Antes de 1991 el BCRA no publica el índice.",
       "schema": {
         "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
         "fields": [
@@ -2632,6 +2644,10 @@
         {
           "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, promedio mensual",
           "path": "https://apis.datos.gob.ar/series/api/series/?ids=116.3_TCRMA_0_M_36"
+        },
+        {
+          "title": "BCRA (publicado por la Subsecretaría de Programación Macroeconómica): Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, valores diarios, promedio mensual",
+          "path": "https://apis.datos.gob.ar/series/api/series/?ids=116.4_TCRZE_2015_D_36_4"
         }
       ],
       "licenses": [

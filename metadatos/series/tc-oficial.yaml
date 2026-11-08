@@ -20,10 +20,14 @@ variantes:
     metodo: >-
       Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos
       actuales con las equivalencias de los signos monetarios (1 peso = 10.000 australes = 10⁷ pesos argentinos
-      = 10¹¹ pesos ley 18.188).
+      = 10¹¹ pesos ley 18.188). Los meses que la copia mensual de datos.gob.ar todavía no tiene son el último dato
+      del mes del tipo de cambio de valuación diario del BCRA (provisorios hasta que llegue la mensual).
     tramos:
       - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01}
-    advertencias: [q.tc.mercados-desdoblados]
+      - {fuente: f.bcra.tc-valuacion-diaria, completa: true}
+    reemplazar:
+      - {fecha: 2026-03, fuente: f.bcra.tc-valuacion-diaria, motivo: La mensual trae el valor del 30/03 y no el del 31/03.}
+    advertencias: [q.tc.mercados-desdoblados, q.tc.tramo-diario, q.tc.marzo-2026]
   - id: moneda-de-epoca
     nombre: En la moneda de cada época
     estado: publicada
@@ -38,7 +42,10 @@ variantes:
       fuente porque cambia de unidad en fechas que no son las de los cambios de signo (ver fuentes.yaml).
     tramos:
       - {fuente: f.bcra.tc-historico-mensual, desde: 1970-01}
-    advertencias: [q.tc.mercados-desdoblados, q.tc.signos-monetarios]
+      - {fuente: f.bcra.tc-valuacion-diaria, completa: true}
+    reemplazar:
+      - {fecha: 2026-03, fuente: f.bcra.tc-valuacion-diaria, motivo: La mensual trae el valor del 30/03 y no el del 31/03.}
+    advertencias: [q.tc.mercados-desdoblados, q.tc.signos-monetarios, q.tc.tramo-diario, q.tc.marzo-2026]
     # Las variaciones y los promedios cruzarían los cambios de signo monetario: antes hay que pasar a pesos
     # actuales (la librería lo exige). También está la variante en pesos actuales.
     transformaciones: [pesos_actuales, var_mensual, var_interanual, base_100, frecuencia]
@@ -60,8 +67,8 @@ validacion:
   var_min: -60
   var_max: 300
   umbral_revision_pct: 0.1
-quiebres: [q.tc.mercados-desdoblados, q.tc.signos-monetarios]
+quiebres: [q.tc.mercados-desdoblados, q.tc.signos-monetarios, q.tc.tramo-diario, q.tc.marzo-2026]
 transformaciones: [var_mensual, var_interanual, base_100, frecuencia, pesos_actuales]
-fuentes: [f.bcra.tc-historico-mensual]
+fuentes: [f.bcra.tc-historico-mensual, f.bcra.tc-valuacion-diaria]
 bibliografia: []
 licencia_derivado: CC-BY-4.0

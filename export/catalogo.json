@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-07T07:45:19Z",
+  "version_datos": "2026-11-07T20:41:28Z",
   "series": [
     {
       "id": "agregados",
@@ -1021,7 +1021,10 @@
       "frecuencia": "mensual",
       "variante_por_defecto": "brutas",
       "quiebres": [
-        "q.reservas.brutas"
+        "q.reservas.brutas",
+        "q.reservas.tramo-diario",
+        "q.reservas.marzo-2026",
+        "q.reservas.fin-de-mes"
       ],
       "variantes": [
         {
@@ -1031,7 +1034,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "1970-01",
-            "hasta": "2026-04"
+            "hasta": "2026-08"
           },
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/reservas/brutas.json"
@@ -1312,7 +1315,9 @@
       "variante_por_defecto": "pesos-actuales",
       "quiebres": [
         "q.tc.mercados-desdoblados",
-        "q.tc.signos-monetarios"
+        "q.tc.signos-monetarios",
+        "q.tc.tramo-diario",
+        "q.tc.marzo-2026"
       ],
       "variantes": [
         {
@@ -1322,7 +1327,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "1970-01",
-            "hasta": "2026-04"
+            "hasta": "2026-08"
           },
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tc-oficial/pesos-actuales.json"
@@ -1334,7 +1339,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "1970-01",
-            "hasta": "2026-04"
+            "hasta": "2026-08"
           },
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tc-oficial/moneda-de-epoca.json"
@@ -1386,7 +1391,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "1970-01",
-            "hasta": "2026-04"
+            "hasta": "2026-08"
           },
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tcr-bilateral/oficial.json"
@@ -1398,7 +1403,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "1970-01",
-            "hasta": "2026-04"
+            "hasta": "2026-08"
           },
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tcr-bilateral/provincias.json"
@@ -1423,10 +1428,11 @@
         "media_movil"
       ],
       "frecuencia": "mensual",
-      "variante_por_defecto": "bruegel",
+      "variante_por_defecto": "bcra",
       "quiebres": [
         "q.tcr.base-1997",
         "q.tcr.ipc-2007-2015",
+        "q.tcr.tramo-diario",
         "q.tcr.bruegel"
       ],
       "variantes": [
@@ -1437,7 +1443,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "1991-01",
-            "hasta": "2024-12"
+            "hasta": "2025-12"
           },
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tcr-multilateral/bcra.json"

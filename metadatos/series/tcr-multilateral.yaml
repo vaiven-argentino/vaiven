@@ -11,9 +11,9 @@ tipo: precio
 agregacion: promedio
 frecuencia: mensual
 cobertura: {desde: 1991-01, hasta: hoy}
-# Bruegel por defecto hasta que la del BCRA llegue a 2025 (la copia de datos.gob.ar termina en diciembre de 2024;
-# decidido el 07/11/2026, segunda revisión de la 4a).
-variante_por_defecto: bruegel
+# El BCRA por defecto: con el tramo de la diaria llega a 2025 (Bruegel fue la variante por defecto mientras la del
+# BCRA terminaba en diciembre de 2024; decidido el 07/11/2026, segunda revisión de la 4a).
+variante_por_defecto: bcra
 vista_inicial: {transformacion: nivel}
 variantes:
   - id: bcra
@@ -22,12 +22,15 @@ variantes:
     empalme: encadenar_tasas
     metodo: >-
       ITCRM del BCRA: las tasas de variación mensual de la serie base diciembre 2001 entre 1991 y enero de 1997,
-      encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. La copia de datos.gob.ar llega
-      hasta diciembre de 2024. Antes de 1991 el BCRA no publica el índice.
+      encadenadas a la serie base 17-12-2015 desde febrero de 1997, que da el nivel. Los meses que la copia mensual de
+      datos.gob.ar todavía no tiene (hoy, 2025) son el promedio mensual de la serie diaria del BCRA, sin reescalar.
+      Antes de 1991 el BCRA no publica el índice.
     tramos:
       - {fuente: f.bcra.itcrm-base-2001, desde: 1991-01, hasta: 1997-01}
       - {fuente: f.bcra.itcrm-base-2015, desde: 1997-02}
-    advertencias: [q.tcr.base-1997, q.tcr.ipc-2007-2015]
+      # Los meses que la mensual todavía no tiene: promedio de la diaria, sin reescalar (segunda revisión de la 4a).
+      - {fuente: f.bcra.itcrm-diario, completa: true}
+    advertencias: [q.tcr.base-1997, q.tcr.ipc-2007-2015, q.tcr.tramo-diario]
   - id: bruegel
     nombre: Bruegel, 51 socios (desde 1970), sin empalmar
     estado: publicada
@@ -67,8 +70,8 @@ validacion:
   var_min: -40
   var_max: 120
   umbral_revision_pct: 0.5
-quiebres: [q.tcr.base-1997, q.tcr.ipc-2007-2015, q.tcr.bruegel]
+quiebres: [q.tcr.base-1997, q.tcr.ipc-2007-2015, q.tcr.tramo-diario, q.tcr.bruegel]
 transformaciones: [var_mensual, var_interanual, base_100, frecuencia, media_movil]
-fuentes: [f.bcra.itcrm-base-2001, f.bcra.itcrm-base-2015, f.bruegel.reer-51-ar]
+fuentes: [f.bcra.itcrm-base-2001, f.bcra.itcrm-base-2015, f.bcra.itcrm-diario, f.bruegel.reer-51-ar]
 bibliografia: [DLB1993-A11, RL2023-G1, CENDA2010-G10, DF2013-C1, DF2013-G3, DF2013-C2]
 licencia_derivado: CC-BY-4.0

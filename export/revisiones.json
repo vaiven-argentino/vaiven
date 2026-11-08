@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "version_datos": "2026-11-07T20:41:28Z",
+    "variante": "reservas.brutas",
+    "umbral_pct": 0.5,
+    "cambios": [
+      {
+        "fecha": "2026-03",
+        "anterior": 43381.0,
+        "nuevo": 42052.0,
+        "variacion_pct": -3.063553
+      }
+    ]
+  },
+  {
+    "version_datos": "2026-11-07T20:41:28Z",
+    "variante": "tc-oficial.pesos-actuales",
+    "umbral_pct": 0.1,
+    "cambios": [
+      {
+        "fecha": "2026-03",
+        "anterior": 1394.9234,
+        "nuevo": 1382.7578,
+        "variacion_pct": -0.872134
+      }
+    ]
+  },
+  {
+    "version_datos": "2026-11-07T20:41:28Z",
+    "variante": "tc-oficial.moneda-de-epoca",
+    "umbral_pct": 0.1,
+    "cambios": [
+      {
+        "fecha": "2026-03",
+        "anterior": 1394.9234,
+        "nuevo": 1382.7578,
+        "variacion_pct": -0.872134
+      }
+    ]
+  },
+  {
+    "version_datos": "2026-11-07T20:41:28Z",
+    "variante": "tcr-bilateral.oficial",
+    "umbral_pct": 0.5,
+    "cambios": [
+      {
+        "fecha": "2026-03",
+        "anterior": 97.00765064,
+        "nuevo": 96.16161402,
+        "variacion_pct": -0.872134
+      }
+    ]
+  },
+  {
+    "version_datos": "2026-11-07T20:41:28Z",
+    "variante": "tcr-bilateral.provincias",
+    "umbral_pct": 0.5,
+    "cambios": [
+      {
+        "fecha": "2026-03",
+        "anterior": 97.00765064,
+        "nuevo": 96.16161402,
+        "variacion_pct": -0.872134
+      }
+    ]
+  }
+]

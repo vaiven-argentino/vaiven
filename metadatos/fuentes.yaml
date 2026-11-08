@@ -151,6 +151,46 @@
     Saldo de fin de mes: en dic. 2005, ene. 2010 y dic. 2020 coincide con el último dato diario de la API del BCRA
     (diferencia máxima, 0,14 millones en dic. 2005).
 
+# Tramos recientes (segunda revisión de la 4a, 2.2): las series mensuales del BCRA en datos.gob.ar llegan con meses
+# de atraso; estas diarias del mismo organismo, también CC BY 4.0, llegan más lejos. La API las pasa a mensuales
+# (`colapsar`) y Vaivén solo usa los meses que la mensual todavía no tiene (`completa: true` en el tramo). Un mes
+# entra solo si la diaria tiene dato de su último día (no se publican meses incompletos).
+- id: f.bcra.reservas-diaria
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Reservas internacionales y pasivos del BCRA. Reservas internacionales, valor diario, último dato del mes
+  api: datos.gob.ar
+  id_api: 92.2_RESERVAS_IRES_0_0_32_40
+  url: https://apis.datos.gob.ar/series/api/series/?ids=92.2_RESERVAS_IRES_0_0_32_40
+  licencia: CC-BY-4.0
+  colapsar: {a: month, con: end_of_period}
+  frecuencia: mensual
+  desfase_esperado: 1
+  unidad: millones de US$
+  cobertura: {desde: 2003-01, hasta: hoy}
+  verificado: 2026-11-07
+  nota: >-
+    En 279 meses comunes (2003–2026) coincide con la mensual (174.1_RRVAS_IDOS_0_0_36) salvo en 13; las diferencias
+    grandes son junio de 2024 (+3,0 %: la diaria repite 29.886 del 26/06 al 03/07, le faltan días) y marzo de 2026
+    (−3,1 %: la mensual toma el dato del 30/03 y la diaria el del 31/03). Por eso solo completa los meses que faltan.
+
+- id: f.bcra.tc-valuacion-diaria
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Reservas internacionales y pasivos del BCRA. Tipo de cambio de valuación, valor diario, último dato del mes
+  api: datos.gob.ar
+  id_api: 92.2_TIPO_CAMBIION_0_0_21_24
+  url: https://apis.datos.gob.ar/series/api/series/?ids=92.2_TIPO_CAMBIION_0_0_21_24
+  licencia: CC-BY-4.0
+  colapsar: {a: month, con: end_of_period}
+  frecuencia: mensual
+  desfase_esperado: 1
+  unidad: pesos actuales por dólar
+  cobertura: {desde: 2003-01, hasta: hoy}
+  verificado: 2026-11-07
+  nota: >-
+    En 279 meses comunes (2003–2026) coincide con la mensual en pesos equivalentes (174.1_T_DE_CATES_0_0_32) salvo en
+    junio de 2010 (−0,13 %), febrero de 2013 (+0,01 %) y marzo de 2026 (−0,87 %: la mensual toma el dato del 30/03).
+    Desde 2003 no hubo cambios de signo monetario: pesos de cada momento y pesos actuales son lo mismo.
+
 # ── Exportaciones (EXT-01) ─────────────────────────────────────────────────────
 - id: f.indec.ica-exportaciones-anual
   organismo: INDEC
@@ -565,8 +605,8 @@
   cobertura: {desde: 1997-01, hasta: hoy}
   verificado: 2026-10-24
   nota: >-
-    En datos.gob.ar llega hasta diciembre de 2024 (24/10/2026); la diaria (116.4_TCRZE_2015_D_36_4) llega a enero de
-    2026, pero su promedio mensual difiere de esta serie hasta 0,9 %, así que no se usa para completarla.
+    En datos.gob.ar llega hasta diciembre de 2024 (24/10/2026). Desde la segunda revisión de la 4a, la variante la
+    completa con el promedio mensual de la diaria (f.bcra.itcrm-diario), que desde 2023 difiere 0,03 % o menos.
 
 - id: f.bruegel.reer-51-ar
   organismo: Bruegel (Zsolt Darvas)
@@ -596,6 +636,24 @@
     Verificado de nuevo el 07/11/2026 en la página del conjunto de datos, junto con la cita recomendada (con DOI).
     Cita: Darvas, Z. (2012), «Real effective exchange rates for 178 countries: a new database», Bruegel Working
     Paper 2012/06, actualizada; doi:10.64153/SZCG6180. El README no dice cuál es el período base.
+
+- id: f.bcra.itcrm-diario
+  organismo: BCRA (publicado por la Subsecretaría de Programación Macroeconómica)
+  nombre: Índice de tipo de cambio real multilateral, base 17-12-2015 = 100, valores diarios, promedio mensual
+  api: datos.gob.ar
+  id_api: 116.4_TCRZE_2015_D_36_4
+  url: https://apis.datos.gob.ar/series/api/series/?ids=116.4_TCRZE_2015_D_36_4
+  licencia: CC-BY-4.0
+  colapsar: {a: month, con: avg}
+  frecuencia: mensual
+  desfase_esperado: 1
+  unidad: índice 17-12-2015 = 100
+  cobertura: {desde: 1997-01, hasta: hoy}
+  verificado: 2026-11-07
+  nota: >-
+    Promedio mensual de la diaria, calculado por la API. Contra la mensual (116.3_TCRMA_0_M_36) difiere hasta 0,9 % en
+    2020–2021, pero 0,03 % o menos desde 2023; solo completa los meses que la mensual no tiene (2025). Enero de 2026
+    queda afuera: la diaria llega al 28/01.
 
 # ── Auxiliares (SPEC 2.6): PIB nominal, población e IPC de EE.UU. ─────────────
 - id: f.bm.pib-nominal

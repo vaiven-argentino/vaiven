@@ -6,7 +6,7 @@
   "nombre": "Tipo de cambio real multilateral",
   "variante": "bruegel",
   "nombre_variante": "Bruegel, 51 socios (desde 1970), sin empalmar",
-  "es_variante_por_defecto": true,
+  "es_variante_por_defecto": false,
   "unidad": "índice (100 ÷ REER de Bruegel; base sin declarar)",
   "tipo": "precio",
   "agregacion": "promedio",
@@ -70,8 +70,8 @@
     }
   ],
   "licencia": "other-at",
-  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bruegel». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-multilateral/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bruegel». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-multilateral/bruegel/",
+  "version_datos": "2026-11-07T20:37:00Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 0.7411160948],

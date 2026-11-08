@@ -30,9 +30,17 @@ def cita(serie_meta: dict, variante: dict, version_datos: str) -> str:
 
 def _advertencias(variante: dict, quiebres: dict[str, dict], serie: pd.Series) -> list[dict]:
     salida = []
+    completa = next((t for t in variante["tramos"] if t.get("completa")), None)
     for qid in variante.get("advertencias", []):
         q = quiebres[qid]
-        salida.append({"id": qid, "desde": _texto(q.get("desde")), "hasta": _texto(q.get("hasta")),
+        desde = q.get("desde")
+        if desde == "tramo-completa":
+            # Quiebre de fuente del tramo reciente (segunda revisión de la 4a, 2.2): empieza donde empieza ese tramo,
+            # que se corre solo cuando la serie mensual se pone al día. Si el tramo no aporta datos, no hay quiebre.
+            if completa is None:
+                continue
+            desde = completa["desde"]
+        salida.append({"id": qid, "desde": _texto(desde), "hasta": _texto(q.get("hasta")),
                        "tipo": q.get("tipo"), "descripcion": q["descripcion"],
                        # Esquema 1.3: un quiebre de un solo país (por ejemplo, Venezuela desde 2015).
                        **({"entidades": list(q["entidades"])} if q.get("entidades") else {})})
