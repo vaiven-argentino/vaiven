@@ -1,0 +1,15 @@
+{
+  "fuente": "f.ocde.ipc-eeuu",
+  "descargado": "2026-11-10T21:26:04Z",
+  "sha256": "156f2343c053893344f36621c1aa6874fae64ad5600a92bb40d1bab2dc0a7f22",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "datos.csv",
+      "url": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.TPS,DSD_PRICES@DF_PRICES_ALL,1.0/USA.M.N.CPI.IX._T.N._Z?startPeriod=1960-01&format=csvfilewithlabels",
+      "bytes": 247527,
+      "sha256": "13185289b87e4bc5253361ac1d156646ab0fa2f31a55dcf29bb50896e149993f"
+    }
+  ]
+}
