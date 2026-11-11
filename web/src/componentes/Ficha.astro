@@ -80,7 +80,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
       <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
       <div><dt>Cobertura</dt><dd>{cobertura(doc.cobertura.desde, doc.tramos[0]?.frecuencia ?? doc.frecuencia, doc.cobertura.hasta, doc.tramos.at(-1)?.frecuencia ?? doc.frecuencia)}</dd></div>
       <div class="ultimo-dato"><dt>Último dato</dt><dd><strong>{ultimo}</strong>{atrasoTexto && <span class="atraso"> · {atrasoTexto}</span>}{manuales.map((m) => <span class="atraso"> · versión de {m.nombre} del {m.version}</span>)}</dd></div>
-      <div><dt>Actualización</dt><dd>Datos de esta serie: <time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> · Últimos datos nuevos en el sitio: <time datetime={versionSitio}>{diaDeVersion(versionSitio)}</time> <span class="secundario">(las fuentes se revisan todos los días; el sitio cambia solo cuando hay datos nuevos)</span></dd></div>
+      <div><dt>Actualización</dt><dd>Datos de esta serie: <time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> · Últimos datos nuevos en el sitio: <time datetime={versionSitio}>{diaDeVersion(versionSitio)}</time></dd></div>
     </dl>
     {doc.desactualizada_desde && (manuales.length ? (
       <p class="alerta">La versión de {manuales.map((m) => m.nombre).join(" y ")} que usa Vaivén tiene más de 3 meses: puede haber una más nueva. Esta fuente se actualiza a mano.</p>

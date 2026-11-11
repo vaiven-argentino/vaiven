@@ -37,7 +37,7 @@ Vaivén es una base histórica **curada** de series económicas argentinas desde
 ### 2.1 Capas
 | Capa | Qué guarda | Regla |
 |---|---|---|
-| **Snapshot** | El archivo tal como lo devolvió la fuente, con fecha de descarga, URL, checksum, licencia y, si la fuente la declara, su versión. | Nunca se modifica; si la fuente cambia, se guarda un snapshot nuevo. Las fuentes de **descarga manual** (sección 5.1) se bajan fuera de la corrida automática. |
+| **Snapshot** | El archivo tal como lo devolvió la fuente, con fecha de descarga, URL, checksum, licencia y, si la fuente la declara, su versión. | Nunca se modifica, salvo para borrar copias con contenido idéntico (por ejemplo, la misma respuesta en otro orden); si la fuente cambia, se guarda un snapshot nuevo. Las fuentes de **descarga manual** (sección 5.1) se bajan fuera de la corrida automática. |
 | **Capa 1: series fuente** | Cada serie de cada fuente, normalizada (fecha ISO, valor numérico, unidad, frecuencia). Una serie fuente = un tramo publicado por un organismo. | Sin transformaciones de contenido: solo formato. |
 | **Capa 2: series curadas** | La serie de Vaivén, con una o más **variantes**. Cada variante declara qué tramos de capa 1 usa, cómo los une y qué advertencias tiene. | Toda operación queda documentada en los metadatos. |
 | **Export** | Lo que consumen la web y el MCP: JSON por serie y variante, archivos de descarga, `datapackage.json`, especificaciones de Vega-Lite. | Se regenera completo en cada actualización. |

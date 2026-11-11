@@ -22,7 +22,7 @@ const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
     <section class="destacadas" aria-labelledby="titulo-series">
       <div class="fila-titulo">
         <h2 id="titulo-series">Series publicadas</h2>
-        <p class="secundario">Últimos datos nuevos: <time datetime={version_datos}>{diaDeVersion(version_datos)}</time>. Las fuentes se revisan todos los días; el sitio cambia solo cuando hay datos nuevos.</p>
+        <p class="secundario">Últimos datos nuevos: <time datetime={version_datos}>{diaDeVersion(version_datos)}</time></p>
       </div>
       <ul>
         {ordenadas.map((s) => {

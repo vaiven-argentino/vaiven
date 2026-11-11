@@ -63,7 +63,7 @@
       "desde": "2007-01",
       "hasta": "2015-12",
       "tipo": "intervencion",
-      "descripcion": "Entre 2007 y 2015, el índice depende de qué inflación argentina se use para deflactar, y la oficial del INDEC de esos años está en duda (ver el IPC). La variante recalculada con un IPC alternativo queda pendiente."
+      "descripcion": "Entre 2007 y 2015, el índice depende de qué inflación argentina se use para deflactar, porque la oficial del INDEC de esos años subestimó la inflación (ver el IPC). Cambia hasta la dirección: entre los promedios de 2006 y 2015, el índice del BCRA, que usa el IPC de San Luis y el de la Ciudad de Buenos Aires, da una apreciación real de 50 %, y el de Bruegel, una depreciación real de 26 % (ver q.tcr.bruegel-2007-2015). La variante recalculada con otro IPC queda pendiente."
     },
     {
       "id": "q.tcr.tramo-diario",
@@ -103,8 +103,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-multilateral/",
-  "version_datos": "2026-11-07T20:37:00Z",
+  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-11-11. https://vaiven.argentino.workers.dev/series/tcr-multilateral/",
+  "version_datos": "2026-11-11T22:33:05Z",
   "desactualizada_desde": null,
   "datos": [
     ["1991-01", 109.1230511],

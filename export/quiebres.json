@@ -707,24 +707,35 @@
     "id": "q.tcr.bruegel",
     "desde": "1970-01",
     "tipo": "metodologia",
-    "descripcion": "Índice de Bruegel (Darvas): otra canasta (51 socios), otros ponderadores y otros IPC que el del BCRA, dado vuelta para que un aumento sea depreciación. No se empalma con el del BCRA. En 1997–2024 sus tasas anuales siguen de cerca a las del BCRA (correlación de 0,98), pero en algunos años difieren mucho: en 1999 da +2,1 % y el BCRA, −11,0 %. Vaivén lo lleva a diciembre de 2015 = 100; el del BCRA promedia 85,1 en ese mes porque su base es un día, el 17/12/2015, posterior a la devaluación: los niveles no se comparan entre sí.",
+    "descripcion": "Índice de Bruegel (Darvas): otra canasta (51 socios), otros ponderadores y otros IPC que el del BCRA, dado vuelta para que un aumento sea depreciación. No se empalma con el del BCRA. Las tasas anuales de 1998–2024 tienen una correlación de 0,98 con las del BCRA, pero la arman los años de grandes saltos: sin 2002, 2014, 2018 y 2023 baja a 0,71. No quiere decir que los niveles se parezcan: en 2007–2015 Bruegel queda entre 3 y 15 puntos por encima del BCRA todos los años y el acumulado va en sentido contrario (ver q.tcr.bruegel-2007-2015); en 1999 Bruegel da +2,1 % y el BCRA, −11,0 %. Desde 2016 se mueven casi igual. Vaivén lo lleva a diciembre de 2015 = 100; el del BCRA promedia 85,1 en ese mes porque su base es un día, el 17/12/2015, posterior a la devaluación. Los niveles anteriores a 2016 no se comparan entre sí: en diciembre de 2001, Bruegel da 31 y el BCRA, 69.",
     "afecta": [
       "tcr-multilateral.bruegel"
     ],
-    "fuente": "Comparación de REER_51_AR (Bruegel, versión del 11/10/2026) con 116.3_TCRMA_0_M_36 (24/10/2026).",
+    "fuente": "Comparación de REER_51_AR (Bruegel, versión del 11/10/2026) con 116.3_TCRMA_0_M_36 (24/10/2026 y 11/11/2026).",
     "hasta": null
+  },
+  {
+    "id": "q.tcr.bruegel-2007-2015",
+    "desde": "2007-01",
+    "hasta": "2015-12",
+    "tipo": "metodologia",
+    "descripcion": "En 2007–2015 esta variante muestra lo contrario que la del BCRA: entre los promedios de 2006 y 2015, Bruegel da una depreciación real de 26 % y el BCRA, una apreciación real de 50 %. Bruegel sube sobre todo en 2009, 2011, 2013 y 2014, mientras el BCRA baja en todos los años de 2007 a 2013. La diferencia viene del IPC argentino: el BCRA usa el de San Luis y el de la Ciudad de Buenos Aires, y Bruegel no aclara cuál usa, pero el resultado es compatible con el IPC oficial del INDEC de esos años, que subestimó la inflación. No sirve para estudiar el atraso cambiario de 2007–2015: para eso, la variante del BCRA.",
+    "afecta": [
+      "tcr-multilateral.bruegel"
+    ],
+    "fuente": "Comparación de las dos variantes en el export de Vaivén (promedios anuales, 11/11/2026); BCRA, «Índice de Tipo de Cambio Real Multilateral. Metodología» (abril de 2016), sección 3."
   },
   {
     "id": "q.tcr.ipc-2007-2015",
     "desde": "2007-01",
     "hasta": "2015-12",
     "tipo": "intervencion",
-    "descripcion": "Entre 2007 y 2015, el índice depende de qué inflación argentina se use para deflactar, y la oficial del INDEC de esos años está en duda (ver el IPC). La variante recalculada con un IPC alternativo queda pendiente.",
+    "descripcion": "Entre 2007 y 2015, el índice depende de qué inflación argentina se use para deflactar, porque la oficial del INDEC de esos años subestimó la inflación (ver el IPC). Cambia hasta la dirección: entre los promedios de 2006 y 2015, el índice del BCRA, que usa el IPC de San Luis y el de la Ciudad de Buenos Aires, da una apreciación real de 50 %, y el de Bruegel, una depreciación real de 26 % (ver q.tcr.bruegel-2007-2015). La variante recalculada con otro IPC queda pendiente.",
     "afecta": [
       "tcr-multilateral.bcra",
       "tcr-multilateral.bruegel"
     ],
-    "fuente": "INDEC, advertencia sobre el IPC 2007–2015."
+    "fuente": "INDEC, advertencia sobre el IPC 2007–2015; BCRA, «Índice de Tipo de Cambio Real Multilateral. Metodología» (abril de 2016), sección 3; comparación de las dos variantes en el export de Vaivén (11/11/2026)."
   },
   {
     "id": "q.tcr.tramo-diario",

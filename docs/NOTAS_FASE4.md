@@ -389,5 +389,29 @@ La SPEC v1.2 incorpora lo de este PR (2.1, 2.5, 5.1, 5.2 e historial). Quedan co
 - Bruegel: mirar una vez por mes si hay versión nueva.
 
 **Datos:**
-- TCR multilateral: si datos.gob.ar no carga 2026 del TCR diario del BCRA antes de fin de año, revisar si conviene volver a Bruegel como variante por defecto.
+- TCR multilateral: si datos.gob.ar no carga 2026 del TCR diario del BCRA antes de fin de año, revisar la variante por defecto. Volver a Bruegel ya no es buena opción (ver la revisión final, 2007–2015).
+
+## 4a · Correcciones de la revisión final
+
+*11/11/2026 · Respuesta a `REVISION_FASE4a_v4.md` (revisión final, sobre la rama del PR #18 y `main` en `0de0cf4`). Con esto, la 4a queda cerrada.*
+
+### Decisiones tomadas con Camilo (11/11/2026)
+
+| Punto | Decisión | Qué se hizo |
+|---|---|---|
+| 1 Conflicto con la corrida diaria | Traer `main` y regenerar | Merge de `main` (IPC de EE.UU. de octubre de 2026) y `actualizar --sin-red`. El IPC de EE.UU. llega a 2026-10; en `snapshots/f.ocde.ipc-eeuu/` quedan solo `2026-10-24` y `2026-11-11` (dato nuevo de verdad). Una segunda corrida sin red no cambia nada. |
+| 2 TCR de Bruegel en 2007–2015 | Textos y quiebre propio; la serie queda completa | Entre los promedios de 2006 y 2015, Bruegel da +26 % (depreciación real) y el BCRA −50 % (apreciación). `q.tcr.ipc-2007-2015` lo dice con las cifras. `q.tcr.bruegel` ya no concluye que «siguen de cerca»: la correlación de 0,98 baja a 0,71 sin 2002, 2014, 2018 y 2023. Quiebre nuevo `q.tcr.bruegel-2007-2015` (banda, solo Bruegel): «no sirve para estudiar el atraso cambiario de 2007–2015». La banda de 2007–2015 ya se sombreaba en las dos variantes. |
+| 3 Regla para los PR con datos | `CLAUDE.md` | «Antes de pedir el merge de un PR que toque `export/` o `datos/`, traer `main` y regenerar con `--sin-red`; mergear el mismo día, antes de las 18:24». |
+| 4 Snapshots borrados | Excepción en la SPEC | 2.1: «salvo para borrar copias con contenido idéntico». |
+| 3 Aclaración repetida | Solo en el pie | La ficha y el inicio dicen «Últimos datos nuevos en el sitio: …»; la explicación queda en el pie. |
+
+### Verificado
+
+- **IPC del BCRA en 2007–2015:** la metodología del ITCRM (BCRA, abril de 2016, sección 3) empalma el IPC GBA del INDEC hasta diciembre de 2006, el IPC de San Luis hasta julio de 2012, el promedio de las variaciones del IPC de la Ciudad de Buenos Aires y el de San Luis hasta abril de 2016 y el nuevo IPC GBA desde entonces. Bruegel no dice qué IPC argentino usa: el texto dice que el resultado es compatible con el oficial del INDEC, sin afirmarlo.
+- **Cifras:** en diciembre de 2001, Bruegel da 31 y el BCRA 69 (no 81, como decía la revisión). En 2007–2015 las tasas anuales se mueven juntas (correlación de 0,91), pero Bruegel queda entre 3 y 15 puntos por encima todos los años.
+
+### Pendientes
+
+- **Ramas viejas:** desde las sesiones de Claude Code no se pueden borrar (GitHub responde 403). Hay que borrarlas desde GitHub o desde la Mac.
+- **Otro IPC para 2007–2015:** la variante pendiente `ipc-alternativo` del TCR multilateral (recalculado con otro IPC en esos años) daría una alternativa que no depende del IPC oficial del INDEC.
 
