@@ -19,6 +19,7 @@
 - **Antes de cada fase, mostrar un plan y esperar aprobación.**
 - **Preguntar antes de cualquier acción irreversible o pública**: crear o borrar repositorios, push, despliegues, cambios de configuración de GitHub o Cloudflare, releases, publicaciones en Zenodo.
 - Commits chicos, con mensajes en español que digan qué cambió y por qué.
+- **Antes de pedir el merge de un PR que toque `export/` o `datos/`**, traer `main` y regenerar con `uv run python -m pipeline actualizar --sin-red`: si no, choca con el commit de la corrida diaria. Conviene mergearlo el mismo día, antes de las 18:24 (hora argentina), cuando corre la actualización.
 
 ## Derechos de autor
 - El repositorio es público. **No se sube material con derechos de autor**: capturas o páginas de libros, PDFs de la bibliografía, series que no permiten redistribución (por ejemplo, el riesgo país).

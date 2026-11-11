@@ -14,6 +14,10 @@ describe("formato", () => {
     expect(numero(211.4076, true)).toBe("211,4");
     expect(numero(6.137836334e-11)).toBe("6,14 × 10⁻¹¹");
     expect(numero(null)).toBe("—");
+    // Signo menos tipográfico, como en los ejes (tercera revisión de la 4a).
+    expect(numero(-10.894)).toBe("−10,89");
+    expect(numero(-2.04, true)).toBe("−2,0");
+    expect(numero(-6.1e-11)).toBe("−6,10 × 10⁻¹¹");
   });
 });
 
@@ -30,5 +34,15 @@ describe("último dato y atraso (segunda revisión de la 4a, 3.5)", () => {
       .toBe("con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó");
     expect(textoAtraso({ tipo: "sin_datos_nuevos", meses: 66 })).toBe("66 meses sin datos nuevos");
     expect(textoAtraso(null)).toBeNull();
+  });
+});
+
+describe("cobertura con la frecuencia de cada punta (tercera revisión de la 4a)", () => {
+  it("trimestral, semestral, mensual y anual", async () => {
+    const { cobertura } = await import("../src/lib/formato");
+    expect(cobertura("1970-01", "trimestral", "2026-04", "trimestral")).toBe("1970, 1.er trimestre – 2026, 2.º trimestre");
+    expect(cobertura("1974-05", "semestral", "2026-04", "trimestral")).toBe("1974, 1.ª onda – 2026, 2.º trimestre");
+    expect(cobertura("1970-01", "mensual", "2026-08", "mensual")).toBe("ene. 1970 – ago. 2026");
+    expect(cobertura("1970", "anual", "2025", "anual")).toBe("1970 – 2025");
   });
 });

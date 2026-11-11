@@ -463,3 +463,36 @@ def test_reemplazar_un_dato_con_otra_fuente_es_estricto(repo):
     meta.write_text(yaml.safe_dump(serie, allow_unicode=True), encoding="utf-8")
     res = ejecutar(repo, con_red=False)
     assert "prueba.oficial" in res.retenidas and "reemplazar" in res.informe()
+
+
+def test_snapshot_compara_por_contenido_si_la_fuente_lo_pide(tmp_path):
+    # La OCDE devuelve las mismas filas en otro orden según el día (tercera revisión de la 4a): no es una versión nueva.
+    from pipeline.fuentes import ocde
+    fuente = {"id": "f.prueba.ocde", "licencia": "CC-BY-4.0"}
+    csv = lambda filas: ("TIME_PERIOD,OBS_VALUE\n" + "\n".join(filas) + "\n").encode()  # noqa: E731
+    filas = ["2000-01,1.0", "2000-02,2.0", "2000-03,3.0"]
+    primero, nuevo = base.guardar_snapshot(tmp_path, fuente, [base.Archivo("datos.csv", "u", csv(filas))], canonizar=ocde.canonizar)
+    assert nuevo
+    mezclado, nuevo = base.guardar_snapshot(tmp_path, fuente, [base.Archivo("datos.csv", "u", csv(filas[::-1]))],
+                                            canonizar=ocde.canonizar)
+    assert not nuevo and mezclado == primero
+    # Sin canonizar, el mismo cambio de orden sí contaba como versión nueva.
+    otro = {**fuente, "id": "f.prueba.bytes"}
+    base.guardar_snapshot(tmp_path, otro, [base.Archivo("datos.csv", "u", csv(filas))])
+    assert base.guardar_snapshot(tmp_path, otro, [base.Archivo("datos.csv", "u", csv(filas[::-1]))])[1]
+    # Un valor distinto sí es una versión nueva.
+    cambiado = ["2000-01,1.0", "2000-02,2.5", "2000-03,3.0"]
+    assert base.guardar_snapshot(tmp_path, fuente, [base.Archivo("datos.csv", "u", csv(cambiado))], canonizar=ocde.canonizar)[1]
+
+
+def test_rebase_lleva_el_indice_a_la_base_declarada():
+    import pandas as pd
+    from pipeline.capa2 import variantes
+    fechas = pd.date_range("2015-11-01", periods=3, freq="MS")
+    capa1 = {"f.x": pd.Series([2.0, 4.0, 5.0], index=fechas)}
+    v = {"id": "v", "empalme": "yuxtaponer", "tramos": [{"fuente": "f.x", "desde": "2015-11"}],
+         "invertir": 100, "rebase": {"fecha": "2015-12", "valor": 100}}
+    s = variantes.construir(v, capa1, [])
+    assert list(s.round(6)) == [200.0, 100.0, 80.0]
+    with pytest.raises(ErrorPipeline, match="rebase"):
+        variantes.construir({**v, "rebase": {"fecha": "2010-01"}}, capa1, [])

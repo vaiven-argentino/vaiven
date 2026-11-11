@@ -34,19 +34,21 @@ variantes:
   - id: bruegel
     nombre: Bruegel, 51 socios (desde 1970), sin empalmar
     estado: publicada
-    unidad: índice (100 ÷ REER de Bruegel; base sin declarar)
+    unidad: índice, diciembre de 2015 = 100 (inversa del REER de Bruegel)
     empalme: yuxtaponer
     # Los datos son de Bruegel, con sus términos (uso libre con atribución, sin sugerir respaldo): no es CC BY.
     licencia_derivado: other-at
     invertir: 100
+    # Bruegel no declara base: se lleva a diciembre de 2015 = 100, para leerla en la escala del BCRA (tercera revisión).
+    rebase: {fecha: 2015-12, valor: 100}
     metodo: >-
       Tipo de cambio real efectivo de Bruegel (Darvas), con IPC y una canasta de 51 socios, mensual, dado vuelta
-      (100 ÷ valor) para que un aumento sea una depreciación real del peso, como en el índice del BCRA. Es otra
-      metodología y no se empalma con la serie del BCRA. Fuente: Darvas, Z. (2012), «Real effective exchange rates
+      (100 ÷ valor) para que un aumento sea una depreciación real del peso, como en el índice del BCRA, y llevado a
+      diciembre de 2015 = 100. Es otra metodología y no se empalma con la serie del BCRA. Fuente: Darvas, Z. (2012), «Real effective exchange rates
       for 178 countries: a new database», Bruegel Working Paper 2012/06, versión actualizada.
     tramos:
       - {fuente: f.bruegel.reer-51-ar, desde: 1970-01}
-    advertencias: [q.tcr.bruegel, q.tcr.ipc-2007-2015]
+    advertencias: [q.tcr.bruegel, q.tcr.bruegel-2007-2015, q.tcr.ipc-2007-2015]
     validacion:
       var_max: 250      # abril de 1989: +214 % (hiperinflación)
   - id: ipc-alternativo
@@ -70,7 +72,7 @@ validacion:
   var_min: -40
   var_max: 120
   umbral_revision_pct: 0.5
-quiebres: [q.tcr.base-1997, q.tcr.ipc-2007-2015, q.tcr.tramo-diario, q.tcr.bruegel]
+quiebres: [q.tcr.base-1997, q.tcr.ipc-2007-2015, q.tcr.tramo-diario, q.tcr.bruegel, q.tcr.bruegel-2007-2015]
 transformaciones: [var_mensual, var_interanual, base_100, frecuencia, media_movil]
 fuentes: [f.bcra.itcrm-base-2001, f.bcra.itcrm-base-2015, f.bcra.itcrm-diario, f.bruegel.reer-51-ar]
 bibliografia: [DLB1993-A11, RL2023-G1, CENDA2010-G10, DF2013-C1, DF2013-G3, DF2013-C2]

@@ -3,7 +3,7 @@
 // Sin JavaScript se ven todas.
 import Base from "../../layouts/Base.astro";
 import { catalogo, urlFicha } from "../../lib/export";
-import { fechaCorta, ultimoDato } from "../../lib/formato";
+import { cobertura, ultimoDato } from "../../lib/formato";
 
 const { series } = catalogo();
 const FRECUENCIAS = ["mensual", "trimestral", "semestral", "anual"];
@@ -57,7 +57,7 @@ const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
               <p>{s.definicion}</p>
               <dl class="datos">
                 <div><dt>Frecuencia</dt><dd>{s.frecuencia}</dd></div>
-                <div><dt>Cobertura</dt><dd>{defecto.cobertura ? `${fechaCorta(defecto.cobertura.desde)} – ${fechaCorta(defecto.cobertura.hasta)}` : "—"}</dd></div>
+                <div><dt>Cobertura</dt><dd>{defecto.cobertura ? cobertura(defecto.cobertura.desde, defecto.frecuencia_primer_dato ?? defecto.frecuencia, defecto.cobertura.hasta, defecto.frecuencia_ultimo_dato ?? defecto.frecuencia) : "—"}</dd></div>
                 {defecto.cobertura && <div><dt>Último dato</dt><dd><strong>{ultimoDato(defecto.cobertura.hasta, defecto.frecuencia_ultimo_dato ?? defecto.frecuencia)}</strong></dd></div>}
                 <div><dt>Variantes</dt><dd>{publicadas} publicada{publicadas === 1 ? "" : "s"}{pendientes > 0 && `, ${pendientes} pendiente${pendientes === 1 ? "" : "s"}`}</dd></div>
               </dl>

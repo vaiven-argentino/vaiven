@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-11T21:23:46Z",
+  "version_datos": "2026-11-11T22:35:39Z",
   "series": [
     {
       "id": "agregados",
@@ -37,6 +37,7 @@
             "desde": "1970-01",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/agregados/m1.json"
         },
@@ -49,6 +50,7 @@
             "desde": "1970-01",
             "hasta": "2021-05"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/agregados/m2-pesos.json"
         },
@@ -61,6 +63,7 @@
             "desde": "1970-01",
             "hasta": "2021-05"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/agregados/m2-total.json"
         },
@@ -73,6 +76,7 @@
             "desde": "1970-01",
             "hasta": "2021-05"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/agregados/m3-total.json"
         },
@@ -85,6 +89,7 @@
             "desde": "2009-06",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/agregados/m2-privado.json"
         }
@@ -126,6 +131,7 @@
             "desde": "1970-01",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/base-monetaria/fin-de-mes.json"
         },
@@ -138,6 +144,7 @@
             "desde": "2003-01",
             "hasta": "2026-05"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/base-monetaria/promedio-mensual.json"
         }
@@ -174,6 +181,7 @@
             "desde": "1970",
             "hasta": "2025"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/cuenta-corriente/larga.json"
         },
@@ -186,6 +194,7 @@
             "desde": "1992",
             "hasta": "2016"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/cuenta-corriente/mbp5.json"
         },
@@ -198,6 +207,7 @@
             "desde": "2006-01",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "trimestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/cuenta-corriente/mbp6.json"
         }
@@ -236,6 +246,7 @@
             "desde": "1974-05",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "semestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/desocupacion/total-urbano.json"
         },
@@ -248,6 +259,7 @@
             "desde": "1974-05",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "semestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/desocupacion/gba.json"
         },
@@ -295,6 +307,7 @@
             "desde": "1970",
             "hasta": "2024"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/deuda-externa/total.json"
         },
@@ -307,6 +320,7 @@
             "desde": "1970",
             "hasta": "2024"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/deuda-externa/publica.json"
         },
@@ -319,6 +333,7 @@
             "desde": "1970",
             "hasta": "2024"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/deuda-externa/privada.json"
         },
@@ -340,6 +355,7 @@
             "desde": "2006-01",
             "hasta": "2024-04"
           },
+          "frecuencia_primer_dato": "trimestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/deuda-externa/indec.json"
         }
@@ -378,6 +394,7 @@
             "desde": "1970",
             "hasta": "2024"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/deuda-publica/externa-bm.json"
         },
@@ -430,6 +447,7 @@
             "desde": "1970",
             "hasta": "2025"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/exportaciones/oficial.json"
         },
@@ -442,6 +460,7 @@
             "desde": "1992-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/exportaciones/mensual.json"
         },
@@ -487,6 +506,7 @@
             "desde": "2003-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/fuga/fae.json"
         },
@@ -499,6 +519,7 @@
             "desde": "1991",
             "hasta": "2024"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/fuga/activos-externos.json"
         },
@@ -553,6 +574,7 @@
             "desde": "1970",
             "hasta": "2025"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/importaciones/oficial.json"
         },
@@ -565,6 +587,7 @@
             "desde": "1992-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/importaciones/mensual.json"
         }
@@ -602,6 +625,7 @@
             "desde": "1961",
             "hasta": "2025"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/int-pib-per-capita/banco-mundial.json"
         }
@@ -727,6 +751,7 @@
             "desde": "1961",
             "hasta": "2025"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/int-pib/banco-mundial.json"
         }
@@ -852,6 +877,7 @@
             "desde": "1993-01",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "trimestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/inversion/retropolada.json"
         },
@@ -864,6 +890,7 @@
             "desde": "1970-01",
             "hasta": "1990-10"
           },
+          "frecuencia_primer_dato": "trimestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/inversion/base-1970.json"
         },
@@ -876,6 +903,7 @@
             "desde": "1993-01",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "trimestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/inversion/pct-pib-corrientes.json"
         },
@@ -926,6 +954,7 @@
             "desde": "1970-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/ipc/oficial.json"
         },
@@ -938,6 +967,7 @@
             "desde": "1970-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/ipc/provincias.json"
         },
@@ -987,6 +1017,7 @@
             "desde": "1970-01",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "trimestral",
           "frecuencia_ultimo_dato": "trimestral",
           "archivo": "series/pib/retropolada.json"
         },
@@ -1036,6 +1067,7 @@
             "desde": "1970-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/reservas/brutas.json"
         },
@@ -1085,6 +1117,7 @@
             "desde": "1993-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/resultado-fiscal/primario.json"
         },
@@ -1097,6 +1130,7 @@
             "desde": "1993-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/resultado-fiscal/financiero.json"
         },
@@ -1155,6 +1189,7 @@
             "desde": "1994-07",
             "hasta": "2026-07"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/salario-real/ripte.json"
         },
@@ -1167,6 +1202,7 @@
             "desde": "2001-10",
             "hasta": "2026-07"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/salario-real/indice-salarios.json"
         },
@@ -1220,6 +1256,7 @@
             "desde": "1970",
             "hasta": "2025"
           },
+          "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
           "archivo": "series/saldo-comercial/oficial.json"
         },
@@ -1232,6 +1269,7 @@
             "desde": "1992-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/saldo-comercial/mensual.json"
         }
@@ -1268,6 +1306,7 @@
             "desde": "1970-01",
             "hasta": "2026-04"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tasa-pasiva/plazo-fijo.json"
         },
@@ -1280,6 +1319,7 @@
             "desde": "1999-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tasa-pasiva/badlar.json"
         },
@@ -1329,6 +1369,7 @@
             "desde": "1970-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tc-oficial/pesos-actuales.json"
         },
@@ -1341,6 +1382,7 @@
             "desde": "1970-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tc-oficial/moneda-de-epoca.json"
         },
@@ -1393,6 +1435,7 @@
             "desde": "1970-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tcr-bilateral/oficial.json"
         },
@@ -1405,6 +1448,7 @@
             "desde": "1970-01",
             "hasta": "2026-08"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tcr-bilateral/provincias.json"
         }
@@ -1433,7 +1477,8 @@
         "q.tcr.base-1997",
         "q.tcr.ipc-2007-2015",
         "q.tcr.tramo-diario",
-        "q.tcr.bruegel"
+        "q.tcr.bruegel",
+        "q.tcr.bruegel-2007-2015"
       ],
       "variantes": [
         {
@@ -1445,6 +1490,7 @@
             "desde": "1991-01",
             "hasta": "2025-12"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tcr-multilateral/bcra.json"
         },
@@ -1457,6 +1503,7 @@
             "desde": "1970-01",
             "hasta": "2026-09"
           },
+          "frecuencia_primer_dato": "mensual",
           "frecuencia_ultimo_dato": "mensual",
           "archivo": "series/tcr-multilateral/bruegel.json"
         },

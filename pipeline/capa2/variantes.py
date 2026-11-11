@@ -114,6 +114,13 @@ def construir(variante: dict, capa1: dict[str, pd.Series], signos: list[dict],
     if "invertir" in variante:
         # Índice dado vuelta (k ÷ valor), declarado: por ejemplo, para que un aumento del TCR sea depreciación.
         serie = float(variante["invertir"]) / serie
+    if "rebase" in variante:
+        # Lleva el índice a una base declarada: `rebase: {fecha: 2015-12, valor: 100}` (Bruegel, que no declara base;
+        # tercera revisión de la 4a). La fecha tiene que estar en la serie.
+        fecha = a_fecha(variante["rebase"]["fecha"])
+        if fecha not in serie.index:
+            raise ErrorPipeline(f"{variante['id']}: `rebase` usa {variante['rebase']['fecha']}, que no está en la serie.")
+        serie = serie / serie.loc[fecha] * float(variante["rebase"].get("valor", 100))
     if "escala" in variante:
         # Cambio de unidad declarado (por ejemplo, de fracción a porcentaje).
         serie = serie * float(variante["escala"])

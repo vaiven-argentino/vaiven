@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-11-11T21:23:46Z",
-  "created": "2026-11-11T21:23:46Z",
+  "version": "2026-11-11T22:35:39Z",
+  "created": "2026-11-11T22:35:39Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -2667,7 +2667,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "Tipo de cambio real efectivo de Bruegel (Darvas), con IPC y una canasta de 51 socios, mensual, dado vuelta (100 ÷ valor) para que un aumento sea una depreciación real del peso, como en el índice del BCRA. Es otra metodología y no se empalma con la serie del BCRA. Fuente: Darvas, Z. (2012), «Real effective exchange rates for 178 countries: a new database», Bruegel Working Paper 2012/06, versión actualizada.",
+      "description": "Tipo de cambio real efectivo de Bruegel (Darvas), con IPC y una canasta de 51 socios, mensual, dado vuelta (100 ÷ valor) para que un aumento sea una depreciación real del peso, como en el índice del BCRA, y llevado a diciembre de 2015 = 100. Es otra metodología y no se empalma con la serie del BCRA. Fuente: Darvas, Z. (2012), «Real effective exchange rates for 178 countries: a new database», Bruegel Working Paper 2012/06, versión actualizada.",
       "schema": {
         "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
         "fields": [
@@ -2679,7 +2679,7 @@
           {
             "name": "valor",
             "type": "number",
-            "description": "índice (100 ÷ REER de Bruegel; base sin declarar)"
+            "description": "índice, diciembre de 2015 = 100 (inversa del REER de Bruegel)"
           }
         ],
         "primaryKey": [

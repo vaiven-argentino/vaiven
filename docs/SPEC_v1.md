@@ -37,7 +37,7 @@ Vaivén es una base histórica **curada** de series económicas argentinas desde
 ### 2.1 Capas
 | Capa | Qué guarda | Regla |
 |---|---|---|
-| **Snapshot** | El archivo tal como lo devolvió la fuente, con fecha de descarga, URL, checksum, licencia y, si la fuente la declara, su versión. | Nunca se modifica; si la fuente cambia, se guarda un snapshot nuevo. Las fuentes de **descarga manual** (sección 5.1) se bajan fuera de la corrida automática. |
+| **Snapshot** | El archivo tal como lo devolvió la fuente, con fecha de descarga, URL, checksum, licencia y, si la fuente la declara, su versión. | Nunca se modifica, salvo para borrar copias con contenido idéntico (por ejemplo, la misma respuesta en otro orden); si la fuente cambia, se guarda un snapshot nuevo. Las fuentes de **descarga manual** (sección 5.1) se bajan fuera de la corrida automática. |
 | **Capa 1: series fuente** | Cada serie de cada fuente, normalizada (fecha ISO, valor numérico, unidad, frecuencia). Una serie fuente = un tramo publicado por un organismo. | Sin transformaciones de contenido: solo formato. |
 | **Capa 2: series curadas** | La serie de Vaivén, con una o más **variantes**. Cada variante declara qué tramos de capa 1 usa, cómo los une y qué advertencias tiene. | Toda operación queda documentada en los metadatos. |
 | **Export** | Lo que consumen la web y el MCP: JSON por serie y variante, archivos de descarga, `datapackage.json`, especificaciones de Vega-Lite. | Se regenera completo en cada actualización. |
@@ -257,7 +257,7 @@ Reglas:
 
 ### 5.1 Pasos
 1. **Disparo:** un Cron Trigger de Cloudflare llama a diario al `workflow_dispatch` de GitHub. El `schedule` propio de GitHub Actions queda como respaldo semanal. También se puede ejecutar a mano.
-2. **Snapshot:** descarga cada fuente; si el checksum no cambió, no hace nada más con ella. Las fuentes de **descarga manual** (`descarga: manual` en `fuentes.yaml`; hoy, Bruegel, cuyo sitio bloquea a los servidores de GitHub Actions) no se descargan acá: se usa su último snapshot, y se bajan con `python -m pipeline bajar-manual` desde otra red.
+2. **Snapshot:** descarga cada fuente; si el checksum no cambió, no hace nada más con ella. Una fuente que devuelve lo mismo en otro orden (la OCDE) se compara por contenido y no por bytes. Las fuentes de **descarga manual** (`descarga: manual` en `fuentes.yaml`; hoy, Bruegel, cuyo sitio bloquea a los servidores de GitHub Actions) no se descargan acá: se usa su último snapshot, y se bajan con `python -m pipeline bajar-manual` desde otra red.
 3. **Capa 1:** normaliza las fuentes que cambiaron.
 4. **Capa 2:** reconstruye las variantes afectadas.
 5. **Validación** (pandera y reglas propias):
@@ -468,4 +468,5 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
   - esquema 1.3 y `desactualizada_desde` como primer día sin respuesta (2.5);
   - commit con el informe entero, issue por fuente a los 7 días y aviso de las fuentes manuales a los 3 meses (5.1 y 5.2);
   - tramos que completan con series diarias pasadas a mensuales y reemplazo documentado de un dato con otra fuente (2.3);
-  - quiebres por entidad (2.4), catálogo sin la bibliografía (2.5), atraso contra el calendario de la fuente (6.1), parámetros estrictos y cita con nombres de países en el MCP (7.2) y licencia `other-at` de Bruegel (9).
+  - quiebres por entidad (2.4), catálogo sin la bibliografía (2.5), atraso contra el calendario de la fuente (6.1), parámetros estrictos y cita con nombres de países en el MCP (7.2) y licencia `other-at` de Bruegel (9);
+  - tercera revisión (11/11/2026): snapshots comparados por contenido cuando la fuente cambia el orden (5.1).

@@ -45,6 +45,14 @@ export function textoAtraso(a: Atraso | null): string | null {
   return `con el calendario habitual de la fuente ${debe}${a.intermediario ? `: ${a.intermediario} todavía no ${uno ? "lo" : "los"} cargó` : ""}`;
 }
 
+/**
+ * La cobertura con la frecuencia de cada punta (tercera revisión de la 4a): «ene. 1970 – ago. 2026»,
+ * «1970, 1.er trimestre – 2026, 2.º trimestre» o «1974, 1.ª onda – 2026, 2.º trimestre».
+ */
+export function cobertura(desde: string, frecuenciaDesde: string, hasta: string, frecuenciaHasta: string): string {
+  return `${fechaLegible(desde, frecuenciaDesde)} – ${fechaLegible(hasta, frecuenciaHasta)}`;
+}
+
 /** Fecha corta de la cobertura o de un quiebre, sin saber la frecuencia: «1970-01» → «ene. 1970». */
 export function fechaCorta(fecha: string | null | undefined): string {
   if (!fecha) return "hoy";
@@ -60,8 +68,15 @@ function formato(opciones: Intl.NumberFormatOptions): Intl.NumberFormat {
   return formatos.get(clave)!;
 }
 
-/** Un valor con los decimales que tienen sentido para su tamaño. Las variaciones van con un decimal, como el INDEC. */
+/**
+ * Un valor con los decimales que tienen sentido para su tamaño. Las variaciones van con un decimal, como el INDEC.
+ * Los negativos llevan el signo menos tipográfico («−10,9»), como los ejes de los gráficos (tercera revisión de la 4a).
+ */
 export function numero(valor: number | null, esVariacion = false): string {
+  return numeroConGuion(valor, esVariacion).replace("-", "−");
+}
+
+function numeroConGuion(valor: number | null, esVariacion: boolean): string {
   if (valor === null || !Number.isFinite(valor)) return "—";
   const abs = Math.abs(valor);
   if (esVariacion) return formato({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(valor);

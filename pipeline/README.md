@@ -24,14 +24,32 @@ uv run pytest                                            # pruebas
 
 **Fuentes que no responden (desde la segunda revisión de la 4a).** Si una descarga falla, se usa el último snapshot y las variantes que la usan quedan con `desactualizada_desde` igual al **primer día en que no respondió**, que se guarda en `snapshots/estado-fuentes.json` (se escribe al empezar a fallar y se borra al volver a responder). `--sin-red` no toca ese archivo y conserva la marca. Los errores no copian páginas HTML enteras: queda el código y el título (por ejemplo, «HTTP 403: página HTML «Just a moment...»»). Si la fuente lleva **más de 7 días** sin responder, el informe la lista en «Fuentes que necesitan atención» y, con `--atencion RUTA`, la deja en un JSON que el workflow usa para abrir un issue `fuente-caida` por fuente (y cerrarlo cuando se normaliza).
 
-**Fuentes de descarga manual** (`descarga: manual` en `fuentes.yaml`). Hoy, solo Bruegel: su sitio responde a los servidores de GitHub Actions con el desafío anti-bots de Cloudflare (HTTP 403), y no corresponde esquivarlo. La corrida automática no la descarga ni la marca como caída: usa el último snapshot. Para actualizarla, desde la Mac o una sesión de Claude Code:
+**Fuentes de descarga manual** (`descarga: manual` en `fuentes.yaml`). Hoy, solo Bruegel: su sitio responde a los servidores de GitHub Actions con el desafío anti-bots de Cloudflare (HTTP 403), y no corresponde esquivarlo. La corrida automática no la descarga ni la marca como caída: usa el último snapshot. El export dice la versión (`fuentes[].version`, esquema 1.3) y, si pasan **más de 92 días** sin una versión nueva, la variante queda desactualizada desde ese día y se abre un issue `fuente-caida`.
 
-```bash
-uv run python -m pipeline bajar-manual f.bruegel.reer-51-ar   # guarda un snapshot si hay una versión nueva
-uv run python -m pipeline actualizar --sin-red --series tcr-multilateral   # opcional: ver cómo queda
-```
+### Cómo se actualiza Bruegel
 
-y se sube el snapshot nuevo por un PR (la corrida diaria siguiente lo publica igual). El export dice la versión (`fuentes[].version`, esquema 1.3) y, si pasan **más de 92 días** sin una versión nueva, la variante queda desactualizada desde ese día y se abre el issue.
+- **Cada cuánto:** una vez por mes, mirá la [página del conjunto de datos](https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database). Dice la fecha de la versión vigente (por ejemplo, «version of 11 October 2026») y el nombre del zip la repite (`REER_database_ver11Oct2026.zip`). Si es más nueva que la que muestra la ficha («versión de Bruegel del …»), hay que bajarla.
+- **Desde la Mac** (o desde una sesión de Claude Code, que también puede bajarla), en la carpeta del repositorio:
+
+  ```bash
+  git switch main && git pull
+  uv run python -m pipeline bajar-manual f.bruegel.reer-51-ar
+  ```
+
+  El comando dice «sin cambios» o «snapshot nuevo en snapshots/f.bruegel.reer-51-ar/<fecha>».
+- **Si hay snapshot nuevo:** subilo por una rama y un PR, por ejemplo:
+
+  ```bash
+  git switch -c datos/bruegel-<fecha>
+  git add snapshots/f.bruegel.reer-51-ar
+  git commit -m "Datos: Bruegel, versión del <fecha>"
+  git push -u origin datos/bruegel-<fecha>
+  ```
+
+  Al mergear el PR, la corrida diaria de «Actualizar datos» arma la variante con el snapshot nuevo y la publica (no hace falta correr nada más). Para ver antes cómo queda: `uv run python -m pipeline actualizar --sin-red --series tcr-multilateral`, sin subir esos cambios.
+- **Si te olvidás:** a los 92 días de la versión vigente, el informe del pipeline lo avisa y se abre el issue.
+
+**Snapshots por contenido.** Si el módulo de una fuente define `canonizar(nombre, contenido)`, el pipeline compara el contenido canonizado con el del snapshot anterior, y no los bytes. Lo usa la OCDE, que devuelve las mismas filas en distinto orden según el día (tercera revisión de la 4a). El snapshot sigue guardando los bytes tal como llegaron.
 
 ## Qué hace cada carpeta
 
@@ -52,6 +70,7 @@ En `metadatos/series/<slug>.yaml` (formato de la SPEC, 2.3), o en `metadatos/aux
 | `enlace` | En `encadenar_tasas`: `periodo` (por defecto: el tramo nuevo aporta su tasa desde el primer período, calculada con el período anterior de su propia fuente) o `anual` (enlaza con el promedio del primer año completo; lo usan las cuentas nacionales trimestrales, para no mezclar la estacionalidad de bases distintas). |
 | `operacion` y `operandos` | Con `derivar`: `resta` (el primero menos la suma del resto), `suma`, `cociente`, `tcr` (tipo de cambio × IPC externo ÷ IPC, con `base`), `dividir_por_promedio` o `diferencia` (variación entre períodos de un stock). Los operandos son variantes («exportaciones.oficial») o fuentes de capa 1. Con `segmentos`, cada tramo de fechas tiene sus propios operandos. Las fechas que faltan en algún operando quedan afuera. |
 | `invertir` | Da vuelta un índice (`invertir: 100` publica 100 ÷ valor; lo usa la base de Bruegel, donde una suba es apreciación). |
+| `rebase` | `{fecha, valor}`: lleva el índice a una base declarada después de `invertir` (Bruegel: diciembre de 2015 = 100). La fecha tiene que estar en la serie. |
 | `agregar` (en un tramo) | `{a: anual, con: suma}`: pasa el tramo a frecuencia anual, solo con los años completos. |
 | `completa` (en un tramo) | `completa: true`, sin `desde`: el tramo (el último) toma solo los meses posteriores al último dato del anterior y se pega sin reescalar, cualquiera sea el `empalme`. Si la fuente anterior se pone al día, el tramo desaparece y sus meses pasan a ser revisiones. Un quiebre con `desde: tramo-completa` empieza donde empieza el tramo. Lo usan las reservas, el tipo de cambio y el TCR del BCRA con las series diarias (segunda revisión de la 4a). |
 | `licencia_derivado` | La licencia del JSON de la variante, si no es la de la serie (Bruegel: `other-at`). |
