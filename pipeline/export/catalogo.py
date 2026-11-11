@@ -62,7 +62,8 @@ def catalogo(series: list[dict], documentos: dict[str, dict], version_datos: str
                 "frecuencia": v.get("frecuencia", s["frecuencia"]),
                 "cobertura": doc["cobertura"] if doc else None,
                 # La frecuencia del último dato (TRA-01: semestral y después trimestral), para escribirlo bien.
-                **({"frecuencia_ultimo_dato": doc["tramos"][-1]["frecuencia"]} if doc else {}),
+                **({"frecuencia_primer_dato": doc["tramos"][0]["frecuencia"],
+                    "frecuencia_ultimo_dato": doc["tramos"][-1]["frecuencia"]} if doc else {}),
                 "archivo": f"series/{s['id']}/{v['id']}.json" if doc else None,
                 **({"nota": v["nota"]} if "nota" in v else
                    {"nota": "Todavía sin datos publicados: la última actualización no pasó la validación."} if sin_datos else {}),

@@ -125,16 +125,17 @@
     BCRA (07/11/2026); decidido el 07/11/2026.
 
 - id: q.reservas.fin-de-mes
-  desde: 2026-01
+  desde: 2024-01
   tipo: metodologia
   descripcion: >-
-    El saldo del último día del mes suele quedar por debajo del de los días vecinos y se recupera al día siguiente:
-    por ejemplo, 44.870 millones el 30/06/2026, contra 46.577 el 29/06 y 47.067 el 01/07; pasa lo mismo a fin de
-    marzo, julio y agosto de 2026 (entre 1.300 y 2.000 millones menos). Es un dato real del BCRA, no un error; una
-    explicación posible, no comprobada, es la salida transitoria de encajes de los bancos al cierre del mes. Las
-    variaciones mensuales comparan saldos de fin de mes y no el nivel promedio.
+    Desde 2024, el saldo del último día hábil del mes suele quedar por debajo del de los días hábiles vecinos y se
+    recupera al día siguiente: en la serie diaria del BCRA pasa en 6 meses de 2024, 8 de 2025 y 5 de enero a julio de
+    2026, con caídas de entre 400 y 1.900 millones (por ejemplo, 44.870 el 30/06/2026, contra 46.577 el 29/06 y
+    47.067 el 01/07). En 2018–2023 no aparece (ninguna caída de más de 300 millones); antes de 2018 no se revisó. Es
+    un dato real del BCRA, no un error; una explicación posible, no comprobada, es la salida transitoria de encajes de
+    los bancos al cierre del mes. Las variaciones mensuales comparan saldos de fin de mes y no el nivel promedio.
   afecta: [reservas.brutas]
-  fuente: Serie diaria del BCRA (92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar), revisada el 07/11/2026.
+  fuente: Serie diaria del BCRA (92.2_RESERVAS_IRES_0_0_32_40 en datos.gob.ar), revisada el 07/11/2026 y el 11/11/2026.
 
 # ── Desocupación ───────────────────────────────────────────────────────────────
 - id: q.desocupacion.eph-2003
@@ -403,7 +404,8 @@
     Índice de Bruegel (Darvas): otra canasta (51 socios), otros ponderadores y otros IPC que el del BCRA, dado
     vuelta para que un aumento sea depreciación. No se empalma con el del BCRA. En 1997–2024 sus tasas anuales
     siguen de cerca a las del BCRA (correlación de 0,98), pero en algunos años difieren mucho: en 1999 da +2,1 %
-    y el BCRA, −11,0 %.
+    y el BCRA, −11,0 %. Vaivén lo lleva a diciembre de 2015 = 100; el del BCRA promedia 85,1 en ese mes porque su
+    base es un día, el 17/12/2015, posterior a la devaluación: los niveles no se comparan entre sí.
   afecta: [tcr-multilateral.bruegel]
   fuente: Comparación de REER_51_AR (Bruegel, versión del 11/10/2026) con 116.3_TCRMA_0_M_36 (24/10/2026).
 

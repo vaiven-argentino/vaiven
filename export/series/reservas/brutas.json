@@ -107,10 +107,10 @@
     },
     {
       "id": "q.reservas.fin-de-mes",
-      "desde": "2026-01",
+      "desde": "2024-01",
       "hasta": null,
       "tipo": "metodologia",
-      "descripcion": "El saldo del último día del mes suele quedar por debajo del de los días vecinos y se recupera al día siguiente: por ejemplo, 44.870 millones el 30/06/2026, contra 46.577 el 29/06 y 47.067 el 01/07; pasa lo mismo a fin de marzo, julio y agosto de 2026 (entre 1.300 y 2.000 millones menos). Es un dato real del BCRA, no un error; una explicación posible, no comprobada, es la salida transitoria de encajes de los bancos al cierre del mes. Las variaciones mensuales comparan saldos de fin de mes y no el nivel promedio."
+      "descripcion": "Desde 2024, el saldo del último día hábil del mes suele quedar por debajo del de los días hábiles vecinos y se recupera al día siguiente: en la serie diaria del BCRA pasa en 6 meses de 2024, 8 de 2025 y 5 de enero a julio de 2026, con caídas de entre 400 y 1.900 millones (por ejemplo, 44.870 el 30/06/2026, contra 46.577 el 29/06 y 47.067 el 01/07). En 2018–2023 no aparece (ninguna caída de más de 300 millones); antes de 2018 no se revisó. Es un dato real del BCRA, no un error; una explicación posible, no comprobada, es la salida transitoria de encajes de los bancos al cierre del mes. Las variaciones mensuales comparan saldos de fin de mes y no el nivel promedio."
     }
   ],
   "excluidos": [
@@ -140,8 +140,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/reservas/",
-  "version_datos": "2026-11-07T20:41:28Z",
+  "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-11-11. https://vaiven.argentino.workers.dev/series/reservas/",
+  "version_datos": "2026-11-11T21:14:54Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 589.5],

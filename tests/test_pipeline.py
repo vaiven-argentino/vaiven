@@ -483,3 +483,16 @@ def test_snapshot_compara_por_contenido_si_la_fuente_lo_pide(tmp_path):
     # Un valor distinto sí es una versión nueva.
     cambiado = ["2000-01,1.0", "2000-02,2.5", "2000-03,3.0"]
     assert base.guardar_snapshot(tmp_path, fuente, [base.Archivo("datos.csv", "u", csv(cambiado))], canonizar=ocde.canonizar)[1]
+
+
+def test_rebase_lleva_el_indice_a_la_base_declarada():
+    import pandas as pd
+    from pipeline.capa2 import variantes
+    fechas = pd.date_range("2015-11-01", periods=3, freq="MS")
+    capa1 = {"f.x": pd.Series([2.0, 4.0, 5.0], index=fechas)}
+    v = {"id": "v", "empalme": "yuxtaponer", "tramos": [{"fuente": "f.x", "desde": "2015-11"}],
+         "invertir": 100, "rebase": {"fecha": "2015-12", "valor": 100}}
+    s = variantes.construir(v, capa1, [])
+    assert list(s.round(6)) == [200.0, 100.0, 80.0]
+    with pytest.raises(ErrorPipeline, match="rebase"):
+        variantes.construir({**v, "rebase": {"fecha": "2010-01"}}, capa1, [])

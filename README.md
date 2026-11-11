@@ -29,8 +29,10 @@ En [`docs/`](docs/):
 - [`NOTAS_FASE1.md`](docs/NOTAS_FASE1.md): decisiones, diferencias con la SPEC y pendientes de la fase 1.
 - [`NOTAS_FASE2.md`](docs/NOTAS_FASE2.md): lo mismo para la fase 2 (web mínima).
 - [`NOTAS_FASE3.md`](docs/NOTAS_FASE3.md): lo mismo para la fase 3 (MCP remoto).
-- [`NOTAS_FASE4.md`](docs/NOTAS_FASE4.md): lo mismo para la fase 4, por subfase (4a: datos del núcleo y correcciones de la revisión).
+- [`NOTAS_FASE4.md`](docs/NOTAS_FASE4.md): lo mismo para la fase 4, por subfase (4a: datos del núcleo y correcciones de las tres revisiones).
 - [`planificacion/`](docs/planificacion/): catálogo del MVP, inventario de gráficos de la bibliografía y resumen de variables.
+
+Para mantener los datos: [`pipeline/README.md`](pipeline/README.md) explica cómo se corre el pipeline y, en «Cómo se actualiza Bruegel», cómo bajar a mano la base de Bruegel (la única fuente que no se baja sola).
 
 ## Licencias
 
