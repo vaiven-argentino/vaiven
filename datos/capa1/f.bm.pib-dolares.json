@@ -2,9 +2,9 @@
   "fuente": "f.bm.pib-dolares",
   "unidad": "dólares corrientes",
   "frecuencia": "anual",
-  "snapshot": "snapshots/f.bm.pib-dolares/2026-11-05",
-  "descargado": "2026-11-05T21:54:00Z",
-  "sha256": "dfe58d0ac5def4c8538bdb2099e42a1968b7e650b1f46287c1c65905d2d2c409",
+  "snapshot": "snapshots/f.bm.pib-dolares/2026-11-11",
+  "descargado": "2026-11-11T21:24:45Z",
+  "sha256": "4278e6cf5c634b29e290a56d87da974841d6a0ce219201111d20d702f5ff9241",
   "observaciones": 66,
   "desde": "1960-01-01",
   "hasta": "2025-01-01"

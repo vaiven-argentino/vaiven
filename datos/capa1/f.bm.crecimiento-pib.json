@@ -2,9 +2,9 @@
   "fuente": "f.bm.crecimiento-pib",
   "unidad": "variación % anual",
   "frecuencia": "anual",
-  "snapshot": "snapshots/f.bm.crecimiento-pib/2026-10-27",
-  "descargado": "2026-10-27T19:44:21Z",
-  "sha256": "3273c53a05871e118d3c94cbc103a1af2fba4223e8b67c2f8bba7681325de0c4",
+  "snapshot": "snapshots/f.bm.crecimiento-pib/2026-11-11",
+  "descargado": "2026-11-11T21:24:12Z",
+  "sha256": "1619dab06b65d8a0c33020cb5a6eb78e4323ab9e12d997fd6131a342451fc812",
   "observaciones": 1235,
   "paises": [
     "ARG",
