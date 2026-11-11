@@ -353,3 +353,41 @@ La SPEC v1.2 incorpora lo de este PR (2.1, 2.5, 5.1, 5.2 e historial). Quedan co
 - **Consultas:** a datos.gob.ar, la base monetaria promedio desde junio de 2026 (no coincide con el Informe Monetario Mensual del BCRA) y las reservas y el tipo de cambio de marzo de 2026 en la serie mensual (traen el dato del 30/03); al BCRA, como antes (licencia de la API y M2 desde 2019-08); a la cátedra, la bibliografía (ahora también fuera del catálogo público) y el CSV del inventario.
 - **Datos:** cifras de un cuadro de los ochenta (por ejemplo, Damill y Frenkel 1990) para contrastar el PIB «de cada base» antes de 1993, y los valores de referencia de los casos de la bibliografía.
 - **Proyecto de Claude:** sumar la SPEC v1.2 como documento del proyecto (sin tocar los originales).
+
+## 4a · Correcciones de la tercera revisión
+
+*11/11/2026 · Respuesta a `REVISION_FASE4a_v3.md` (tercera revisión, hecha con Claude Cowork sobre `main` en `2e11c4c`). La revisión dio por resueltos todos los puntos de la segunda y dejó un problema nuevo (2.1) y menores. Con este PR, la 4a queda cerrada.*
+
+### Decisiones tomadas con Camilo (11/11/2026)
+
+| Punto | Decisión | Qué se hizo |
+|---|---|---|
+| 2.1 OCDE, una copia por día | Comparar por contenido | La API devuelve las mismas 800 filas en distinto orden: 4 snapshots con los mismos datos (24/10, 09/11 dos veces y 10/11). `guardar_snapshot` acepta `canonizar` (la OCDE ordena las filas) y compara el contenido con el snapshot anterior; los bytes se siguen guardando tal como llegan. Se borraron las tres copias repetidas y queda la del 24/10. Es la única fuente con snapshots repetidos. |
+| 2.2 Bruegel | Documentar cómo se actualiza | «Cómo se actualiza Bruegel» en `pipeline/README.md`, enlazado desde el README: mirarla una vez por mes, `bajar-manual` desde la Mac y subir el snapshot por un PR. |
+| 3 Cobertura trimestral | Mismo formato que el último dato | «1970, 1.er trimestre – 2026, 2.º trimestre», con la frecuencia de cada punta, en la ficha, el catálogo y el inicio. El catálogo exporta `frecuencia_primer_dato`. |
+| 3 «Sitio actualizado» | Cambiar el texto | «Últimos datos nuevos en el sitio: …», con la aclaración de que las fuentes se revisan todos los días y el sitio cambia solo cuando hay datos nuevos (ficha, inicio y pie). |
+| 3 Escala de Bruegel | Diciembre de 2015 = 100 | Campo de variante `rebase`. Sept. 2026: 99,0. El BCRA promedia 85,1 en diciembre de 2015 (su base es el 17/12/2015), y `q.tcr.bruegel` lo aclara. El cambio de unidad no se anotó en `revisiones.json`: no es una revisión de la fuente. |
+| 3 TCR por defecto | No cambia | Queda el BCRA (ver «Pendientes»). |
+| 3 Signo menos | Unificar | `numero()` usa «−» (U+2212), como los ejes. |
+| 3 Reservas a fin de mes | Aclarar desde cuándo | En la diaria del BCRA, la caída del último día hábil (más de 300 millones) aparece en 6 meses de 2024, 8 de 2025 y 5 de 2026, y en ningún mes de 2018–2023. `q.reservas.fin-de-mes` pasa a empezar en 2024. |
+
+### Contrastes del revisor de datos (11/11/2026)
+
+- **Bruegel rebasado:** bajó la base de Bruegel (versión del 11/10/2026) y comprobó que los 681 meses publicados cumplen 100 × REER(2015M12) ÷ REER(t) (diferencias menores a 1e-7 %), y que una suba es depreciación real, como en el BCRA. La comparación con otra fuente es la de la 4a (correlación anual de 0,98 con el BCRA en 1997–2024).
+
+### Diferencias con la SPEC
+
+- **Snapshots borrados.** La SPEC (2.1) dice que un snapshot nunca se modifica. Se borraron tres copias de la OCDE con los mismos datos que la del 24/10: no se perdió información.
+- **Prueba con red de la OCDE.** La primera corrida dio «sin cambios» contra el snapshot del 24/10. En la segunda, la OCDE ya había publicado el IPC de octubre de 2026 (dato nuevo de verdad). No se sumó a esta rama: lo baja la corrida diaria.
+
+### Pendientes
+
+**Tuyos** (siguen de la segunda revisión):
+- Prueba manual del MCP con el guion actualizado.
+- Consultas a datos.gob.ar, el BCRA y la cátedra, como antes.
+- El cuadro de los ochenta para el PIB «de cada base» antes de 1993 y los valores de referencia de los casos de la bibliografía.
+- Bruegel: mirar una vez por mes si hay versión nueva.
+
+**Datos:**
+- TCR multilateral: si datos.gob.ar no carga 2026 del TCR diario del BCRA antes de fin de año, revisar si conviene volver a Bruegel como variante por defecto.
+
