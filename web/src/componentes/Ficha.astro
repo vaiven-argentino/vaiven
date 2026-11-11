@@ -5,7 +5,7 @@ import { atraso, disponibles, serieDeEntidad, tienePais, transformar } from "@va
 import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
 import { aniosDe, crecimientoPorDecada, desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
-import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, textoAtraso, ultimoDato } from "../lib/formato";
+import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, cobertura, diaDeVersion, fechaCorta, textoAtraso, ultimoDato } from "../lib/formato";
 
 interface Props {
   serie: SerieCatalogo;
@@ -78,9 +78,9 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
     <dl class="datos-clave">
       <div><dt>Unidad</dt><dd>{doc.unidad}{medida && `, como se publica (el gráfico arranca ${ARRANCA[medida]})`}</dd></div>
       <div><dt>Frecuencia</dt><dd>{doc.frecuencia}</dd></div>
-      <div><dt>Cobertura</dt><dd>{fechaCorta(doc.cobertura.desde)} – {fechaCorta(doc.cobertura.hasta)}</dd></div>
+      <div><dt>Cobertura</dt><dd>{cobertura(doc.cobertura.desde, doc.tramos[0]?.frecuencia ?? doc.frecuencia, doc.cobertura.hasta, doc.tramos.at(-1)?.frecuencia ?? doc.frecuencia)}</dd></div>
       <div class="ultimo-dato"><dt>Último dato</dt><dd><strong>{ultimo}</strong>{atrasoTexto && <span class="atraso"> · {atrasoTexto}</span>}{manuales.map((m) => <span class="atraso"> · versión de {m.nombre} del {m.version}</span>)}</dd></div>
-      <div><dt>Actualización</dt><dd>Datos de esta serie: <time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> · Sitio actualizado: <time datetime={versionSitio}>{diaDeVersion(versionSitio)}</time></dd></div>
+      <div><dt>Actualización</dt><dd>Datos de esta serie: <time datetime={doc.version_datos}>{diaDeVersion(doc.version_datos)}</time> · Últimos datos nuevos en el sitio: <time datetime={versionSitio}>{diaDeVersion(versionSitio)}</time> <span class="secundario">(las fuentes se revisan todos los días; el sitio cambia solo cuando hay datos nuevos)</span></dd></div>
     </dl>
     {doc.desactualizada_desde && (manuales.length ? (
       <p class="alerta">La versión de {manuales.map((m) => m.nombre).join(" y ")} que usa Vaivén tiene más de 3 meses: puede haber una más nueva. Esta fuente se actualiza a mano.</p>

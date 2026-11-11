@@ -24,6 +24,8 @@ export interface VarianteCatalogo {
   cobertura: { desde: string; hasta: string } | null;
   /** La frecuencia del último tramo (segunda revisión de la 4a): «2.º trimestre de 2026» y no «abr. 2026». */
   frecuencia_ultimo_dato?: string;
+  /** La del primer tramo, para escribir la cobertura (tercera revisión de la 4a). */
+  frecuencia_primer_dato?: string;
   archivo: string | null;
   nota?: string;
 }
