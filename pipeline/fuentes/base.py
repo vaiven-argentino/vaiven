@@ -83,16 +83,23 @@ def leer_meta(dir_snapshot: Path) -> dict:
     return json.loads((dir_snapshot / "meta.json").read_text(encoding="utf-8"))
 
 
-def guardar_snapshot(dir_snapshots: Path, fuente: dict, archivos: list[Archivo], version: str | None = None) -> tuple[Path, bool]:
+def guardar_snapshot(dir_snapshots: Path, fuente: dict, archivos: list[Archivo], version: str | None = None,
+                     canonizar=None) -> tuple[Path, bool]:
     """Guarda el snapshot si el contenido cambió. Devuelve (carpeta del snapshot vigente, si es nuevo).
 
     Si la fuente no permite redistribuir (`redistribuible: false`), se guarda solo `meta.json`
     y los archivos quedan en `.crudos/` (fuera de Git) para poder normalizarlos.
+
+    `canonizar(nombre, contenido) -> bytes`, si la fuente lo define, compara por contenido y no por bytes: la OCDE
+    devuelve las mismas filas en otro orden según el día, y cada orden contaba como una versión nueva (tercera revisión
+    de la 4a). El snapshot sigue guardando los bytes tal como los devolvió la fuente.
     """
     suma = checksum(archivos)
     dir_fuente = dir_snapshots / fuente["id"]
     previo = ultimo_snapshot(dir_fuente)
     if previo is not None and leer_meta(previo)["sha256"] == suma:
+        return previo, False
+    if previo is not None and canonizar is not None and _igual_contenido(dir_snapshots, previo, archivos, canonizar):
         return previo, False
 
     momento = ahora_utc()
@@ -123,6 +130,16 @@ def guardar_snapshot(dir_snapshots: Path, fuente: dict, archivos: list[Archivo],
         },
     )
     return destino, True
+
+
+def _igual_contenido(dir_snapshots: Path, previo: Path, archivos: list[Archivo], canonizar) -> bool:
+    """El contenido nuevo, canonizado, es el mismo que el del snapshot anterior (si sus archivos están a mano)."""
+    try:
+        anteriores = leer_archivos(dir_snapshots, previo)
+    except FileNotFoundError:
+        return False
+    canon = lambda pares: sorted((n, canonizar(n, c)) for n, c in pares)  # noqa: E731
+    return canon((a.nombre, a.contenido) for a in archivos) == canon(anteriores)
 
 
 def leer_archivos(dir_snapshots: Path, dir_snapshot: Path) -> list[tuple[str, bytes]]:

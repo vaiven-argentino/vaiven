@@ -16,6 +16,15 @@ def bajar(fuente: dict) -> list[Archivo]:
     return [Archivo("datos.csv", fuente["url_descarga"], descargar(fuente["url_descarga"], timeout=120))]
 
 
+def canonizar(nombre: str, contenido: bytes) -> bytes:
+    """El CSV con la cabecera primero y las filas ordenadas: la API devuelve las mismas filas en distinto orden según
+    el día (tercera revisión de la 4a). Solo se usa para comparar con el snapshot anterior."""
+    lineas = contenido.decode("utf-8").splitlines()
+    if not lineas:
+        return contenido
+    return ("\n".join([lineas[0], *sorted(l for l in lineas[1:] if l.strip())]) + "\n").encode()
+
+
 def normalizar(archivos: list[tuple[str, bytes]], columna: str | None = None) -> pd.DataFrame:
     (_, contenido), = archivos
     df = pd.read_csv(io.BytesIO(contenido), dtype={"TIME_PERIOD": str})

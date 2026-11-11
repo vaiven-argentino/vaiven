@@ -32,7 +32,8 @@ def bajar_manuales(rutas: Rutas, ids: list[str] | None = None) -> list[str]:
         version = None
         if hasattr(mod, "version_de_archivo"):
             version = next((v for a in archivos if a.origen and (v := mod.version_de_archivo(a.origen["archivo"]))), None)
-        snapshot, nuevo = base.guardar_snapshot(rutas.snapshots, fuente, archivos, version)
+        snapshot, nuevo = base.guardar_snapshot(rutas.snapshots, fuente, archivos, version,
+                                                canonizar=getattr(mod, "canonizar", None))
         ruta = snapshot.relative_to(rutas.raiz).as_posix()
         if nuevo:
             salida.append(f"{fid}: snapshot nuevo en {ruta} (versión {version or 'sin fecha'}; la anterior era "

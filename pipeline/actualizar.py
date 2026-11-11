@@ -254,8 +254,10 @@ def obtener_fuente(rutas: Rutas, fuente: dict, con_red: bool, res: Resultado,
     if con_red and not manual:
         res.consultadas.append(fid)
         try:
-            archivos = capa1.modulo(fuente).bajar(fuente)
-            snapshot, nuevo = base.guardar_snapshot(rutas.snapshots, fuente, archivos)
+            mod = capa1.modulo(fuente)
+            archivos = mod.bajar(fuente)
+            snapshot, nuevo = base.guardar_snapshot(rutas.snapshots, fuente, archivos,
+                                                    canonizar=getattr(mod, "canonizar", None))
             if nuevo:
                 res.snapshots_nuevos.append(snapshot.relative_to(rutas.raiz).as_posix())
             estado.respondio(fid)
