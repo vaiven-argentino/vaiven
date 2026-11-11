@@ -394,8 +394,10 @@
   descripcion: >-
     Entre 2007 y 2015, el índice depende de qué inflación argentina se use para deflactar, porque la oficial del
     INDEC de esos años subestimó la inflación (ver el IPC). Cambia hasta la dirección: entre los promedios de 2006 y
-    2015, el índice del BCRA, que usa el IPC de San Luis y el de la Ciudad de Buenos Aires, da una apreciación real
-    de 50 %, y el de Bruegel, una depreciación real de 26 % (ver q.tcr.bruegel-2007-2015). La variante recalculada
+    2015, el índice del BCRA da una apreciación real de 50 % y el de Bruegel, una depreciación real de 26 % (ver
+    q.tcr.bruegel-2007-2015). El BCRA no usa el IPC del INDEC en esos años: usa el de San Luis desde enero de 2007
+    hasta julio de 2012 y, desde entonces hasta abril de 2016, el promedio de las variaciones del de San Luis y del de
+    la Ciudad de Buenos Aires. La variante recalculada
     con otro IPC queda pendiente.
   afecta: [tcr-multilateral.bcra, tcr-multilateral.bruegel]
   fuente: >-
@@ -425,9 +427,11 @@
     En 2007–2015 esta variante muestra lo contrario que la del BCRA: entre los promedios de 2006 y 2015, Bruegel da
     una depreciación real de 26 % y el BCRA, una apreciación real de 50 %. Bruegel sube sobre todo en 2009, 2011, 2013 y 2014,
     mientras el BCRA baja en todos los años de 2007 a 2013. La diferencia viene del IPC argentino: el BCRA usa el de
-    San Luis y el de la Ciudad de Buenos Aires, y Bruegel no aclara cuál usa, pero el resultado es compatible con el
-    IPC oficial del INDEC de esos años, que subestimó la inflación. No sirve para estudiar el atraso cambiario de
-    2007–2015: para eso, la variante del BCRA.
+    San Luis hasta julio de 2012 y después el promedio del de San Luis y el de la Ciudad de Buenos Aires (ver
+    q.tcr.ipc-2007-2015). La página del conjunto de datos de Bruegel no indica qué IPC usa para la Argentina; el
+    resultado es compatible con el IPC oficial del INDEC, que subestimó la inflación en esos años, pero no se pudo
+    confirmar en su documentación. No sirve para estudiar el atraso cambiario de 2007–2015: para eso, la variante del
+    BCRA.
   afecta: [tcr-multilateral.bruegel]
   fuente: >-
     Comparación de las dos variantes en el export de Vaivén (promedios anuales, 11/11/2026); BCRA, «Índice de Tipo de

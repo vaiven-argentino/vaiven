@@ -407,11 +407,12 @@ La SPEC v1.2 incorpora lo de este PR (2.1, 2.5, 5.1, 5.2 e historial). Quedan co
 
 ### Verificado
 
-- **IPC del BCRA en 2007–2015:** la metodología del ITCRM (BCRA, abril de 2016, sección 3) empalma el IPC GBA del INDEC hasta diciembre de 2006, el IPC de San Luis hasta julio de 2012, el promedio de las variaciones del IPC de la Ciudad de Buenos Aires y el de San Luis hasta abril de 2016 y el nuevo IPC GBA desde entonces. Bruegel no dice qué IPC argentino usa: el texto dice que el resultado es compatible con el oficial del INDEC, sin afirmarlo.
+- **IPC del BCRA en 2007–2015:** la metodología del ITCRM (BCRA, abril de 2016, sección 3) empalma el IPC GBA del INDEC hasta diciembre de 2006, el IPC de San Luis hasta julio de 2012, el promedio de las variaciones del IPC de la Ciudad de Buenos Aires y el de San Luis hasta abril de 2016 y el nuevo IPC GBA desde entonces. La página del conjunto de datos de Bruegel no dice qué IPC argentino usa: el texto dice que el resultado es compatible con el oficial del INDEC, sin afirmarlo. El revisor de datos confirmó las cifras de los textos y pidió precisar las fechas del IPC del BCRA, ya corregidas.
 - **Cifras:** en diciembre de 2001, Bruegel da 31 y el BCRA 69 (no 81, como decía la revisión). En 2007–2015 las tasas anuales se mueven juntas (correlación de 0,91), pero Bruegel queda entre 3 y 15 puntos por encima todos los años.
 
 ### Pendientes
 
 - **Ramas viejas:** desde las sesiones de Claude Code no se pueden borrar (GitHub responde 403). Hay que borrarlas desde GitHub o desde la Mac.
+- **IPC argentino de Bruegel:** leer la sección de fuentes de Darvas (2012), Bruegel Working Paper 2012/06, para confirmar qué IPC usa para la Argentina. El revisor de datos no pudo bajarlo (el proxy cortó la conexión); hasta entonces, el quiebre dice que el resultado es «compatible» con el IPC oficial, sin afirmarlo.
 - **Otro IPC para 2007–2015:** la variante pendiente `ipc-alternativo` del TCR multilateral (recalculado con otro IPC en esos años) daría una alternativa que no depende del IPC oficial del INDEC.
 
