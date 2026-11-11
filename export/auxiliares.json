@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-07T20:41:28Z",
+  "version_datos": "2026-11-11T21:23:46Z",
   "auxiliares": [
     {
       "id": "ipc-eeuu",
@@ -15,7 +15,7 @@
           "frecuencia": "mensual",
           "cobertura": {
             "desde": "1970-01",
-            "hasta": "2026-09"
+            "hasta": "2026-10"
           },
           "archivo": "auxiliares/ipc-eeuu/ocde.json",
           "usada_por": []
