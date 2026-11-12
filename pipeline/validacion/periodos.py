@@ -35,6 +35,7 @@ LARGO_NOMBRE_CORTO = 24
 SLUG = r"[a-z0-9]+(?:-[a-z0-9]+)*"
 RE_PERIODO = re.compile(rf"^p\.(gobierno|ministro|plan|regimen|catedra)\.({SLUG})$")
 RE_EVENTO = re.compile(rf"^e\.(\d{{4}}-\d{{2}}-\d{{2}})\.({SLUG})$")
+RE_PUBLICADO = re.compile(r"^\d{4}(-\d{2})?$")   # bibliografía con solo año o mes
 RE_IGUAL_A = re.compile(r"^(p\.[a-z_]+\.[a-z0-9-]+)\.(desde|hasta)$")
 
 CAMPOS_PERIODO = {"id", "tipo", "nombre", "nombre_corto", "desde", "hasta", "caracter", "cargo", "orden", "descripcion",
@@ -99,8 +100,8 @@ def _fuentes(errores: list[str], quien: str, fuentes, extremos: list[str], con_p
             errores.append(f"{q}: falta la referencia")
         if f.get("tipo") == "secundaria" and not str(f.get("pagina") or "").strip():
             errores.append(f"{q}: una fuente secundaria lleva la página")
-        if "publicado" in f and not _es_fecha(f["publicado"]):
-            errores.append(f"{q}: `publicado` tiene que ser una fecha AAAA-MM-DD")
+        if "publicado" in f and not (_es_fecha(f["publicado"]) or RE_PUBLICADO.match(str(f["publicado"]))):
+            errores.append(f"{q}: `publicado` tiene que ser AAAA-MM-DD, AAAA-MM o AAAA")
         if f.get("url") and not str(f["url"]).startswith(("https://", "http://")):
             errores.append(f"{q}: la URL tiene que empezar con https://")
         if con_para and f.get("para") not in ("desde", "hasta", "ambas"):

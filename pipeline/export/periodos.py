@@ -33,7 +33,8 @@ def _f(v: date | None) -> str | None:
 
 
 def _fuente(f: dict) -> dict:
-    return {k: (_f(v) if k == "publicado" else v) for k, v in f.items() if v not in (None, "")}
+    return {k: (_f(v) if k == "publicado" and isinstance(v, date) else str(v) if k in ("publicado", "pagina") else v)
+            for k, v in f.items() if v not in (None, "")}
 
 
 def _cortes(p: dict) -> dict:
