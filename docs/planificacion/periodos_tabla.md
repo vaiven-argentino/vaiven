@@ -1,6 +1,6 @@
-# Vaivén · Propuesta de períodos y eventos (fase 4b)
+# Vaivén · Períodos y eventos: tabla aprobada (fase 4b)
 
-*12/11/2026 · Para aprobar antes de cargar `metadatos/periodos.yaml` y `metadatos/eventos.yaml`. Las tablas las armaron cuatro búsquedas en paralelo y las contrastaron cuatro revisores independientes (`revisor-datos`), que vieron solo los nombres y las fechas, sin las fuentes. Las correcciones claras del revisor ya están aplicadas; lo que necesita tu decisión está en la sección 1.*
+*12/11/2026 · Aprobada por Camilo y cargada en `metadatos/periodos.yaml` y `metadatos/eventos.yaml`; este documento conserva las fuentes de trabajo y el contraste. Las tablas las armaron cuatro búsquedas en paralelo y las contrastaron cuatro revisores independientes (`revisor-datos`), que vieron solo los nombres y las fechas, sin las fuentes. Las correcciones del revisor y las decisiones de la sección 1 ya están aplicadas.*
 
 ## Cómo leer las tablas
 
@@ -23,43 +23,29 @@
   | Gobiernos | 64 | 60 | 2 (corregidas) | 0 | 2 |
   | Ministros | 94 | 67 | 1 | 1 | 25 (todas de 1969–1982) |
   | Regímenes y planes | 76 | 38 | 2 (corregidas) | 16 | 20 |
+  | Régimen 1971–1976 (subdivisión) | 10 | 10 (2 con un día de diferencia entre norma y operación) | 0 | 0 | 0 |
   | Eventos | 48 | 45 | 1 (corregida) | 0 | 2 |
 
-## 1. Decisiones pendientes
+## 1. Decisiones tomadas (12/11/2026)
 
-1. **Corte entre las etapas 7 y 8 (Resolución 125/2008).**
-   - Fechas posibles:
-     - firma, 10/3/2008;
-     - anuncio de Lousteau, 11/3 (solo prensa);
-     - publicación en el Boletín Oficial, 12/3 (n.º 31.364, p. 18);
-     - vigencia, 13/3 (art. 9: «a partir del día siguiente al de su publicación»).
-   - La tabla usa por ahora el 11/3.
-   - **Recomendación:** el 13/3, la vigencia, que es el criterio de los regímenes y los planes.
-2. **Inicio de Duhalde: 1/1 o 2/1/2002.**
-   - La Asamblea lo designó el 1/1 y juró pasadas las 23 h. Camaño firmó decretos ese día.
-   - La Casa Rosada y la Biblioteca del Congreso dan el 2/1. Con la regla estricta («el día del traspaso es del que entra») sería el 1/1.
-   - **Recomendación:** el 2/1, con nota.
-3. **Lacoste (11 al 22/12/1981) y Saint-Jean (18/6 al 1/7/1982).**
-   - Ejercieron la presidencia según las actas de la Junta (Acta 205 y Acta 228), pero ningún listado oficial los registra como presidentes.
-   - Sacarlos deja huecos, y los gobiernos no pueden tener huecos.
-   - **Recomendación:** dejarlos, con carácter `de_facto`, la fuente de las actas y una nota que diga que los listados oficiales los omiten.
-4. **Fin de la Convertibilidad: 7/1/2002.**
-   - Es la publicación de la Ley 25.561 en el Boletín Oficial, que no tiene cláusula de vigencia. El revisor coincide; la SPEC decía 6/1, que es la sanción.
-   - El desdoblamiento empieza el 11/1, cuando abren los mercados oficial y libre (Comunicación A 3425). Del 7 al 10/1 el mercado estuvo cerrado, y esos días quedan sin régimen, con nota.
-   - **Recomendación:** aprobar así.
-5. **Cuántos tramos de régimen cambiario.**
-   - La tabla tiene 28: separa cada norma que abre un tramo, sobre todo en 1981–1982 y en 1989, y suma el tramo de febrero a abril de 1989 que pidió el revisor.
-   - Se pueden unir los tramos de 1981–1982 y de 1989, para que el sombreado tenga menos cortes.
-   - **Recomendación:** dejar los 28. En el gráfico, los tramos cortos se ven igual, con su rótulo en el tooltip.
-6. **Tramo de 1971–1976.**
-   - El revisor señala que en 1975–1976 hubo reordenamientos: la Resolución 380 del Ministerio de Economía (1975) y la Circular RC 620 (1976). También dice que a fines de 1976 coexistían varios tipos de cambio.
-   - **Recomendación:** dejar un solo tramo, «Mercados desdoblados y control de cambios», con esos cambios en la nota. Separarlo exige fechas de 1975–1976 que no pudimos verificar.
-7. **Ley de Modernización Laboral 27.802 (2026).** Tiene efecto económico, pero no es un hecho macroeconómico, y es el único evento de 2026. ¿La dejamos?
-8. **Programa de Krieger Vasena (1967).** Seguía en marcha en 1970, pero Krieger Vasena dejó el ministerio en junio de 1969. **Recomendación:** no agregarlo.
-9. **Fechas sin verificación independiente.** Son 25 extremos de ministros de 1969–1982 y 20 de regímenes y planes. Todas tienen fuente (de Pablo, 2021, con página; las Memorias del BCRA, con página; las actas de las Juntas), pero el revisor no encontró una segunda fuente.
-   - **Recomendación:** publicarlas con esa fuente y confianza media. Se pueden confirmar más adelante con el Boletín Oficial desde otra red.
+1. **Corte entre las etapas 7 y 8:** vigencia de la Resolución 125/2008, **13/3/2008** (firma 10/3, anuncio 11/3, publicación 12/3).
+2. **Duhalde:** desde el **2/1/2002**, como la Casa Rosada y la Biblioteca del Congreso (designado y jurado la noche del 1/1).
+3. **Lacoste y Saint-Jean:** quedan, `de_facto`, con las actas de la Junta y nota de que los listados oficiales los omiten.
+4. **Fin de la Convertibilidad:** **7/1/2002** (publicación de la Ley 25.561); el desdoblamiento empieza el 11/1 (A 3425) y del 7 al 10/1 no hay régimen (mercado cerrado).
+5. **Regímenes:** se mantienen los tramos cortos de 1981–1982 y 1989.
+6. **Régimen 1971–1976:** se divide según normas cambiarias en cinco tramos:
+   - comercial y financiero, desde el 17/9/1971;
+   - tres mercados con ajustes graduales, desde el 26/8/1975 (primer día de operación; la Resolución 17 del Ministerio de Economía es del 25/8);
+   - financiero y especial, desde el 18/11/1975 (Resolución 380);
+   - con mercado libre, desde el 5/1/1976 (R.C. 586; el tipo con recargo del 19/1/1976 va solo como nota);
+   - oficial y libre, desde el 8/3/1976 (R.C. 620).
 
-**Cambios en la SPEC (v1.3), una vez aprobada la tabla:**
+   El Rodrigazo no abre tramo: es una devaluación dentro del esquema. Como evento, lleva fecha 4/6/1975 (anuncio) y vigencia 9/6/1975 (Memoria del BCRA 1975, p. 76). Un revisor independiente confirmó los seis cortes; además señaló el tipo con recargo de enero de 1976, que va como nota.
+7. **Ley 27.802 (2026):** no entra como evento.
+8. **Programa de Krieger Vasena:** no se agrega.
+9. **Fechas sin verificación independiente:** se publican con su fuente y confianza media.
+
+**Cambios en la SPEC (v1.3):**
 - el ejemplo `e.1991-04-01.convertibilidad` pasa a `e.1991-03-27.convertibilidad` (sanción) y la vigencia queda en el régimen;
 - el Plan Austral empieza el 15/6/1985 (el decreto rige «a partir del 15 de junio»);
 - la Convertibilidad termina el 7/1/2002.
@@ -212,7 +198,11 @@ Los cortes salen de los otros períodos (`igual_a`) y heredan su fuente. El úni
 | id | Nombre | Desde | Hasta | Fuente de «desde» | Fuente de «hasta» | Conf. | Revisor |
 |---|---|---|---|---|---|---|---|
 | `p.regimen.paridad-ajustable-1967` | Paridad fija ajustable con dólar único (1967–1971) | 13/3/1967 | 17/9/1971 | *secundaria*: Reinhart, Carmen M. (2002), «A Modern History of Exchange Rate Arrangements: The Country Histories,… | *oficial*: BCRA, Memoria anual 1971, p. 53 («El 17 de setiembre se instituyeron nuevas normas...») | media | **no_verificada** (desde): —. Fuentes secundarias confirman devaluación/tipo fijo de Krieger Vasena en marzo de 1967 (tipo de $3,5 desde 1967) pero no encontré norma ni comunicación con el d<br>**no_verificada** (hasta): 1971-09 (día no verificado). Dos fuentes secundarias ubican el desdoblamiento en septiembre de 1971 (comercial fijo $5, financiero libre); ninguna da el día. 17/09 no comprobado. |
-| `p.regimen.desdoblamiento-1971` | Mercados comercial y financiero con control de cambios (1971–1976) | 17/9/1971 | 22/11/1976 | *oficial*: BCRA, Memoria anual 1971, p. 53 | *oficial*: BCRA, Memoria anual 1976, p. 59 (Circular R.C. N° 663 del 19/11/1976) | media | **no_verificada** (desde): 1971-09 (día no verificado). Mes coincide, día no verificado (Boletín Oficial no accesible; memoria BCRA 1971 es imagen sin texto y el OCR no alcanzó a completarse).<br>**no_verificada** (hasta): fines de 1976 (día no verificado). El libro dice que el tipo desdoblado «se unificó a fines de ese año» (1976) sin día. Además: en nov-1975 (Res. MEcon 380) las operaciones del mercado comercial  |
+| `p.regimen.comercial-financiero-1971` | Mercados comercial y financiero (1971–1975) | 17/9/1971 | 26/8/1975 | *oficial*: BCRA, Memoria anual 1971, p. 53 («El 17 de setiembre se instituyeron nuevas normas ... a través de dos… | *oficial*: BCRA, Memoria anual 1975, p. 76 (mercado financiero especial «vigente ... a partir de la Resolución N° 17 del…<br>*oficial*: Secretaría de Política Económica, datos.gob.ar, dataset 175, serie 175.1_DR_FINANTA_0_0_21 | media | **coincide con matiz de 1 dia** (hasta): 1975-08-26. La norma es del 25/08 y la primera cotizacion del 26/08. Si 'desde' es el dia en que rige la norma y la Resolucion 17 rige desde el 25, el corte podria ser 1975 |
+| `p.regimen.tres-mercados-1975` | Mercados comercial, financiero y financiero especial con ajustes graduales (1975) | 26/8/1975 | 18/11/1975 | *oficial*: BCRA, Memoria anual 1975, p. 76<br>*secundaria*: Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República…<br>*oficial*: Secretaría de Política Económica, datos.gob.ar, dataset 175, serie 175.1_DR_FINANTA_0_0_21 | *oficial*: BCRA, Memoria anual 1975, p. 76, nota 1 (comercial «vigente hasta el 17.11.75 inclusive; a partir del día… | alta | **coincide con matiz de 1 dia** (desde): 1975-08-26. idem |
+| `p.regimen.financiero-1975` | Mercados financiero y financiero especial (1975–1976) | 18/11/1975 | 5/1/1976 | *oficial*: BCRA, Memoria anual 1975, p. 76, nota 1 (Resolución ME 380)<br>*secundaria*: Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República… | *oficial*: BCRA, Memoria anual 1976, p. 58 («a los cuales se agregaron el 5 de enero el mercado libre (Circular R. C. N°… | alta | coincide |
+| `p.regimen.tres-mercados-1976` | Mercados financiero, financiero especial y libre (enero–marzo de 1976) | 5/1/1976 | 8/3/1976 | *oficial*: BCRA, Memoria anual 1976, p. 58<br>*secundaria*: Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República… | *oficial*: BCRA, Memoria anual 1976, p. 59 («Desde el 8 de marzo rigieron únicamente los mercados oficial y libre… | media | **observacion** (nota_interna): 1976-01-19. Segun el criterio (se crea un mercado) el 19/1/1976 podria abrir tramo: pasan a ser cuatro mercados. Decision del equipo: o se abre tramo, o se aclara en el nom |
+| `p.regimen.oficial-libre-1976` | Mercados oficial y libre (marzo–noviembre de 1976) | 8/3/1976 | 22/11/1976 | *oficial*: BCRA, Memoria anual 1976, p. 59<br>*secundaria*: Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República…<br>*oficial*: Secretaría de Política Económica, datos.gob.ar, dataset 175, serie 175.1_DR_OFICNTA_0_0_19 | *oficial*: BCRA, Memoria anual 1976, p. 59 («a partir del 22 de noviembre todas las operaciones se cursaron por el… | alta | coincide |
 | `p.regimen.unificacion-1976` | Mercado único con minidevaluaciones (1976–1978) | 22/11/1976 | 21/12/1978 | *oficial*: BCRA, Memoria anual 1976, p. 59 («a partir del 22 de noviembre todas las operaciones se cursaron por el… | *oficial*: BCRA, Memoria anual 1978, p. 81 (Circular R.C. N° 807 del 21/12/1978) | alta | **no_verificada** (desde): fines de 1976. Ver fila anterior. Otro estudio del BCRA citado por buscador habla de cuatro tipos de cambio coexistiendo 1976-78: la etiqueta «mercado único 1976-78» tiene res<br>**criterio** (hasta): 1978-12-21 (publicación de la pauta; vigencia de la pauta no comprobada). El libro: «el 21 de diciembre se publicó el precio del dólar para cada día entre enero y agosto de 1979». Es la fecha de publicación; por la convención (vigenci |
 | `p.regimen.tablita` | Tablita: pauta cambiaria preanunciada (1978–1981) | 21/12/1978 | 2/4/1981 | *oficial*: BCRA, Memoria anual 1978, p. 81 («RCN° 807 21.12.78 Da a conocer las cotizaciones diarias tipo comprador… | *comunicacion_bcra*: BCRA, Comunicación "A" 16 (deja sin efecto el Anexo I de la Circular CAMEX-1, el cronograma de cotizaciones)<br>*oficial*: BCRA, Memoria anual 1981, p. 6 (numeración inferida) («elevar el tipo de cambio del dólar en un 29 % a partir… | alta | **criterio** (desde): 1978-12-21 (publicación). Ver arriba. No encontré la comunicación del BCRA de diciembre de 1978 (anterior a la serie A). |
 | `p.regimen.devaluaciones-1981` | Tipo fijado por el BCRA con devaluaciones (abril–junio de 1981) | 2/4/1981 | 22/6/1981 | *comunicacion_bcra*: BCRA, Comunicación "A" 16 | *comunicacion_bcra*: BCRA, Comunicación "A" 38 («normas que regirán a partir de la fecha») | alta | coincide |
@@ -244,7 +234,7 @@ Los cortes salen de los otros períodos (`igual_a`) y heredan su fuente. El úni
 
 | id | Nombre | Fecha | Vigencia | Categoría | Fuente | Conf. | Revisor |
 |---|---|---|---|---|---|---|---|
-| `e.1975-06-04.rodrigazo` | Rodrigazo: plan de ajuste de Celestino Rodrigo | 4/6/1975 | — | cambiario | *secundaria*: Vitto, Cecilia (2013). «La política económica del tercer gobierno peronista y las principales rupturas entre… | media | coincide |
+| `e.1975-06-04.rodrigazo` | Rodrigazo: plan de ajuste de Celestino Rodrigo | 4/6/1975 | 9/6/1975 | cambiario | *secundaria*: Vitto, Cecilia (2013). «La política económica del tercer gobierno peronista y las principales rupturas entre…<br>*oficial*: BCRA, Memoria anual 1975, p. 76: desde el 9/6/1975 el tipo comercial pasa de 10 a 26 pesos por dólar y el… | media | coincide |
 | `e.1977-02-14.ley-entidades-financieras` | Ley de Entidades Financieras 21.526 | 14/2/1977 | — | financiero | *norma*: Ley 21.526, sanción 1977-02-14, BO n.º 23.602, p. 3<br>*norma*: Ley 21.495 (descentralización de depósitos), sanción 1977-01-17, BO n.º 23.581, p. 2 | alta | coincide |
 | `e.1978-12-20.tablita` | Anuncio de la «tablita» cambiaria | 20/12/1978 | — | cambiario | *secundaria*: Dornbusch, Rudiger y de Pablo, Juan Carlos (1990). «From Martinez de Hoz to Alfonsin», en Sachs, Jeffrey D.… | media | coincide |
 | `e.1980-03-28.liquidacion-bir` | Liquidación del Banco de Intercambio Regional (BIR) | 28/3/1980 | — | crisis | *secundaria*: Gómez R., Hernando J. y Montenegro T., Armando (1980). «Breve descripción de los recientes desarrollos de la… | media | coincide |
@@ -275,4 +265,3 @@ Los cortes salen de los otros períodos (`igual_a`) y heredan su fuente. El úni
 | `e.2022-03-25.acuerdo-fmi-2022` | Acuerdo de facilidades extendidas con el FMI | 25/3/2022 | — | deuda | *oficial*: FMI, comunicado de prensa 22/89: «IMF Executive Board Approves 30-month US$44 billion Extended Arrangement… | alta | coincide |
 | `e.2023-12-12.devaluacion` | Devaluación del peso (sinceramiento cambiario) | 12/12/2023 | 13/12/2023 | cambiario | *oficial*: BCRA, «Nuevo marco de política monetaria y cambiaria» (comunicado del 12/12/2023)<br>*oficial*: BCRA, Comunicación «A» 3500 (serie diaria): 366,50 el 12/12/2023 y 799,975 el 13/12/2023 | alta | coincide |
 | `e.2025-04-11.acuerdo-fmi-salida-cepo` | Acuerdo con el FMI y salida del cepo para personas | 11/4/2025 | 14/4/2025 | cambiario | *oficial*: FMI, comunicado de prensa 25/101: «IMF Executive Board Approves 48-month US$20 billion Extended Arrangement…<br>*comunicacion_bcra*: Comunicación «A» 8226 (CAMEX 1-1041), del 11/4/2025, «con vigencia a partir del 14/04/25»<br>*oficial*: BCRA, Comunicación «A» 3500 (serie diaria): 1.078,375 el 11/4/2025 y 1.182,4167 el 14/4/2025 | alta | coincide |
-| `e.2026-02-27.reforma-laboral` | Ley de Modernización Laboral 27.802 | 27/2/2026 | 6/3/2026 | institucional | *norma*: Ley 27.802, sanción 2026-02-27, BO n.º 35.865, p. 4 | alta | coincide |

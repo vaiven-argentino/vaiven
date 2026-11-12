@@ -416,3 +416,66 @@ La SPEC v1.2 incorpora lo de este PR (2.1, 2.5, 5.1, 5.2 e historial). Quedan co
 - **IPC argentino de Bruegel:** leer la sección de fuentes de Darvas (2012), Bruegel Working Paper 2012/06, para confirmar qué IPC usa para la Argentina. El revisor de datos no pudo bajarlo (el proxy cortó la conexión); hasta entonces, el quiebre dice que el resultado es «compatible» con el IPC oficial, sin afirmarlo.
 - **Otro IPC para 2007–2015:** la variante pendiente `ipc-alternativo` del TCR multilateral (recalculado con otro IPC en esos años) daría una alternativa que no depende del IPC oficial del INDEC.
 
+
+## 4b · Períodos y eventos (PR 1)
+
+*12/11/2026 · Primera entrega de la 4b: los registros de períodos y eventos, su validación y export, y las herramientas `listar_periodos` y `periodo_en_fecha` del MCP. El explorador (PR 2) y el sombreado en la ficha y la página `/periodos/` (PR 3) vienen después.*
+
+### Qué quedó publicado
+
+- `metadatos/periodos.yaml`: **128 períodos**.
+  - 28 gobiernos, de Onganía a Milei, con los mandatos de Menem y de Fernández de Kirchner;
+  - 46 ministros de Economía;
+  - 11 planes de estabilización;
+  - 32 regímenes cambiarios;
+  - 11 etapas de la política económica del curso.
+- `metadatos/eventos.yaml`: **31 eventos**, de 1975 a 2025.
+- **Validación** (`pipeline/validacion/periodos.py`): si encuentra un error, frena la publicación. Controla:
+  - ids, fechas y campos permitidos;
+  - una fuente por extremo, con página en las secundarias y nota en los cortes convencionales;
+  - que no haya superposiciones (gobiernos, ministros, regímenes y etapas) ni huecos en los gobiernos desde el 1/1/1970;
+  - que los mandatos cubran su gobierno, que las etapas sean contiguas y que los `igual_a` sean válidos;
+  - que solo el último período de cada tipo quede abierto.
+- **Export:** `periodos.json` y `eventos.json`, con esquemas `periodos-1.0` y `eventos-1.0` publicados en `/esquemas/`. También van como CSV en la descarga completa, como tablas en el `datapackage.json` y como registros en el catálogo. Un cambio en los períodos cuenta como cambio y lleva versión nueva.
+- **Librería** (`@vaiven/transformaciones`): tipos y funciones de períodos (vigencia en una fecha, vista por mandato, período de cada observación), para la web y el MCP. **`@vaiven/cita`**: cita de los registros.
+- **MCP:** `listar_periodos(tipo?, por_mandato?)` y `periodo_en_fecha(fecha)`, con parámetros estrictos. Sin `tipo`, `listar_periodos` devuelve una lista compacta: con las fuentes pesa 117 KB y no conviene mandársela entera a un modelo. Hay 3 preguntas nuevas (14 a 16) en `mcp/PRUEBA_MANUAL.md`.
+
+### Cómo se armó la tabla de fechas
+
+- **Búsqueda:** cuatro búsquedas en paralelo (gobiernos, ministros, planes y regímenes, eventos), con fuente primaria cuando existe y, si no, secundaria académica con página. Wikipedia sirvió solo para orientarse.
+- **Revisión:** cuatro revisores independientes (`revisor-datos`) recibieron solo los nombres y las fechas, sin las fuentes. Después, un quinto revisó la subdivisión cambiaria de 1971–1976.
+- **El detalle de cada fila** (fuentes de trabajo, confianza y resultado del revisor) está en `docs/planificacion/periodos_tabla.md` y `.csv`.
+- **El Boletín Oficial corta la conexión desde el entorno.** Se usaron:
+  - InfoLEG, en argentina.gob.ar/normativa;
+  - las comunicaciones del BCRA;
+  - las Memorias del BCRA (escaneos, leídos con OCR);
+  - las actas de las Juntas publicadas por el Ministerio de Defensa;
+  - los dossiers de la Biblioteca del Congreso.
+
+### Decisiones tomadas con Camilo (11 y 12/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Intervalos | Semiabiertos [desde, hasta): el día del traspaso es del que entra. |
+| Gobiernos | Con juntas e interinatos; una entrada por persona con `mandatos`. Las licencias (Luder 1975, Liendo 1981) y el interinato de horas de Pinedo (2015) van como nota. Lacoste y Saint-Jean quedan como `de_facto`, con las actas de la Junta y nota de que los listados oficiales los omiten. Rodríguez Saá–Camaño: 30/12/2001. Duhalde: 2/1/2002. |
+| Ministros | Titular de Hacienda o Economía: Hacienda y Finanzas en 1971–1973 y Hacienda en 2017–2019 (Finanzas, como nota). Se suman Wehbe (1972–1973) y Bauzá (interino, 14/7/1989). Los encargados sin designación van como nota. |
+| Regímenes | Un tramo cambia cuando se crea o se elimina un mercado o cambia la forma de fijar el tipo. 1971–1976 se divide en cinco tramos (agosto y noviembre de 1975, enero y marzo de 1976); el Rodrigazo es una devaluación dentro del esquema. Convertibilidad hasta el 7/1/2002 (publicación de la Ley 25.561); desdoblamiento desde el 11/1/2002 (A 3425); del 7 al 10/1 no hay régimen. Se mantienen los tramos cortos de 1981–1982 y 1989. |
+| Planes | Los 11 aprobados, con fin convencional y justificado cuando no hay un hecho fechado. Sin Krieger Vasena. |
+| Etapas del curso | Nombre público «Etapas de la política económica (curso)», detrás de `MOSTRAR_BIBLIOGRAFIA` (en Python, `PUBLICAR_BIBLIOGRAFIA`). Corte de 2008: vigencia de la Resolución 125, el 13/3/2008. |
+| Eventos | Fecha del hecho que nombran; vigencia aparte. Solo económicos o institucionales con efecto económico. Sin la Ley 27.802 (2026). Pago al FMI: vigencia 4/1/2006, según el FMI. Rodrigazo: vigencia 9/6/1975. |
+| Sin segunda fuente | Se publican con su fuente y confianza media: 25 extremos de ministros de 1969–1982 y 20 de regímenes y planes. |
+
+### Diferencias con la SPEC
+
+La SPEC pasa a la v1.3. Los ejemplos de 2.2 y 2.4 decían:
+- Plan Austral desde el 14/6/1985 (anuncio); el decreto rige desde el 15;
+- Convertibilidad hasta el 6/1/2002 (sanción); la ley se publicó el 7;
+- `e.1991-04-01.convertibilidad` (vigencia); el evento es la sanción, el 27/3/1991.
+
+También se documentaron las reglas de 2.4, el export de 2.5, el nombre público de 6.4 y los parámetros de 7.2.
+
+### Pendientes
+
+- **Verificar con el Boletín Oficial**, desde otra red, las fechas de 1969–1983 que no tienen segunda fuente. En especial: Lacoste, Saint-Jean, el inicio del Plan Gelbard (30/5, 6/6 u 8/6/1973) y las salidas de Moyano Llerena y de Bonanni.
+- `export/periodos.json` pesa 185 KB, por lo largas que son las referencias. La web lo va a leer solo cuando se pida el sombreado; si hace falta, se puede publicar una versión sin fuentes.
+- Prueba manual del MCP con las preguntas 14 a 16.

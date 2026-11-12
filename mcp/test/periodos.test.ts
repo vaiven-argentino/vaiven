@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { ErrorHerramienta, Repositorio } from "../src/datos";
 import { listarPeriodos, periodoEnFecha } from "../src/herramientas/periodos";
 import { ESQUEMAS } from "../src/servidor";
-import { repoCon } from "./ayuda";
+import { repoCon, repoReal } from "./ayuda";
 
 const f = (para: string, referencia = "Decreto X") => ({ para, tipo: "norma", referencia, publicado: "1983-12-12" });
 const gob = (id: string, nombre: string, desde: string, hasta: string | null, caracter = "constitucional", extra = {}) => ({
@@ -62,9 +62,11 @@ describe("listar_periodos", () => {
     expect(r.version_datos).toBe("2026-11-11T21:00:00Z");
     expect(r.cita).toMatch(/^Vaivén \(2026\)\. Períodos de la política económica argentina, 1970–hoy\. Versión de datos 2026-11-11\. https:\/\/.*\/periodos\/$/);
     expect(r.fuentes[0].licencia).toBe("CC-BY-4.0");
-    const cfk = r.periodos.find((p) => p.id === "p.gobierno.cfk")!;
-    expect(cfk.mandatos?.map((m) => m.id)).toEqual(["p.gobierno.cfk-2007", "p.gobierno.cfk-2011"]);
-    expect(r.periodos.find((p) => p.id === "p.ministro.frigeri")!.fuentes[0]).toBe("norma: Decreto X, publicado 1983-12-12");
+    expect(r.periodos.find((p) => p.id === "p.gobierno.cfk")).toMatchObject({ mandatos: ["p.gobierno.cfk-2007", "p.gobierno.cfk-2011"] });
+    expect(r.nota).toMatch(/compacta/);
+    expect(r.periodos.find((p) => p.id === "p.ministro.frigeri")).not.toHaveProperty("fuentes");
+    const ministros = await listarPeriodos(repo, { tipo: "ministro" });
+    expect(ministros.periodos.find((p) => p.id === "p.ministro.frigeri")).toMatchObject({ fuentes: ["norma: Decreto X, publicado 1983-12-12"] });
   });
   it("filtra por tipo y separa los mandatos si se pide", async () => {
     const r = await listarPeriodos(repo, { tipo: "gobierno", por_mandato: true });
@@ -117,5 +119,34 @@ describe("parámetros estrictos", () => {
     expect(ESQUEMAS.periodo_en_fecha["~standard"].validate({ fecha: "2001" })).toHaveProperty("issues");
     expect(ESQUEMAS.periodo_en_fecha["~standard"].validate({ fecha: "2001-12", dia: 1 })).toHaveProperty("issues");
     expect(ESQUEMAS.periodo_en_fecha["~standard"].validate({ fecha: "2001-12-23" })).not.toHaveProperty("issues");
+  });
+});
+
+describe("con los períodos publicados", () => {
+  const real = repoReal();
+  it("el 15/6/1985 regían Alfonsín, Sourrouille, el Plan Austral y su tipo fijo", async () => {
+    const r = await periodoEnFecha(real, { fecha: "1985-06-15" }, HOY);
+    expect(r.gobierno.map((p) => p.id)).toEqual(["p.gobierno.alfonsin"]);
+    expect(r.ministro.map((p) => p.id)).toEqual(["p.ministro.sourrouille"]);
+    expect(r.plan.map((p) => p.id)).toEqual(["p.plan.austral"]);
+    expect(r.regimen_cambiario.map((p) => p.id)).toEqual(["p.regimen.austral-fijo"]);
+    expect(r.catedra.map((p) => p.id)).toEqual(["p.catedra.sourrouille"]);
+  });
+  it("en diciembre de 2001 hubo cuatro gobiernos y el corralito", async () => {
+    const r = await periodoEnFecha(real, { fecha: "2001-12" }, HOY);
+    expect(r.gobierno).toHaveLength(4);
+    expect(r.eventos.map((e) => e.id)).toContain("e.2001-12-01.corralito");
+  });
+  it("la lista compacta entra en un pedido razonable y cada tipo trae sus fuentes", async () => {
+    expect(JSON.stringify(await listarPeriodos(real, {})).length).toBeLessThan(40_000);
+    const gob = await listarPeriodos(real, { tipo: "gobierno", por_mandato: true });
+    expect(gob.periodos.map((p) => p.id)).toContain("p.gobierno.menem-1995");
+    expect(gob.periodos.every((p) => "fuentes" in p && (p as { fuentes: string[] }).fuentes.length > 0)).toBe(true);
+    expect(gob.periodos.at(-1)).toMatchObject({ id: "p.gobierno.milei", hasta: null });
+  });
+  it("las etapas del curso no nombran a la cátedra", async () => {
+    const r = await listarPeriodos(real, { tipo: "catedra" });
+    expect(JSON.stringify(r)).not.toMatch(/cátedra|Cronograma/);
+    expect(r.periodos).toHaveLength(11);
   });
 });

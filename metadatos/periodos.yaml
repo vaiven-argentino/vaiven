@@ -1,0 +1,3102 @@
+# Períodos de la política económica argentina, 1970–hoy (SPEC 2.4). Lo valida pipeline/validacion/periodos.py.
+# - Intervalos semiabiertos [desde, hasta): el día del traspaso es del que entra; `hasta` vacío = vigente.
+# - Cada extremo con fecha lleva su fuente (`para`); una secundaria lleva la página; un corte sin hecho fechado,
+#   una fuente `convencional` con su nota.
+# - Las etapas del curso toman sus fechas de otros períodos con `igual_a`; `referencia_curso` no se exporta.
+# - Las tablas con las fuentes de trabajo y el contraste del revisor están en docs/planificacion/periodos_tabla.md.
+- id: p.gobierno.ongania
+  tipo: gobierno
+  nombre: Juan Carlos Onganía
+  nombre_corto: Onganía
+  desde: 1966-06-29
+  hasta: 1970-06-08
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, «Nómina de presidentes y ministros»: «Periodo: 29 de junio de 1966 al 8 de junio de
+      1970»'
+    nota: 'Publicación: s/f (consultado 2026-11-11).'
+    url: https://www.argentina.gob.ar/node/48921
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Burillo, Jesús (1986). «Peronismo y clase obrera en Argentina (1968-1973)». Anales de Historia Contemporánea,
+      5, 229-252, p. 231: «28 de junio 1966: presidencia del general Juan Carlos Onganía, depuesto por la junta militar en
+      8 de junio 1970»'
+    publicado: '1986'
+    pagina: '231'
+    url: https://revistas.um.es/analeshc/article/view/107541
+  notas: Gobierno de facto de la «Revolución Argentina»; en ejercicio el 1/1/1970.
+- id: p.gobierno.junta-comandantes-1970
+  tipo: gobierno
+  nombre: Junta de Comandantes en Jefe (Alejandro A. Lanusse, Pedro A. J. Gnavi, Carlos A. Rey)
+  nombre_corto: Junta (1970)
+  desde: 1970-06-08
+  hasta: 1970-06-18
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Burillo, Jesús (1986). «Peronismo y clase obrera en Argentina (1968-1973)». Anales de Historia Contemporánea,
+      5, 229-252, p. 231: «depuesto por la junta militar en 8 de junio 1970»'
+    publicado: '1986'
+    pagina: '231'
+    url: https://revistas.um.es/analeshc/article/view/107541
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Burillo, Jesús (1986). «Peronismo y clase obrera en Argentina (1968-1973)». Anales de Historia Contemporánea,
+      5, 229-252, p. 231: «18 de junio 1970: nombramiento del general Marcelo Levingston»'
+    publicado: '1986'
+    pagina: '231'
+    url: https://revistas.um.es/analeshc/article/view/107541
+- id: p.gobierno.levingston
+  tipo: gobierno
+  nombre: Roberto Marcelo Levingston
+  nombre_corto: Levingston
+  desde: 1970-06-18
+  hasta: 1971-03-23
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, «Nómina de presidentes y ministros»: «Periodo: 18 de junio de 1970 al 23 de marzo
+      de 1971»'
+    nota: 'Publicación: s/f (consultado 2026-11-11).'
+    url: https://www.argentina.gob.ar/node/48921
+  - para: hasta
+    tipo: oficial
+    referencia: 'Acta de la Junta de Comandantes en Jefe (documento primario, secreto, no publicado en el BO), reproducida
+      en Ministerio de Defensa (2022), Actas de la Dictadura 1971-1973, Tomo I (1971), p. 71: Anexo A al Acta N° 2/71 (Jefe
+      del Estado Mayor Conjunto, 25/3/1971): «La Junta de Comandantes en Jefe resolvió en la madrugada del 23-MAR-71, comunicar
+      al Presidente de la Nación, que cesaba en el desempeño del cargo y reasumir el Poder Político»'
+    publicado: 2022-08
+    pagina: '71'
+    url: https://www.argentina.gob.ar/sites/default/files/actas-tomo-i-71.pdf
+- id: p.gobierno.junta-comandantes-1971
+  tipo: gobierno
+  nombre: Junta de Comandantes en Jefe (Alejandro A. Lanusse, Pedro A. J. Gnavi, Carlos A. Rey)
+  nombre_corto: Junta (1971)
+  desde: 1971-03-23
+  hasta: 1971-03-26
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Acta de la Junta de Comandantes en Jefe (documento primario, secreto, no publicado en el BO), reproducida
+      en Ministerio de Defensa (2022), Actas de la Dictadura 1971-1973, Tomo I (1971), p. 71: Anexo A al Acta N° 2/71 (Jefe
+      del Estado Mayor Conjunto, 25/3/1971): «La Junta de Comandantes en Jefe resolvió en la madrugada del 23-MAR-71, comunicar
+      al Presidente de la Nación, que cesaba en el desempeño del cargo y reasumir el Poder Político»'
+    publicado: 2022-08
+    pagina: '71'
+    url: https://www.argentina.gob.ar/sites/default/files/actas-tomo-i-71.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: 'Acta de la Junta de Comandantes en Jefe (documento primario, secreto, no publicado en el BO), reproducida
+      en Ministerio de Defensa (2022), Actas de la Dictadura 1971-1973, Tomo I (1971), p. 69: Acta N° 2/71 (25/3/1971), resolución
+      5°: «Disponer que la ceremonia de juramento del Presidente de la Nación se realice el día 26 de Marzo de 1971, a las
+      19:00 horas»'
+    publicado: 2022-08
+    pagina: '69'
+    url: https://www.argentina.gob.ar/sites/default/files/actas-tomo-i-71.pdf
+- id: p.gobierno.lanusse
+  tipo: gobierno
+  nombre: Alejandro Agustín Lanusse
+  nombre_corto: Lanusse
+  desde: 1971-03-26
+  hasta: 1973-05-25
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Acta de la Junta de Comandantes en Jefe (documento primario, secreto, no publicado en el BO), reproducida
+      en Ministerio de Defensa (2022), Actas de la Dictadura 1971-1973, Tomo I (1971), p. 69: Acta N° 2/71 (25/3/1971), resolución
+      5°: «Disponer que la ceremonia de juramento del Presidente de la Nación se realice el día 26 de Marzo de 1971, a las
+      19:00 horas»'
+    publicado: 2022-08
+    pagina: '69'
+    url: https://www.argentina.gob.ar/sites/default/files/actas-tomo-i-71.pdf
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Borrelli, Marcelo (2021). «Por la democratización imposible. La revista Cuestionario y la tercera presidencia
+      de Perón (1973-1974)». Sociohistórica, 47, e121, p. 4: «Cámpora asumió la presidencia de la nación el 25 de mayo»'
+    publicado: '2021'
+    pagina: '4'
+    url: https://sociohistorica.fahce.unlp.edu.ar/article/download/SHe121/13502/34620
+- id: p.gobierno.campora
+  tipo: gobierno
+  nombre: Héctor José Cámpora
+  nombre_corto: Cámpora
+  desde: 1973-05-25
+  hasta: 1973-07-13
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Borrelli, Marcelo (2021). «Por la democratización imposible. La revista Cuestionario y la tercera presidencia
+      de Perón (1973-1974)». Sociohistórica, 47, e121, p. 4: «Cámpora asumió la presidencia de la nación el 25 de mayo»'
+    publicado: '2021'
+    pagina: '4'
+    url: https://sociohistorica.fahce.unlp.edu.ar/article/download/SHe121/13502/34620
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Borrelli, Marcelo (2021). «Por la democratización imposible. La revista Cuestionario y la tercera presidencia
+      de Perón (1973-1974)». Sociohistórica, 47, e121, p. 4: «debió renunciar el 13 de julio de ese año»'
+    publicado: '2021'
+    pagina: '4'
+    url: https://sociohistorica.fahce.unlp.edu.ar/article/download/SHe121/13502/34620
+- id: p.gobierno.lastiri
+  tipo: gobierno
+  nombre: Raúl Alberto Lastiri
+  nombre_corto: Lastiri
+  desde: 1973-07-13
+  hasta: 1973-10-12
+  caracter: interino
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Stavale, Mariela (2023). Un peronismo alternativo para la revolución. Los Polvorines-La Plata-Posadas: UNGS-UNLP
+      (FaHCE)-UNaM, p. 159: «Identidad peronista en crisis: el interregno de Raúl Lastiri, 13 de julio - 12 de octubre de
+      1973»'
+    publicado: '2023'
+    pagina: '159'
+    url: https://libros.fahce.unlp.edu.ar/index.php/libros/catalog/view/223/277/1611-1
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Stavale, Mariela (2023). Un peronismo alternativo para la revolución. Los Polvorines-La Plata-Posadas: UNGS-UNLP
+      (FaHCE)-UNaM, p. 207: «El 12 de octubre de 1973, Perón asumió su tercera presidencia»'
+    publicado: '2023'
+    pagina: '207'
+    url: https://libros.fahce.unlp.edu.ar/index.php/libros/catalog/view/223/277/1611-1
+  notas: Presidente de la Cámara de Diputados en ejercicio del Poder Ejecutivo tras las renuncias de Cámpora y Solano Lima.
+- id: p.gobierno.peron-1973
+  tipo: gobierno
+  nombre: Juan Domingo Perón (tercera presidencia)
+  nombre_corto: Perón
+  desde: 1973-10-12
+  hasta: 1974-07-01
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Stavale, Mariela (2023). Un peronismo alternativo para la revolución. Los Polvorines-La Plata-Posadas: UNGS-UNLP
+      (FaHCE)-UNaM, p. 207: «El 12 de octubre de 1973, Perón asumió su tercera presidencia»'
+    publicado: '2023'
+    pagina: '207'
+    url: https://libros.fahce.unlp.edu.ar/index.php/libros/catalog/view/223/277/1611-1
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Borrelli, Marcelo (2021). «Por la democratización imposible. La revista Cuestionario y la tercera presidencia
+      de Perón (1973-1974)». Sociohistórica, 47, e121, p. 2: «tercera presidencia de Perón (12 de octubre de 1973 al 1º de
+      julio de 1974)»'
+    publicado: '2021'
+    pagina: '2'
+    url: https://sociohistorica.fahce.unlp.edu.ar/article/download/SHe121/13502/34620
+  notas: Algunos listados oficiales cierran su gobierno el 30/6/1974; se toma el 1/7/1974, día de su muerte, en que la vicepresidenta
+    pasa a ser titular.
+- id: p.gobierno.martinez-de-peron
+  tipo: gobierno
+  nombre: María Estela Martínez de Perón
+  nombre_corto: Isabel Perón
+  desde: 1974-07-01
+  hasta: 1976-03-24
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Borrelli, Marcelo (2021). «Por la democratización imposible. La revista Cuestionario y la tercera presidencia
+      de Perón (1973-1974)». Sociohistórica, 47, e121, p. 13: «la muerte de Perón el 1º de julio de 1974»'
+    publicado: '2021'
+    pagina: '13'
+    url: https://sociohistorica.fahce.unlp.edu.ar/article/download/SHe121/13502/34620
+  - para: hasta
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, Fondo «Junta Militar», descripción ISAD(G), p. 1: «El 24 de marzo de 1976 [...] derrocaba
+      al gobierno constitucional de María Estela Martínez de Perón e instalaba una Junta»; las actas constitutivas se publicaron
+      en el BO del 29/3/1976'
+    nota: 'Publicación: s/f.'
+    pagina: '1'
+    url: https://argentina.gob.ar/sites/default/files/fondo_junta_militar.pdf
+  notas: Durante su licencia, entre septiembre y octubre de 1975, ejerció el Poder Ejecutivo el presidente provisional del
+    Senado, Ítalo Argentino Luder; no se trata como cambio de gobierno.
+- id: p.gobierno.junta-militar-1976
+  tipo: gobierno
+  nombre: Junta Militar (Jorge R. Videla, Emilio E. Massera, Orlando R. Agosti)
+  nombre_corto: Junta Militar (1976)
+  desde: 1976-03-24
+  hasta: 1976-03-29
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, Fondo «Junta Militar», descripción ISAD(G), p. 1: «El 24 de marzo de 1976 [...] derrocaba
+      al gobierno constitucional de María Estela Martínez de Perón e instalaba una Junta»; las actas constitutivas se publicaron
+      en el BO del 29/3/1976'
+    nota: 'Publicación: s/f.'
+    pagina: '1'
+    url: https://argentina.gob.ar/sites/default/files/fondo_junta_militar.pdf
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Raggio, Sandra (s/f). «Los años de la dictadura militar (1976-1983)». La Plata: Comisión Provincial por la
+      Memoria, p. 2 del PDF (sin paginación impresa): «Jorge Rafael Videla asumió como presidente el 29 de marzo de 1976»'
+    nota: 'Publicación: s/f.'
+    pagina: '2'
+    url: https://www.comisionporlamemoria.org/archivos/jovenesymemoria/bibliografia_web/dictadura/Raggio.pdf
+- id: p.gobierno.videla
+  tipo: gobierno
+  nombre: Jorge Rafael Videla
+  nombre_corto: Videla
+  desde: 1976-03-29
+  hasta: 1981-03-29
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Raggio, Sandra (s/f). «Los años de la dictadura militar (1976-1983)». La Plata: Comisión Provincial por la
+      Memoria, p. 2 del PDF (sin paginación impresa): «Jorge Rafael Videla asumió como presidente el 29 de marzo de 1976»'
+    nota: 'Publicación: s/f.'
+    pagina: '2'
+    url: https://www.comisionporlamemoria.org/archivos/jovenesymemoria/bibliografia_web/dictadura/Raggio.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: 'Acta de la Junta Militar (documento primario, secreto, no publicado en el BO), reproducida en Ministerio
+      de Defensa (2014), Actas de la dictadura. Documentos de la Junta Militar encontrados en el Edificio Cóndor, tomo 4,
+      p. 134: Acta N° 155 (3/10/1980): designación del ciudadano que ejercerá el PEN «durante el período comprendido entre
+      el 29 de marzo de 1981 y el 29 de marzo de 1984»'
+    publicado: '2014'
+    pagina: '134'
+    url: https://biblioteca.senado-ba.gov.ar/acta/Actas_Tomo4.pdf
+- id: p.gobierno.viola
+  tipo: gobierno
+  nombre: Roberto Eduardo Viola
+  nombre_corto: Viola
+  desde: 1981-03-29
+  hasta: 1981-12-11
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Acta de la Junta Militar (documento primario, secreto, no publicado en el BO), reproducida en Ministerio
+      de Defensa (2014), Actas de la dictadura. Documentos de la Junta Militar encontrados en el Edificio Cóndor, tomo 4,
+      p. 134: Acta N° 155 (3/10/1980): designación del ciudadano que ejercerá el PEN «durante el período comprendido entre
+      el 29 de marzo de 1981 y el 29 de marzo de 1984»'
+    publicado: '2014'
+    pagina: '134'
+    url: https://biblioteca.senado-ba.gov.ar/acta/Actas_Tomo4.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: 'Acta de la Junta Militar (documento primario, secreto, no publicado en el BO), reproducida en Ministerio
+      de Defensa (2014), Actas de la dictadura. Documentos de la Junta Militar encontrados en el Edificio Cóndor, tomo 4,
+      p. 299: Acta N° 205 (11/12/1981, 10 h): con el presidente Viola presente entre las 11 y las 12 h, la Junta trata la
+      «Situación institucional» y aprueba Resoluciones de Junta Militar «firmadas y entregadas en esa oportunidad» (el texto
+      de las resoluciones no está reproducido)'
+    publicado: '2014'
+    pagina: '299'
+    url: https://biblioteca.senado-ba.gov.ar/acta/Actas_Tomo4.pdf
+  notas: Durante su licencia por enfermedad, en noviembre y diciembre de 1981, ejerció el Poder Ejecutivo el ministro del
+    Interior, Horacio Tomás Liendo; no se trata como cambio de gobierno.
+- id: p.gobierno.lacoste
+  tipo: gobierno
+  nombre: Carlos Alberto Lacoste
+  nombre_corto: Lacoste
+  desde: 1981-12-11
+  hasta: 1981-12-22
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Acta de la Junta Militar (documento primario, secreto, no publicado en el BO), reproducida en Ministerio
+      de Defensa (2014), Actas de la dictadura. Documentos de la Junta Militar encontrados en el Edificio Cóndor, tomo 4,
+      p. 299: Acta N° 205 (11/12/1981, 10 h): con el presidente Viola presente entre las 11 y las 12 h, la Junta trata la
+      «Situación institucional» y aprueba Resoluciones de Junta Militar «firmadas y entregadas en esa oportunidad» (el texto
+      de las resoluciones no está reproducido)'
+    publicado: '2014'
+    pagina: '299'
+    url: https://biblioteca.senado-ba.gov.ar/acta/Actas_Tomo4.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, «Nómina de presidentes y ministros»: «Periodo: 22 de diciembre de 1981 al 17 de junio
+      de 1982 [Galtieri]»'
+    nota: 'Publicación: s/f (consultado 2026-11-11).'
+    url: https://www.argentina.gob.ar/node/48921
+  notas: Interinato dentro del régimen de facto, entre la remoción de Viola y la asunción de Galtieri. Las fechas salen de
+    las actas de la Junta Militar; los listados oficiales de presidentes no lo registran.
+- id: p.gobierno.galtieri
+  tipo: gobierno
+  nombre: Leopoldo Fortunato Galtieri
+  nombre_corto: Galtieri
+  desde: 1981-12-22
+  hasta: 1982-06-18
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, «Nómina de presidentes y ministros»: «Periodo: 22 de diciembre de 1981 al 17 de junio
+      de 1982»'
+    nota: 'Publicación: s/f (consultado 2026-11-11).'
+    url: https://www.argentina.gob.ar/node/48921
+  - para: hasta
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, «Nómina de presidentes y ministros»: «Periodo: 22 de diciembre de 1981 al 17 de junio
+      de 1982»'
+    nota: 'Publicación: s/f (consultado 2026-11-11).'
+    url: https://www.argentina.gob.ar/node/48921
+- id: p.gobierno.saint-jean
+  tipo: gobierno
+  nombre: Alfredo Oscar Saint-Jean
+  nombre_corto: Saint-Jean
+  desde: 1982-06-18
+  hasta: 1982-07-01
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Ministerio de Defensa, «Nómina de presidentes y ministros»: «Periodo: 22 de diciembre de 1981 al 17 de junio
+      de 1982 [Galtieri]»'
+    nota: 'Publicación: s/f (consultado 2026-11-11).'
+    url: https://www.argentina.gob.ar/node/48921
+  - para: hasta
+    tipo: oficial
+    referencia: 'Acta de la Junta Militar (documento primario, secreto, no publicado en el BO), reproducida en Ministerio
+      de Defensa (2014), Actas de la dictadura. Documentos de la Junta Militar encontrados en el Edificio Cóndor, tomo 5,
+      p. 58: Acta N° 228 (22/6/1982): «El gobierno que asumirá el 1° de julio de 1982 deberá, indefectiblemente, concluir
+      con la institucionalización del país en los primeros meses de 1984»'
+    publicado: '2014'
+    pagina: '58'
+    url: https://biblioteca.senado-ba.gov.ar/acta/Actas_Tomo5.pdf
+  notas: Interinato del ministro del Interior dentro del régimen de facto, tras la renuncia de Galtieri. Los listados oficiales
+    de presidentes no lo registran.
+- id: p.gobierno.bignone
+  tipo: gobierno
+  nombre: Reynaldo Benito Antonio Bignone
+  nombre_corto: Bignone
+  desde: 1982-07-01
+  hasta: 1983-12-10
+  caracter: de_facto
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Acta de la Junta Militar (documento primario, secreto, no publicado en el BO), reproducida en Ministerio
+      de Defensa (2014), Actas de la dictadura. Documentos de la Junta Militar encontrados en el Edificio Cóndor, tomo 5,
+      p. 58: Acta N° 228 (22/6/1982): «El gobierno que asumirá el 1° de julio de 1982 deberá, indefectiblemente, concluir
+      con la institucionalización del país en los primeros meses de 1984»'
+    publicado: '2014'
+    pagina: '58'
+    url: https://biblioteca.senado-ba.gov.ar/acta/Actas_Tomo5.pdf
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 24/1983 (Bs. As., 10/12/1983), designa Secretario de Hacienda, «EL PRESIDENTE DE LA NACION ARGENTINA
+      DECRETA», firma ALFONSIN; BO n° 25319, p. 8
+    publicado: 1983-12-13
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97762/texto
+- id: p.gobierno.alfonsin
+  tipo: gobierno
+  nombre: Raúl Ricardo Alfonsín
+  nombre_corto: Alfonsín
+  desde: 1983-12-10
+  hasta: 1989-07-08
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 24/1983 (Bs. As., 10/12/1983), designa Secretario de Hacienda, «EL PRESIDENTE DE LA NACION ARGENTINA
+      DECRETA», firma ALFONSIN; BO n° 25319, p. 8
+    publicado: 1983-12-13
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97762/texto
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1/1989 (8/7/1989), designa Ministro del Interior a Eduardo Bauzá; primer número de la nueva serie
+      de decretos. InfoLEG solo publica el resumen: firmante no visto; BO n° 26672, p. 9'
+    publicado: 1989-07-11
+    pagina: '9'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-830
+- id: p.gobierno.menem
+  tipo: gobierno
+  nombre: Carlos Saúl Menem
+  nombre_corto: Menem
+  desde: 1989-07-08
+  hasta: 1999-12-10
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1/1989 (8/7/1989), designa Ministro del Interior a Eduardo Bauzá; primer número de la nueva serie
+      de decretos. InfoLEG solo publica el resumen: firmante no visto; BO n° 26672, p. 9'
+    publicado: 1989-07-11
+    pagina: '9'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-830
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 2/1999 (Bs. As., 10/12/99), designa Ministro del Interior, firma DE LA RUA; BO n° 29292, p. 3
+    publicado: 1999-12-14
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-61396/texto
+  mandatos:
+  - id: p.gobierno.menem-1989
+    nombre: Carlos Saúl Menem (primer mandato, 1989-1995)
+    nombre_corto: Menem I
+    desde: 1989-07-08
+    hasta: 1995-07-08
+    fuentes:
+    - para: desde
+      tipo: norma
+      referencia: 'Decreto 1/1989 (8/7/1989), designa Ministro del Interior a Eduardo Bauzá; primer número de la nueva serie
+        de decretos. InfoLEG solo publica el resumen: firmante no visto; BO n° 26672, p. 9'
+      publicado: 1989-07-11
+      pagina: '9'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-830
+    - para: hasta
+      tipo: norma
+      referencia: Decreto 1/1995 (Bs. As., 8/7/95), designa Jefe de Gabinete a Eduardo Bauzá, firma MENEM; BO n° 28182, p.
+        4
+      publicado: 1995-07-11
+      pagina: '4'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-23707/texto
+  - id: p.gobierno.menem-1995
+    nombre: Carlos Saúl Menem (segundo mandato, 1995-1999)
+    nombre_corto: Menem II
+    desde: 1995-07-08
+    hasta: 1999-12-10
+    fuentes:
+    - para: desde
+      tipo: norma
+      referencia: Decreto 1/1995 (Bs. As., 8/7/95), designa Jefe de Gabinete a Eduardo Bauzá, firma MENEM; BO n° 28182, p.
+        4
+      publicado: 1995-07-11
+      pagina: '4'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-23707/texto
+    - para: hasta
+      tipo: norma
+      referencia: 'Constitución Nacional (texto ordenado por Ley 24.430), Disposición transitoria décima: «El mandato del
+        Presidente de la Nación que asuma su cargo el 8 de julio de 1995 se extinguirá el 10 de diciembre de 1999»; BO n°
+        28057, p. 1'
+      publicado: 1995-01-10
+      pagina: '1'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-804/texto
+- id: p.gobierno.de-la-rua
+  tipo: gobierno
+  nombre: Fernando de la Rúa
+  nombre_corto: De la Rúa
+  desde: 1999-12-10
+  hasta: 2001-12-21
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 2/1999 (Bs. As., 10/12/99), designa Ministro del Interior, firma DE LA RUA; BO n° 29292, p. 3
+    publicado: 1999-12-14
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-61396/texto
+  - para: hasta
+    tipo: oficial
+    referencia: 'Biblioteca del Congreso de la Nación, Dossier Edición Especial 40 Años de Democracia n° 265 (2023-09), p.
+      4: «durante la presidencia del Dr. Fernando De la Rúa (10 de diciembre de 1999 al 21 de diciembre de 2001)»'
+    publicado: 2023-09
+    pagina: '4'
+    url: https://bcn.gob.ar/uploads/adjuntos/DossierEspecialN265seleccionleyesdelarua.pdf
+- id: p.gobierno.puerta
+  tipo: gobierno
+  nombre: Federico Ramón Puerta
+  nombre_corto: Puerta
+  desde: 2001-12-21
+  hasta: 2001-12-23
+  caracter: interino
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1/2001 (Bs. As., 21/12/2001), acepta la renuncia del Jefe de Gabinete Colombo, firma PUERTA; BO n°
+      29802, p. 18
+    publicado: 2001-12-24
+    pagina: '18'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71022/texto
+  - para: hasta
+    tipo: norma
+    referencia: 'Asamblea Legislativa, Decreto-Resolución DR-989/01 (Buenos Aires, 23/12/2001): «Desígnase Presidente de la
+      Nación al ciudadano Dr. Adolfo RODRIGUEZ SAA»; BO n° 29803, p. 1'
+    publicado: 2001-12-26
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71061/texto
+- id: p.gobierno.rodriguez-saa
+  tipo: gobierno
+  nombre: Adolfo Rodríguez Saá
+  nombre_corto: Rodríguez Saá
+  desde: 2001-12-23
+  hasta: 2001-12-30
+  caracter: interino
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Asamblea Legislativa, Decreto-Resolución DR-989/01 (Buenos Aires, 23/12/2001): «Desígnase Presidente de la
+      Nación al ciudadano Dr. Adolfo RODRIGUEZ SAA»; BO n° 29803, p. 1'
+    publicado: 2001-12-26
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71061/texto
+  - para: hasta
+    tipo: oficial
+    referencia: 'Biblioteca del Congreso de la Nación, Dossier Edición Especial 40 Años de Democracia n.º 266, p. 3: «el Dr.
+      Eduardo Camaño (30 de diciembre de 2001 al 1° de enero de 2002)»'
+    publicado: 2023-09
+    pagina: '3'
+    url: https://bcn.gob.ar/uploads/adjuntos/DossierEspecialN266seleccionleyespuertarodriguezsaa-camanoduhalde.pdf
+- id: p.gobierno.camano
+  tipo: gobierno
+  nombre: Eduardo Oscar Camaño
+  nombre_corto: Camaño
+  desde: 2001-12-30
+  hasta: 2002-01-02
+  caracter: interino
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Biblioteca del Congreso de la Nación, Dossier Edición Especial 40 Años de Democracia n.º 266, p. 3: «el Dr.
+      Eduardo Camaño (30 de diciembre de 2001 al 1° de enero de 2002)»'
+    publicado: 2023-09
+    pagina: '3'
+    url: https://bcn.gob.ar/uploads/adjuntos/DossierEspecialN266seleccionleyespuertarodriguezsaa-camanoduhalde.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: 'Biblioteca del Congreso de la Nación, Dossier Edición Especial 40 Años de Democracia n° 266 (2023-09), p.
+      3: «el Dr. Eduardo Camaño (30 de diciembre de 2001 al 1° de enero de 2002) y el Dr. Eduardo Duhalde (2° de enero de
+      2002 al 25 de mayo de 2003)»'
+    publicado: 2023-09
+    pagina: '3'
+    url: https://bcn.gob.ar/uploads/adjuntos/DossierEspecialN266seleccionleyespuertarodriguezsaa-camanoduhalde.pdf
+  notas: Presidente de la Cámara de Diputados en ejercicio del Poder Ejecutivo. Algunos listados dan el 31/12/2001 como inicio;
+    se toma el 30/12, como la Biblioteca del Congreso y la Casa Rosada.
+- id: p.gobierno.duhalde
+  tipo: gobierno
+  nombre: Eduardo Alberto Duhalde
+  nombre_corto: Duhalde
+  desde: 2002-01-02
+  hasta: 2003-05-25
+  caracter: interino
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'Biblioteca del Congreso de la Nación, Dossier Edición Especial 40 Años de Democracia n° 266 (2023-09), p.
+      3: «el Dr. Eduardo Camaño (30 de diciembre de 2001 al 1° de enero de 2002) y el Dr. Eduardo Duhalde (2° de enero de
+      2002 al 25 de mayo de 2003)»'
+    publicado: 2023-09
+    pagina: '3'
+    url: https://bcn.gob.ar/uploads/adjuntos/DossierEspecialN266seleccionleyespuertarodriguezsaa-camanoduhalde.pdf
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 1/2003 (Bs. As., 25/5/2003), designa Jefe de Gabinete, firma KIRCHNER; BO n° 30158, p. 5
+    publicado: 2003-05-27
+    pagina: '5'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-85539/texto
+  notas: Designado por la Asamblea Legislativa el 1/1/2002 para completar el mandato de De la Rúa; asumió esa noche. Se toma
+    el 2/1/2002, como la Casa Rosada y la Biblioteca del Congreso.
+- id: p.gobierno.kirchner
+  tipo: gobierno
+  nombre: Néstor Carlos Kirchner
+  nombre_corto: Néstor Kirchner
+  desde: 2003-05-25
+  hasta: 2007-12-10
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1/2003 (Bs. As., 25/5/2003), designa Jefe de Gabinete, firma KIRCHNER; BO n° 30158, p. 5
+    publicado: 2003-05-27
+    pagina: '5'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-85539/texto
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 1/2007 (Bs. As., 10/12/2007), designa Jefe de Gabinete, firma FERNANDEZ DE KIRCHNER; BO n° 31300,
+      p. 9
+    publicado: 2007-12-11
+    pagina: '9'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-135518/texto
+- id: p.gobierno.fernandez-de-kirchner
+  tipo: gobierno
+  nombre: Cristina Fernández de Kirchner
+  nombre_corto: Fernández de Kirchner
+  desde: 2007-12-10
+  hasta: 2015-12-10
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1/2007 (Bs. As., 10/12/2007), designa Jefe de Gabinete, firma FERNANDEZ DE KIRCHNER; BO n° 31300,
+      p. 9
+    publicado: 2007-12-11
+    pagina: '9'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-135518/texto
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 1/2015 (Bs. As., 10/12/2015), designa Jefe de Gabinete, firma MACRI; BO n° 33273, p. 1
+    publicado: 2015-12-11
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-256594/texto
+  mandatos:
+  - id: p.gobierno.fernandez-de-kirchner-2007
+    nombre: Cristina Fernández de Kirchner (primer mandato, 2007-2011)
+    nombre_corto: Cristina Fernández de Kirchner I
+    desde: 2007-12-10
+    hasta: 2011-12-10
+    fuentes:
+    - para: desde
+      tipo: norma
+      referencia: Decreto 1/2007 (Bs. As., 10/12/2007), designa Jefe de Gabinete, firma FERNANDEZ DE KIRCHNER; BO n° 31300,
+        p. 9
+      publicado: 2007-12-11
+      pagina: '9'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-135518/texto
+    - para: hasta
+      tipo: norma
+      referencia: Decreto 1/2011 (Bs. As., 10/12/2011), designa Jefe de Gabinete; la numeración de decretos se reinicia con
+        el segundo mandato; firma FERNANDEZ DE KIRCHNER; BO n° 32293, p. 19
+      publicado: 2011-12-12
+      pagina: '19'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-191058/texto
+  - id: p.gobierno.fernandez-de-kirchner-2011
+    nombre: Cristina Fernández de Kirchner (segundo mandato, 2011-2015)
+    nombre_corto: Cristina Fernández de Kirchner II
+    desde: 2011-12-10
+    hasta: 2015-12-10
+    fuentes:
+    - para: desde
+      tipo: norma
+      referencia: Decreto 1/2011 (Bs. As., 10/12/2011), designa Jefe de Gabinete; la numeración de decretos se reinicia con
+        el segundo mandato; firma FERNANDEZ DE KIRCHNER; BO n° 32293, p. 19
+      publicado: 2011-12-12
+      pagina: '19'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-191058/texto
+    - para: hasta
+      tipo: norma
+      referencia: Decreto 1/2015 (Bs. As., 10/12/2015), designa Jefe de Gabinete, firma MACRI; BO n° 33273, p. 1
+      publicado: 2015-12-11
+      pagina: '1'
+      url: https://www.argentina.gob.ar/normativa/nacional/norma-256594/texto
+- id: p.gobierno.macri
+  tipo: gobierno
+  nombre: Mauricio Macri
+  nombre_corto: Macri
+  desde: 2015-12-10
+  hasta: 2019-12-10
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1/2015 (Bs. As., 10/12/2015), designa Jefe de Gabinete, firma MACRI; BO n° 33273, p. 1
+    publicado: 2015-12-11
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-256594/texto
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 1/2019 (Ciudad de Buenos Aires, 10/12/2019), designa Jefe de Gabinete, firma FERNANDEZ; BO n° 34258,
+      p. 4
+    publicado: 2019-12-11
+    pagina: '4'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-333130/texto
+  notas: En la mañana del 10/12/2015, hasta la jura de Macri, ejerció la presidencia en forma provisional el presidente provisional
+    del Senado, Federico Pinedo; no se trata como cambio de gobierno.
+- id: p.gobierno.alberto-fernandez
+  tipo: gobierno
+  nombre: Alberto Ángel Fernández
+  nombre_corto: Alberto Fernández
+  desde: 2019-12-10
+  hasta: 2023-12-10
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1/2019 (Ciudad de Buenos Aires, 10/12/2019), designa Jefe de Gabinete, firma FERNANDEZ; BO n° 34258,
+      p. 4
+    publicado: 2019-12-11
+    pagina: '4'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-333130/texto
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 1/2023 (Ciudad de Buenos Aires, 10/12/2023), designa Jefe de Gabinete, firma MILEI; BO n° 35318, p.
+      2
+    publicado: 2023-12-11
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-394969/texto
+- id: p.gobierno.milei
+  tipo: gobierno
+  nombre: Javier Gerardo Milei
+  nombre_corto: Milei
+  desde: 2023-12-10
+  hasta: null
+  caracter: constitucional
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1/2023 (Ciudad de Buenos Aires, 10/12/2023), designa Jefe de Gabinete, firma MILEI; BO n° 35318, p.
+      2
+    publicado: 2023-12-11
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-394969/texto
+- id: p.ministro.dagnino-pastore-1969
+  tipo: ministro
+  nombre: José María Dagnino Pastore
+  nombre_corto: Dagnino Pastore
+  cargo: Ministro de Economía y Trabajo
+  desde: 1969-06-11
+  hasta: 1970-06-18
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+- id: p.ministro.moyano-llerena
+  tipo: ministro
+  nombre: Carlos María Moyano Llerena
+  nombre_corto: Moyano Llerena
+  cargo: Ministro de Economía y Trabajo
+  desde: 1970-06-18
+  hasta: 1970-10-15
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+- id: p.ministro.ferrer
+  tipo: ministro
+  nombre: Aldo Ferrer
+  nombre_corto: Ferrer
+  cargo: Ministro de Economía y Trabajo
+  desde: 1970-10-26
+  hasta: 1971-05-28
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: norma
+    referencia: 'Ley 19.064 (de facto), sanción 1971-05-28, B.O. n.º 22186, p. 5: elimina el Ministerio de Economía y Trabajo
+      y crea el de Hacienda y Finanzas'
+    publicado: 1971-06-01
+    pagina: '5'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-166486
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  notas: 'La Ley 19.064 (Boletín Oficial del 1/6/1971) disuelve el Ministerio de Economía y Trabajo: desde entonces se toma
+    el titular de Hacienda y Finanzas.'
+- id: p.ministro.quilici
+  tipo: ministro
+  nombre: Juan Alberto Francisco Quilici
+  nombre_corto: Quilici
+  cargo: Ministro de Hacienda y Finanzas
+  desde: 1971-06-01
+  hasta: 1971-10-11
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+- id: p.ministro.licciardo
+  tipo: ministro
+  nombre: Cayetano Antonio Licciardo
+  nombre_corto: Licciardo
+  cargo: Ministro de Hacienda y Finanzas
+  desde: 1971-10-11
+  hasta: 1972-10-13
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+- id: p.ministro.wehbe-1972
+  tipo: ministro
+  nombre: Jorge Wehbe
+  nombre_corto: Wehbe
+  cargo: Ministro de Hacienda y Finanzas
+  desde: 1972-10-13
+  hasta: 1973-05-25
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 2/1973 (Cámpora), sanción 1973-05-25, B.O. n.º 22684, p. 7 (solo resumen en línea): nombra a Gelbard
+      en Hacienda y Finanzas'
+    publicado: 1973-06-11
+    pagina: '7'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-202632
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+- id: p.ministro.gelbard
+  tipo: ministro
+  nombre: José Ber Gelbard
+  nombre_corto: Gelbard
+  cargo: Ministro de Hacienda y Finanzas; Ministro de Economía desde 1973-08-21 (Ley 20.524)
+  desde: 1973-05-25
+  hasta: 1974-10-21
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 2/1973 (Cámpora), sanción 1973-05-25, B.O. n.º 22684, p. 7 (solo resumen)
+    publicado: 1973-06-11
+    pagina: '7'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-202632
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1187/1974, sanción 1974-10-21, B.O. n.º 23020, p. 2: acepta la renuncia (solo resumen)'
+    publicado: 1974-10-22
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-203242
+  notas: La Ley 20.524 (Boletín Oficial del 21/8/1973) vuelve a crear el Ministerio de Economía.
+- id: p.ministro.gomez-morales
+  tipo: ministro
+  nombre: Alfredo Gómez Morales
+  nombre_corto: Gómez Morales
+  cargo: Ministro de Economía
+  desde: 1974-10-21
+  hasta: 1975-06-02
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1188/1974 (texto: «Bs. As., 21/10/74»), B.O. n.º 23020, p. 2'
+    publicado: 1974-10-22
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-183062
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+- id: p.ministro.rodrigo
+  tipo: ministro
+  nombre: Celestino Rodrigo
+  nombre_corto: Rodrigo
+  cargo: Ministro de Economía
+  desde: 1975-06-02
+  hasta: 1975-07-19
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: norma
+    referencia: Decreto 1957 del 19/7/1975, que acepta la renuncia, citado en los considerandos del Decreto 1976/1975 (B.O.
+      n.º 23206, p. 2)
+    publicado: 1975-07-28
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-182811
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  notas: Entre su salida y la asunción de Bonanni quedó a cargo un interino no designado como titular.
+- id: p.ministro.bonanni
+  tipo: ministro
+  nombre: Pedro José Bonanni
+  nombre_corto: Bonanni
+  cargo: Ministro de Economía
+  desde: 1975-07-22
+  hasta: 1975-08-11
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1976/1975 (texto: «Bs. As., 22/7/75»; nombra a «José Bonanni, L.E. 504.046»), B.O. n.º 23206, p.
+      2'
+    publicado: 1975-07-28
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-182811
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  notas: El decreto de designación lo nombra «José Bonanni».
+- id: p.ministro.cafiero
+  tipo: ministro
+  nombre: Antonio Francisco Cafiero
+  nombre_corto: Cafiero
+  cargo: Ministro de Economía
+  desde: 1975-08-14
+  hasta: 1976-02-03
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+- id: p.ministro.mondelli
+  tipo: ministro
+  nombre: Emilio Mondelli
+  nombre_corto: Mondelli
+  cargo: Ministro de Economía
+  desde: 1976-02-03
+  hasta: 1976-03-24
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1/1976 de la Junta Militar (texto: «Bs. As., 24/3/76»: «han cesado también en sus funciones todos
+      los integrantes del Gabinete Nacional»), B.O. n.º 23373, p. 2'
+    publicado: 1976-03-29
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-183353
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  notas: Entre el golpe del 24/3/1976 y la asunción de Martínez de Hoz, el área estuvo a cargo de un delegado de la Junta
+    Militar.
+- id: p.ministro.martinez-de-hoz
+  tipo: ministro
+  nombre: José Alfredo Martínez de Hoz
+  nombre_corto: Martínez de Hoz
+  cargo: Ministro de Economía
+  desde: 1976-03-29
+  hasta: 1981-03-29
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: desde
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: secundaria
+    referencia: de Pablo, Juan Carlos (2021), «¿Qué tiene de década el período 1964-74?», Documentos de Trabajo UCEMA n.º
+      800, cuadro 3, p. 4 (p. 6 del PDF)
+    publicado: 2021-07
+    pagina: '6'
+    url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+- id: p.ministro.sigaut
+  tipo: ministro
+  nombre: Lorenzo Juan Sigaut
+  nombre_corto: Sigaut
+  cargo: Ministro de Economía, Hacienda y Finanzas
+  desde: 1981-03-29
+  hasta: 1981-12-21
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 5/1981 (Viola), B.O. n.º 24640, p. 19: «Desígnase Ministro de Economía, Hacienda y Finanzas»'
+    publicado: 1981-04-01
+    pagina: '19'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-183936
+  - para: desde
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 2248/1981, sanción 1981-12-21, B.O. n.º 24823: acepta la renuncia (solo resumen)'
+    publicado: 1981-12-23
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97951
+  notas: El decreto de designación lleva la fecha 20/3/1981, anterior a la asunción de Viola; se toma el 29/3/1981.
+- id: p.ministro.alemann
+  tipo: ministro
+  nombre: Roberto Teodoro Alemann
+  nombre_corto: Alemann
+  cargo: Ministro de Economía
+  desde: 1981-12-22
+  hasta: 1982-07-02
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 5/1981 (Galtieri; texto: «Bs. As., 22/12/81»), B.O. n.º 24824, p. 7'
+    publicado: 1981-12-24
+    pagina: '7'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97954
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 6/1982, sanción 1982-07-02: designa a Dagnino Pastore (sucesor)'
+    publicado: 1982-07-06
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97959
+- id: p.ministro.dagnino-pastore-1982
+  tipo: ministro
+  nombre: José María Dagnino Pastore
+  nombre_corto: Dagnino Pastore
+  cargo: Ministro de Economía
+  desde: 1982-07-02
+  hasta: 1982-08-24
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 6/1982, sanción 1982-07-02, B.O. n.º 24956 (solo resumen)
+    publicado: 1982-07-06
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97959
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 419/1982, sanción 1982-08-24, B.O. n.º 24991, p. 2: acepta la renuncia (el resumen escribe «Danigno
+      Pastore»)'
+    publicado: 1982-08-26
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97974
+- id: p.ministro.wehbe-1982
+  tipo: ministro
+  nombre: Jorge Wehbe
+  nombre_corto: Wehbe
+  cargo: Ministro de Economía
+  desde: 1982-08-25
+  hasta: 1983-12-10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 420/1982, sanción 1982-08-25, B.O. n.º 24991, p. 2 (solo resumen)
+    publicado: 1982-08-26
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97977
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 3216/1983, sanción 1983-12-07, B.O. n.º 25318: acepta la renuncia a partir del 10/12/1983 (solo resumen)'
+    publicado: 1983-12-12
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97755
+- id: p.ministro.grinspun
+  tipo: ministro
+  nombre: Bernardo Grinspun
+  nombre_corto: Grinspun
+  cargo: Ministro de Economía
+  desde: 1983-12-10
+  hasta: 1985-02-19
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 4/1983 (texto: «Bs.As., 10/12/1983»), B.O. n.º 25319, p. 8'
+    publicado: 1983-12-13
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-97760
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 352/1985, sanción 1985-02-19, B.O. n.º 25622, p. 3: acepta la renuncia (solo resumen)'
+    publicado: 1985-02-22
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-194346
+- id: p.ministro.sourrouille
+  tipo: ministro
+  nombre: Juan Vital Sourrouille
+  nombre_corto: Sourrouille
+  cargo: Ministro de Economía
+  desde: 1985-02-19
+  hasta: 1989-04-04
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 354/1985 (texto: «Bs. As., 19/2/85»), B.O. n.º 25622, p. 2'
+    publicado: 1985-02-22
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-106933
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 464/1989 (texto: «Bs. As., 4/4/89»): designa a Pugliese (sucesor), B.O. n.º 26609, p. 1'
+    publicado: 1989-04-10
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-106935
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 463/1989, B.O. n.º 26609: acepta la renuncia (solo resumen; InfoLEG pone sanción 10/4/1989, igual
+      a la del B.O.)'
+    publicado: 1989-04-10
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-106967
+  - para: hasta
+    tipo: oficial
+    referencia: Ministerio de Economía, Centro de Documentación e Información (CDI), «Listado de Ministros de Economía» (página
+      y CSV ministros.csv)
+    nota: 'Publicación: sin fecha (consultado 2026-11-12).'
+    url: https://cdi.mecon.gob.ar/ministros-de-economia
+- id: p.ministro.pugliese
+  tipo: ministro
+  nombre: Juan Carlos Pugliese
+  nombre_corto: Pugliese
+  cargo: Ministro de Economía
+  desde: 1989-04-04
+  hasta: 1989-05-26
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 464/1989 (texto: «Bs. As., 4/4/89»), B.O. n.º 26609, p. 1'
+    publicado: 1989-04-10
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-106935
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 704/1989, sanción 1989-05-26, B.O. n.º 26647: acepta la renuncia (solo resumen)'
+    publicado: 1989-06-05
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-106968
+- id: p.ministro.jesus-rodriguez
+  tipo: ministro
+  nombre: Jesús Rodríguez
+  nombre_corto: Rodríguez
+  cargo: Ministro de Economía
+  desde: 1989-05-26
+  hasta: 1989-07-07
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 709/1989 (texto: «Bs. As., 26/5/89»), B.O. n.º 26645, p. 3'
+    publicado: 1989-06-01
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-106941
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1147/1989, sanción 1989-07-07, B.O. n.º 26672, p. 8: acepta la renuncia (solo resumen)'
+    publicado: 1989-07-11
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-62086
+- id: p.ministro.roig
+  tipo: ministro
+  nombre: Miguel Roig
+  nombre_corto: Roig
+  cargo: Ministro de Economía
+  desde: 1989-07-08
+  hasta: 1989-07-14
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 4/1989 (Menem), sanción 1989-07-08, B.O. n.º 26672, p. 9 (solo resumen)
+    publicado: 1989-07-11
+    pagina: '9'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-833
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 250/1989, sanción 1989-07-14, B.O. n.º 26677, p. 1: duelo nacional 14 al 16/7/1989 por el fallecimiento
+      del ministro de Economía Miguel Roig'
+    publicado: 1989-07-18
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-1079
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 251/1989, sanción 1989-07-14: designa ministro interino de Economía al ministro del Interior Eduardo
+      Bauzá'
+    publicado: 1989-07-18
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-1080
+- id: p.ministro.bauza
+  tipo: ministro
+  nombre: Eduardo Bauzá
+  nombre_corto: Bauzá
+  cargo: Ministro de Economía (interino)
+  desde: 1989-07-14
+  hasta: 1989-07-15
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 251/1989 (14/7/1989): designa ministro interino de Economía a Eduardo Bauzá, tras la muerte de Miguel
+      Roig'
+    publicado: 1989-07
+    url: https://www.argentina.gob.ar/normativa/nacional/1080/texto
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 260/1989 (15/7/1989): designa ministro de Economía a Néstor Rapanelli'
+    publicado: 1989-07-18
+    url: https://www.argentina.gob.ar/normativa/nacional/1089/texto
+  notas: Ministro interino entre la muerte de Miguel Roig y la designación de Néstor Rapanelli.
+- id: p.ministro.rapanelli
+  tipo: ministro
+  nombre: Néstor Mario Rapanelli
+  nombre_corto: Rapanelli
+  cargo: Ministro de Economía
+  desde: 1989-07-15
+  hasta: 1989-12-15
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 260/1989, sanción 1989-07-15, B.O. n.º 26677, p. 3 (solo resumen)
+    publicado: 1989-07-18
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-1089
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1486/1989, sanción 1989-12-15, B.O. n.º 26785: acepta la renuncia (solo resumen)'
+    publicado: 1989-12-20
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-2270
+- id: p.ministro.erman-gonzalez
+  tipo: ministro
+  nombre: Antonio Erman González
+  nombre_corto: Erman González
+  cargo: Ministro de Economía
+  desde: 1989-12-15
+  hasta: 1991-01-31
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1491/1989, sanción 1989-12-15, B.O. n.º 26784, p. 3 (solo resumen)
+    publicado: 1989-12-19
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-2276
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 217/1991, sanción 1991-01-31, B.O. n.º 27066: acepta la renuncia (solo resumen)'
+    publicado: 1991-02-04
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-5526
+- id: p.ministro.cavallo-1991
+  tipo: ministro
+  nombre: Domingo Felipe Cavallo
+  nombre_corto: Cavallo
+  cargo: Ministro de Economía; Ministro de Economía y Obras y Servicios Públicos desde 1991-04-23 (Ley 23.930)
+  desde: 1991-01-31
+  hasta: 1996-07-26
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 220/1991, sanción 1991-01-31, B.O. n.º 27066, p. 2 (solo resumen)
+    publicado: 1991-02-04
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-5529
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 872/1996 (texto: «Bs. As., 26/7/96»), B.O. n.º 28446, p. 2: acepta la renuncia al cargo de Ministro
+      de Economía y Obras y Servicios Públicos'
+    publicado: 1996-07-30
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-38161
+- id: p.ministro.roque-fernandez
+  tipo: ministro
+  nombre: Roque Benjamín Fernández
+  nombre_corto: Fernández
+  cargo: Ministro de Economía y Obras y Servicios Públicos
+  desde: 1996-07-26
+  hasta: 1999-12-10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 874/1996 (texto: «Bs. As., 26/7/96»), B.O. n.º 28445, p. 10'
+    publicado: 1996-07-29
+    pagina: '10'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-38145
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1672/1999 (texto del 9/12/1999: acepta la renuncia «a partir del 10 de diciembre de 1999»), B.O.
+      n.º 29292, p. 8'
+    publicado: 1999-12-14
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-61457
+- id: p.ministro.machinea
+  tipo: ministro
+  nombre: José Luis Machinea
+  nombre_corto: Machinea
+  cargo: Ministro de Economía
+  desde: 1999-12-10
+  hasta: 2001-03-05
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 6/1999, sanción 1999-12-10, B.O. n.º 29292, p. 3 (solo resumen)
+    publicado: 1999-12-14
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-61399
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 273/2001, sanción 2001-03-05, B.O. n.º 29603, p. 3: acepta la renuncia como titular de Economía e
+      interino de Infraestructura y Vivienda (solo resumen)'
+    publicado: 2001-03-07
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-66347
+- id: p.ministro.lopez-murphy
+  tipo: ministro
+  nombre: Ricardo Hipólito López Murphy
+  nombre_corto: López Murphy
+  cargo: Ministro de Economía
+  desde: 2001-03-05
+  hasta: 2001-03-20
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 276/2001, sanción 2001-03-05, B.O. n.º 29603, p. 3 (solo resumen)
+    publicado: 2001-03-07
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-66348
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 334/2001, sanción 2001-03-20, B.O. n.º 29614, p. 2: acepta la renuncia como Ministro de Economía
+      e interino de Infraestructura y Vivienda (solo resumen)'
+    publicado: 2001-03-22
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-66506
+- id: p.ministro.cavallo-2001
+  tipo: ministro
+  nombre: Domingo Felipe Cavallo
+  nombre_corto: Cavallo
+  cargo: Ministro de Economía
+  desde: 2001-03-20
+  hasta: 2001-12-20
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 347/2001, sanción 2001-03-20, B.O. n.º 29614, p. 2 (solo resumen)
+    publicado: 2001-03-22
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-66509
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1681/2001 (texto: «Bs. As., 20/12/2001»), B.O. n.º 29802, p. 18'
+    publicado: 2001-12-24
+    pagina: '18'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71020
+  notas: 'Entre su salida y la asunción de Remes Lenicov no hubo ministro titular: hubo funcionarios a cargo o interinos (Nicolás
+    Gallo, Jorge Capitanich).'
+- id: p.ministro.remes-lenicov
+  tipo: ministro
+  nombre: Jorge Luis Remes Lenicov
+  nombre_corto: Remes Lenicov
+  cargo: Ministro de Economía; Ministro de Economía e Infraestructura desde 2002-02-21 (DNU 355/2002 y Decreto 367/2002);
+    Ministro de Economía desde 2002-03-08 (DNU 473/2002 y Decreto 476/2002)
+  desde: 2002-01-03
+  hasta: 2002-04-26
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 5/2002 (texto: «Bs. As., 3/1/2002»), B.O. n.º 29810, p. 2'
+    publicado: 2002-01-07
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71453
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 694/2002, sanción 2002-04-26, B.O. n.º 29887, p. 1: acepta la renuncia (solo resumen)'
+    publicado: 2002-04-29
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-73833
+- id: p.ministro.lavagna
+  tipo: ministro
+  nombre: Roberto Lavagna
+  nombre_corto: Lavagna
+  cargo: Ministro de Economía; Ministro de Economía y Producción desde 2003-05-25 (DNU 1283/2003; redesignado por Decreto
+    5/2003)
+  desde: 2002-04-26
+  hasta: 2005-11-28
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 695/2002 (texto: «Bs. As., 26/4/2002»), B.O. n.º 29887, p. 2'
+    publicado: 2002-04-29
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-73836
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1471/2005, sanción 2005-11-28, B.O. n.º 30792, p. 2: acepta la renuncia (solo resumen)'
+    publicado: 2005-11-30
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-111762
+- id: p.ministro.miceli
+  tipo: ministro
+  nombre: Felisa Josefina Miceli
+  nombre_corto: Miceli
+  cargo: Ministra de Economía y Producción
+  desde: 2005-12-01
+  hasta: 2007-07-16
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1496/2005 (texto: «Bs. As., 1/12/2005»), B.O. n.º 30794, p. 2'
+    publicado: 2005-12-02
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-111838
+  - para: desde
+    tipo: periodistica
+    referencia: Página/12, «El Presidente les tomó juramento a los cuatro nuevos ministros»
+    publicado: 2005-12-02
+    url: https://www.pagina12.com.ar/diario/elpais/1-59933-2005-12-02.html
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 909/2007, sanción 2007-07-16, B.O. n.º 31197, p. 1: acepta la renuncia (solo resumen)'
+    publicado: 2007-07-17
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-130159
+- id: p.ministro.peirano
+  tipo: ministro
+  nombre: Miguel Gustavo Peirano
+  nombre_corto: Peirano
+  cargo: Ministro de Economía y Producción
+  desde: 2007-07-16
+  hasta: 2007-12-10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 910/2007, sanción 2007-07-16, B.O. n.º 31197, p. 2 (solo resumen)
+    publicado: 2007-07-17
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-130160
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1918/2007 (texto del 7/12/2007: acepta la renuncia «a partir del 10 de diciembre de 2007»), B.O.
+      n.º 31300, p. 4'
+    publicado: 2007-12-11
+    pagina: '4'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-135506
+- id: p.ministro.lousteau
+  tipo: ministro
+  nombre: Martín Lousteau
+  nombre_corto: Lousteau
+  cargo: Ministro de Economía y Producción
+  desde: 2007-12-10
+  hasta: 2008-04-25
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 5/2007, sanción 2007-12-10, B.O. n.º 31300, p. 9 (solo resumen)
+    publicado: 2007-12-11
+    pagina: '9'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-135514
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 711/2008, sanción 2008-04-25, B.O. n.º 31393, p. 13: acepta la renuncia (solo resumen)'
+    publicado: 2008-04-28
+    pagina: '13'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-140034
+- id: p.ministro.carlos-fernandez
+  tipo: ministro
+  nombre: Carlos Rafael Fernández
+  nombre_corto: Fernández
+  cargo: Ministro de Economía y Producción; Ministro de Economía y Finanzas Públicas desde 2008-11-25 (DNU 2025/2008; redesignado
+    por Decreto 2026/2008)
+  desde: 2008-04-25
+  hasta: 2009-07-08
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 713/2008, sanción 2008-04-25, B.O. n.º 31393, p. 13 (solo resumen)
+    publicado: 2008-04-28
+    pagina: '13'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-140036
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 879/2009, sanción 2009-07-08, B.O. n.º 31691, p. 1: acepta la renuncia (solo resumen)'
+    publicado: 2009-07-10
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-155369
+- id: p.ministro.boudou
+  tipo: ministro
+  nombre: Amado Boudou
+  nombre_corto: Boudou
+  cargo: Ministro de Economía y Finanzas Públicas
+  desde: 2009-07-08
+  hasta: 2011-12-10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 885/2009, sanción 2009-07-08, B.O. n.º 31691, p. 1 (solo resumen)
+    publicado: 2009-07-10
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-155370
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 2027/2011, sanción 2011-12-07, B.O. n.º 32293, p. 24: acepta la renuncia a partir del 10/12/2011
+      (solo resumen)'
+    publicado: 2011-12-12
+    pagina: '24'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-191119
+- id: p.ministro.lorenzino
+  tipo: ministro
+  nombre: Hernán Gaspar Lorenzino
+  nombre_corto: Lorenzino
+  cargo: Ministro de Economía y Finanzas Públicas
+  desde: 2011-12-10
+  hasta: 2013-11-19
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 5/2011, sanción 2011-12-10, B.O. n.º 32293, p. 24 (solo resumen)
+    publicado: 2011-12-12
+    pagina: '24'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-191120
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1887/2013, sanción 2013-11-19, B.O. n.º 32769, p. 3: acepta la renuncia (solo resumen)'
+    publicado: 2013-11-20
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-222394
+- id: p.ministro.kicillof
+  tipo: ministro
+  nombre: Axel Kicillof
+  nombre_corto: Kicillof
+  cargo: Ministro de Economía y Finanzas Públicas
+  desde: 2013-11-19
+  hasta: 2015-12-10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1890/2013, sanción 2013-11-19, B.O. n.º 32769, p. 1 (solo resumen)
+    publicado: 2013-11-20
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-222395
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 2828/2015, sanción 2015-12-09, B.O. n.º 33277, p. 8: acepta la renuncia a partir del 10/12/2015 (solo
+      resumen)'
+    publicado: 2015-12-16
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-256966
+- id: p.ministro.prat-gay
+  tipo: ministro
+  nombre: Alfonso de Prat-Gay
+  nombre_corto: Prat-Gay
+  cargo: Ministro de Hacienda y Finanzas Públicas
+  desde: 2015-12-10
+  hasta: 2016-12-31
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 15/2015, sanción 2015-12-10, B.O. n.º 33273, p. 11 (el decreto escribe «Alfonso de Prat Gay»)
+    publicado: 2015-12-11
+    pagina: '11'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-256610
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1/2017, sanción 2017-01-02, B.O. n.º 33536, p. 2: acepta la renuncia a partir del 31/12/2016 (solo
+      resumen)'
+    publicado: 2017-01-03
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-270228
+  notas: El DNU 13/2015 reemplaza el Ministerio de Economía y Finanzas Públicas por el de Hacienda y Finanzas Públicas.
+- id: p.ministro.dujovne
+  tipo: ministro
+  nombre: Nicolás Dujovne
+  nombre_corto: Dujovne
+  cargo: Ministro de Hacienda
+  desde: 2017-01-02
+  hasta: 2019-08-20
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 3/2017 (texto: «Buenos Aires, 02/01/2017»; designa «a partir de la fecha del dictado»), B.O. n.º
+      33536, p. 3'
+    publicado: 2017-01-03
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-270229
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 581/2019, sanción 2019-08-20, B.O. n.º 34179, p. 4: acepta la renuncia y designa a Lacunza (solo
+      resumen)'
+    publicado: 2019-08-21
+    pagina: '4'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-326891
+  notas: El DNU 2/2017 divide la cartera en Hacienda y Finanzas; se toma Hacienda. Luis Caputo fue ministro de Finanzas desde
+    el 2/1/2017 hasta junio de 2018, cuando Finanzas volvió a Hacienda.
+- id: p.ministro.lacunza
+  tipo: ministro
+  nombre: Jorge Roberto Hernán Lacunza
+  nombre_corto: Lacunza
+  cargo: Ministro de Hacienda
+  desde: 2019-08-20
+  hasta: 2019-12-10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 581/2019, sanción 2019-08-20, B.O. n.º 34179, p. 4: lo designa «a partir de la fecha del dictado»
+      (solo resumen)'
+    publicado: 2019-08-21
+    pagina: '4'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-326891
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 890/2019 (texto del 9/12/2019: acepta la renuncia «a partir del 10 de diciembre de 2019»), B.O. n.º
+      34257, p. 12'
+    publicado: 2019-12-10
+    pagina: '12'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-333175
+- id: p.ministro.guzman
+  tipo: ministro
+  nombre: Martín Maximiliano Guzmán
+  nombre_corto: Guzmán
+  cargo: Ministro de Economía
+  desde: 2019-12-10
+  hasta: 2022-07-04
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 10/2019, sanción 2019-12-10, B.O. n.º 34258, p. 35: lo designa a partir del 10/12/2019 (solo resumen)'
+    publicado: 2019-12-11
+    pagina: '35'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-333141
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 361/2022, sanción 2022-07-04, B.O. n.º 34953, p. 8: acepta la renuncia (solo resumen)'
+    publicado: 2022-07-04
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-367306
+- id: p.ministro.batakis
+  tipo: ministro
+  nombre: Silvina Aida Batakis
+  nombre_corto: Batakis
+  cargo: Ministra de Economía
+  desde: 2022-07-04
+  hasta: 2022-08-03
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 362/2022 (texto: «Ciudad de Buenos Aires, 04/07/2022»), B.O. n.º 34953, p. 8'
+    publicado: 2022-07-04
+    pagina: '8'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-367305
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 452/2022 (texto: «Ciudad de Buenos Aires, 03/08/2022»), B.O. n.º 34975 (suplemento), p. 11: acepta
+      la renuncia'
+    publicado: 2022-08-03
+    pagina: '11'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-369237
+- id: p.ministro.massa
+  tipo: ministro
+  nombre: Sergio Tomás Massa
+  nombre_corto: Massa
+  cargo: Ministro de Economía
+  desde: 2022-08-03
+  hasta: 2023-12-10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 453/2022, sanción 2022-08-03, B.O. n.º 34975, p. 12 (solo resumen)
+    publicado: 2022-08-03
+    pagina: '12'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-369238
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 707/2023 (texto del 6/12/2023: acepta la renuncia «a partir del cese del actual mandato presidencial,
+      el día 10 de diciembre de 2023»), B.O. n.º 35315, p. 12'
+    publicado: 2023-12-07
+    pagina: '12'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-394729
+- id: p.ministro.caputo
+  tipo: ministro
+  nombre: Luis Andrés Caputo
+  nombre_corto: Caputo
+  cargo: Ministro de Economía
+  desde: 2023-12-10
+  hasta: null
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 5/2023, sanción 2023-12-10, B.O. n.º 35318, p. 3 (solo resumen)
+    publicado: 2023-12-11
+    pagina: '3'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-394973
+- id: p.plan.gelbard
+  tipo: plan
+  nombre: Plan Gelbard / Pacto Social (Acta de Compromiso Nacional)
+  nombre_corto: Plan Gelbard
+  desde: 1973-06-08
+  hasta: 1974-10-21
+  descripcion: 'Programa del ministro José Ber Gelbard basado en un acuerdo entre el gobierno, la CGE y la CGT: congelamiento
+    de precios, aumento salarial de suma fija y suspensión de las paritarias por dos años, con tipo de cambio fijo.'
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: Vercesi, Alberto J. (s. f.), «Política Económica Argentina 1973-1976. Influencias doctrinarias», Universidad
+      Nacional del Sur (SEDICI-UNLP), p. 8 (8/6/1973) y p. 13 (30/5/1973)
+    nota: 'Publicación: sin fecha.'
+    pagina: '13'
+    url: http://sedici.unlp.edu.ar/handle/10915/107086
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1974, p. 2 («La rígida política de precios iniciada en junio de 1973»)
+    publicado: 1975-07-10
+    pagina: '2'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1974.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: renuncia de Gelbard al Ministerio de Economía.'
+  notas: Las fuentes difieren sobre la fecha del Acta de Compromiso Nacional (30/5, 6/6 u 8/6/1973); se toma el 8/6/1973.
+- id: p.plan.martinez-de-hoz
+  tipo: plan
+  nombre: Programa de Martínez de Hoz («de recuperación, saneamiento y expansión de la economía argentina»)
+  nombre_corto: Martínez de Hoz
+  desde: 1976-04-02
+  hasta: 1981-03-29
+  descripcion: 'Programa del ministro José A. Martínez de Hoz: liberalización de precios, unificación cambiaria, reforma financiera
+    de 1977 y apertura comercial y financiera.'
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1976, p. 10 («El 2 de abril se anunció un programa de recuperación, saneamiento y expansión
+      de la economía argentina»)
+    publicado: 1977-07-13
+    pagina: '10'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1976.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: cambio de autoridades económicas con la asunción de Viola.'
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1981, p. 6 (numeración inferida) («las autoridades económicas que asumieron a fines de
+      marzo de 1981»)
+    publicado: 1982-04-15
+    pagina: '6'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1981.pdf
+  notas: Se superpone con el programa del 20 de diciembre de 1978.
+- id: p.plan.20-de-diciembre-1978
+  tipo: plan
+  nombre: Programa del 20 de diciembre de 1978 (enfoque monetario del balance de pagos, tablita)
+  nombre_corto: 20 de diciembre de 1978
+  desde: 1978-12-21
+  hasta: 1981-04-02
+  descripcion: 'Reordenamiento del programa de Martínez de Hoz: cronograma preanunciado del tipo de cambio, rebajas arancelarias
+    trimestrales, pautas de tarifas y salarios y liberalización de la entrada de capitales.'
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1978, p. 81 (Circulares R.C. 807, 808 y 809 del 21/12/1978)
+    publicado: 1979-08-30
+    pagina: '81'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1978.pdf
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1978, p. 8 (numeración inferida) («En diciembre de 1978 se anunció un reordenamiento del
+      programa económico»)
+    publicado: 1979-08-30
+    pagina: '8'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1978.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: abandono de la pauta cambiaria preanunciada, su instrumento central (Comunicación A 16).'
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 16
+    publicado: 1981-04-02
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0016.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1981, p. 6 (numeración inferida)
+    publicado: 1982-04-15
+    pagina: '6'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1981.pdf
+- id: p.plan.austral
+  tipo: plan
+  nombre: Plan Austral
+  nombre_corto: Austral
+  desde: 1985-06-15
+  hasta: 1988-08-04
+  descripcion: 'Programa de Juan V. Sourrouille: nueva moneda (austral), congelamiento de precios, salarios y tipo de cambio
+    (0,80 australes por dólar), desagio de contratos y compromiso de no financiar al Tesoro con emisión.'
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1096/1985 («tendrá vigencia a partir del 15 de junio de 1985»)
+    publicado: 1985-06-17
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-310324
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 674
+    publicado: 1985-06-15
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0674.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: reemplazo por el Plan Primavera.'
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1231
+    publicado: 1988-08-03
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1231.pdf
+  notas: Anunciado el 14/6/1985; el decreto rige desde el 15/6/1985.
+- id: p.plan.primavera
+  tipo: plan
+  nombre: Plan Primavera
+  nombre_corto: Primavera
+  desde: 1988-08-04
+  hasta: 1989-02-07
+  descripcion: 'Acuerdo de precios con grandes empresas y desdoblamiento cambiario: el BCRA compraba parte de las exportaciones
+    a tipo oficial y vendía en el mercado libre, para anclar el tipo libre.'
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1231
+    publicado: 1988-08-03
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1231.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: reordenamiento cambiario de la Comunicación A 1326, con la corrida de febrero de 1989.'
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1326 (nuevo reparto entre mercados «con vigencia a partir de la apertura de los Mercados
+      de Cambio correspondientes al 7 de febrero»)
+    publicado: 1989-02-06
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1326.pdf
+- id: p.plan.bunge-born
+  tipo: plan
+  nombre: Plan Bunge y Born
+  nombre_corto: Bunge y Born
+  desde: 1989-07-10
+  hasta: 1989-12-12
+  descripcion: 'Programa de los ministros Roig y Rapanelli al inicio del gobierno de Menem: fuerte devaluación inicial, tipo
+    de cambio fijo, acuerdo de precios con empresas y aumento de tarifas, con las leyes de Reforma del Estado y de Emergencia
+    Económica.'
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1482
+    publicado: 1989-07-09
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1482.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: abandono del tipo de cambio fijo (Comunicación A 1583).'
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1583
+    publicado: 1989-12-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1583.pdf
+- id: p.plan.bonex
+  tipo: plan
+  nombre: Plan Bonex
+  nombre_corto: Bonex
+  desde: 1990-01-03
+  hasta: 1991-04-01
+  descripcion: Canje compulsivo de los depósitos a plazo y de deuda pública interna por Bonos Externos 1989 (Bonex), para
+    cortar la hiperinflación reduciendo la liquidez, con flotación del tipo de cambio.
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto DNU 36/1990 (sanc. 3/1/1990): canje de depósitos a plazo por Bonos Externos 1989'
+    publicado: 1990-01-05
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-2559
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1603
+    publicado: 1990-01-03
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1603.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: reemplazo por la Convertibilidad.'
+  - para: hasta
+    tipo: norma
+    referencia: Ley 23.928 (sanc. 27/3/1991)
+    publicado: 1991-03-28
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-328
+- id: p.plan.convertibilidad
+  tipo: plan
+  nombre: Plan de Convertibilidad
+  nombre_corto: Convertibilidad
+  desde: 1991-04-01
+  hasta: 2002-01-07
+  descripcion: Tipo fijo por ley de 10.000 australes (luego un peso) por dólar con respaldo de la base monetaria en reservas,
+    acompañado de privatizaciones y apertura.
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Ley 23.928 (sanc. 27/3/1991)
+    publicado: 1991-03-28
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-328
+  - para: hasta
+    tipo: norma
+    referencia: Ley 25.561, art. 3 (sanc. 6/1/2002)
+    publicado: 2002-01-07
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71477
+  notas: Termina con la Ley 25.561, que deroga la paridad fija.
+- id: p.plan.base-cero-2018
+  tipo: plan
+  nombre: Programa monetario de octubre de 2018 (base monetaria cero y zona de no intervención)
+  nombre_corto: Base cero 2018
+  desde: 2018-10-01
+  hasta: 2019-09-01
+  descripcion: Compromiso de crecimiento nulo de la base monetaria (octubre de 2018–junio de 2019, luego extendido) con flotación
+    dentro de una zona de no intervención, en el marco del acuerdo stand-by con el FMI.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, «El BCRA implementa su nuevo marco de política monetaria»
+    publicado: 2018-09-28
+    url: https://www.bcra.gob.ar/noticias/el-bcra-implementa-su-nuevo-marco-de-politica-monetaria/
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: vuelta de los controles de cambios (DNU 609/2019), que cambia el núcleo del programa.'
+  - para: hasta
+    tipo: norma
+    referencia: Decreto DNU 609/2019
+    publicado: 2019-09-01
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-327566
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 6770
+    publicado: 2019-09-01
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A6770.pdf
+- id: p.plan.diciembre-2023
+  tipo: plan
+  nombre: Programa de estabilización de diciembre de 2023
+  nombre_corto: Diciembre 2023
+  desde: 2023-12-13
+  hasta: 2025-04-14
+  descripcion: 'Programa del ministro Luis Caputo: devaluación a 800 pesos por dólar con deslizamiento del 2 % mensual, ajuste
+    fiscal y cambios en el acceso al mercado de cambios para importaciones.'
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 7916
+    publicado: 2023-12-12
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7916.pdf
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Informe Monetario Mensual, diciembre de 2023, p. 10
+    publicado: 2024-01-08
+    pagina: '10'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/informe-monetario-mensual-dic-2023.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: reemplazo por la fase 3 del programa (bandas y acuerdo con el FMI).'
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 8226
+    publicado: 2025-04-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf
+  notas: 'Mismo gobierno y equipo que el programa de abril de 2025: puede leerse como un solo programa con fases.'
+- id: p.plan.abril-2025
+  tipo: plan
+  nombre: 'Programa de abril de 2025 (fase 3: bandas cambiarias y acuerdo con el FMI)'
+  nombre_corto: Abril 2025
+  desde: 2025-04-14
+  hasta: null
+  descripcion: Flotación entre bandas, fin del cepo para personas humanas y nuevo programa de facilidades extendidas con el
+    FMI; desde 2026, bandas ajustadas por inflación y programa de compra de reservas.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 8226
+    publicado: 2025-04-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, «Inicio de la Fase 3 del Programa Económico con flexibilización cambiaria y flotación entre bandas»
+    publicado: 2025-04-11
+    url: https://www.bcra.gob.ar/noticias/inicio-de-la-fase-3-del-programa-economico/
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto DNU 179/2025: aprueba las operaciones de crédito público del Programa de Facilidades Extendidas con
+      el FMI'
+    publicado: 2025-03-11
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-410472
+  notas: Desde el 1/1/2026 los límites de la banda se ajustan cada mes por la inflación del INDEC con dos meses de rezago;
+    se toma como continuidad del mismo programa.
+- id: p.regimen.paridad-ajustable-1967
+  tipo: regimen_cambiario
+  nombre: Paridad fija ajustable con dólar único (1967–1971)
+  nombre_corto: Paridad ajustable
+  desde: 1967-03-13
+  hasta: 1971-09-17
+  descripcion: Mercado de cambios único con un tipo fijo respecto del dólar que el gobierno ajustaba por saltos; desde abril
+    de 1971, con minidevaluaciones.
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Reinhart, Carmen M. (2002), «A Modern History of Exchange Rate Arrangements: The Country Histories, 1946-2001»,
+      MPRA Paper 13191, p. 7'
+    publicado: 2009-02-06
+    pagina: '7'
+    url: https://mpra.ub.uni-muenchen.de/13191/1/MPRA_paper_13191.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1971, p. 53 («El 17 de setiembre se instituyeron nuevas normas...»)
+    publicado: 1972-05-24
+    pagina: '53'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1971.pdf
+  notas: Empieza con la devaluación de marzo de 1967. El 18/6/1970, tras un feriado cambiario, la paridad pasó de 3,50 a 4
+    pesos ley 18.188 por dólar.
+- id: p.regimen.comercial-financiero-1971
+  tipo: regimen_cambiario
+  nombre: Mercados comercial y financiero (1971–1975)
+  nombre_corto: Comercial y financiero
+  desde: 1971-09-17
+  hasta: 1975-08-26
+  descripcion: Control de cambios con un mercado comercial a tipo fijo para el valor FOB de exportaciones e importaciones
+    y un mercado financiero para el resto; desde 1972 el financiero también quedó estable, y ambos tipos se ajustaron por
+    saltos dispuestos por el Ministerio de Economía.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'BCRA, Memoria anual 1971, p. 53 («El 17 de setiembre se instituyeron nuevas normas ... a través de dos mercados:
+      el Comercial, manteniendo la cotización fija de $5 por dólar ... y el Financiero, con precios resultantes del juego
+      de la oferta y la demanda»)'
+    publicado: 1972-05-24
+    pagina: '53'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1971.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1975, p. 76 (mercado financiero especial «vigente ... a partir de la Resolución N° 17
+      del Ministerio de Economía del 25 de agosto»; primera cotización el 26/8)
+    publicado: 1976-06-23
+    pagina: '76'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1975.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Secretaría de Política Económica, datos.gob.ar, dataset 175, serie 175.1_DR_FINANTA_0_0_21
+    nota: 'Publicación: 2026-11-11 (consulta).'
+    url: https://apis.datos.gob.ar/series/api/series/?ids=175.1_DR_FINANTA_0_0_21
+  notas: 'Las devaluaciones de 1975, incluida la del Rodrigazo (desde el 9/6/1975 el comercial pasa de 10 a 26 pesos por dólar
+    y el financiero de 15,05 a 30), ocurren dentro de este esquema: no cambian los mercados ni la forma de fijar el tipo.'
+- id: p.regimen.tres-mercados-1975
+  tipo: regimen_cambiario
+  nombre: Mercados comercial, financiero y financiero especial con ajustes graduales (1975)
+  nombre_corto: Tres mercados 1975
+  desde: 1975-08-26
+  hasta: 1975-11-18
+  descripcion: Se agrega un mercado financiero especial (para las exportaciones promocionadas, entre otras operaciones) y
+    los tres tipos pasan a ajustarse en forma gradual cada dos o tres semanas.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1975, p. 76
+    publicado: 1976-06-23
+    pagina: '76'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1975.pdf
+  - para: desde
+    tipo: secundaria
+    referencia: 'Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República
+      Argentina, Buenos Aires: Lenguaje Claro/Ciccus, p. 306 («En agosto se creó un mercado financiero especial, con tipos
+      de cambio un 40% superiores en promedio a los del mercado financiero»)'
+    publicado: 2018-03
+    pagina: '306'
+    url: https://ceheal.economicas.uba.ar/wp-content/uploads/Libro-11.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Secretaría de Política Económica, datos.gob.ar, dataset 175, serie 175.1_DR_FINANTA_0_0_21
+    nota: 'Publicación: 2026-11-11 (consulta).'
+    url: https://apis.datos.gob.ar/series/api/series/?ids=175.1_DR_FINANTA_0_0_21
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1975, p. 76, nota 1 (comercial «vigente hasta el 17.11.75 inclusive; a partir del día
+      18.11.75 dejó de regir este mercado según Resolución N° 380 del Ministerio de Economía»)
+    publicado: 1976-06-23
+    pagina: '76'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1975.pdf
+  notas: La Resolución 17 del Ministerio de Economía es del 25/8/1975; el mercado financiero especial empezó a cotizar el
+    26/8. Desde agosto de 1975 los tipos se ajustan en forma gradual, cada dos o tres semanas.
+- id: p.regimen.financiero-1975
+  tipo: regimen_cambiario
+  nombre: Mercados financiero y financiero especial (1975–1976)
+  nombre_corto: Financiero y especial
+  desde: 1975-11-18
+  hasta: 1976-01-05
+  descripcion: 'Desaparece el mercado comercial: sus operaciones pasan al financiero, que convive con el financiero especial,
+    ambos con ajustes graduales.'
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1975, p. 76, nota 1 (Resolución ME 380)
+    publicado: 1976-06-23
+    pagina: '76'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1975.pdf
+  - para: desde
+    tipo: secundaria
+    referencia: 'Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República
+      Argentina, Buenos Aires: Lenguaje Claro/Ciccus, p. 306, nota 62 («Ministerio de Economía, Resolución 380, noviembre
+      de 1975»: «las operaciones que se cursaban por el mercado comercial ... fueron transferidas en conjunto al mercado financiero»)'
+    publicado: 2018-03
+    pagina: '306'
+    url: https://ceheal.economicas.uba.ar/wp-content/uploads/Libro-11.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1976, p. 58 («a los cuales se agregaron el 5 de enero el mercado libre (Circular R. C.
+      N° 586)»)
+    publicado: 1977-07-13
+    pagina: '58'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1976.pdf
+- id: p.regimen.tres-mercados-1976
+  tipo: regimen_cambiario
+  nombre: Mercados financiero, financiero especial y libre (enero–marzo de 1976)
+  nombre_corto: Con mercado libre 1976
+  desde: 1976-01-05
+  hasta: 1976-03-08
+  descripcion: Al financiero y al financiero especial se suma un mercado libre (inicialmente para viajes y turismo), con devaluaciones
+    semanales en los mercados regulados.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1976, p. 58
+    publicado: 1977-07-13
+    pagina: '58'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1976.pdf
+  - para: desde
+    tipo: secundaria
+    referencia: 'Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República
+      Argentina, Buenos Aires: Lenguaje Claro/Ciccus, p. 306 («En enero de 1976 se agregó el tipo de cambio libre para gastos
+      de viajes y turismo mientras las devaluaciones se disponían semanalmente»)'
+    publicado: 2018-03
+    pagina: '306'
+    url: https://ceheal.economicas.uba.ar/wp-content/uploads/Libro-11.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1976, p. 59 («Desde el 8 de marzo rigieron únicamente los mercados oficial y libre (Circular
+      R. C. N° 620 del 5.3.76)»)
+    publicado: 1977-07-13
+    pagina: '59'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1976.pdf
+  notas: El 19/1/1976 se agregó un tipo financiero con un recargo del 20 % (Circulares R.C. 594 y 596); no se trata como mercado
+    aparte.
+- id: p.regimen.oficial-libre-1976
+  tipo: regimen_cambiario
+  nombre: Mercados oficial y libre (marzo–noviembre de 1976)
+  nombre_corto: Oficial y libre 1976
+  desde: 1976-03-08
+  hasta: 1976-11-22
+  descripcion: Mercado oficial (que absorbe el financiero y el financiero especial) para el comercio exterior y mercado libre
+    para el resto; desde abril, la proporción de exportaciones liquidada en el libre se fue ampliando hasta la unificación.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1976, p. 59
+    publicado: 1977-07-13
+    pagina: '59'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1976.pdf
+  - para: desde
+    tipo: secundaria
+    referencia: 'Rougier, Marcelo y Sember, Florencia (coords.) (2018), Historia necesaria del Banco Central de la República
+      Argentina, Buenos Aires: Lenguaje Claro/Ciccus, p. 306, nota 63 (BCRA, Circular RC 620, marzo de 1976: mercado oficial
+      y segmento libre; se suprime el seguro de cambio)'
+    publicado: 2018-03
+    pagina: '306'
+    url: https://ceheal.economicas.uba.ar/wp-content/uploads/Libro-11.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Secretaría de Política Económica, datos.gob.ar, dataset 175, serie 175.1_DR_OFICNTA_0_0_19
+    nota: 'Publicación: 2026-11-11 (consulta).'
+    url: https://apis.datos.gob.ar/series/api/series/?ids=175.1_DR_OFICNTA_0_0_19
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1976, p. 59 («a partir del 22 de noviembre todas las operaciones se cursaron por el mercado
+      libre de cambios (Circular R.C. N° 663 del 19.11.76)»)
+    publicado: 1977-07-13
+    pagina: '59'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1976.pdf
+  notas: Desde abril de 1976 se fue aumentando la proporción de las operaciones que se liquidan en el mercado libre, hasta
+    la unificación.
+- id: p.regimen.unificacion-1976
+  tipo: regimen_cambiario
+  nombre: Mercado único con minidevaluaciones (1976–1978)
+  nombre_corto: Unificación 1976
+  desde: 1976-11-22
+  hasta: 1978-12-21
+  descripcion: Todas las operaciones pasaron al mercado libre, con intervención del BCRA y ajustes frecuentes del tipo de
+    cambio.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1976, p. 59 («a partir del 22 de noviembre todas las operaciones se cursaron por el mercado
+      libre de cambios (Circular R.C. N° 663 del 19.11.76)»)
+    publicado: 1977-07-13
+    pagina: '59'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1976.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1978, p. 81 (Circular R.C. N° 807 del 21/12/1978)
+    publicado: 1979-08-30
+    pagina: '81'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1978.pdf
+  notas: La circular de unificación es del 19/11/1976 y rige desde el 22/11.
+- id: p.regimen.tablita
+  tipo: regimen_cambiario
+  nombre: 'Tablita: pauta cambiaria preanunciada (1978–1981)'
+  nombre_corto: Tablita
+  desde: 1978-12-21
+  hasta: 1981-04-02
+  descripcion: El BCRA fijó y anunció por adelantado las cotizaciones diarias del dólar, con un ritmo de devaluación decreciente,
+    como ancla del programa del 20 de diciembre de 1978.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1978, p. 81 («RCN° 807 21.12.78 Da a conocer las cotizaciones diarias tipo comprador contado,
+      que regirán para transferencias entre el 21.12.78 y el 31.8.79»)
+    publicado: 1979-08-30
+    pagina: '81'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1978.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 16 (deja sin efecto el Anexo I de la Circular CAMEX-1, el cronograma de cotizaciones)
+    publicado: 1981-04-02
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0016.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1981, p. 6 (numeración inferida) («elevar el tipo de cambio del dólar en un 29 % a partir
+      del 2 de abril»)
+    publicado: 1982-04-15
+    pagina: '6'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1981.pdf
+  notas: Anunciada el 20/12/1978; las cotizaciones preanunciadas rigen desde el 21/12/1978.
+- id: p.regimen.devaluaciones-1981
+  tipo: regimen_cambiario
+  nombre: Tipo fijado por el BCRA con devaluaciones (abril–junio de 1981)
+  nombre_corto: Devaluaciones 1981
+  desde: 1981-04-02
+  hasta: 1981-06-22
+  descripcion: 'Fin de la pauta preanunciada: mercado único con tipos límite que el BCRA fija día a día, con devaluaciones
+    por saltos.'
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 16
+    publicado: 1981-04-02
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0016.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 38 («normas que regirán a partir de la fecha»)
+    publicado: 1981-06-22
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0038.pdf
+- id: p.regimen.desdoblamiento-1981
+  tipo: regimen_cambiario
+  nombre: Mercados comercial y financiero (1981)
+  nombre_corto: Desdoblamiento 1981
+  desde: 1981-06-22
+  hasta: 1981-12-24
+  descripcion: Mercado comercial con cotización fijada diariamente por el BCRA para exportaciones e importaciones y mercado
+    financiero de cotización libre para el resto.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 38
+    publicado: 1981-06-22
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0038.pdf
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 40
+    publicado: 1981-06-22
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0040.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 84 («Opera un mercado único de cambios en el cual la cotización resulta del juego de
+      oferta y demanda»; rige «a partir de la fecha»)
+    publicado: 1981-12-24
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0084.pdf
+- id: p.regimen.flotacion-1982
+  tipo: regimen_cambiario
+  nombre: Mercado único con flotación (diciembre de 1981–julio de 1982)
+  nombre_corto: Flotación 1982
+  desde: 1981-12-24
+  hasta: 1982-07-06
+  descripcion: Unificación del mercado con cotización libre, fijada por la oferta y la demanda.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 84
+    publicado: 1981-12-24
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0084.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 135 (normas «que regirán a partir del 6.7.82»)
+    publicado: 1982-07-05
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0135.pdf
+- id: p.regimen.desdoblamiento-1982
+  tipo: regimen_cambiario
+  nombre: Mercados comercial y financiero (1982)
+  nombre_corto: Desdoblamiento 1982
+  desde: 1982-07-06
+  hasta: 1982-11-01
+  descripcion: Mercado comercial con cotización fijada diariamente por el BCRA para el comercio exterior y mercado financiero
+    para los demás movimientos.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 135
+    publicado: 1982-07-05
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0135.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 241 («Opera un mercado único de cambios»; normas «que regirán a partir del 1.11.82»)
+    publicado: 1982-10-29
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0241.pdf
+- id: p.regimen.minidevaluaciones-1982
+  tipo: regimen_cambiario
+  nombre: Mercado único con tipo fijado por el BCRA y minidevaluaciones (1982–1985)
+  nombre_corto: Minidevaluaciones 1982
+  desde: 1982-11-01
+  hasta: 1985-06-15
+  descripcion: Mercado único con cotización oficial que el BCRA ajustaba casi a diario, con mercado paralelo ilegal.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 241 («El Banco Central fija diariamente los tipos comprador y vendedor»)
+    publicado: 1982-10-29
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0241.pdf
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1096/1985 (art. final: «tendrá vigencia a partir del 15 de junio de 1985»)'
+    publicado: 1985-06-17
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-310324
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1985, p. 10 (tipo de cambio «fijado en 80 centavos de austral por dólar»)
+    publicado: 1987-01-09
+    pagina: '10'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1985.pdf
+- id: p.regimen.austral-fijo
+  tipo: regimen_cambiario
+  nombre: Tipo fijo del Plan Austral (1985–1986)
+  nombre_corto: Austral fijo
+  desde: 1985-06-15
+  hasta: 1986-04-07
+  descripcion: Congelamiento del tipo de cambio en 0,80 australes por dólar como parte del congelamiento de precios y salarios
+    del Plan Austral.
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto 1096/1985
+    publicado: 1985-06-17
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-310324
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1985, p. 10
+    publicado: 1987-01-09
+    pagina: '10'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1985.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1986, p. 165 («A partir de la flexibilización de los controles de precios y salarios implementada
+      desde el mes de abril, el tipo de cambio fue administrado ... a través de ... pequeñas y periódicas devaluaciones»)
+    publicado: 1987-12-03
+    pagina: '165'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1986.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: Secretaría de Política Económica, datos.gob.ar, dataset 175 (cotizaciones diarias del dólar), series 175.1_DR_*
+    nota: 'Publicación: 2026-11-11 (consulta).'
+    url: https://apis.datos.gob.ar/series/api/series/?ids=175.1_DR_LIBRNTA_0_0_17
+- id: p.regimen.minidevaluaciones-1986
+  tipo: regimen_cambiario
+  nombre: Minidevaluaciones del austral (1986–1987)
+  nombre_corto: Minidevaluaciones 1986
+  desde: 1986-04-07
+  hasta: 1987-10-15
+  descripcion: Mercado único con tipo oficial administrado por el BCRA mediante pequeñas devaluaciones periódicas.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Memoria anual 1986, p. 165
+    publicado: 1987-12-03
+    pagina: '165'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1986.pdf
+  - para: desde
+    tipo: oficial
+    referencia: Secretaría de Política Económica, datos.gob.ar, dataset 175 (cotizaciones diarias del dólar), series 175.1_DR_*
+    nota: 'Publicación: 2026-11-11 (consulta).'
+    url: https://apis.datos.gob.ar/series/api/series/?ids=175.1_DR_LIBRNTA_0_0_17
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1091 (normas «con vigencia a partir del 15.10.87»)
+    publicado: 1987-10-14
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1091.pdf
+- id: p.regimen.desdoblamiento-1987
+  tipo: regimen_cambiario
+  nombre: Mercados oficial y libre (octubre de 1987–agosto de 1988)
+  nombre_corto: Desdoblamiento 1987
+  desde: 1987-10-15
+  hasta: 1988-08-04
+  descripcion: Mercado oficial con tipos fijados diariamente por el BCRA para el comercio exterior y ciertas deudas, y mercado
+    libre de cotización libre para el resto.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1091
+    publicado: 1987-10-14
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1091.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1231 (vigencia «a partir de la apertura de los mercados de cambio correspondiente al
+      día 4.8.88»)
+    publicado: 1988-08-03
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1231.pdf
+- id: p.regimen.desdoblamiento-primavera
+  tipo: regimen_cambiario
+  nombre: Desdoblamiento del Plan Primavera (1988–1989)
+  nombre_corto: Desdoblamiento Primavera
+  desde: 1988-08-04
+  hasta: 1989-02-07
+  descripcion: Mercado oficial para parte de las exportaciones (50 % del valor FOB de la mayoría) y el petróleo, y mercado
+    libre para el resto, en el que el BCRA vendía divisas por licitación.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1231
+    publicado: 1988-08-03
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1231.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: 'BCRA, Comunicación «A» 1326 (6/2/1989): reordena el mercado oficial «con vigencia a partir de la apertura
+      de los Mercados de Cambio correspondientes al 7 de febrero»'
+    publicado: 1989-02-06
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1326.pdf
+- id: p.regimen.desdoblamiento-1989-febrero
+  tipo: regimen_cambiario
+  nombre: Desdoblamiento reordenado tras el Plan Primavera
+  nombre_corto: Desdoblamiento 1989
+  desde: 1989-02-07
+  hasta: 1989-04-17
+  descripcion: El BCRA deja de sostener el tipo de cambio del Plan Primavera y reordena qué operaciones van al mercado oficial
+    y cuáles al libre.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: 'BCRA, Comunicación «A» 1326 (6/2/1989): reordena el mercado oficial «con vigencia a partir de la apertura
+      de los Mercados de Cambio correspondientes al 7 de febrero»'
+    publicado: 1989-02-06
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1326.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1397
+    publicado: 1989-04-13
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1397.pdf
+- id: p.regimen.flotacion-1989
+  tipo: regimen_cambiario
+  nombre: Mercado libre único (abril–mayo de 1989)
+  nombre_corto: Flotación abril 1989
+  desde: 1989-04-17
+  hasta: 1989-05-30
+  descripcion: Todas las operaciones pasan al mercado libre con cotización por oferta y demanda; las exportaciones registradas
+    antes del 14/4/1989 se ceden al BCRA a un tipo que fija diariamente.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1397
+    publicado: 1989-04-13
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1397.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1433 (Mercado Único de Cambios «con vigencia a partir del 30.5.89 ... al tipo de cambio
+      que será fijado por el Banco Central»)
+    publicado: 1989-05-29
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1433.pdf
+- id: p.regimen.mercado-unico-1989
+  tipo: regimen_cambiario
+  nombre: Mercado único con tipo fijado por el BCRA (mayo–julio de 1989)
+  nombre_corto: Mercado único 1989
+  desde: 1989-05-30
+  hasta: 1989-07-10
+  descripcion: Mercado único de cambios con cotización fijada por el BCRA, en hiperinflación.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1433
+    publicado: 1989-05-29
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1433.pdf
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1434
+    publicado: 1989-05-29
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1434.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1482 (Mercado Único «a partir del inicio de las actividades correspondientes al día
+      10.07.89»)
+    publicado: 1989-07-09
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1482.pdf
+- id: p.regimen.bunge-born
+  tipo: regimen_cambiario
+  nombre: Tipo fijo de Bunge y Born (1989)
+  nombre_corto: Tipo fijo BB
+  desde: 1989-07-10
+  hasta: 1989-12-12
+  descripcion: Mercado único con un tipo de cambio fijado por el BCRA y mantenido estable como ancla del plan de estabilización
+    de julio de 1989.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1482 («El Banco Central fijara diariamente los tipos de cambio comprador y vendedor»)
+    publicado: 1989-07-09
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1482.pdf
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1483
+    publicado: 1989-07-09
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1483.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1583 (mercados oficial y libre desde el 12.12.89; el Mercado Único dejó de funcionar
+      al cierre del 7.12.89)
+    publicado: 1989-12-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1583.pdf
+- id: p.regimen.desdoblamiento-1989
+  tipo: regimen_cambiario
+  nombre: Mercados oficial y libre (diciembre de 1989)
+  nombre_corto: Desdoblamiento dic. 1989
+  desde: 1989-12-12
+  hasta: 1989-12-20
+  descripcion: 'Breve desdoblamiento: mercado oficial a tipos que fija el BCRA para los conceptos comerciales y mercado libre
+    para el resto.'
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1583
+    publicado: 1989-12-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1583.pdf
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1584
+    publicado: 1989-12-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1584.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1589 («Se deja sin efecto el funcionamiento del Mercado Oficial de Cambios ... a partir
+      de la apertura del Mercado Cambiario correspondiente al día 20.12.89, todos los pagos y cobros ... se cursarán por el
+      Mercado Libre de Cambios»)
+    publicado: 1989-12-18
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1589.pdf
+- id: p.regimen.flotacion-1989-1991
+  tipo: regimen_cambiario
+  nombre: Flotación (diciembre de 1989–marzo de 1991)
+  nombre_corto: Flotación 1989–91
+  desde: 1989-12-20
+  hasta: 1991-04-01
+  descripcion: Mercado libre único con cotización por oferta y demanda e intervenciones del BCRA.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1589
+    publicado: 1989-12-18
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1589.pdf
+  - para: hasta
+    tipo: norma
+    referencia: 'Ley 23.928 de Convertibilidad (sanc. 27/3/1991): convertibilidad «a partir del 1 de abril de 1991»'
+    publicado: 1991-03-28
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-328
+- id: p.regimen.convertibilidad
+  tipo: regimen_cambiario
+  nombre: Convertibilidad (1991–2002)
+  nombre_corto: Convertibilidad
+  desde: 1991-04-01
+  hasta: 2002-01-07
+  descripcion: Tipo fijo de 10.000 australes (desde 1992, un peso) por dólar, con respaldo de la base monetaria en reservas.
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Ley 23.928 (sanc. 27/3/1991)
+    publicado: 1991-03-28
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-328
+  - para: desde
+    tipo: norma
+    referencia: Decreto 529/1991, reglamentario de la Ley 23.928
+    publicado: 1991-03-28
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-5838
+  - para: hasta
+    tipo: norma
+    referencia: 'Ley 25.561 de Emergencia Pública (sanc. y promulg. parcial 6/1/2002), art. 3: deroga los arts. 1, 2, 8, 9,
+      12 y 13 de la Ley 23.928'
+    publicado: 2002-01-07
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71477
+  notas: La Ley 25.561 se sancionó el 6/1/2002 y se publicó en el Boletín Oficial el 7/1/2002. El mercado de cambios estuvo
+    cerrado por feriado cambiario desde el 21/12/2001 hasta el 10/1/2002.
+- id: p.regimen.desdoblamiento-2002
+  tipo: regimen_cambiario
+  nombre: Mercados oficial y libre (enero–febrero de 2002)
+  nombre_corto: Desdoblamiento 2002
+  desde: 2002-01-11
+  hasta: 2002-02-11
+  descripcion: 'Fin de la convertibilidad: mercado oficial a $ 1,40 por dólar para el comercio exterior y ciertas operaciones,
+    y mercado libre para el resto.'
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: 'BCRA, Comunicación «A» 3425 (10/1/2002): «A partir del 11.01.2002, tendrán vigencia los mercados Oficial
+      y Libre de Cambios»'
+    publicado: 2002-01-10
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A3425.pdf
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 260/2002 (sanc. 8/2/2002): mercado único y libre de cambios'
+    publicado: 2002-02-08
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-72193
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 3471 («a partir del 11 de febrero del 2002, operará un Mercado Único y Libre de Cambios»)
+    publicado: 2002-02-08
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A3471.pdf
+  notas: Los mercados oficial y libre abrieron el 11/1/2002; entre el 7 y el 10 de enero el mercado siguió cerrado.
+- id: p.regimen.flotacion-administrada-2002
+  tipo: regimen_cambiario
+  nombre: Flotación administrada (2002–2011)
+  nombre_corto: Flotación administrada
+  desde: 2002-02-11
+  hasta: 2011-10-31
+  descripcion: Mercado Único y Libre de Cambios con fuerte intervención del BCRA para sostener un tipo de cambio competitivo
+    y acumular reservas.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 3471
+    publicado: 2002-02-08
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A3471.pdf
+  - para: desde
+    tipo: norma
+    referencia: Decreto 260/2002
+    publicado: 2002-02-08
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-72193
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 5239 (vigencia «a partir del 31.10.2011 inclusive»)
+    publicado: 2011-10-28
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A5239.pdf
+  - para: hasta
+    tipo: norma
+    referencia: Resolución General AFIP 3210/2011, Programa de Consulta de Operaciones Cambiarias
+    publicado: 2011-10-31
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-188904
+- id: p.regimen.cepo-2011
+  tipo: regimen_cambiario
+  nombre: Cepo cambiario (2011–2015)
+  nombre_corto: Cepo 2011–15
+  desde: 2011-10-31
+  hasta: 2015-12-17
+  descripcion: Tipo oficial administrado con validación fiscal previa para comprar divisas y, desde 2012, prohibición de comprar
+    para atesoramiento, con brecha frente al dólar paralelo.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 5239
+    publicado: 2011-10-28
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A5239.pdf
+  - para: desde
+    tipo: norma
+    referencia: Resolución General AFIP 3210/2011
+    publicado: 2011-10-31
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-188904
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 5850 (vigencia «a partir del 17.12.2015 inclusive»; deroga la A 5245)
+    publicado: 2015-12-17
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A5850.pdf
+- id: p.regimen.flotacion-2015
+  tipo: regimen_cambiario
+  nombre: Flotación (2015–2018)
+  nombre_corto: Flotación 2015–18
+  desde: 2015-12-17
+  hasta: 2018-10-01
+  descripcion: Levantamiento del cepo y flotación del peso; desde 2017, con metas de inflación como ancla nominal.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 5850
+    publicado: 2015-12-17
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A5850.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, «El BCRA implementa su nuevo marco de política monetaria» (zona de no intervención desde el 1/10/2018)
+    publicado: 2018-09-28
+    url: https://www.bcra.gob.ar/noticias/el-bcra-implementa-su-nuevo-marco-de-politica-monetaria/
+  notas: Las metas de inflación se adoptaron formalmente en enero de 2017; no son un cambio de régimen cambiario.
+- id: p.regimen.zona-no-intervencion
+  tipo: regimen_cambiario
+  nombre: 'Bandas: zona de no intervención (2018–2019)'
+  nombre_corto: Zona de no intervención
+  desde: 2018-10-01
+  hasta: 2019-09-01
+  descripcion: Flotación dentro de una zona de no intervención (inicialmente 34–44 pesos por dólar, ajustada 3 % mensual hasta
+    fin de 2018), con ventas del BCRA por encima del techo.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, «El BCRA implementa su nuevo marco de política monetaria»
+    publicado: 2018-09-28
+    url: https://www.bcra.gob.ar/noticias/el-bcra-implementa-su-nuevo-marco-de-politica-monetaria/
+  - para: hasta
+    tipo: norma
+    referencia: Decreto DNU 609/2019
+    publicado: 2019-09-01
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-327566
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 6770
+    publicado: 2019-09-01
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A6770.pdf
+- id: p.regimen.cepo-2019
+  tipo: regimen_cambiario
+  nombre: Cepo cambiario (2019–2023)
+  nombre_corto: Cepo 2019–23
+  desde: 2019-09-01
+  hasta: 2023-12-13
+  descripcion: Controles de cambio con acceso restringido al mercado oficial, tipo oficial con deslizamiento administrado
+    y varios tipos de cambio paralelos.
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Decreto DNU 609/2019 (vigente desde su publicación)
+    publicado: 2019-09-01
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-327566
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 6770
+    publicado: 2019-09-01
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A6770.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 7916 (deja sin efecto la A 7915 «a partir del 13.12.23»)
+    publicado: 2023-12-12
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7916.pdf
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, Informe Monetario Mensual, diciembre de 2023, p. 10 (TCN «a $800/USD» y «sendero de deslizamiento de
+      2% mensual»)
+    publicado: 2024-01-08
+    pagina: '10'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/informe-monetario-mensual-dic-2023.pdf
+- id: p.regimen.crawling-peg-2023
+  tipo: regimen_cambiario
+  nombre: Crawling peg con cepo (2023–2025)
+  nombre_corto: Crawling peg
+  desde: 2023-12-13
+  hasta: 2025-04-14
+  descripcion: Devaluación a 800 pesos por dólar y deslizamiento preanunciado del 2 % mensual, reducido al 1 % mensual desde
+    febrero de 2025, con los controles de cambio vigentes.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 7916
+    publicado: 2023-12-12
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A7916.pdf
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, Informe Monetario Mensual, diciembre de 2023, p. 10
+    publicado: 2024-01-08
+    pagina: '10'
+    url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/informe-monetario-mensual-dic-2023.pdf
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 8226 («resolución con vigencia a partir del 14/04/25»)
+    publicado: 2025-04-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf
+  notas: El deslizamiento mensual pasó del 2 % al 1 % en febrero de 2025.
+- id: p.regimen.bandas-2025
+  tipo: regimen_cambiario
+  nombre: Bandas de flotación (desde abril de 2025)
+  nombre_corto: Bandas 2025
+  desde: 2025-04-14
+  hasta: null
+  descripcion: Flotación del peso entre una banda de 1.000 a 1.400 pesos por dólar que se ampliaba 1 % mensual, con compras
+    del BCRA en el piso y ventas en el techo; fin del cepo para personas humanas.
+  fuentes:
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 8226
+    publicado: 2025-04-11
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf
+  - para: desde
+    tipo: oficial
+    referencia: BCRA, «Inicio de la Fase 3 del Programa Económico con flexibilización cambiaria y flotación entre bandas»
+    publicado: 2025-04-11
+    url: https://www.bcra.gob.ar/noticias/inicio-de-la-fase-3-del-programa-economico/
+  notas: Desde el 1/1/2026 el piso y el techo de la banda se ajustan cada mes por la inflación del INDEC con dos meses de
+    rezago; se mantiene el esquema de bandas.
+- id: p.catedra.herencia-dictadura
+  tipo: catedra
+  nombre: Herencia de la dictadura
+  nombre_corto: Herencia dictadura
+  orden: 1
+  desde:
+    igual_a: p.gobierno.junta-militar-1976.desde
+  hasta:
+    igual_a: p.gobierno.alfonsin.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 2
+- id: p.catedra.grinspun
+  tipo: catedra
+  nombre: Período Grinspun
+  nombre_corto: Grinspun
+  orden: 2
+  desde:
+    igual_a: p.gobierno.alfonsin.desde
+  hasta:
+    igual_a: p.ministro.sourrouille.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 2–3
+- id: p.catedra.sourrouille
+  tipo: catedra
+  nombre: 'Período Sourrouille: Plan Austral e hiperinflación'
+  nombre_corto: Sourrouille
+  orden: 3
+  desde:
+    igual_a: p.ministro.sourrouille.desde
+  hasta:
+    igual_a: p.gobierno.menem.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 4
+- id: p.catedra.1989-1991
+  tipo: catedra
+  nombre: '1989–1991: Plan Bunge y Born y segunda hiperinflación'
+  nombre_corto: 1989–1991
+  orden: 4
+  desde:
+    igual_a: p.gobierno.menem.desde
+  hasta:
+    igual_a: p.regimen.convertibilidad.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 5
+- id: p.catedra.convertibilidad
+  tipo: catedra
+  nombre: Convertibilidad
+  nombre_corto: Convertibilidad
+  orden: 5
+  desde:
+    igual_a: p.regimen.convertibilidad.desde
+  hasta:
+    igual_a: p.gobierno.de-la-rua.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 6
+- id: p.catedra.alianza
+  tipo: catedra
+  nombre: Alianza y crisis de la Convertibilidad
+  nombre_corto: Alianza y crisis
+  orden: 6
+  desde:
+    igual_a: p.gobierno.de-la-rua.desde
+  hasta:
+    igual_a: p.regimen.convertibilidad.hasta
+  referencia_curso: Cronograma 2026 de la materia, clase 7
+- id: p.catedra.posconvertibilidad
+  tipo: catedra
+  nombre: Posconvertibilidad, 2002–2008
+  nombre_corto: Posconvertibilidad
+  orden: 7
+  desde:
+    igual_a: p.regimen.convertibilidad.hasta
+  hasta: 2008-03-13
+  referencia_curso: Cronograma 2026 de la materia, clase 8–9
+  fuentes:
+  - para: hasta
+    tipo: norma
+    referencia: Resolución 125/2008 del Ministerio de Economía y Producción (firmada el 10/3/2008, anunciada el 11/3/2008,
+      publicada en el Boletín Oficial n.º 31.364 el 12/3/2008, p. 18; rige desde el 13/3/2008)
+    publicado: &id001 2008-03-12
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-138567
+- id: p.catedra.kirchnerismo-2008-2015
+  tipo: catedra
+  nombre: Kirchnerismo, 2008–2015
+  nombre_corto: Kirchnerismo
+  orden: 8
+  desde: 2008-03-13
+  hasta:
+    igual_a: p.gobierno.macri.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 10
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: Resolución 125/2008 del Ministerio de Economía y Producción (firmada el 10/3/2008, anunciada el 11/3/2008,
+      publicada en el Boletín Oficial n.º 31.364 el 12/3/2008, p. 18; rige desde el 13/3/2008)
+    publicado: *id001
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-138567
+- id: p.catedra.macrismo
+  tipo: catedra
+  nombre: Macrismo
+  nombre_corto: Macrismo
+  orden: 9
+  desde:
+    igual_a: p.gobierno.macri.desde
+  hasta:
+    igual_a: p.gobierno.alberto-fernandez.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 11
+- id: p.catedra.albertismo
+  tipo: catedra
+  nombre: Albertismo
+  nombre_corto: Albertismo
+  orden: 10
+  desde:
+    igual_a: p.gobierno.alberto-fernandez.desde
+  hasta:
+    igual_a: p.gobierno.milei.desde
+  referencia_curso: Cronograma 2026 de la materia, clase 12
+- id: p.catedra.mileismo
+  tipo: catedra
+  nombre: Mileísmo
+  nombre_corto: Mileísmo
+  orden: 11
+  desde:
+    igual_a: p.gobierno.milei.desde
+  hasta: null
+  referencia_curso: Cronograma 2026 de la materia, clase 13

@@ -1,6 +1,6 @@
-# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.2
+# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.3
 
-*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a · v1.2: 07/11/2026, segunda revisión de la 4a (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
+*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a · v1.2: 07/11/2026, segunda revisión de la 4a · v1.3: 12/11/2026, períodos y eventos de la 4b (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
 
 ---
 
@@ -46,7 +46,7 @@ Vaivén es una base histórica **curada** de series económicas argentinas desde
 - **Serie:** código del catálogo y un *slug* legible. Ejemplo: `PRE-01` / `ipc`.
 - **Variante:** `<slug>.<variante>`. Ejemplo: `ipc.oficial`, `ipc.cavallo-bertolotto`, `ipc.provincias`.
 - **Serie fuente (capa 1):** `f.<organismo>.<nombre>`. Ejemplo: `f.indec.ipc-historico-1943-2008`.
-- **Período y evento:** `p.<tipo>.<slug>` y `e.<fecha>.<slug>`. Ejemplo: `p.plan.austral`, `e.1991-04-01.convertibilidad`.
+- **Período y evento:** `p.<tipo>.<slug>` y `e.<fecha>.<slug>`. Ejemplo: `p.plan.austral`, `e.1991-03-27.convertibilidad` (la fecha del evento es la del hecho que nombra: aquí, la sanción de la ley).
 - **Entidad (país o agregado):** código ISO3 del Banco Mundial. Ejemplos: `ARG`, `BRA`, `USA`, `WLD` (Mundo), `LCN` (América Latina y el Caribe), `EUU` (Unión Europea), `EMU` (Zona del euro). Solo lo usan las series con dimensión `pais` (bloque Contexto internacional); las series argentinas no la llevan.
 - Los identificadores son estables: nunca se reutilizan ni se renombran; si una serie se retira, queda marcada como discontinuada.
 
@@ -109,35 +109,52 @@ transformaciones: [nivel, indice_desde_tasas, media_movil]
 |---|---|
 | `fuentes.yaml` | Una entrada por serie fuente: organismo, conjunto de datos, ID en la API, URL, licencia, frecuencia, cobertura, fecha de último acceso. |
 | `quiebres.yaml` | Una entrada por quiebre: id, fecha o rango, tipo (cambio de base, cobertura, intervención, metodología, signo monetario), descripción, series y variantes afectadas, fuente y, en las series con dimensión `pais`, las `entidades` a las que se aplica (sin el campo, a todas; por ejemplo, el de Venezuela desde 2015 solo se avisa si Venezuela está entre los países que se ven). |
-| `periodos.yaml` | Gobiernos, ministros de Economía, planes de estabilización y regímenes cambiarios, con fechas de inicio y fin y fuente. |
-| `eventos.yaml` | Hitos puntuales (por ejemplo, la sanción de la Convertibilidad o el default de 2001), con fecha, descripción y fuente. |
+| `periodos.yaml` | Gobiernos (con sus mandatos), ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política económica del curso, con fechas de inicio y fin y la fuente de cada fecha. |
+| `eventos.yaml` | Hitos puntuales económicos o institucionales con efecto económico (por ejemplo, la sanción de la Convertibilidad o el anuncio del default de 2001), con fecha del hecho, vigencia si es otra, categoría, descripción y fuente. |
 | `glosario.yaml` | Definiciones de conceptos (balanza de pagos, FAE, reservas netas, etc.), reutilizando el material de la cátedra cuando corresponda. |
 
-Ejemplo de período, con fechas de referencia:
+Ejemplo de período:
 ```yaml
 - id: p.gobierno.alfonsin
-  tipo: gobierno
-  nombre: Raúl Alfonsín
+  tipo: gobierno            # gobierno | ministro | plan | regimen_cambiario | catedra
+  nombre: Raúl Ricardo Alfonsín
+  nombre_corto: Alfonsín
   desde: 1983-12-10
-  hasta: 1989-07-08
+  hasta: 1989-07-08         # vacío = vigente
+  caracter: constitucional  # solo gobiernos: constitucional | de_facto | interino
+  fuentes:
+    - {para: desde, tipo: norma, referencia: "Decreto …", publicado: 1983-12-12, url: "https://…"}
+    - {para: hasta, tipo: norma, referencia: "Decreto …", url: "https://…"}
 - id: p.plan.austral
   tipo: plan
   nombre: Plan Austral
-  desde: 1985-06-14
+  desde: 1985-06-15         # el Decreto 1096/85 rige «a partir del 15 de junio»; se anunció el 14
+  hasta: 1988-08-04
+  fuentes:
+    - {para: desde, tipo: norma, referencia: "Decreto 1096/1985"}
+    - {para: hasta, tipo: convencional, nota: "Fin convencional: reemplazo por el Plan Primavera."}
 - id: p.regimen.convertibilidad
   tipo: regimen_cambiario
-  nombre: Convertibilidad
   desde: 1991-04-01
-  hasta: 2002-01-06
+  hasta: 2002-01-07         # publicación de la Ley 25.561 en el Boletín Oficial
 ```
-La periodización de la cátedra (sección 6.4) se arma sobre estas tablas. Las fechas se cargan con fuente y se revisan una por una en la implementación.
+Reglas (las controla `pipeline/validacion/periodos.py`; un error frena la publicación):
+- Intervalos semiabiertos [desde, hasta): el día del traspaso es del período que empieza. Solo el último de cada tipo puede quedar abierto.
+- Cada extremo con fecha lleva su fuente: primaria cuando existe (norma con número y publicación, comunicación del BCRA, acta) y, si no, secundaria académica con página. Un fin sin hecho fechado se declara con una fuente `convencional` y su justificación («corte convencional de Vaivén»).
+- Sin superposiciones en gobiernos, ministros, regímenes y etapas; sin huecos en los gobiernos desde el 1/1/1970. Los ministros pueden tener huecos cortos; los planes pueden superponerse.
+- Los gobiernos de más de un mandato (Menem, Fernández de Kirchner) llevan `mandatos`, que cubren el gobierno entero: el sombreado, la página de períodos y el MCP permiten ver por persona o por mandato. Las licencias del titular (Luder en 1975, Liendo en 1981) no son cambio de gobierno: van como nota.
+- Ministros: el titular de la cartera de Hacienda o Economía de cada época (en 1971–1973, Hacienda y Finanzas; en 2017–2019, Hacienda).
+- Los regímenes cambiarios cambian cuando se crea o se elimina un mercado o cambia la forma de fijar el tipo de cambio; una devaluación dentro del mismo esquema (por ejemplo, el Rodrigazo) no abre un tramo.
+- Las etapas del curso toman sus fechas de otros períodos (`igual_a: p.gobierno.menem.desde`) y heredan su fuente.
+
+La periodización de la cátedra (sección 6.4) se arma sobre estas tablas. Las fechas se cargaron con fuente y las contrastó un revisor independiente; las fuentes de trabajo y el contraste están en `planificacion/periodos_tabla.md`.
 
 ### 2.5 Formato de exportación
 - `export/series/<slug>/<variante>.json`: metadatos resumidos + `datos: [["1970-01", 0.0123], ...]` + `version_datos`. En las series con dimensión `pais`, `datos` es un objeto por entidad: `{"ARG": [["1961", 5.4], ...], "BRA": [...]}`.
   - Fechas: `AAAA-MM` en mensuales, trimestrales (mes de inicio) y semestrales (mes de la onda); `AAAA` en anuales.
   - Cada JSON declara su versión de esquema en `esquema`. La vigente es la **1.3** (`tests/contrato/serie-1.3.schema.json`, publicada en `/esquemas/`): suma a las fuentes `descarga` y `version` (descarga manual), `desfase_esperado` y `cita` (la que recomienda la fuente); a las advertencias, `entidades`; y acepta `licencia: other-at` (sección 9). La 1.2 sumó `moneda`, `insumos` (qué series necesita cada medida, con su `denominador` en el % del PIB), `auxiliar`, `vista_inicial` (transformación, medida, frecuencia y período con que arranca la ficha) y los campos de la dimensión `pais`. Las versiones anteriores siguen publicadas y la web, el MCP y la librería las leen.
   - `desactualizada_desde`: la fecha desde la que la variante no se actualiza: el primer día en que la fuente no respondió, la versión anterior si la variante quedó retenida por la validación, o la fecha en que la versión de una fuente de descarga manual cumplió 3 meses (sección 5.2).
-- `export/catalogo.json` (con las entidades de las series con `pais` y la frecuencia del último dato de cada variante; las fichas de la bibliografía no se publican hasta que la cátedra responda, sección 12), `export/periodos.json`, `export/eventos.json`, `export/quiebres.json`, `export/revisiones.json`.
+- `export/catalogo.json` (con las entidades de las series con `pais` y la frecuencia del último dato de cada variante; las fichas de la bibliografía no se publican hasta que la cátedra responda, sección 12), `export/periodos.json` y `export/eventos.json` (esquemas `periodos-1.0` y `eventos-1.0`, publicados en `/esquemas/`; también como CSV en la descarga completa y como tablas del `datapackage.json`), `export/quiebres.json`, `export/revisiones.json`.
 - `export/auxiliares/<slug>/<variante>.json` y su índice `export/auxiliares.json` (sección 2.6), más `export/auxiliares/signos-monetarios.json`.
 - `export/datapackage.json` (Frictionless Data Package v2) que describe todos los recursos.
 - `export/descargas/vaiven_<version>.parquet` y `.zip` con CSV por serie, para descarga completa.
@@ -337,7 +354,7 @@ vaiven/
 - **Tipografía:** sans serif legible para la interfaz y numerales tabulares en tablas y ejes.
 
 ### 6.4 Periodización de la cátedra
-Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun · Sourrouille, Austral, hiperinflación · 1989–91 · Convertibilidad · Alianza y crisis · salida de la crisis y 2002–2008 · kirchnerismo 2008–2015 · macrismo · albertismo · mileísmo. Además se puede sombrear por gobierno, ministro de Economía o régimen cambiario.
+Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si quiere figurar (sección 12), en la web y el MCP la opción se llama «Etapas de la política económica (curso)» y no nombra a la cátedra ni a la materia (tipo `catedra` en `periodos.yaml`; la referencia al cronograma queda solo en el YAML). Etapas: herencia de la dictadura / Grinspun · Sourrouille, Austral, hiperinflación · 1989–91 · Convertibilidad · Alianza y crisis · salida de la crisis y 2002–2008 · kirchnerismo 2008–2015 · macrismo · albertismo · mileísmo. Además se puede sombrear por gobierno, ministro de Economía o régimen cambiario.
 
 ### 6.5 Accesibilidad y uso en celular
 - WCAG 2.1 AA: contraste, navegación por teclado, textos alternativos con resumen de cada gráfico, tablas accesibles como alternativa al gráfico.
@@ -359,8 +376,8 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
 | `describir_serie` | `id` | Metadatos completos: definición, variantes (con su último dato, sus transformaciones, medidas, deflactores y PIB disponibles), quiebres, fuentes, licencias, países y cita. La bibliografía, cuando la cátedra lo confirme. Los parámetros de todas las herramientas son estrictos: uno desconocido da error. |
 | `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `pesos_actuales?`, `frecuencia?`, `medida?` (real, en_dolares, pct_pib), `deflactor?`, `base_real?`, `denominador?`, `transformacion?`, `base?`, `paises?` (códigos ISO3; solo series internacionales; por defecto, la selección inicial) | Datos (por país en las internacionales), unidad resultante, último dato y su atraso, advertencias por quiebres en el rango (las de un solo país, si ese país se pidió), versión de datos y cita (con los países por su nombre). |
 | `comparar_series` | `ids[]` (hasta 4) y los mismos parámetros por serie | Series alineadas en fecha, con advertencias y citas. |
-| `listar_periodos` | `tipo?` (gobierno, ministro, plan, régimen, cátedra) | Períodos con fechas y fuente. |
-| `periodo_en_fecha` | `fecha` | Gobierno, ministro, plan y régimen vigentes en esa fecha. |
+| `listar_periodos` | `tipo?` (`gobierno`, `ministro`, `plan`, `regimen_cambiario`, `catedra`), `por_mandato?` | Períodos con fechas y fuente de cada fecha, y aviso de los cortes convencionales. Sin `tipo`, una lista compacta sin fuentes (la completa pasa los 100 KB). |
+| `periodo_en_fecha` | `fecha` (AAAA-MM-DD, o AAAA-MM para todo lo vigente en algún momento del mes) | Gobierno (y mandato), ministro, planes, régimen cambiario y etapa vigentes, con sus fuentes, y los eventos de ese día o mes. |
 | `especificacion_grafico` | igual que `comparar_series` + `sombreado?` | Especificación de Vega-Lite y un link al explorador con esa vista. |
 | `riesgo_pais` | `desde?`, `hasta?`, `frecuencia?` | Consulta en vivo a ArgentinaDatos, con fuente y aviso de licencia; no se almacena. |
 | `citar` | `id`, `variante?`, `formato?` (APA, texto, BibTeX) y los mismos parámetros de transformación de `obtener_serie` | Cita lista para usar, con versión de datos y lo que calculó Vaivén. |
@@ -470,3 +487,9 @@ Sombreado opcional en todos los gráficos: herencia de la dictadura / Grinspun �
   - tramos que completan con series diarias pasadas a mensuales y reemplazo documentado de un dato con otra fuente (2.3);
   - quiebres por entidad (2.4), catálogo sin la bibliografía (2.5), atraso contra el calendario de la fuente (6.1), parámetros estrictos y cita con nombres de países en el MCP (7.2) y licencia `other-at` de Bruegel (9);
   - tercera revisión (11/11/2026): snapshots comparados por contenido cuando la fuente cambia el orden (5.1).
+- **v1.3 (12/11/2026):** períodos y eventos de la 4b (`NOTAS_FASE4.md`, «4b»):
+  - ejemplo de evento con la fecha del hecho, `e.1991-03-27.convertibilidad` (2.2);
+  - esquema y reglas de `periodos.yaml` y `eventos.yaml`: intervalos semiabiertos, fuente por extremo, cortes convencionales, mandatos, criterio de ministros y de regímenes, etapas con `igual_a`; Plan Austral desde el 15/6/1985 y Convertibilidad hasta el 7/1/2002 (2.4);
+  - export de períodos y eventos con esquema propio, CSV y datapackage (2.5);
+  - nombre público de las etapas del curso (6.4);
+  - parámetros de `listar_periodos` y `periodo_en_fecha` (7.2).

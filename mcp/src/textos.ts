@@ -60,7 +60,8 @@ export const DESCRIPCION = {
     "Lista los períodos de la historia económica argentina desde 1970 que usa Vaivén, con fechas exactas y la fuente " +
     "de cada fecha (decreto, ley, comunicación del BCRA o bibliografía): gobiernos (incluidos los de facto y los " +
     "interinos), ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política " +
-    "económica (periodización de un curso universitario; `catedra`). Sin `tipo`, todos. Con `por_mandato`, los " +
+    "económica (periodización de un curso universitario; `catedra`). Sin `tipo`, todos, en una lista compacta (sin " +
+    "fuentes ni descripciones); con `tipo`, con la fuente de cada fecha. Con `por_mandato`, los " +
     "gobiernos de dos mandatos (Menem, Fernández de Kirchner) van separados. Usala para saber entre qué fechas pedir " +
     "una serie con obtener_serie (por ejemplo, la inflación durante el Plan Austral) o para nombrar bien un período. " +
     "Algunos fines (los de los planes, sobre todo) son cortes convencionales de Vaivén y no un hecho fechado: la " +

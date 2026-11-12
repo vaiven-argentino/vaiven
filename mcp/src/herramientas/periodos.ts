@@ -49,6 +49,14 @@ function resumen(p: Periodo, nombreTipo: Map<string, string>) {
   };
 }
 
+function compacto(p: Periodo) {
+  return {
+    id: p.id, tipo: p.tipo, nombre: p.nombre, desde: p.desde, hasta: p.hasta,
+    ...(p.caracter ? { caracter: p.caracter } : {}), ...(p.padre ? { gobierno: p.padre } : {}),
+    ...(p.mandatos?.length ? { mandatos: p.mandatos.map((m) => m.id) } : {}),
+  };
+}
+
 function convencionales(periodos: Periodo[], nombreTipo: Map<string, string>): string[] {
   return periodos.flatMap((p) => (["desde", "hasta"] as const)
     .filter((e) => p.cortes[e] === "convencional")
@@ -75,11 +83,14 @@ export async function listarPeriodos(repo: Repositorio, args: ArgsListarPeriodos
   }
   const tipos = args.tipo ? [args.tipo] : [...TIPOS_PERIODO];
   const periodos = tipos.flatMap((t) => periodosDe(doc, t, args.por_mandato ?? false));
+  // Sin tipo, la lista completa con fuentes pasa los 100 KB: se devuelve compacta y se pide un tipo para las fuentes.
+  const compacta = !args.tipo;
   return {
     tipos: doc.tipos.filter((t) => tipos.includes(t.id)).map((t) => ({ id: t.id, nombre: t.nombre })),
     convencion: CONVENCION,
+    ...(compacta ? { nota: "Lista compacta, sin fuentes ni descripciones: pedí un `tipo` para verlas." } : {}),
     total: periodos.length,
-    periodos: periodos.map((p) => ({
+    periodos: periodos.map((p) => compacta ? compacto(p) : ({
       ...resumen(p, nombreTipo),
       // Sin por_mandato, los gobiernos de dos mandatos los listan aparte (Menem, Fernández de Kirchner).
       ...(!args.por_mandato && p.mandatos?.length
