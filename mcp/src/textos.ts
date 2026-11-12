@@ -59,19 +59,24 @@ export const DESCRIPCION = {
   listar_periodos:
     "Lista los períodos de la historia económica argentina desde 1970 que usa Vaivén, con fechas exactas y la fuente " +
     "de cada fecha (decreto, ley, comunicación del BCRA o bibliografía): gobiernos (incluidos los de facto y los " +
-    "interinos), ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política " +
-    "económica (periodización de un curso universitario; `catedra`). Sin `tipo`, todos, en una lista compacta (sin " +
+    "interinos), ministros de Economía (incluidos los interinos designados por decreto), planes de estabilización, " +
+    "regímenes cambiarios, etapas de la política económica (según la periodización de un curso universitario; " +
+    "`catedra`) y episodios (procesos de varios meses, como la hiperinflación de 1989–1990, con sus fases; pueden " +
+    "superponerse). Sin `tipo`, todos, en una lista compacta (sin " +
     "fuentes ni descripciones); con `tipo`, con la fuente de cada fecha. Con `por_mandato`, los " +
     "gobiernos de dos mandatos (Menem, Fernández de Kirchner) van separados. Usala para saber entre qué fechas pedir " +
     "una serie con obtener_serie (por ejemplo, la inflación durante el Plan Austral) o para nombrar bien un período. " +
-    "Algunos fines (los de los planes, sobre todo) son cortes convencionales de Vaivén y no un hecho fechado: la " +
-    "respuesta lo avisa en `advertencias`.",
+    "Algunos fines (los de los planes, sobre todo) son cortes convencionales de Vaivén y no un hecho fechado, y cada " +
+    "fecha lleva su `confianza` (alta, media o baja): la respuesta avisa en `advertencias` los cortes convencionales " +
+    "y las fechas de confianza baja («fecha a confirmar»).",
   periodo_en_fecha:
     "Dice qué regía en una fecha, según los registros de Vaivén: gobierno (y mandato), ministro de Economía, planes de estabilización, régimen " +
-    "cambiario y etapa de la política económica, con sus fechas y fuentes, más los eventos económicos de ese día o mes " +
-    "(por ejemplo, el corralito o la salida del cepo). `fecha`: AAAA-MM-DD (un día) o AAAA-MM (todo lo que estuvo " +
-    "vigente en algún momento de ese mes; en diciembre de 2001, cuatro presidentes). Desde 1970. Usala para poner en " +
-    "contexto un dato de una serie.",
+    "cambiario, etapa de la política económica y episodios, con sus fechas, fuentes y confianza, más los eventos " +
+    "económicos de ese día o mes (por ejemplo, el corralito o la salida del cepo). `fecha`: AAAA-MM-DD (un día) o " +
+    "AAAA-MM (todo lo que estuvo vigente en algún momento de ese mes; en diciembre de 2001, cuatro presidentes). Con un " +
+    "mes, `asignacion` dice a qué período asigna Vaivén un dato mensual (el vigente a mitad de mes; un saldo a fin de " +
+    "mes, como las reservas, va al vigente el último día) y `reparto`, los días de cada uno. Desde 1970. Usala para " +
+    "poner en contexto un dato de una serie.",
 } as const;
 
 export const TITULO = {
@@ -127,7 +132,8 @@ export const PARAMETRO = {
   comoEnObtener: "El mismo valor que se pasó a obtener_serie, si se usó.",
   tipoPeriodo:
     "gobierno · ministro (de Economía o Hacienda) · plan (de estabilización) · regimen_cambiario · catedra (etapas de " +
-    "la política económica de un curso universitario). Si se omite, todos.",
+    "la política económica según la periodización de un curso universitario) · episodio (por ejemplo, la " +
+    "hiperinflación de 1989–1990, con sus fases). Si se omite, todos.",
   porMandato: "true separa los gobiernos de dos mandatos (Menem 1989 y 1995, Fernández de Kirchner 2007 y 2011). Solo para gobiernos.",
   fechaPeriodo: "AAAA-MM-DD para un día (por ejemplo, «1989-07-08») o AAAA-MM para un mes («2001-12»). Desde 1970.",
 } as const;

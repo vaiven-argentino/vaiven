@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-12T21:23:45Z",
+  "version_datos": "2026-11-12T22:14:59Z",
   "series": [
     {
       "id": "agregados",
@@ -1531,7 +1531,7 @@
   "registros": {
     "periodos": {
       "archivo": "periodos.json",
-      "esquema": "periodos-1.0",
+      "esquema": "periodos-1.1",
       "tipos": [
         {
           "id": "gobierno",
@@ -1541,12 +1541,12 @@
         {
           "id": "ministro",
           "nombre": "Ministros de Economía",
-          "cantidad": 46
+          "cantidad": 52
         },
         {
           "id": "plan",
           "nombre": "Planes de estabilización",
-          "cantidad": 11
+          "cantidad": 12
         },
         {
           "id": "regimen_cambiario",
@@ -1557,13 +1557,18 @@
           "id": "catedra",
           "nombre": "Etapas de la política económica (curso)",
           "cantidad": 11
+        },
+        {
+          "id": "episodio",
+          "nombre": "Episodios",
+          "cantidad": 1
         }
       ]
     },
     "eventos": {
       "archivo": "eventos.json",
       "esquema": "eventos-1.0",
-      "cantidad": 31
+      "cantidad": 30
     }
   }
 }

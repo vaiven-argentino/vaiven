@@ -1,12 +1,12 @@
 ---
-// Períodos (SPEC 6.1): línea de tiempo de gobiernos, ministros de Economía, planes, regímenes cambiarios y etapas de la
-// política económica, con los eventos; desde cada período, accesos al explorador ya filtrados. Página estática: se lee
+// Períodos (SPEC 6.1): línea de tiempo de gobiernos, ministros de Economía, planes, regímenes cambiarios, etapas de la
+// política económica y episodios, con los eventos; desde cada período, accesos al explorador ya filtrados. Página estática: se lee
 // sin JavaScript.
 import Base from "../../layouts/Base.astro";
 import { citaRegistro } from "@vaiven/cita";
 import { periodosDe, rangoLegible, type FuentePeriodo, type Periodo, type TipoPeriodo } from "@vaiven/transformaciones";
 import { catalogo, eventos as leerEventos, periodos as leerPeriodos, tamano } from "../../lib/export";
-import { accesoEvento, accesosDe, lineaDeTiempo } from "../../lib/periodos";
+import { accesoEvento, accesosDe, avisoConfianza, lineaDeTiempo } from "../../lib/periodos";
 
 const registro = leerPeriodos();
 const registroEventos = leerEventos();
@@ -18,7 +18,7 @@ const publicadas = new Set(catalogo().series.filter((s) => s.variantes.some((v) 
 // Línea de tiempo: 1970 a fin del año en curso, en un lienzo de 1160 px que ocupa el ancho de la página y en el celular
 // se desplaza de costado (nunca baja de 1100 px, para que los rótulos se lean).
 const INICIO = 1970, FIN = anioHoy + 1, ANCHO = 1000, MARGEN = 150, ALTO_FILA = 24, SEP = 10;
-const NOMBRE_CARRIL: Record<string, string> = { catedra: "Etapas (curso)", gobierno: "Gobiernos", ministro: "Ministros", plan: "Planes", regimen_cambiario: "Regímenes cambiarios", evento: "Eventos" };
+const NOMBRE_CARRIL: Record<string, string> = { catedra: "Etapas (curso)", gobierno: "Gobiernos", ministro: "Ministros", plan: "Planes", regimen_cambiario: "Regímenes cambiarios", episodio: "Episodios", evento: "Eventos" };
 const carriles = lineaDeTiempo(registro, registroEventos, ANCHO, INICIO, FIN, hoy);
 let y = 30;
 const ubicados = carriles.map((c) => { const salida = { ...c, y }; y += c.filas * ALTO_FILA + SEP; return salida; });
@@ -26,7 +26,10 @@ const altoSvg = y + 6;
 const anios = Array.from({ length: Math.floor((FIN - INICIO) / 5) + 1 }, (_, k) => INICIO + k * 5);
 const xAnio = (a: number) => MARGEN + ((a - INICIO) / (FIN - INICIO)) * ANCHO;
 
-const ORDEN: TipoPeriodo[] = ["catedra", "gobierno", "ministro", "plan", "regimen_cambiario"];
+const ORDEN: TipoPeriodo[] = ["catedra", "gobierno", "ministro", "plan", "regimen_cambiario", "episodio"];
+const NIVEL: Record<string, string> = { alta: "alta", media: "media (una sola fuente o sin verificación independiente)", baja: "baja (las fuentes no coinciden)" };
+const textoConfianzaLargo = (c?: { desde: string; hasta?: string }) =>
+  c ? `Confianza de las fechas: inicio, ${NIVEL[c.desde]}${c.hasta ? `; fin, ${NIVEL[c.hasta]}` : ""}.` : "";
 const nombreTipo = new Map(registro.tipos.map((t) => [t.id, t.nombre]));
 const ancla = (id: string) => id;
 const fuenteTexto = (f: FuentePeriodo) => `${f.referencia ?? f.nota ?? ""}${f.pagina !== undefined ? `, p. ${f.pagina}` : ""}${f.publicado ? ` (publicado ${f.publicado})` : ""}`;
@@ -93,12 +96,14 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
         <h2 id={tipo}>{nombreTipo.get(tipo)} <span class="secundario cantidad">({lista(tipo).length})</span></h2>
         {tipo === "catedra" && <p class="lectura secundario">Periodización de un curso universitario de política económica argentina. Los nombres son los del curso; las fechas de corte las fijó Vaivén a partir de hechos fechados, con su fuente.</p>}
         {tipo === "ministro" && <p class="lectura secundario">Titular de la cartera de Hacienda o Economía según la estructura de cada época (en 1971–1973, Hacienda y Finanzas; en 2017–2019, Hacienda). Puede haber días sin titular entre una renuncia y la jura del siguiente.</p>}
+        {tipo === "episodio" && <p class="lectura secundario">Procesos de varios meses que la historiografía trata como una unidad (por ejemplo, una hiperinflación). Pueden superponerse con otros y tener fases. En los gráficos se marcan con «Marcar eventos», en una franja debajo del eje.</p>}
         {tipo === "regimen_cambiario" && <p class="lectura secundario">Un tramo nuevo empieza cuando se crea o se elimina un mercado de cambios o cambia la forma de fijar el tipo de cambio; una devaluación dentro del mismo esquema no abre un tramo.</p>}
         <ol class="tarjetas">
           {lista(tipo).map((p) => (
             <li class="tarjeta" id={ancla(p.id)}>
               <h3>{p.nombre}</h3>
               <p class="fechas"><strong>{rangoLegible(p)}</strong>{p.caracter && <> · {CARACTER[p.caracter]}</>}{p.cargo && <> · {p.cargo}</>}</p>
+              {avisoConfianza(p) && <p class="a-confirmar">⚠ {avisoConfianza(p).replace(/^./, (c) => c.toUpperCase())}: las fuentes no coinciden.</p>}
               {p.cortes.hasta === "convencional" && <p class="convencional">El fin es un corte convencional de Vaivén, no un hecho fechado.</p>}
               {p.descripcion && <p>{p.descripcion}</p>}
               {p.notas && <p class="secundario">{p.notas}</p>}
@@ -107,8 +112,14 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
                   {p.mandatos.map((m) => <li id={ancla(m.id)}>{m.nombre}: {rangoLegible(m)}</li>)}
                 </ul>
               )}
+              {p.fases && (
+                <ul class="mandatos">
+                  {p.fases.map((f) => <li id={ancla(f.id)}>{f.nombre}: {rangoLegible(f)}{f.descripcion && <> · <span class="secundario">{f.descripcion}</span></>}</li>)}
+                </ul>
+              )}
               <details class="fuentes">
                 <summary>Fuentes ({p.fuentes.length})</summary>
+                {p.confianza && <p class="secundario">{textoConfianzaLargo(p.confianza)}</p>}
                 <ul>
                   {p.fuentes.map((f) => (
                     <li><span class="secundario">{PARA[f.para ?? "ambas"]}:</span> {f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>
@@ -188,6 +199,7 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
   .tarjeta p { margin: 0; }
   .fechas { font-size: 0.92rem; }
   .convencional { font-size: 0.88rem; color: var(--ocre); }
+  .a-confirmar { font-size: 0.88rem; font-weight: 600; margin: 0; }
   .mandatos { margin: 0; padding-left: 1.1em; font-size: 0.9rem; }
   .fuentes summary { cursor: pointer; font-size: 0.9rem; min-height: 44px; display: flex; align-items: center; gap: 6px; color: var(--acento); }
   .fuentes summary::before { content: "▸"; transition: transform 0.15s; }

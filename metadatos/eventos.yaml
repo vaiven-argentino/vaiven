@@ -98,19 +98,6 @@
     publicado: 1985-06-15
     url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0674.pdf
   vigencia: 1985-06-15
-- id: e.1989-07-01.hiperinflacion
-  fecha: 1989-07-01
-  nombre: Pico de la primera hiperinflación (julio de 1989)
-  nombre_corto: Hiperinflación
-  categoria: crisis
-  descripcion: La inflación minorista mensual alcanzó su máximo histórico en julio de 1989, con una suba del IPC de 196,6%
-    respecto de junio.
-  fuentes:
-  - tipo: oficial
-    referencia: INDEC, IPC histórico nivel general (serie 178.1_NL_GENERAL_0_0_13; en Vaivén, f.indec.ipc-historico-1943-2008);
-      variación jul-1989/jun-1989
-    nota: 'Publicación: sin fecha (consulta 2026-10-24).'
-    url: https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13
 - id: e.1990-01-03.plan-bonex
   fecha: 1990-01-03
   nombre: Plan Bonex (Decreto 36/1990)

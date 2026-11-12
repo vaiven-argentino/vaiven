@@ -1,7 +1,7 @@
 {
-  "esquema": "periodos-1.0",
-  "version_datos": "2026-11-12T21:23:45Z",
-  "descripcion": "Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política económica, 1970–hoy. Intervalos semiabiertos [desde, hasta): el día del traspaso es del período que empieza; `hasta` null quiere decir vigente.",
+  "esquema": "periodos-1.1",
+  "version_datos": "2026-11-12T22:14:59Z",
+  "descripcion": "Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios, etapas de la política económica según la periodización de un curso universitario y episodios, 1970–hoy. Intervalos semiabiertos [desde, hasta): el día del traspaso es del período que empieza; `hasta` null quiere decir vigente. `confianza` dice cuán firme es cada fecha (alta, media o baja).",
   "fuente": "metadatos/periodos.yaml",
   "licencia": "CC-BY-4.0",
   "tipos": [
@@ -13,12 +13,12 @@
     {
       "id": "ministro",
       "nombre": "Ministros de Economía",
-      "cantidad": 46
+      "cantidad": 52
     },
     {
       "id": "plan",
       "nombre": "Planes de estabilización",
-      "cantidad": 11
+      "cantidad": 12
     },
     {
       "id": "regimen_cambiario",
@@ -29,6 +29,11 @@
       "id": "catedra",
       "nombre": "Etapas de la política económica (curso)",
       "cantidad": 11
+    },
+    {
+      "id": "episodio",
+      "nombre": "Episodios",
+      "cantidad": 1
     }
   ],
   "periodos": [
@@ -44,6 +49,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -74,6 +83,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -106,6 +119,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -135,6 +152,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -167,6 +188,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -197,6 +222,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -230,6 +259,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -261,6 +294,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -294,6 +331,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -325,6 +366,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -355,6 +400,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -388,6 +437,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -420,6 +473,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "baja",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -449,6 +506,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -480,6 +541,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "baja",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -509,6 +574,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -541,6 +610,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -572,6 +645,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -597,6 +674,10 @@
           "nombre_corto": "Menem I",
           "desde": "1989-07-08",
           "hasta": "1995-07-08",
+          "confianza": {
+            "desde": "alta",
+            "hasta": "alta"
+          },
           "fuentes": [
             {
               "para": "desde",
@@ -622,6 +703,10 @@
           "nombre_corto": "Menem II",
           "desde": "1995-07-08",
           "hasta": "1999-12-10",
+          "confianza": {
+            "desde": "alta",
+            "hasta": "alta"
+          },
           "fuentes": [
             {
               "para": "desde",
@@ -655,6 +740,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -686,6 +775,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -716,6 +809,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -749,6 +846,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -781,6 +882,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -811,6 +916,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -843,6 +952,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -868,6 +981,10 @@
           "nombre_corto": "Cristina Fernández de Kirchner I",
           "desde": "2007-12-10",
           "hasta": "2011-12-10",
+          "confianza": {
+            "desde": "alta",
+            "hasta": "alta"
+          },
           "fuentes": [
             {
               "para": "desde",
@@ -893,6 +1010,10 @@
           "nombre_corto": "Cristina Fernández de Kirchner II",
           "desde": "2011-12-10",
           "hasta": "2015-12-10",
+          "confianza": {
+            "desde": "alta",
+            "hasta": "alta"
+          },
           "fuentes": [
             {
               "para": "desde",
@@ -927,6 +1048,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -958,6 +1083,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -988,6 +1117,9 @@
       "cortes": {
         "desde": "hecho"
       },
+      "confianza": {
+        "desde": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1010,6 +1142,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1052,9 +1188,14 @@
       "desde": "1970-06-18",
       "hasta": "1970-10-15",
       "cargo": "Ministro de Economía y Trabajo",
+      "notas": "El listado del CDI le da fin el 26/10/1970 porque no registra el interinato de Aldo Ferrer (Decreto 1831/1970).",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -1079,6 +1220,47 @@
           "publicado": "2021-07",
           "pagina": "6",
           "url": "https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 1829/1970 (Bs. As., 15/10/1970): acepta la renuncia de Carlos M. Moyano Llerena (texto escaneado del BO)",
+          "publicado": "1970-10-20",
+          "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/7039658/19701020"
+        }
+      ]
+    },
+    {
+      "id": "p.ministro.ferrer-interino",
+      "tipo": "ministro",
+      "nombre": "Aldo Ferrer (interino)",
+      "nombre_corto": "Ferrer (interino)",
+      "desde": "1970-10-15",
+      "hasta": "1970-10-26",
+      "cargo": "Ministro de Obras y Servicios Públicos; «encomiéndase interinamente» el Ministerio de Economía y Trabajo",
+      "notas": "Interino designado por decreto durante la vacante, antes de ser nombrado titular.",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "norma",
+          "referencia": "Decreto 1831/1970 (Bs. As., 15/10/1970): «VISTO que se encuentra acéfalo el Ministerio de Economía y Trabajo […] Encomiéndase interinamente el Ministerio de Economía y Trabajo, al señor Ministro de Obras y Servicios Públicos, doctor don Aldo Ferrer» (texto escaneado del BO)",
+          "publicado": "1970-10-22",
+          "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/7039752/19701022"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 2042/1970 (Bs. As., 26/10/1970): «Nómbrase Ministro de Economía y Trabajo al doctor Aldo Ferrer» (texto escaneado del BO)",
+          "publicado": "1970-10-30",
+          "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/7039861/19701030"
         }
       ]
     },
@@ -1094,6 +1276,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1148,6 +1334,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1193,6 +1383,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1237,6 +1431,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1292,6 +1490,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1338,6 +1540,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1372,10 +1578,14 @@
       "desde": "1975-06-02",
       "hasta": "1975-07-19",
       "cargo": "Ministro de Economía",
-      "notas": "Entre su salida y la asunción de Bonanni quedó a cargo un interino no designado como titular.",
+      "notas": "Entre su salida y la asunción de Bonanni quedó a cargo del despacho, por el mismo decreto, el ministro de Justicia Ernesto A. Corvalán Nanclares.",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1412,6 +1622,40 @@
       ]
     },
     {
+      "id": "p.ministro.corvalan-nanclares-1975a",
+      "tipo": "ministro",
+      "nombre": "Ernesto A. Corvalán Nanclares (a cargo del despacho)",
+      "nombre_corto": "Corvalán Nanclares",
+      "desde": "1975-07-19",
+      "hasta": "1975-07-22",
+      "cargo": "Ministro de Justicia; interinamente se hará cargo del despacho del Ministerio de Economía",
+      "notas": "Designado por el mismo decreto que acepta la renuncia de Celestino Rodrigo, hasta la designación de Bonanni.",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "norma",
+          "referencia": "Decreto 1957/1975, art. 3 (Bs. As., 19/7/1975): «interinamente se hará cargo del despacho del Ministerio de Economía» (texto escaneado del BO)",
+          "publicado": "1975-07-24",
+          "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/7066137/19750724"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 1976/1975 (Bs. As., 22/7/1975): designa ministro de Economía a Pedro J. Bonanni",
+          "publicado": "1975-07-28",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-182811"
+        }
+      ]
+    },
+    {
       "id": "p.ministro.bonanni",
       "tipo": "ministro",
       "nombre": "Pedro José Bonanni",
@@ -1423,6 +1667,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "baja"
       },
       "fuentes": [
         {
@@ -1444,6 +1692,40 @@
       ]
     },
     {
+      "id": "p.ministro.corvalan-nanclares-1975b",
+      "tipo": "ministro",
+      "nombre": "Ernesto A. Corvalán Nanclares (a cargo del despacho)",
+      "nombre_corto": "Corvalán Nanclares",
+      "desde": "1975-08-11",
+      "hasta": "1975-08-14",
+      "cargo": "Ministro de Justicia; se hará cargo interinamente del despacho del Ministerio de Economía",
+      "notas": "Entre la renuncia de Bonanni (Decreto 2177/1975, 11/8/1975) y la designación de Cafiero.",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "norma",
+          "referencia": "Decreto 2188/1975 (11/8/1975; la fecha del escaneo se lee mal y se toma de los decretos vecinos): «se hará cargo interinamente del despacho del Ministerio de Economía» (texto escaneado del BO)",
+          "publicado": "1975-08-18",
+          "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/7066289/19750818"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 2200/1975 (Bs. As., 14/8/1975): designa ministro de Economía a Antonio F. Cafiero",
+          "publicado": "1975-08-21",
+          "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/7066315/19750821"
+        }
+      ]
+    },
+    {
       "id": "p.ministro.cafiero",
       "tipo": "ministro",
       "nombre": "Antonio Francisco Cafiero",
@@ -1454,6 +1736,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1496,10 +1782,14 @@
       "desde": "1976-02-03",
       "hasta": "1976-03-24",
       "cargo": "Ministro de Economía",
-      "notas": "Entre el golpe del 24/3/1976 y la asunción de Martínez de Hoz, el área estuvo a cargo de un delegado de la Junta Militar.",
+      "notas": "Entre el golpe del 24/3/1976 y la asunción de Martínez de Hoz, el área estuvo a cargo de Joaquín De Las Heras, delegado de la Junta Militar.",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1543,6 +1833,41 @@
       ]
     },
     {
+      "id": "p.ministro.de-las-heras",
+      "tipo": "ministro",
+      "nombre": "Joaquín De Las Heras (delegado de la Junta Militar)",
+      "nombre_corto": "De Las Heras",
+      "desde": "1976-03-24",
+      "hasta": "1976-03-29",
+      "cargo": "General de Brigada; «Delegado de la Junta Militar» en el Ministerio de Economía",
+      "notas": "No fue ministro interino sino delegado de un gobierno de facto; se incluye porque estuvo a cargo de la cartera por decreto durante la vacante (criterio de las correcciones de la revisión externa, 12/11/2026).",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "norma",
+          "referencia": "Decreto 1/1976 de la Junta Militar (Bs. As., 24/3/1976): «Nómbranse Delegados de la Junta Militar […] Economía al señor General de Brigada D. Joaquín De Las Heras»; BO n.º 23373, p. 2",
+          "publicado": "1976-03-29",
+          "pagina": "2",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-183353"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 5/1976 (29/3/1976): designa a José A. Martínez de Hoz Ministro Secretario de Estado en el Departamento de Economía (texto escaneado del BO)",
+          "publicado": "1976-04-05",
+          "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/7069122/19760405"
+        }
+      ]
+    },
+    {
       "id": "p.ministro.martinez-de-hoz",
       "tipo": "ministro",
       "nombre": "José Alfredo Martínez de Hoz",
@@ -1553,6 +1878,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1600,6 +1929,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1636,6 +1969,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1674,6 +2011,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1703,6 +2044,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -1734,6 +2079,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1764,6 +2113,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1810,6 +2163,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1839,6 +2196,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -1870,6 +2231,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -1904,11 +2269,15 @@
       "nombre_corto": "Bauzá",
       "desde": "1989-07-14",
       "hasta": "1989-07-15",
-      "cargo": "Ministro de Economía (interino)",
+      "cargo": "Ministro del Interior; «Ministro Interino de Economía»",
       "notas": "Ministro interino entre la muerte de Miguel Roig y la designación de Néstor Rapanelli.",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -1938,6 +2307,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -1969,6 +2342,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -1998,6 +2375,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2030,6 +2411,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2060,6 +2445,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2092,6 +2481,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2119,10 +2512,14 @@
       "desde": "2001-03-20",
       "hasta": "2001-12-20",
       "cargo": "Ministro de Economía",
-      "notas": "Entre su salida y la asunción de Remes Lenicov no hubo ministro titular: hubo funcionarios a cargo o interinos (Nicolás Gallo, Jorge Capitanich).",
+      "notas": "Después de su salida quedaron a cargo Nicolás Gallo (20/12/2001) y Jorge Capitanich (21/12/2001). Del 22/12/2001 al 3/1/2002 no hubo ministro de Economía: Rodolfo Frigeri fue secretario de Hacienda (Decreto 14/2001), no ministro.",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2144,6 +2541,76 @@
       ]
     },
     {
+      "id": "p.ministro.gallo",
+      "tipo": "ministro",
+      "nombre": "Nicolás Vicente Gallo (a cargo)",
+      "nombre_corto": "Gallo",
+      "desde": "2001-12-20",
+      "hasta": "2001-12-21",
+      "cargo": "Secretario General de la Presidencia; «a cargo de los Ministerios de Economía y de Infraestructura y Vivienda»",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "norma",
+          "referencia": "Decreto 1685/2001 (20/12/2001): «Desígnase […] a cargo de los MINISTERIOS DE ECONOMIA y de INFRAESTRUCTURA Y VIVIENDA, sin perjuicio de sus funciones como Secretario General de la Presidencia»; BO n.º 29802, p. 2",
+          "publicado": "2001-12-24",
+          "pagina": "2",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-71015"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 2/2001 (21/12/2001, Puerta): acepta la renuncia de Nicolás V. Gallo",
+          "publicado": "2001-12-24",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-71023"
+        }
+      ]
+    },
+    {
+      "id": "p.ministro.capitanich",
+      "tipo": "ministro",
+      "nombre": "Jorge Milton Capitanich (interino)",
+      "nombre_corto": "Capitanich",
+      "desde": "2001-12-21",
+      "hasta": "2001-12-22",
+      "cargo": "«Ministro de Infraestructura y Vivienda e interino de Economía», de Desarrollo Social, Salud, Trabajo y Seguridad Social",
+      "notas": "Algunos listados lo extienden hasta el 23/12/2001; el Decreto 25/2001 acepta su renuncia el 22/12.",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "norma",
+          "referencia": "Decreto 11/2001 (21/12/2001, Puerta): «Desígnase MINISTRO DE INFRAESTRUCTURA Y VIVIENDA e interino de ECONOMIA […]»; BO n.º 29802, p. 19",
+          "publicado": "2001-12-24",
+          "pagina": "19",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-71032"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 25/2001 (22/12/2001): acepta la renuncia de Jorge M. Capitanich; BO n.º 29804, p. 1",
+          "publicado": "2001-12-27",
+          "pagina": "1",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-71056"
+        }
+      ]
+    },
+    {
       "id": "p.ministro.remes-lenicov",
       "tipo": "ministro",
       "nombre": "Jorge Luis Remes Lenicov",
@@ -2154,6 +2621,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2186,6 +2657,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2216,6 +2691,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2255,6 +2734,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2285,6 +2768,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2317,6 +2804,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2347,6 +2838,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2379,6 +2874,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2410,6 +2909,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2437,10 +2940,14 @@
       "desde": "2015-12-10",
       "hasta": "2016-12-31",
       "cargo": "Ministro de Hacienda y Finanzas Públicas",
-      "notas": "El DNU 13/2015 reemplaza el Ministerio de Economía y Finanzas Públicas por el de Hacienda y Finanzas Públicas.",
+      "notas": "El DNU 13/2015 reemplaza el Ministerio de Economía y Finanzas Públicas por el de Hacienda y Finanzas Públicas. Entre el 31/12/2016 y el 2/1/2017 no hubo ministro titular ni interino.",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2474,6 +2981,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2504,6 +3015,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2536,6 +3051,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2566,6 +3085,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2598,6 +3121,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2628,6 +3155,9 @@
       "cortes": {
         "desde": "hecho"
       },
+      "confianza": {
+        "desde": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2651,6 +3181,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "convencional"
+      },
+      "confianza": {
+        "desde": "baja",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -2689,6 +3223,10 @@
         "desde": "hecho",
         "hasta": "convencional"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2724,6 +3262,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "convencional"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -2777,6 +3319,10 @@
         "desde": "hecho",
         "hasta": "convencional"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2818,6 +3364,10 @@
         "desde": "hecho",
         "hasta": "convencional"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2852,6 +3402,10 @@
         "desde": "hecho",
         "hasta": "convencional"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2885,6 +3439,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "convencional"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -2928,6 +3486,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -2946,6 +3508,59 @@
       ]
     },
     {
+      "id": "p.plan.metas-inflacion",
+      "tipo": "plan",
+      "nombre": "Régimen de metas de inflación",
+      "nombre_corto": "Metas de inflación",
+      "desde": "2017-01-01",
+      "hasta": "2018-10-01",
+      "descripcion": "El BCRA fija metas anuales de inflación y usa como instrumento la tasa de interés central del corredor de pases en pesos a 7 días.",
+      "notas": "El BCRA presentó el régimen y sus metas el 26/9/2016 (12–17 % para 2017, 8–12 % para 2018 y 5 % para 2019); en 2016 había anunciado el rumbo sin metas numéricas. Las metas se recalibraron el 28/12/2017 (15 % para 2018, 10 % para 2019 y 5 % para 2020) y se revisaron con el FMI el 7/6/2018. No hay una Comunicación «A» del cambio de instrumento.",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "convencional"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "oficial",
+          "referencia": "BCRA, Informe Monetario Mensual, diciembre de 2016: «El principal instrumento de política monetaria desde el 1 de enero de 2017 es la tasa de interés central del corredor de pases en pesos a 7 días»",
+          "publicado": "2017-01",
+          "url": "https://www.bcra.gob.ar/publicaciones/informe-monetario-mensual-diciembre-de-2016/"
+        },
+        {
+          "para": "desde",
+          "tipo": "oficial",
+          "referencia": "BCRA, comunicado de política monetaria del 27/12/2016: «a partir de la semana próxima la tasa de política monetaria será la tasa de pases a 7 días»",
+          "publicado": "2016-12-27",
+          "url": "https://www.bcra.gob.ar/noticias/el-bcra-mantuvo-inalterada-su-tasa-de-politica-monetaria-en-2475-4/"
+        },
+        {
+          "para": "hasta",
+          "tipo": "convencional",
+          "nota": "Fin convencional: lo reemplaza el programa monetario de octubre de 2018, que fija una meta de base monetaria en lugar de la meta de inflación."
+        },
+        {
+          "para": "hasta",
+          "tipo": "oficial",
+          "referencia": "BCRA, «El BCRA implementa su nuevo marco de política monetaria» (base monetaria con crecimiento nulo desde octubre y zona de no intervención desde el 1/10/2018)",
+          "publicado": "2018-09-28",
+          "url": "https://www.bcra.gob.ar/noticias/el-bcra-implementa-su-nuevo-marco-de-politica-monetaria/"
+        },
+        {
+          "para": "hasta",
+          "tipo": "oficial",
+          "referencia": "FMI, comunicado de prensa 18/362: el nuevo marco consiste en «replacing the inflation targeting regime with a monetary base target»",
+          "publicado": "2018-09-26",
+          "url": "https://www.imf.org/en/news/articles/2018/09/26/pr18362-argentina-imf-and-argentina-authorities-reach-staff-level-agreement"
+        }
+      ]
+    },
+    {
       "id": "p.plan.base-cero-2018",
       "tipo": "plan",
       "nombre": "Programa monetario de octubre de 2018 (base monetaria cero y zona de no intervención)",
@@ -2956,6 +3571,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "convencional"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -2999,6 +3618,10 @@
         "desde": "hecho",
         "hasta": "convencional"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3026,6 +3649,21 @@
           "referencia": "BCRA, Comunicación \"A\" 8226",
           "publicado": "2025-04-11",
           "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 269/2025 (DNU, 11/4/2025): deroga el Decreto 28/2023 (dólar blend) desde su publicación; BO n.º 35647, p. 5",
+          "publicado": "2025-04-14",
+          "pagina": "5",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-411653"
+        },
+        {
+          "para": "hasta",
+          "tipo": "comunicacion_bcra",
+          "referencia": "BCRA, Comunicación \"A\" 8227: aplica la derogación del Decreto 28/23 dispuesta por el Decreto 269/25 «a partir del 14/04/25»",
+          "publicado": "2025-04-14",
+          "url": "https://www.bcra.gob.ar/Pdfs/comytexord/A8227.pdf"
         }
       ]
     },
@@ -3040,6 +3678,9 @@
       "notas": "Desde el 1/1/2026 los límites de la banda se ajustan cada mes por la inflación del INDEC con dos meses de rezago; se toma como continuidad del mismo programa.",
       "cortes": {
         "desde": "hecho"
+      },
+      "confianza": {
+        "desde": "alta"
       },
       "fuentes": [
         {
@@ -3078,6 +3719,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3109,6 +3754,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -3148,6 +3797,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -3195,6 +3848,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3235,6 +3892,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3274,6 +3935,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -3322,6 +3987,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3353,6 +4022,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -3392,6 +4065,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3420,6 +4097,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -3457,6 +4138,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3486,6 +4171,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3514,6 +4203,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -3551,6 +4244,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -3597,6 +4294,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3634,6 +4335,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3662,6 +4367,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -3692,6 +4401,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3721,6 +4434,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3749,6 +4466,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -3786,6 +4507,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3821,6 +4546,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -3858,6 +4587,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3887,6 +4620,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -3925,6 +4662,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -3960,6 +4701,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -4004,6 +4749,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4041,6 +4790,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4070,6 +4823,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4097,14 +4854,18 @@
     {
       "id": "p.regimen.cepo-2019",
       "tipo": "regimen_cambiario",
-      "nombre": "Cepo cambiario (2019–2023)",
-      "nombre_corto": "Cepo 2019–23",
+      "nombre": "Cepo cambiario con deslizamiento administrado (2019–2023)",
+      "nombre_corto": "Cepo, crawl administrado",
       "desde": "2019-09-01",
       "hasta": "2023-12-13",
       "descripcion": "Controles de cambio con acceso restringido al mercado oficial, tipo oficial con deslizamiento administrado y varios tipos de cambio paralelos.",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -4141,15 +4902,19 @@
     {
       "id": "p.regimen.crawling-peg-2023",
       "tipo": "regimen_cambiario",
-      "nombre": "Crawling peg con cepo (2023–2025)",
-      "nombre_corto": "Crawling peg",
+      "nombre": "Cepo cambiario con salto y crawling peg preanunciado (2023–2025)",
+      "nombre_corto": "Cepo, salto y crawl fijo",
       "desde": "2023-12-13",
       "hasta": "2025-04-14",
       "descripcion": "Devaluación a 800 pesos por dólar y deslizamiento preanunciado del 2 % mensual, reducido al 1 % mensual desde febrero de 2025, con los controles de cambio vigentes.",
-      "notas": "El deslizamiento mensual pasó del 2 % al 1 % en febrero de 2025.",
+      "notas": "El deslizamiento mensual pasó del 2 % al 1 % desde el 1/2/2025 (BCRA, comunicado del 14/1/2025). Dólar blend: las exportaciones liquidaban el 80 % en el mercado oficial y el 20 % con operaciones de contado con liquidación, desde el Decreto 28/2023 (DNU, BO 13/12/2023, vigente ese día) hasta el Decreto 269/2025 (BO y vigencia 14/4/2025), que lo deroga; el BCRA lo aplicó con la Comunicación \"A\" 8227. El 80/20 no cambió en ese lapso.",
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -4173,6 +4938,21 @@
           "referencia": "BCRA, Comunicación \"A\" 8226 («resolución con vigencia a partir del 14/04/25»)",
           "publicado": "2025-04-11",
           "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf"
+        },
+        {
+          "para": "hasta",
+          "tipo": "norma",
+          "referencia": "Decreto 269/2025 (DNU, 11/4/2025): deroga el Decreto 28/2023 (dólar blend) desde su publicación; BO n.º 35647, p. 5",
+          "publicado": "2025-04-14",
+          "pagina": "5",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-411653"
+        },
+        {
+          "para": "hasta",
+          "tipo": "comunicacion_bcra",
+          "referencia": "BCRA, Comunicación \"A\" 8227: aplica la derogación del Decreto 28/23 dispuesta por el Decreto 269/25 «a partir del 14/04/25»",
+          "publicado": "2025-04-14",
+          "url": "https://www.bcra.gob.ar/Pdfs/comytexord/A8227.pdf"
         }
       ]
     },
@@ -4187,6 +4967,9 @@
       "notas": "Desde el 1/1/2026 el piso y el techo de la banda se ajustan cada mes por la inflación del INDEC con dos meses de rezago; se mantiene el esquema de bandas.",
       "cortes": {
         "desde": "hecho"
+      },
+      "confianza": {
+        "desde": "alta"
       },
       "fuentes": [
         {
@@ -4216,6 +4999,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -4248,6 +5035,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -4282,6 +5073,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4314,6 +5109,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "media"
       },
       "fuentes": [
         {
@@ -4355,6 +5154,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4395,6 +5198,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "media"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4427,6 +5234,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "media",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4456,6 +5267,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -4487,6 +5302,10 @@
       "cortes": {
         "desde": "hecho",
         "hasta": "hecho"
+      },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
       },
       "fuentes": [
         {
@@ -4521,6 +5340,10 @@
         "desde": "hecho",
         "hasta": "hecho"
       },
+      "confianza": {
+        "desde": "alta",
+        "hasta": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4553,6 +5376,9 @@
       "cortes": {
         "desde": "hecho"
       },
+      "confianza": {
+        "desde": "alta"
+      },
       "fuentes": [
         {
           "para": "desde",
@@ -4562,6 +5388,121 @@
           "pagina": "2",
           "url": "https://www.argentina.gob.ar/normativa/nacional/norma-394969/texto",
           "nota": "Fecha de p.gobierno.milei (desde)."
+        }
+      ]
+    },
+    {
+      "id": "p.episodio.hiperinflacion-1989-1990",
+      "tipo": "episodio",
+      "nombre": "Hiperinflación de 1989–1990",
+      "nombre_corto": "Hiperinflación 1989–90",
+      "desde": "1989-02-06",
+      "hasta": "1990-04-01",
+      "descripcion": "Dos brotes de inflación mensual de tres dígitos o cerca, con una tregua en agosto–noviembre de 1989 (Plan Bunge y Born). El IPC subió 196,6 % en julio de 1989 y 95,5 % en marzo de 1990.",
+      "notas": "Criterio de Cagan (1956, p. 25, citado por Kiguel y Liviatan, 1995, p. 371): una hiperinflación empieza el mes en que los precios suben más del 50 % y termina el mes anterior a que la suba baje de ese nivel y se mantenga abajo al menos un año. Con ese criterio va de mayo de 1989 a marzo de 1990: el IPC subió 78,5, 114,5 y 196,6 % en mayo, junio y julio de 1989, y 79,2, 61,6 y 95,5 % en enero, febrero y marzo de 1990. Entre los dos brotes no pasó un año por debajo del 50 %, así que al pie de la letra es un solo episodio (Fischer, Sahay y Végh, 2002, tabla 2: mayo de 1989 a marzo de 1990, 11 meses). Las cifras son las de la serie del IPC de Vaivén y coinciden con Kiguel y Liviatan (1995), tabla 12.A.2.",
+      "cortes": {
+        "desde": "hecho",
+        "hasta": "convencional"
+      },
+      "confianza": {
+        "desde": "media",
+        "hasta": "alta"
+      },
+      "fuentes": [
+        {
+          "para": "desde",
+          "tipo": "secundaria",
+          "referencia": "Almansi, Aquiles y Rodríguez, Carlos (1989), «Reforma monetaria y financiera en hiperinflación», CEMA, Documento de Trabajo n.º 67: «La economía argentina entró en un claro proceso hiperinflacionario a partir del día 6 de Febrero de 1989. En esa fecha el Banco Central abandonó la política de vender divisas en licitaciones públicas»",
+          "publicado": "1989-08",
+          "pagina": "1",
+          "url": "https://ucema.edu.ar/sites/default/files/2025-12/67.pdf"
+        },
+        {
+          "para": "desde",
+          "tipo": "comunicacion_bcra",
+          "referencia": "BCRA, Comunicación \"A\" 1326 (6/2/1989), con vigencia desde la apertura de los mercados del 7/2/1989",
+          "publicado": "1989-02-06",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1326.pdf"
+        },
+        {
+          "para": "hasta",
+          "tipo": "convencional",
+          "nota": "Fin convencional: el último mes con inflación mensual por encima del 50 % es marzo de 1990 (95,5 %); en abril baja a 11,4 % y no vuelve a superar ese nivel."
+        },
+        {
+          "para": "hasta",
+          "tipo": "secundaria",
+          "referencia": "Fischer, Stanley; Sahay, Ratna y Végh, Carlos (2002), «Modern Hyper- and High Inflations», NBER Working Paper 8930, tabla 2: Argentina, «May-89 Mar-90», 11 meses",
+          "publicado": "2002-05",
+          "pagina": "46",
+          "url": "https://www.nber.org/papers/w8930.pdf"
+        },
+        {
+          "para": "hasta",
+          "tipo": "secundaria",
+          "referencia": "Kiguel, Miguel y Liviatan, Nissan (1995), «Stopping Three Big Inflations: Argentina, Brazil, and Peru», en Dornbusch y Edwards (eds.), Reform, Recovery, and Growth, NBER y University of Chicago Press: el Plan Bonex «failed to control inflation, and the government responded with a new stabilization effort in March 1990 (Decree 435)»",
+          "publicado": "1995",
+          "pagina": "394",
+          "url": "https://www.nber.org/system/files/chapters/c7663/c7663.pdf"
+        }
+      ],
+      "fases": [
+        {
+          "id": "p.episodio.hiperinflacion-1989",
+          "nombre": "Primer brote (febrero–diciembre de 1989)",
+          "nombre_corto": "Primer brote",
+          "desde": "1989-02-06",
+          "hasta": "1989-12-12",
+          "descripcion": "La inflación mensual pasa del 50 % en mayo, junio y julio de 1989 (78,5, 114,5 y 196,6 %); con el Plan Bunge y Born baja a 37,9 % en agosto y a menos del 10 % de septiembre a noviembre.",
+          "notas": "El corte del 12/12/1989 es criterio de Vaivén; la literatura da «diciembre de 1989», sin día.",
+          "confianza": {
+            "desde": "media",
+            "hasta": "media"
+          },
+          "fuentes": [
+            {
+              "para": "desde",
+              "tipo": "secundaria",
+              "referencia": "Almansi y Rodríguez (1989), CEMA, Documento de Trabajo n.º 67",
+              "publicado": "1989-08",
+              "pagina": "1",
+              "url": "https://ucema.edu.ar/sites/default/files/2025-12/67.pdf"
+            },
+            {
+              "para": "hasta",
+              "tipo": "comunicacion_bcra",
+              "referencia": "BCRA, Comunicación \"A\" 1584 (11/12/1989): mercados oficial y libre «a partir del 12.12.89»; termina el tipo fijo del Plan Bunge y Born",
+              "publicado": "1989-12-11",
+              "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1584.pdf"
+            }
+          ]
+        },
+        {
+          "id": "p.episodio.hiperinflacion-1990",
+          "nombre": "Segundo brote (diciembre de 1989–marzo de 1990)",
+          "nombre_corto": "Segundo brote",
+          "desde": "1989-12-12",
+          "hasta": "1990-04-01",
+          "descripcion": "La inflación mensual sube a 40,1 % en diciembre de 1989 y pasa del 50 % en enero, febrero y marzo de 1990 (79,2, 61,6 y 95,5 %).",
+          "confianza": {
+            "desde": "media",
+            "hasta": "alta"
+          },
+          "fuentes": [
+            {
+              "para": "desde",
+              "tipo": "secundaria",
+              "referencia": "Kiguel y Liviatan (1995): «a new inflationary explosion started in December 1989, prompted by a new run toward foreign currency as the government announced the Plan Bonex»",
+              "publicado": "1995",
+              "pagina": "397",
+              "url": "https://www.nber.org/system/files/chapters/c7663/c7663.pdf"
+            },
+            {
+              "para": "hasta",
+              "tipo": "convencional",
+              "nota": "Fin convencional: marzo de 1990 es el último mes por encima del 50 %."
+            }
+          ]
         }
       ]
     }

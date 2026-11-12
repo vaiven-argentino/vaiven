@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { serieDeEntidad, transformar } from "@vaiven/transformaciones";
+import { fechaDeDibujo, referenciaDe, serieDeEntidad, transformar } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
 import { especificacion, filas, reservaSuperior, topeY, ubicarMarcadores, type Tema } from "../src/graficos/espec";
 import type { SerieExportada } from "@vaiven/transformaciones";
@@ -17,7 +17,7 @@ function capas(doc: Doc, opciones = {}) {
   const resultado = transformar(doc, opciones);
   const spec = especificacion({
     resultado, tramos: doc.tramos, empalme: doc.empalme, quiebres: numerarQuiebres(doc), tema, esVariacion: false,
-    log: false, alto: 300, ancho: 800, descripcion: "prueba",
+    log: false, alto: 300, ancho: 800, descripcion: "prueba", ubicacion: { agregacion: doc.agregacion },
   }) as { layer: Array<{ mark: { type: string; text?: string }; data: { values: Array<Record<string, unknown>> } }> };
   return spec.layer;
 }
@@ -25,7 +25,8 @@ function capas(doc: Doc, opciones = {}) {
 describe("desocupación: frecuencia mixta y tramos sin empalmar", () => {
   const doc = leer("desocupacion", "total-urbano");
   const f = filas({ resultado: transformar(doc), tramos: doc.tramos, empalme: doc.empalme, esVariacion: false });
-  const segmentoDe = (fecha: string) => f.find((x) => x.t === `${fecha}-01`)!.segmento;
+  // Cada dato se dibuja en el punto medio de su observación (en las semestrales, el mes de la onda).
+  const segmentoDe = (fecha: string) => f.find((x) => x.t === fechaDeDibujo(referenciaDe(fecha, fecha < "2003-06" ? "semestral" : "trimestral", { agregacion: "promedio" })))!.segmento;
 
   it("corta la línea en el cambio de encuesta (2003-05 → 2003-07)", () => {
     expect(segmentoDe("2003-05")).not.toBe(segmentoDe("2003-07"));
@@ -65,9 +66,10 @@ describe("reservas: dato excluido", () => {
   it("corta la línea y marca la «×» en marzo de 1979", () => {
     const layer = capas(doc);
     const marca = layer.find((c) => c.mark.text === "×")!;
-    expect(marca.data.values[0].t).toBe("1979-03-01");
-    const f = filas({ resultado: transformar(doc), tramos: doc.tramos, empalme: doc.empalme, esVariacion: false });
-    const feb = f.find((x) => x.t === "1979-02-01")!, abr = f.find((x) => x.t === "1979-04-01")!;
+    // Las reservas son un saldo a fin de período: el dato (y su «×») va el último día del mes.
+    expect(marca.data.values[0].t).toBe("1979-03-31T12:00:00.000Z");
+    const f = filas({ resultado: transformar(doc), tramos: doc.tramos, empalme: doc.empalme, esVariacion: false, ubicacion: { agregacion: doc.agregacion } });
+    const feb = f.find((x) => x.t === "1979-02-28T12:00:00.000Z")!, abr = f.find((x) => x.t === "1979-04-30T12:00:00.000Z")!;
     expect(feb.segmento).not.toBe(abr.segmento);
   });
   it("el quiebre que cubre toda la serie no se dibuja", () => {

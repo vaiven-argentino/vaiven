@@ -1,18 +1,22 @@
 // Interactividad de la ficha: transformaciones, período y escala, con el estado en la URL; gráfico (Vega-Lite,
 // cargado recién cuando hace falta); tabla, resumen, avisos, descargas de la vista y cita.
 import {
-  ErrorTransformacion, disponibles, periodoDeCadaFecha, rangoLegible, serieDeEntidad, tienePais, transformar, type DocumentoEventos,
-  type DocumentoPeriodos, type Opciones, type Periodo, type Resultado,
+  ErrorTransformacion, REGLA_UBICACION, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, serieDeEntidad, textoReparto,
+  tienePais, transformar, type DocumentoEventos, type DocumentoPeriodos, type Opciones, type Periodo, type Resultado,
   type SerieExportada, type Transformacion,
 } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
-import { especificacion, type MarcaEvento } from "./espec";
-import { bandasDe, columnaPeriodo, esSombreado, eventosEnRango, periodosEnRango, textoSombreado, type OpcionSombreado } from "../lib/periodos";
+import { especificacion, type BandaEpisodio, type MarcaEvento } from "./espec";
+import {
+  ACLARACION_ETAPAS, avisoConfianza, bandasDe, columnaPeriodo, columnasDe, contextoDe, episodiosEnRango, esSombreado,
+  eventosEnRango, periodosEnRango, textoSombreado, tipoDe, ubicacionesDe, type ColumnasPeriodo, type OpcionSombreado,
+} from "../lib/periodos";
+import { conectarLector, type Lectura } from "./lector";
 import { csvDeVista } from "../lib/descarga";
-import { bajar, cargarInsumos as pedirInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen as licencia, tema, type Cargados } from "./comun";
+import { bajar, cargarInsumos as pedirInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen as licencia, tema, type Cargados, type VistaGrafico } from "./comun";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
 
@@ -156,22 +160,28 @@ function iniciar(): void {
 
   let ultimo: {
     r: Resultado; o: Opciones; otras: Array<{ nombre: string; resultado: Resultado }>; periodos: Periodo[]; eventos: MarcaEvento[];
+    episodios: BandaEpisodio[];
   } | null = null;
+  // Cómo se ubica cada dato (ubicacion.ts): con la agregación de la variante y la transformación pedida.
+  const contexto = (o: Opciones) => contextoDe(serie.agregacion, o);
   const sombreado = () => (cSombreado && esSombreado(cSombreado.value) ? cSombreado.value as OpcionSombreado : null);
 
   /** Los períodos y eventos que se ven (se piden a /datos/ la primera vez que se activan). */
-  async function marcas(r: Resultado): Promise<{ periodos: Periodo[]; eventos: MarcaEvento[] }> {
+  async function marcas(r: Resultado): Promise<{ periodos: Periodo[]; eventos: MarcaEvento[]; episodios: BandaEpisodio[] }> {
     const sh = sombreado();
+    const ev = !!cEventos?.checked;
     try {
-      if (sh) registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
-      if (cEventos?.checked) registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
+      // Los episodios están en periodos.json: se marcan junto con los eventos.
+      if (sh || ev) registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
+      if (ev) registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
     } catch (err) {
       estado.textContent = `No se pudieron leer los períodos o los eventos (${err instanceof Error ? err.message : String(err)}).`;
-      return { periodos: [], eventos: [] };
+      return { periodos: [], eventos: [], episodios: [] };
     }
     return {
       periodos: sh && registroPeriodos ? periodosEnRango(registroPeriodos, sh, r) : [],
-      eventos: cEventos?.checked && registroEventos ? eventosEnRango(registroEventos, r) : [],
+      eventos: ev && registroEventos ? eventosEnRango(registroEventos, r) : [],
+      episodios: ev && registroPeriodos ? episodiosEnRango(registroPeriodos, r) : [],
     };
   }
 
@@ -241,6 +251,7 @@ function iniciar(): void {
     for (const n of r.notas) lineas.push(n);
     const pico = picoQueComprime(r);
     if (pico) lineas.push(`El máximo (${pico}) comprime el resto del gráfico. Para ver mejor los otros años, elegí un período más corto (por ejemplo, «Desde 1991»)${cLog.disabled ? "" : " o la escala logarítmica"}.`);
+    if (ultimo?.periodos.length) lineas.push(REGLA_UBICACION);
     const caja = $("avisos")!;
     caja.replaceChildren(...lineas.map((l) => Object.assign(document.createElement("p"), { textContent: l })));
     caja.hidden = !lineas.length;
@@ -265,7 +276,7 @@ function iniciar(): void {
 
   function leyendas(): void {
     if (!ultimo) return;
-    const { periodos, eventos } = ultimo;
+    const { periodos, eventos, episodios } = ultimo;
     const lp = $("leyenda-periodos");
     if (!lp) return;
     lp.hidden = !periodos.length;
@@ -274,9 +285,19 @@ function iniciar(): void {
       const li = document.createElement("li");
       li.append(`${p.nombre}${p.caracter === "de_facto" ? " (de facto)" : p.caracter === "interino" ? " (interino)" : ""} `,
         Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible(p) }));
+      const aviso = avisoConfianza(p);
+      if (aviso) li.append(" ", Object.assign(document.createElement("span"), { className: "a-confirmar", textContent: `⚠ ${aviso}` }));
       return li;
     }));
-    $("leyenda-eventos")!.hidden = !eventos.length;
+    $("leyenda-eventos")!.hidden = !eventos.length && !episodios.length;
+    const lep = $("lista-episodios")!;
+    lep.hidden = !episodios.length;
+    lep.replaceChildren(...episodios.map((x) => {
+      const li = document.createElement("li");
+      li.append(`${x.nombre} `, Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible(x) }));
+      if (x.fases?.length) li.append(` (${x.fases.map((f) => `${f.nombre_corto.toLowerCase()}: ${rangoLegible(f)}`).join("; ")})`);
+      return li;
+    }));
     $("lista-eventos")!.replaceChildren(...eventos.map((e) => {
       const li = document.createElement("li");
       li.append(`${e.nombre} `, Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible({ desde: e.fecha, hasta: null }).replace("desde el ", "") }));
@@ -284,10 +305,11 @@ function iniciar(): void {
     }));
   }
 
-  /** El período del sombreado de cada fila (el vigente su último día), o nada si no hay sombreado. */
-  function periodoDeFilas(res: Resultado): Array<string | undefined> {
-    if (!ultimo?.periodos.length) return [];
-    return periodoDeCadaFecha(ultimo.periodos, res.datos.map((d) => d[0]), res.frecuencias).map((p) => p?.nombre);
+  /** Las tres columnas del período de cada fila (ubicacion.ts), o nada si no hay sombreado. */
+  function periodoDeFilas(res: Resultado): ColumnasPeriodo[] {
+    const sh = sombreado();
+    if (!ultimo?.periodos.length || !sh) return [];
+    return ubicacionesDe(ultimo.periodos, sh, res, contexto(ultimo.o)).map(columnasDe);
   }
 
   function tabla(r: Resultado, variacion: boolean): void {
@@ -300,6 +322,7 @@ function iniciar(): void {
       cabPeriodo.hidden = !conPeriodo;
       cabPeriodo.textContent = sh ? columnaPeriodo(sh) : "";
     }
+    for (const id of ["tabla-proporcion", "tabla-otros"]) { const c = $(id); if (c) c.hidden = !conPeriodo; }
     const periodosFila = periodoDeFilas(r);
     const filas = filasTabla(r, variacion).map((f, k) => {
       const tr = document.createElement("tr");
@@ -307,7 +330,13 @@ function iniciar(): void {
       const th = Object.assign(document.createElement("th"), { scope: "row", textContent: f.etiqueta });
       const td = Object.assign(document.createElement("td"), { textContent: f.valor });
       tr.append(th, td);
-      if (conPeriodo) tr.append(Object.assign(document.createElement("td"), { className: "periodo-fila", textContent: periodosFila[k] ?? "—" }));
+      if (conPeriodo) {
+        const fila = periodosFila[k];
+        const prop = fila?.periodo_proporcion;
+        tr.append(Object.assign(document.createElement("td"), { className: "periodo-fila", textContent: fila?.periodo ?? "—" }),
+          Object.assign(document.createElement("td"), { textContent: typeof prop === "number" ? `${Math.round(prop * 100)} %` : (prop ?? "") }),
+          Object.assign(document.createElement("td"), { textContent: fila?.otros_periodos || "—" }));
+      }
       return tr;
     });
     cuerpo.replaceChildren(...filas);
@@ -349,8 +378,31 @@ function iniciar(): void {
     $("cita-bibtex")!.textContent = bibtex(doc, tr, paises);
   }
 
-  let vista: { finalize: () => void } | null = null;
+  let vista: VistaGrafico | null = null;
   let turno = 0;
+  const lector = $("lector") && $("lectura") ? conectarLector($("lector")!, $("lectura")!) : null;
+
+  /** Lo que dice el lector del gráfico de cada dato: fecha, valor, período (con sus fechas) y reparto. */
+  function lecturas(): Lectura[] {
+    if (!ultimo) return [];
+    const { r, o, periodos } = ultimo;
+    const sh = sombreado();
+    const ctx = contexto(o);
+    const us = periodos.length && sh ? ubicacionesDe(periodos, sh, r, ctx) : [];
+    const variacion = esVariacion(o.transformacion ?? "nivel");
+    return r.datos.flatMap(([f, v], k) => {
+      if (v === null) return [];
+      const partes = [`${fechaLegible(f, r.frecuencias[k])}: ${numero(v, variacion)}`];
+      const u = us[k];
+      if (u && sh) {
+        const p = u.vigentes[0];
+        partes.push(`${columnaPeriodo(sh)}: ${u.mayoria ? u.etiqueta : `${u.etiqueta} (sin mayoría)`}${p && u.vigentes.length === 1 ? ` (${rangoLegible(p)})` : ""}`);
+        const reparto = textoReparto(u);
+        if (reparto) partes.push(`reparto: ${reparto}`);
+      }
+      return [{ t: fechaDeDibujo(referenciaDe(f, r.frecuencias[k], ctx)), texto: partes.join(" · ") }];
+    });
+  }
   async function dibujar(): Promise<void> {
     if (!ultimo) return;
     const mio = ++turno;
@@ -368,6 +420,7 @@ function iniciar(): void {
       vista?.finalize();
       vista = await dibujarEn(contenedor, spec);
       contenedor.dataset.listo = "1";
+      lector?.actualizar(lecturas(), vista);
     } catch (err) {
       estado.textContent = `No se pudo dibujar el gráfico (${err instanceof Error ? err.message : String(err)}). La tabla y las descargas siguen disponibles.`;
       estado.dataset.tipo = "error";
@@ -377,10 +430,11 @@ function iniciar(): void {
   // Exportar el gráfico con título, unidad, fuentes, variante y versión impresos (SPEC 6.2).
   async function imagen(formato: "png" | "svg"): Promise<void> {
     if (!ultimo) return;
-    const { r, o, otras, periodos, eventos } = ultimo;
+    const { r, o, otras, periodos, eventos, episodios } = ultimo;
     const fuentes = [...new Set(doc.fuentes.map((f) => f.organismo))].join("; ");
     const lineasMarcas = [
-      ...(periodos.length && registroPeriodos ? [`Sombreado: ${cSombreado?.selectedOptions[0]?.textContent?.toLowerCase()}. Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`] : []),
+      ...(periodos.length && registroPeriodos ? [`Sombreado: ${cSombreado?.selectedOptions[0]?.textContent?.toLowerCase()}${sombreado() === "catedra" ? ` (${ACLARACION_ETAPAS})` : ""}. Cada dato, en el período vigente a mitad de su intervalo (los saldos en nivel, el último día). Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`] : []),
+      ...(episodios.length ? [`Episodios: ${episodios.map((e) => e.nombre).join("; ")}.`] : []),
       ...(eventos.length ? [`Eventos: ${eventos.map((e) => `${e.letra}. ${e.nombre}`).join("; ")}.`] : []),
     ];
     const spec = especificacion({
@@ -400,10 +454,14 @@ function iniciar(): void {
 
   function marcasDelGrafico() {
     if (!ultimo) return {};
-    const { periodos, eventos } = ultimo;
+    const { periodos, eventos, episodios, o } = ultimo;
+    const sh = sombreado();
     return {
-      ...(periodos.length ? { sombreado: { bandas: bandasDe(periodos), franja: sombreado() === "plan" } } : {}),
+      ubicacion: contexto(o),
+      ...(periodos.length ? { sombreado: { bandas: bandasDe(periodos), franja: sh === "plan" } } : {}),
+      ...(periodos.length && sh ? { asignacion: { periodos, tipo: tipoDe(sh) } } : {}),
       ...(eventos.length ? { eventos } : {}),
+      ...(episodios.length ? { episodios } : {}),
     };
   }
 
@@ -440,7 +498,7 @@ function iniciar(): void {
     const conPeriodo = !!sh && ultimo.periodos.length > 0;
     const de = (res: Resultado, p?: string) => {
       const ps = conPeriodo ? periodoDeFilas(res) : [];
-      return res.datos.map(([fecha, valor], k) => ({ fecha, pais: p, valor, periodo: ps[k] }));
+      return res.datos.map(([fecha, valor], k) => ({ fecha, pais: p, valor, ...ps[k] }));
     };
     // En las series con dimensión pais, el CSV lleva todos los países que se ven (la resaltada primero).
     const filas = pais

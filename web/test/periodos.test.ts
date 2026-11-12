@@ -73,7 +73,7 @@ describe("accesos de /periodos/ al explorador", () => {
 describe("línea de tiempo", () => {
   const carriles = lineaDeTiempo(periodos, eventos, 1000, 1970, 2027, "2026-11-12");
   it("un carril por tipo y uno de eventos, con los planes en filas", () => {
-    expect(carriles.map((c) => c.tipo)).toEqual(["catedra", "gobierno", "ministro", "plan", "regimen_cambiario", "evento"]);
+    expect(carriles.map((c) => c.tipo)).toEqual(["catedra", "gobierno", "ministro", "plan", "regimen_cambiario", "episodio", "evento"]);
     expect(carriles.find((c) => c.tipo === "plan")!.filas).toBe(2);
     expect(carriles.find((c) => c.tipo === "gobierno")!.filas).toBe(1);
   });

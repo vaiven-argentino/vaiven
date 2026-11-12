@@ -88,11 +88,17 @@ export function licenciaImagen(fuentes: Array<{ organismo: string; licencia: str
   return otras.length ? `Licencia de Vaivén CC BY 4.0; los datos de ${otras.join(" y ")} conservan sus términos.` : "Licencia CC BY 4.0.";
 }
 
+/** Lo que se usa de la vista de Vega: finalizarla y ubicar una fecha en el eje X (para el lector del gráfico). */
+export interface VistaGrafico {
+  finalize: () => void;
+  view: { scale: (nombre: string) => ((v: unknown) => number) | undefined; origin: () => [number, number] };
+}
+
 /** Dibuja una especificación en un contenedor con el formato en español; devuelve la vista para poder finalizarla. */
-export async function dibujarEn(contenedor: HTMLElement, spec: Record<string, unknown>): Promise<{ finalize: () => void }> {
+export async function dibujarEn(contenedor: HTMLElement, spec: Record<string, unknown>): Promise<VistaGrafico> {
   const { default: embed } = await import("vega-embed");
   return embed(contenedor, spec as never, {
     renderer: "svg", actions: false, formatLocale: LOCALE_NUMEROS, timeFormatLocale: LOCALE_FECHAS as never,
     tooltip: { theme: "custom" },
-  });
+  }) as unknown as Promise<VistaGrafico>;
 }
