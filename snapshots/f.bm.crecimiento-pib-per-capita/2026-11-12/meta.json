@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bm.crecimiento-pib-per-capita",
+  "descargado": "2026-11-12T21:34:39Z",
+  "sha256": "6474e64837ed1e0552bb277c62448286419942a16c6cde71157468669ff7db0b",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://api.worldbank.org/v2/country/ARG;USA;CHN;MEX;BRA;BOL;CHL;COL;ECU;GUY;PRY;PER;SUR;URY;VEN;WLD;LCN;EUU;EMU/indicator/NY.GDP.PCAP.KD.ZG?format=json&per_page=20000",
+      "bytes": 284524,
+      "sha256": "babf7176453c5f0191e79a033af339e47e6cb4446df43b5d6cde905c5285fb30"
+    }
+  ]
+}

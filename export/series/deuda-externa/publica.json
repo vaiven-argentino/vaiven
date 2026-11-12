@@ -75,7 +75,7 @@
   ],
   "cobertura": {
     "desde": "1970",
-    "hasta": "2024"
+    "hasta": "2025"
   },
   "advertencias": [
     {
@@ -105,8 +105,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Deuda externa total, variante «publica». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/deuda-externa/publica/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "cita": "Vaivén (2026). Deuda externa total, variante «publica». Versión de datos 2026-11-12. https://vaiven.argentino.workers.dev/series/deuda-externa/publica/",
+  "version_datos": "2026-11-12T21:23:45Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 1963.191434],
@@ -163,6 +163,7 @@
     ["2021", 114796.7628],
     ["2022", 110318.8223],
     ["2023", 112885.9802],
-    ["2024", 110608.4857]
+    ["2024", 110625.4927],
+    ["2025", 116308.9522]
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-12T17:24:06Z",
+  "version_datos": "2026-11-12T21:23:45Z",
   "series": [
     {
       "id": "agregados",
@@ -305,7 +305,7 @@
           "frecuencia": "anual",
           "cobertura": {
             "desde": "1970",
-            "hasta": "2024"
+            "hasta": "2025"
           },
           "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
@@ -318,7 +318,7 @@
           "frecuencia": "anual",
           "cobertura": {
             "desde": "1970",
-            "hasta": "2024"
+            "hasta": "2025"
           },
           "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
@@ -331,7 +331,7 @@
           "frecuencia": "anual",
           "cobertura": {
             "desde": "1970",
-            "hasta": "2024"
+            "hasta": "2025"
           },
           "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",
@@ -392,7 +392,7 @@
           "frecuencia": "anual",
           "cobertura": {
             "desde": "1970",
-            "hasta": "2024"
+            "hasta": "2025"
           },
           "frecuencia_primer_dato": "anual",
           "frecuencia_ultimo_dato": "anual",

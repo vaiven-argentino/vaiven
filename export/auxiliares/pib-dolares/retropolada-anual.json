@@ -104,9 +104,9 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). PIB en dólares, variante «retropolada-anual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-dolares/retropolada-anual/",
-  "version_datos": "2026-11-07T07:43:45Z",
-  "desactualizada_desde": null,
+  "cita": "Vaivén (2026). PIB en dólares, variante «retropolada-anual». Versión de datos 2026-11-12. https://vaiven.argentino.workers.dev/series/pib-dolares/retropolada-anual/",
+  "version_datos": "2026-11-12T21:23:45Z",
+  "desactualizada_desde": "2026-11-12",
   "datos": [
     ["1970", 34303.31873],
     ["1971", 33299.62162],

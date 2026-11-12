@@ -78,9 +78,9 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). PIB nominal en pesos, variante «cada-base-anual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-nominal/",
-  "version_datos": "2026-11-07T07:38:15Z",
-  "desactualizada_desde": null,
+  "cita": "Vaivén (2026). PIB nominal en pesos, variante «cada-base-anual». Versión de datos 2026-11-12. https://vaiven.argentino.workers.dev/series/pib-nominal/",
+  "version_datos": "2026-11-12T21:23:45Z",
+  "desactualizada_desde": "2026-11-12",
   "datos": [
     ["1970", 1.200199962e-06],
     ["1971", 1.664659977e-06],

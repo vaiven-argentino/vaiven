@@ -2,10 +2,10 @@
   "fuente": "f.bm.deuda-externa-privada",
   "unidad": "US$ corrientes",
   "frecuencia": "anual",
-  "snapshot": "snapshots/f.bm.deuda-externa-privada/2026-10-27",
-  "descargado": "2026-10-27T19:38:40Z",
-  "sha256": "0583e74dd9d551d3da5173e1600a4ea58797b5c22db9b0246aebb867c28fc9fe",
-  "observaciones": 55,
+  "snapshot": "snapshots/f.bm.deuda-externa-privada/2026-11-12",
+  "descargado": "2026-11-12T21:31:17Z",
+  "sha256": "a0fd53745f4fba314a75653544084f8cc72f89536d5a87dcc1a0b7088d91656a",
+  "observaciones": 56,
   "desde": "1970-01-01",
-  "hasta": "2024-01-01"
+  "hasta": "2025-01-01"
 }

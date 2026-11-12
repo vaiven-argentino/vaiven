@@ -2,10 +2,10 @@
   "fuente": "f.bm.deuda-externa-total",
   "unidad": "US$ corrientes",
   "frecuencia": "anual",
-  "snapshot": "snapshots/f.bm.deuda-externa-total/2026-10-27",
-  "descargado": "2026-10-27T19:38:39Z",
-  "sha256": "a49188ad2307b7cd8f8c2353912d66173dabdfe774f0c4c59e4985867b29203c",
-  "observaciones": 55,
+  "snapshot": "snapshots/f.bm.deuda-externa-total/2026-11-12",
+  "descargado": "2026-11-12T21:25:56Z",
+  "sha256": "3ff37400705535782096dbb9cf6e06826da3b44bc024be4716d59f5f26f477e1",
+  "observaciones": 56,
   "desde": "1970-01-01",
-  "hasta": "2024-01-01"
+  "hasta": "2025-01-01"
 }

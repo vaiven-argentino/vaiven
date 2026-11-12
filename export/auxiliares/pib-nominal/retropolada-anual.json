@@ -78,9 +78,9 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). PIB nominal en pesos, variante «retropolada-anual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-nominal/retropolada-anual/",
-  "version_datos": "2026-11-07T07:25:59Z",
-  "desactualizada_desde": null,
+  "cita": "Vaivén (2026). PIB nominal en pesos, variante «retropolada-anual». Versión de datos 2026-11-12. https://vaiven.argentino.workers.dev/series/pib-nominal/retropolada-anual/",
+  "version_datos": "2026-11-12T21:23:45Z",
+  "desactualizada_desde": "2026-11-12",
   "datos": [
     ["1970", 1.300667502e-06],
     ["1971", 1.804007001e-06],

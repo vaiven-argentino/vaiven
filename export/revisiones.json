@@ -1,5 +1,102 @@
 [
   {
+    "version_datos": "2026-11-12T21:23:45Z",
+    "variante": "deuda-externa.total",
+    "umbral_pct": 1,
+    "cambios": [
+      {
+        "fecha": "2010",
+        "anterior": 126641.5099,
+        "nuevo": 155351.9879,
+        "variacion_pct": 22.670669
+      },
+      {
+        "fecha": "2011",
+        "anterior": 142883.776,
+        "nuevo": 169223.536,
+        "variacion_pct": 18.434395
+      },
+      {
+        "fecha": "2012",
+        "anterior": 139876.8511,
+        "nuevo": 164348.3171,
+        "variacion_pct": 17.495008
+      },
+      {
+        "fecha": "2013",
+        "anterior": 150224.2804,
+        "nuevo": 166410.8354,
+        "variacion_pct": 10.774926
+      },
+      {
+        "fecha": "2014",
+        "anterior": 153793.075,
+        "nuevo": 161930.89,
+        "variacion_pct": 5.291405
+      },
+      {
+        "fecha": "2015",
+        "anterior": 177183.9765,
+        "nuevo": 162727.0885,
+        "variacion_pct": -8.159252
+      },
+      {
+        "fecha": "2016",
+        "anterior": 181637.2862,
+        "nuevo": 169990.8772,
+        "variacion_pct": -6.411904
+      },
+      {
+        "fecha": "2017",
+        "anterior": 225923.9672,
+        "nuevo": 215355.2832,
+        "variacion_pct": -4.677983
+      },
+      {
+        "fecha": "2018",
+        "anterior": 277825.7474,
+        "nuevo": 256464.7494,
+        "variacion_pct": -7.688632
+      },
+      {
+        "fecha": "2019",
+        "anterior": 280683.5964,
+        "nuevo": 257098.3354,
+        "variacion_pct": -8.402793
+      },
+      {
+        "fecha": "2020",
+        "anterior": 255603.0729,
+        "nuevo": 231717.1479,
+        "variacion_pct": -9.344929
+      },
+      {
+        "fecha": "2021",
+        "anterior": 246114.3074,
+        "nuevo": 222716.0714,
+        "variacion_pct": -9.50706
+      },
+      {
+        "fecha": "2022",
+        "anterior": 248976.6508,
+        "nuevo": 227133.1538,
+        "variacion_pct": -8.773311
+      },
+      {
+        "fecha": "2023",
+        "anterior": 252793.9047,
+        "nuevo": 231621.5727,
+        "variacion_pct": -8.375333
+      },
+      {
+        "fecha": "2024",
+        "anterior": 242357.1557,
+        "nuevo": 225363.2537,
+        "variacion_pct": -7.011925
+      }
+    ]
+  },
+  {
     "version_datos": "2026-11-07T20:41:28Z",
     "variante": "reservas.brutas",
     "umbral_pct": 0.5,

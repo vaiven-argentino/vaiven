@@ -111,9 +111,9 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). PIB en dólares, variante «cada-base-anual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-dolares/",
-  "version_datos": "2026-11-07T07:43:45Z",
-  "desactualizada_desde": null,
+  "cita": "Vaivén (2026). PIB en dólares, variante «cada-base-anual». Versión de datos 2026-11-12. https://vaiven.argentino.workers.dev/series/pib-dolares/",
+  "version_datos": "2026-11-12T21:23:45Z",
+  "desactualizada_desde": "2026-11-12",
   "datos": [
     ["1970", 31653.62536],
     ["1971", 30727.45689],

@@ -2,9 +2,9 @@
   "fuente": "f.bm.crecimiento-pib-per-capita",
   "unidad": "variación % anual",
   "frecuencia": "anual",
-  "snapshot": "snapshots/f.bm.crecimiento-pib-per-capita/2026-10-27",
-  "descargado": "2026-10-27T19:44:16Z",
-  "sha256": "9d4894e7421f0eeb3b87f6ddbaafad0298ba366ce4d92a4c26f99611e2a9e3f9",
+  "snapshot": "snapshots/f.bm.crecimiento-pib-per-capita/2026-11-12",
+  "descargado": "2026-11-12T21:34:39Z",
+  "sha256": "6474e64837ed1e0552bb277c62448286419942a16c6cde71157468669ff7db0b",
   "observaciones": 1235,
   "paises": [
     "ARG",
