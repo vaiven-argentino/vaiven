@@ -578,7 +578,7 @@ También se documentaron las reglas de 2.4, el export de 2.5, el nombre público
 
 ### Verificación
 
-- **pytest:** 292 pruebas (se sumó el caso del corte convencional con fuente que respalda la fecha).
+- **pytest:** 291 pruebas, entre ellas el caso nuevo del corte convencional con una fuente que respalda la fecha.
 - **Vitest de la web:** 64 pruebas. Las nuevas cubren los períodos y eventos que se ven, los mandatos, el nombre público de las etapas, los accesos (ventana, tipos, series sin publicar, URL canónica), la línea de tiempo y los gobiernos de facto.
 - **Punta a punta**, en 390 y 1280 px:
   - la ficha con `?sh=gobierno&ev=1` muestra bandas, leyendas y la columna del período, y su enlace abre el explorador con la misma vista;
