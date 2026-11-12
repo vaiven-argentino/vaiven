@@ -99,6 +99,45 @@ async function explorador(pagina, ancho) {
   console.log(`${id}: URL ${url}; CSV ${csv.bytes} B, XLSX ${xlsx.bytes} B (${xlsx.ruta}), PNG ${png.bytes} B, SVG ${svg.bytes} B`);
 }
 
+// Ficha con sombreado y eventos, su enlace al explorador, y los accesos de /periodos/ (fase 4b, PR 3).
+async function fichaYPeriodos(pagina, ancho) {
+  let id = `ficha /series/ipc/?sh=gobierno&ev=1 @ ${ancho}px`;
+  await pagina.goto(`${base}/series/ipc/?sh=gobierno&ev=1`, { waitUntil: "networkidle" });
+  if (ok(await pagina.waitForSelector("#grafico[data-listo='1'] svg", { timeout: 15000 }).then(() => true, () => false), `${id}: no se dibujó el gráfico`)) {
+    await conEjes(pagina, id, "el gráfico con sombreado");
+    ok(await pagina.$$eval("#grafico svg .mark-rect path", (ps) => ps.length) > 0, `${id}: no se ve el sombreado`);
+    ok(await pagina.$$eval("#lista-eventos li", (ls) => ls.length) > 0, `${id}: no se listan los eventos`);
+    ok(await pagina.$$eval("#lista-periodos li", (ls) => ls.length) > 0, `${id}: no se listan los períodos`);
+    ok(await pagina.$eval("#tabla-periodo", (th) => !th.hidden && th.textContent === "Gobierno"), `${id}: la tabla no tiene la columna del período`);
+    const href = await pagina.$eval("#abrir-explorador", (a) => a.getAttribute("href"));
+    ok(/sh=gobierno/.test(href) && /ev=1/.test(href), `${id}: el enlace al explorador no lleva la vista (${href})`);
+    await pagina.click("#abrir-explorador");
+    await pagina.waitForURL("**/explorador/**");
+    await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+    ok(await pagina.$eval("#x-sombreado", (s) => s.value) === "gobierno" && await pagina.$eval("#x-eventos", (c) => c.checked), `${id}: el explorador no abre con la misma vista`);
+  }
+  // Sin parámetros, la ficha no sombrea (el sombreado viene apagado).
+  id = `ficha /series/pib/ @ ${ancho}px`;
+  await pagina.goto(`${base}/series/pib/`, { waitUntil: "networkidle" });
+  await pagina.waitForSelector("#grafico[data-listo='1'] svg", { timeout: 15000 });
+  ok(await pagina.$eval("#c-sombreado", (s) => s.value) === "" && await pagina.$eval("#leyenda-periodos", (d) => d.hidden), `${id}: el sombreado no arranca apagado`);
+  // /periodos/: una tarjeta por período y evento, y sus accesos abren el explorador con esa vista.
+  id = `/periodos/ @ ${ancho}px`;
+  await pagina.goto(`${base}/periodos/`, { waitUntil: "networkidle" });
+  const tarjetas = await pagina.$$eval(".tarjeta", (ts) => ts.length);
+  ok(tarjetas >= 150, `${id}: hay ${tarjetas} tarjetas`);
+  ok(await pagina.$$eval(".linea-marco svg a", (as) => as.length) >= 150, `${id}: la línea de tiempo no enlaza los tramos`);
+  ok(await pagina.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${id}: la página se desborda de costado`);
+  const acceso = pagina.locator("[id='p.plan.austral'] .accesos a").first();
+  const destino = await acceso.getAttribute("href");
+  await acceso.click();
+  await pagina.waitForURL("**/explorador/**");
+  await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+  ok(new URL(pagina.url()).pathname + new URL(pagina.url()).search === destino, `${id}: el acceso cambió de URL al abrirse`);
+  ok(await pagina.$$eval("#x-grafico svg .mark-rect path", (ps) => ps.length) > 0, `${id}: el acceso no muestra el sombreado`);
+  console.log(`${id}: ${tarjetas} tarjetas; acceso ${destino} reproducido; ficha con sombreado y enlace al explorador`);
+}
+
 async function conEjesEn(pagina, sel, id, que) {
   const e = await pagina.$$eval(`${sel} svg g.role-axis`, (gs) => gs.map((g) => ({
     eje: (g.getAttribute("aria-label") ?? "").slice(0, 6), etiquetas: g.querySelectorAll(".role-axis-label text").length,
@@ -195,6 +234,7 @@ for (const ancho of [390, 1280]) {
   }
   // Explorador (fase 4b): abrir una URL reproduce la vista; cambiar un control, recargar y comparar; descargas.
   await explorador(pagina, ancho);
+  await fichaYPeriodos(pagina, ancho);
   await contexto.close();
 }
 await navegador.close();

@@ -3,7 +3,7 @@
   "nombre": "Signos monetarios argentinos",
   "descripcion": "Para pasar un valor en la moneda de su época a pesos actuales, se divide por `unidades_por_peso_actual` del signo vigente al último día del período.",
   "fuente": "metadatos/signos_monetarios.yaml",
-  "version_datos": "2026-11-12T03:11:09Z",
+  "version_datos": "2026-11-12T17:24:06Z",
   "signos": [
     {
       "id": "peso-moneda-nacional",

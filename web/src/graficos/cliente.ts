@@ -1,15 +1,18 @@
 // Interactividad de la ficha: transformaciones, período y escala, con el estado en la URL; gráfico (Vega-Lite,
 // cargado recién cuando hace falta); tabla, resumen, avisos, descargas de la vista y cita.
 import {
-  ErrorTransformacion, disponibles, serieDeEntidad, tienePais, transformar, type Opciones, type Resultado,
+  ErrorTransformacion, disponibles, periodoDeCadaFecha, rangoLegible, serieDeEntidad, tienePais, transformar, type DocumentoEventos,
+  type DocumentoPeriodos, type Opciones, type Periodo, type Resultado,
   type SerieExportada, type Transformacion,
 } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
-import { especificacion } from "./espec";
-import { bajar, cargarInsumos as pedirInsumos, dibujarEn, exportarImagen, licenciaImagen as licencia, tema, type Cargados } from "./comun";
+import { especificacion, type MarcaEvento } from "./espec";
+import { bandasDe, columnaPeriodo, esSombreado, eventosEnRango, periodosEnRango, textoSombreado, type OpcionSombreado } from "../lib/periodos";
+import { csvDeVista } from "../lib/descarga";
+import { bajar, cargarInsumos as pedirInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen as licencia, tema, type Cargados } from "./comun";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
 
@@ -42,6 +45,10 @@ function iniciar(): void {
   const cDesde = $<HTMLInputElement>("c-desde")!;
   const cHasta = $<HTMLInputElement>("c-hasta")!;
   const cLog = $<HTMLInputElement>("c-log")!;
+  const cSombreado = $<HTMLSelectElement>("c-sombreado");
+  const cEventos = $<HTMLInputElement>("c-eventos");
+  let registroPeriodos: DocumentoPeriodos | null = null;
+  let registroEventos: DocumentoEventos | null = null;
   const campoLog = $<HTMLLabelElement>("campo-log")!;
   const estado = $<HTMLParagraphElement>("estado-grafico")!;
   const contenedor = $<HTMLDivElement>("grafico")!;
@@ -70,6 +77,9 @@ function iniciar(): void {
   cDesde.value = desde === null ? (desdeInicial(serie) ?? "") : desde === "todo" ? "" : desde;
   if (q.get("hasta")) cHasta.value = q.get("hasta")!;
   cLog.checked = q.get("log") === "1" || (q.get("log") === null && escalaLogInicial());
+  // Sombreado y eventos (fase 4b): apagados salvo que la URL los pida.
+  if (cSombreado && esSombreado(q.get("sh"))) cSombreado.value = q.get("sh")!;
+  if (cEventos) cEventos.checked = q.get("ev") === "1";
   // En pantallas chicas el panel de opciones arranca cerrado (SPEC 6.5), para que el gráfico quede a la vista.
   const panel = $<HTMLDetailsElement>("panel-opciones");
   if (panel && window.matchMedia("(max-width: 700px)").matches) panel.open = false;
@@ -138,11 +148,32 @@ function iniciar(): void {
     if (cDesde.value !== (desdeInicial(serie) ?? "")) p.set("desde", cDesde.value || "todo");
     if (cHasta.value) p.set("hasta", cHasta.value);
     if (cLog.checked !== escalaLogInicial()) p.set("log", cLog.checked ? "1" : "0");
+    if (cSombreado?.value) p.set("sh", cSombreado.value);
+    if (cEventos?.checked) p.set("ev", "1");
     const nueva = `${location.pathname}${p.size ? `?${p}` : ""}${location.hash}`;
     history.replaceState(null, "", nueva);
   }
 
-  let ultimo: { r: Resultado; o: Opciones; otras: Array<{ nombre: string; resultado: Resultado }> } | null = null;
+  let ultimo: {
+    r: Resultado; o: Opciones; otras: Array<{ nombre: string; resultado: Resultado }>; periodos: Periodo[]; eventos: MarcaEvento[];
+  } | null = null;
+  const sombreado = () => (cSombreado && esSombreado(cSombreado.value) ? cSombreado.value as OpcionSombreado : null);
+
+  /** Los períodos y eventos que se ven (se piden a /datos/ la primera vez que se activan). */
+  async function marcas(r: Resultado): Promise<{ periodos: Periodo[]; eventos: MarcaEvento[] }> {
+    const sh = sombreado();
+    try {
+      if (sh) registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
+      if (cEventos?.checked) registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
+    } catch (err) {
+      estado.textContent = `No se pudieron leer los períodos o los eventos (${err instanceof Error ? err.message : String(err)}).`;
+      return { periodos: [], eventos: [] };
+    }
+    return {
+      periodos: sh && registroPeriodos ? periodosEnRango(registroPeriodos, sh, r) : [],
+      eventos: cEventos?.checked && registroEventos ? eventosEnRango(registroEventos, r) : [],
+    };
+  }
 
   /** Pide a /datos/ los insumos que la medida elegida todavía no tiene. */
   async function cargarInsumos(o: Opciones): Promise<void> {
@@ -164,18 +195,21 @@ function iniciar(): void {
     }
     estado.textContent = "";
     delete estado.dataset.tipo;
-    ultimo = { r, o, otras: pais ? otrasEntidades(o) : [] };
+    ultimo = { r, o, otras: pais ? otrasEntidades(o) : [], ...(await marcas(r)) };
     const variacion = esVariacion(o.transformacion ?? "nivel");
     const positivos = r.datos.every((d) => d[1] === null || d[1] > 0);
     cLog.disabled = !positivos;
     campoLog.classList.toggle("deshabilitado", !positivos);
     $("unidad-grafico")!.textContent = r.unidad;
     leyendaPaises();
-    $("resumen-grafico")!.textContent = resumen(r, r.unidad, variacion, quiebres);
+    $("resumen-grafico")!.textContent = resumen(r, r.unidad, variacion, quiebres)
+      + (sombreado() || ultimo.eventos.length ? textoSombreado(sombreado() ?? "gobierno", ultimo.periodos, ultimo.eventos, tiposPeriodo()) : "");
+    leyendas();
     avisos(r, ultimo.otras.map((x) => x.resultado));
     tabla(r, variacion);
     cita(o);
     guardarEnUrl();
+    enlaceExplorador();
     resumenOpciones(o);
     void dibujar();
   }
@@ -224,15 +258,56 @@ function iniciar(): void {
     return `${numero(max.v, esVariacion(cTransf.value))} en ${fechaLegible(max.f, r.frecuencias[max.k])}`;
   }
 
+  /** Los nombres de los tipos de período (el de las etapas del curso, público), leídos del selector. */
+  function tiposPeriodo(): Array<{ id: string; nombre: string }> {
+    return cSombreado ? [...cSombreado.options].filter((o) => o.value).map((o) => ({ id: o.value, nombre: o.textContent ?? o.value })) : [];
+  }
+
+  function leyendas(): void {
+    if (!ultimo) return;
+    const { periodos, eventos } = ultimo;
+    const lp = $("leyenda-periodos");
+    if (!lp) return;
+    lp.hidden = !periodos.length;
+    $("titulo-periodos")!.textContent = `Períodos: ${cSombreado?.selectedOptions[0]?.textContent?.toLowerCase() ?? ""}`;
+    $("lista-periodos")!.replaceChildren(...periodos.map((p) => {
+      const li = document.createElement("li");
+      li.append(`${p.nombre}${p.caracter === "de_facto" ? " (de facto)" : p.caracter === "interino" ? " (interino)" : ""} `,
+        Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible(p) }));
+      return li;
+    }));
+    $("leyenda-eventos")!.hidden = !eventos.length;
+    $("lista-eventos")!.replaceChildren(...eventos.map((e) => {
+      const li = document.createElement("li");
+      li.append(`${e.nombre} `, Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible({ desde: e.fecha, hasta: null }).replace("desde el ", "") }));
+      return li;
+    }));
+  }
+
+  /** El período del sombreado de cada fila (el vigente su último día), o nada si no hay sombreado. */
+  function periodoDeFilas(res: Resultado): Array<string | undefined> {
+    if (!ultimo?.periodos.length) return [];
+    return periodoDeCadaFecha(ultimo.periodos, res.datos.map((d) => d[0]), res.frecuencias).map((p) => p?.nombre);
+  }
+
   function tabla(r: Resultado, variacion: boolean): void {
     const cuerpo = $<HTMLTableSectionElement>("tabla-cuerpo")!;
     $("tabla-unidad")!.textContent = r.unidad;
-    const filas = filasTabla(r, variacion).map((f) => {
+    const sh = sombreado();
+    const conPeriodo = !!sh && !!ultimo?.periodos.length;
+    const cabPeriodo = $("tabla-periodo");
+    if (cabPeriodo) {
+      cabPeriodo.hidden = !conPeriodo;
+      cabPeriodo.textContent = sh ? columnaPeriodo(sh) : "";
+    }
+    const periodosFila = periodoDeFilas(r);
+    const filas = filasTabla(r, variacion).map((f, k) => {
       const tr = document.createElement("tr");
       if (f.excluido) tr.className = "excluido";
       const th = Object.assign(document.createElement("th"), { scope: "row", textContent: f.etiqueta });
       const td = Object.assign(document.createElement("td"), { textContent: f.valor });
       tr.append(th, td);
+      if (conPeriodo) tr.append(Object.assign(document.createElement("td"), { className: "periodo-fila", textContent: periodosFila[k] ?? "—" }));
       return tr;
     });
     cuerpo.replaceChildren(...filas);
@@ -285,6 +360,7 @@ function iniciar(): void {
       nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
       resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
       log: cLog.checked && !cLog.disabled, alto: ancho < 520 ? 240 : 320, ancho, descripcion: $("resumen-grafico")!.textContent ?? "",
+      ...marcasDelGrafico(),
     });
     try {
       await import("vega-embed");
@@ -301,20 +377,46 @@ function iniciar(): void {
   // Exportar el gráfico con título, unidad, fuentes, variante y versión impresos (SPEC 6.2).
   async function imagen(formato: "png" | "svg"): Promise<void> {
     if (!ultimo) return;
-    const { r, o, otras } = ultimo;
+    const { r, o, otras, periodos, eventos } = ultimo;
     const fuentes = [...new Set(doc.fuentes.map((f) => f.organismo))].join("; ");
+    const lineasMarcas = [
+      ...(periodos.length && registroPeriodos ? [`Sombreado: ${cSombreado?.selectedOptions[0]?.textContent?.toLowerCase()}. Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`] : []),
+      ...(eventos.length ? [`Eventos: ${eventos.map((e) => `${e.letra}. ${e.nombre}`).join("; ")}.`] : []),
+    ];
     const spec = especificacion({
       nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
       resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
       log: cLog.checked && !cLog.disabled, alto: 380, ancho: 900, descripcion: $("resumen-grafico")!.textContent ?? "",
+      ...marcasDelGrafico(),
       impreso: {
         titulo: `${doc.nombre} · ${doc.nombre_variante}`,
         subtitulo: r.unidad,
-        pie: [`Fuentes: ${fuentes}.`, ...lineaPaises(),
+        pie: [`Fuentes: ${fuentes}.`, ...lineaPaises(), ...lineasMarcas,
           `Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. ${licenciaImagen()}`, location.href],
       },
     });
     await exportarImagen(spec, formato, `${nombreArchivo()}.${formato}`);
+  }
+
+  function marcasDelGrafico() {
+    if (!ultimo) return {};
+    const { periodos, eventos } = ultimo;
+    return {
+      ...(periodos.length ? { sombreado: { bandas: bandasDe(periodos), franja: sombreado() === "plan" } } : {}),
+      ...(eventos.length ? { eventos } : {}),
+    };
+  }
+
+  /** El mismo gráfico en el explorador: la serie, la variante y los parámetros de la ficha (el país resaltado, en `e`). */
+  function enlaceExplorador(): void {
+    const a = document.getElementById("abrir-explorador") as HTMLAnchorElement | null;
+    if (!a) return;
+    const q = new URLSearchParams(location.search);
+    const salida = new URLSearchParams();
+    if (doc.serie !== "ipc") salida.set("s", doc.serie);
+    if (!doc.es_variante_por_defecto) salida.set("v", doc.variante);
+    for (const [k, v] of q) salida.set(k, v);
+    a.href = `/explorador/${salida.size ? `?${salida}` : ""}`;
   }
 
   function lineaPaises(): string[] {
@@ -327,19 +429,25 @@ function iniciar(): void {
   function nombreArchivo(): string {
     const o = ultimo?.o;
     const partes = ["vaiven", doc.serie, doc.variante, pais ? cEntidad?.value : undefined, o?.pesosActuales ? "pesos_actuales" : undefined,
-      o?.frecuencia, o?.medida, o?.transformacion !== "nivel" ? o?.transformacion : undefined, o?.mediaMovil ? `mm${o.mediaMovil}` : undefined];
+      o?.frecuencia, o?.medida, o?.transformacion !== "nivel" ? o?.transformacion : undefined, o?.mediaMovil ? `mm${o.mediaMovil}` : undefined,
+      sombreado() ? `sombreado_${sombreado()}` : undefined];
     return partes.filter(Boolean).join("_");
   }
 
   function csvVista(): void {
     if (!ultimo) return;
-    const linea = ([f, v]: [string, number | null], p?: string) => `${f},${p === undefined ? "" : `${p},`}${v === null ? "" : v}`;
+    const sh = sombreado();
+    const conPeriodo = !!sh && ultimo.periodos.length > 0;
+    const de = (res: Resultado, p?: string) => {
+      const ps = conPeriodo ? periodoDeFilas(res) : [];
+      return res.datos.map(([fecha, valor], k) => ({ fecha, pais: p, valor, periodo: ps[k] }));
+    };
     // En las series con dimensión pais, el CSV lleva todos los países que se ven (la resaltada primero).
     const filas = pais
-      ? ["fecha,pais,valor", ...ultimo.r.datos.map((d) => linea(d, cEntidad?.value)),
-        ...ultimo.otras.flatMap((o, k) => o.resultado.datos.map((d) => linea(d, mostradas()[k + 1])))]
-      : ["fecha,valor", ...ultimo.r.datos.map((d) => linea(d))];
-    bajar(URL.createObjectURL(new Blob([filas.join("\n") + "\n"], { type: "text/csv;charset=utf-8" })), `${nombreArchivo()}.csv`);
+      ? [...de(ultimo.r, cEntidad?.value), ...ultimo.otras.flatMap((o, k) => de(o.resultado, mostradas()[k + 1]))]
+      : de(ultimo.r);
+    const texto = csvDeVista({ unidad: ultimo.r.unidad, conPais: pais, periodo: conPeriodo && sh ? columnaPeriodo(sh) : undefined, filas, metadatos: [], cita: { texto: "", apa: "", bibtex: "" } });
+    bajar(URL.createObjectURL(new Blob([texto], { type: "text/csv;charset=utf-8" })), `${nombreArchivo()}.csv`);
   }
 
   function citaTxt(): void {

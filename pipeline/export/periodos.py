@@ -38,13 +38,17 @@ def _fuente(f: dict) -> dict:
 
 
 def _cortes(p: dict) -> dict:
-    """Cómo se fijó cada extremo: `hecho` (una norma o un hecho fechado) o `convencional` (corte de Vaivén)."""
+    """Cómo se fijó cada extremo: `hecho` (una norma o un hecho fechado) o `convencional` (corte de Vaivén).
+
+    Un extremo es convencional si lleva una fuente de tipo `convencional`, aunque tenga además otras fuentes que
+    respaldan la fecha elegida (por ejemplo, el fin del Plan Austral es el inicio del Primavera, que tiene su norma).
+    """
     salida = {}
     for extremo in ("desde", "hasta"):
         if extremo == "hasta" and p.get("hasta") is None:
             continue
         fuentes = [f for f in p.get("fuentes", []) if f["para"] in (extremo, "ambas")]
-        salida[extremo] = "convencional" if fuentes and all(f["tipo"] == "convencional" for f in fuentes) else "hecho"
+        salida[extremo] = "convencional" if any(f["tipo"] == "convencional" for f in fuentes) else "hecho"
     return salida
 
 
