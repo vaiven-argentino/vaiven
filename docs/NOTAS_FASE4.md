@@ -599,3 +599,86 @@ También se documentaron las reglas de 2.4, el export de 2.5, el nombre público
   - Las reglas de los eventos tachaban los rótulos de las bandas: ahora empiezan debajo de los rótulos.
 - **Verificación:** axe no da violaciones en `/periodos/` (390 y 1280 px), en la ficha con sombreado ni en el explorador con planes y eventos.
 
+
+## 4b · Correcciones de la revisión externa
+
+*12/11/2026 · Correcciones que pidió la revisión externa de la 4b (REVISION_FASE4b.md, secciones 1, 2, 3, 9 y 10). Van en dos PR: «datos y método» (este) e «interfaz» (el siguiente). La SPEC pasa a la v1.4.*
+
+### Decisiones tomadas con Camilo (12/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Asignación de períodos a los datos | Una sola regla (sección 9.2 de la revisión). Un saldo a fin de período en nivel es un instante: el último día. Lo demás es un intervalo: el punto medio. Más el reparto por días. |
+| «Sin mayoría» | `periodo` lleva el nombre del período del punto medio con «(sin mayoría)», así coincide con la banda donde se dibuja el punto, y `otros_periodos` lista al resto. |
+| Hiperinflación | Un episodio con dos fases contiguas, cortadas el 12/12/1989. Empieza el 6/2/1989 (la fecha de la fuente). El criterio de Cagan va como nota. |
+| Interinos | Entra todo interino designado por decreto **durante una vacante**, cualquiera sea la fórmula («a cargo del despacho», «delegado de la Junta»). Los encargos por viaje o licencia van como nota. |
+| Confianza | Fiel a la tabla: cada extremo lleva la confianza de su fila; solo se separan los 6 casos en que la tabla distingue el extremo. |
+| Metas de inflación | Plan del 1/1/2017 (adopción formal) al 1/10/2018 (relevo por el programa de octubre de 2018). |
+| Nombres cortos | «Cepo, crawl administrado» (2019–2023) y «Cepo, salto y crawl fijo» (2023–2025). |
+| Eventos candidatos | Con la regla nueva entrarían la Circular 1050, la devaluación de enero de 2014, las PASO de 2019 y el swap con el Tesoro de EE.UU. Quedan para la 4c. La corrida de 2018 sería un episodio. |
+| Episodios en el filtro de eventos | Una categoría más; `ev=1` los incluye (en el PR de interfaz). |
+| Esquema | `periodos-1.1`, menor. Solo agrega: el tipo `episodio`, `fases` y `confianza`. La 1.0 sigue publicada. |
+
+### Qué se hizo (PR «datos y método»)
+
+- **Regla única de ubicación** (`paquetes/transformaciones/src/ubicacion.ts`):
+  - `referenciaDe` decide si un dato es instante o intervalo y `ubicar` lo asigna con su reparto completo. Los huecos tienen nombre («sin ministro titular»).
+  - La usan el gráfico (cada punto en su fecha de referencia), el tooltip, la tabla, el CSV y el XLSX (`periodo`, `periodo_proporcion`, `otros_periodos`), el resumen y el MCP.
+  - `periodoDeCadaFecha` queda como deprecada. El signo monetario de los pesos actuales sigue en el último día.
+  - Las semestrales de la EPH cubren el mes de la onda; antes cubrían seis meses.
+- **Lector del gráfico** (`web/src/graficos/lector.ts`): con el foco, las flechas recorren los datos y se anuncian la fecha, el valor, el período (con sus fechas) y el reparto.
+- **Registros:**
+  - el episodio de la hiperinflación;
+  - 6 ministros interinos (Ferrer, Corvalán Nanclares dos veces, De Las Heras, Gallo y Capitanich), más Bauzá;
+  - el plan de metas de inflación;
+  - `confianza` en los 136 períodos (salvo 9 etapas, que la heredan);
+  - nombres y nota del blend en los regímenes 2019–2025;
+  - el DNU 269/2025 y la A 8227 como fuentes del fin del régimen y del plan de diciembre de 2023.
+  - En números: 136 períodos (52 ministros, 12 planes, 1 episodio) y 30 eventos.
+- **Web:**
+  - franja de episodios debajo del eje, con «Marcar eventos»;
+  - «⚠ fecha a confirmar» en las leyendas y en `/periodos/`, y la confianza en el detalle de las fuentes;
+  - carril y tarjetas de episodios;
+  - la regla, en el aviso junto al gráfico, en la hoja de metadatos y en el pie de las imágenes;
+  - la aclaración de las etapas.
+- **MCP:**
+  - `listar_periodos(tipo: "episodio")`;
+  - `confianza` y advertencias de las fechas dudosas;
+  - `periodo_en_fecha` con los episodios y, en un mes, `asignacion` y el reparto por días;
+  - lee `periodos-1.0` y `1.1` (antes exigía la 1.0 exacta).
+  - Preguntas 17 y 18 en `PRUEBA_MANUAL.md`.
+
+### Contrastes del revisor de datos (12/11/2026, sin ver las fuentes)
+
+- **Interinos:** las 7 filas coinciden con los decretos del Boletín Oficial, que ahora responde desde el entorno (escaneos de 1970–1989 e InfoLEG).
+  - De Las Heras es «Delegado de la Junta Militar».
+  - Capitanich termina el 22/12/2001, no el 23.
+  - Moyano Llerena se fue el 15/10/1970: el CDI pone el 26/10 porque no registra el interinato.
+- **Metas de inflación:** el inicio coincide (IMM de diciembre de 2016). El fin es criterio (26/9, 28/9 o 1/10/2018). No hay Comunicación «A» del cambio de instrumento.
+- **Dólar blend:** el 80/20, del DNU 28/2023 (13/12/2023) al DNU 269/2025 (14/4/2025), coincide y no tuvo cambios intermedios. El deslizamiento del 1 % desde el 1/2/2025 coincide.
+- **Hiperinflación:** el fin en marzo de 1990 coincide. Las cifras de 1989 coinciden con Rossi (2026), tabla 2. El inicio del 6/2/1989 y el corte del 12/12/1989 son criterio. Las 12 cifras coinciden también con Kiguel y Liviatan (1995), tabla 12.A.2, según la búsqueda.
+- **IPC de enero a junio de 1990** (segunda tanda): coinciden con la serie histórica empalmada del INDEC (178.1_NL_GENERAL_0_0_13, en datos.gob.ar), con diferencias de redondeo menores a 0,05 puntos. No apareció una publicación de 1990 en papel con las seis cifras.
+- **Fin de Jesús Rodríguez:** el Decreto 1147/1989 («Bs. As., 7/7/89») acepta su renuncia sin fijar otra fecha de cese; el CDI le da fin el 8/7, el día que asumen Menem y Roig. Se mantiene el 7/7, con el criterio de los demás ministros (la fecha del decreto), y el 7/7/1989 queda «sin ministro titular». Si preferís el 8/7, es un cambio de una línea.
+
+### Diferencias con la SPEC
+
+La SPEC pasa a la v1.4:
+- 2.4: episodios, confianza, interinos, regla de eventos y regla de ubicación;
+- 2.5: `periodos-1.1` y regla de versión de los esquemas;
+- 6.1, 6.2, 6.4 y 7.2.
+
+Antes, la SPEC 6.2 decía que la columna del período era «la vigente el último día de cada fila».
+
+### Pendientes
+
+- **PR de interfaz** (revisión, 9.4):
+  - explorador en dos columnas;
+  - filtro y densidad de eventos;
+  - `/periodos/` en tabla;
+  - contraste de los grises y de la franja de planes en modo oscuro;
+  - foco en bandas y eventos;
+  - casos fijos nuevos del revisor visual.
+- **Eventos candidatos** (4c): Circular 1050, devaluación de enero de 2014, PASO de 2019 y swap con el Tesoro. Episodios candidatos: crisis financiera de 1980–1982, Tequila, crisis de la Convertibilidad, crisis cambiaria de 2018 y pandemia.
+- **Sin verificar:** los huecos entre ministros del 28/5 al 1/6/1971 y del 21 al 22/12/1981, y la p. 25 del original de Cagan.
+- **A decidir:** el fin de Jesús Rodríguez, 7/7 (decreto, como está) u 8/7/1989 (CDI).
+- **De la 4b:** la prueba manual del MCP (preguntas 14 a 18) y los 19 extremos de regímenes sin norma.

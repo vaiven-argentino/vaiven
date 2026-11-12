@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-11-12T21:23:45Z",
-  "created": "2026-11-12T21:23:45Z",
+  "version": "2026-11-12T22:14:59Z",
+  "created": "2026-11-12T22:14:59Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -2709,7 +2709,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "Gobiernos (con sus mandatos), ministros de Economía, planes, regímenes cambiarios y etapas. También en JSON: periodos.json.",
+      "description": "Gobiernos (con sus mandatos), ministros de Economía, planes, regímenes cambiarios, etapas según la periodización de un curso universitario y episodios (con sus fases). También en JSON: periodos.json.",
       "schema": {
         "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
         "primaryKey": [
@@ -2724,7 +2724,7 @@
           {
             "name": "tipo",
             "type": "string",
-            "description": "gobierno, ministro, plan, regimen_cambiario o catedra."
+            "description": "gobierno, ministro, plan, regimen_cambiario, catedra o episodio."
           },
           {
             "name": "nombre",
@@ -2764,7 +2764,7 @@
           {
             "name": "padre",
             "type": "string",
-            "description": "Mandatos: el gobierno al que pertenecen."
+            "description": "Mandatos y fases: el gobierno o el episodio al que pertenecen."
           },
           {
             "name": "corte_desde",
@@ -2775,6 +2775,16 @@
             "name": "corte_hasta",
             "type": "string",
             "description": "hecho o convencional."
+          },
+          {
+            "name": "confianza_desde",
+            "type": "string",
+            "description": "alta, media o baja (SPEC 2.4)."
+          },
+          {
+            "name": "confianza_hasta",
+            "type": "string",
+            "description": "alta, media o baja (SPEC 2.4)."
           },
           {
             "name": "descripcion",

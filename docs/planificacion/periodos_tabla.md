@@ -50,6 +50,44 @@
 - el Plan Austral empieza el 15/6/1985 (el decreto rige «a partir del 15 de junio»);
 - la Convertibilidad termina el 7/1/2002.
 
+## 1.1 Correcciones de la revisión externa (12/11/2026)
+
+Aprobadas por Camilo el 12/11/2026 y cargadas en `periodos.yaml` (detalle en `NOTAS_FASE4.md`, «4b · Correcciones de la revisión externa»). El `revisor-datos` contrastó las fechas nuevas sin ver las fuentes.
+
+**Ministros interinos designados por decreto durante una vacante** (criterio decidido: todo interino designado por decreto es ministro; los encargos por viaje o licencia de un titular en funciones van como nota):
+
+| id | Persona | Fórmula del decreto | Desde | Hasta | Norma | Conf. | Revisor |
+|---|---|---|---|---|---|---|---|
+| `p.ministro.ferrer-interino` | Aldo Ferrer | «encomiéndase interinamente» Economía y Trabajo | 15/10/1970 | 26/10/1970 | Decreto 1831/1970 (BO 22/10/1970) | alta | coincide |
+| `p.ministro.corvalan-nanclares-1975a` | Ernesto A. Corvalán Nanclares | «interinamente se hará cargo del despacho» | 19/7/1975 | 22/7/1975 | Decreto 1957/1975, art. 3 | alta | coincide |
+| `p.ministro.corvalan-nanclares-1975b` | Ernesto A. Corvalán Nanclares | «se hará cargo interinamente del despacho» | 11/8/1975 | 14/8/1975 | Decreto 2188/1975 | alta | coincide |
+| `p.ministro.de-las-heras` | Joaquín De Las Heras | «Delegado de la Junta Militar» | 24/3/1976 | 29/3/1976 | Decreto 1/1976 de la Junta | alta | coincide (con el matiz de la fórmula) |
+| `p.ministro.bauza` | Eduardo Bauzá | «Ministro Interino de Economía» | 14/7/1989 | 15/7/1989 | Decreto 251/1989 | alta | coincide (antes, «sin revisar») |
+| `p.ministro.gallo` | Nicolás V. Gallo | «a cargo de los Ministerios de Economía y de Infraestructura» | 20/12/2001 | 21/12/2001 | Decreto 1685/2001 | alta | coincide |
+| `p.ministro.capitanich` | Jorge M. Capitanich | «Ministro de Infraestructura y Vivienda e interino de Economía» | 21/12/2001 | 22/12/2001 | Decreto 11/2001 | alta | coincide |
+
+- Sin ministro titular ni interino: 22/12/2001–3/1/2002 (Frigeri fue secretario de Hacienda), 28/11–1/12/2005 y 31/12/2016–2/1/2017.
+- Sin verificar: 28/5–1/6/1971 y 21–22/12/1981. El 7/7/1989 queda sin ministro: el Decreto 1147/1989 acepta la renuncia de Jesús Rodríguez el 7/7 (criterio de la fecha del decreto); el CDI da el 8/7.
+- IPC de enero a junio de 1990: el revisor lo contrastó con la serie histórica del INDEC (coincide).
+- El fin de **Moyano Llerena** (15/10/1970) queda respaldado por el Decreto 1829/1970: su confianza pasa de baja a alta.
+
+**Metas de inflación como plan:** `p.plan.metas-inflacion`, del **1/1/2017** (adopción formal: la tasa de política pasa al centro del corredor de pases a 7 días; IMM de diciembre de 2016) al **1/10/2018** (corte convencional: lo reemplaza el programa monetario de octubre de 2018). La presentación del 26/9/2016 va como nota. Revisor: coincide el inicio; el fin es criterio (anuncio 26/9, implementación 28/9, vigencia 1/10).
+
+**Episodio «Hiperinflación de 1989–1990»:** del **6/2/1989** (Almansi y Rodríguez, CEMA DT 67, p. 1; confianza media) al **1/4/1990** (fin convencional: marzo de 1990 es el último mes por encima del 50 %), con dos fases cortadas el 12/12/1989 (fin del tipo fijo del Plan Bunge y Born). El criterio de Cagan va como nota, con las cifras de la serie del IPC, que coinciden con Kiguel y Liviatan (1995), tabla 12.A.2, y, las de 1989, con Rossi (2026), tabla 2. Se borró el evento `e.1989-07-01.hiperinflacion`.
+
+**Nombres de los regímenes 2019–2025:** «Cepo, crawl administrado» y «Cepo, salto y crawl fijo» (antes, «Cepo 2019–23» y «Crawling peg», que sugerían que el cepo terminó en diciembre de 2023). Nota del **dólar blend** (80/20) en el régimen 2023–2025: Decreto 28/2023 (13/12/2023) a Decreto 269/2025 y Com. A 8227 (14/4/2025), sin cambios intermedios (revisor: coincide).
+
+**Confianza por extremo:** cada extremo lleva la confianza de su fila, salvo donde la tabla distingue el extremo dudoso:
+
+| Período | Desde | Hasta |
+|---|---|---|
+| Lacoste | baja | media |
+| Saint-Jean | baja | media |
+| Moyano Llerena | media | alta |
+| Bonanni | media | baja |
+| Plan Gelbard | baja | media |
+| Levingston | media | alta |
+
 ## 2. Correcciones ya aplicadas
 
 **Por el revisor:**
@@ -152,7 +190,7 @@ Los cortes salen de los otros períodos (`igual_a`) y heredan su fuente. El úni
 | `p.ministro.pugliese` | Juan Carlos Pugliese | Ministro de Economía | 4/4/1989 | 26/5/1989 | *norma*: Decreto 464/1989 (texto: «Bs. As., 4/4/89»), B.O. n.º 26609, p. 1 | *norma*: Decreto 704/1989, sanción 1989-05-26, B.O. n.º 26647: acepta la renuncia (solo resumen) | alta | coincide |
 | `p.ministro.jesus-rodriguez` | Jesús Rodríguez | Ministro de Economía | 26/5/1989 | 7/7/1989 | *norma*: Decreto 709/1989 (texto: «Bs. As., 26/5/89»), B.O. n.º 26645, p. 3 | *norma*: Decreto 1147/1989, sanción 1989-07-07, B.O. n.º 26672, p. 8: acepta la renuncia (solo resumen) | media | **criterio** (hasta): 1989-07-08. 1 día. Asumió Menem el 08-07-1989 (Decreto 1/1989, id 830). No hallé decreto de cese de Rodríguez. |
 | `p.ministro.roig` | Miguel Roig | Ministro de Economía | 8/7/1989 | 14/7/1989 | *norma*: Decreto 4/1989 (Menem), sanción 1989-07-08, B.O. n.º 26672, p. 9 (solo resumen) | *norma*: Decreto 250/1989, sanción 1989-07-14, B.O. n.º 26677, p. 1: duelo nacional 14 al 16/7/1989 por el…<br>*norma*: Decreto 251/1989, sanción 1989-07-14: designa ministro interino de Economía al ministro del Interior Eduardo… | alta | coincide |
-| `p.ministro.bauza` | Eduardo Bauzá | Ministro de Economía (interino) | 14/7/1989 | 15/7/1989 | *norma*: Decreto 251/1989 (14/7/1989): designa ministro interino de Economía a Eduardo Bauzá, tras la muerte de Miguel… | *norma*: Decreto 260/1989 (15/7/1989): designa ministro de Economía a Néstor Rapanelli | alta | sin revisar |
+| `p.ministro.bauza` | Eduardo Bauzá | Ministro de Economía (interino) | 14/7/1989 | 15/7/1989 | *norma*: Decreto 251/1989 (14/7/1989): designa ministro interino de Economía a Eduardo Bauzá, tras la muerte de Miguel… | *norma*: Decreto 260/1989 (15/7/1989): designa ministro de Economía a Néstor Rapanelli | alta | coincide (12/11/2026: Decreto 251/1989 leído en el BO) |
 | `p.ministro.rapanelli` | Néstor Mario Rapanelli | Ministro de Economía | 15/7/1989 | 15/12/1989 | *norma*: Decreto 260/1989, sanción 1989-07-15, B.O. n.º 26677, p. 3 (solo resumen) | *norma*: Decreto 1486/1989, sanción 1989-12-15, B.O. n.º 26785: acepta la renuncia (solo resumen) | alta | coincide |
 | `p.ministro.erman-gonzalez` | Antonio Erman González | Ministro de Economía | 15/12/1989 | 31/1/1991 | *norma*: Decreto 1491/1989, sanción 1989-12-15, B.O. n.º 26784, p. 3 (solo resumen) | *norma*: Decreto 217/1991, sanción 1991-01-31, B.O. n.º 27066: acepta la renuncia (solo resumen) | alta | coincide |
 | `p.ministro.cavallo-1991` | Domingo Felipe Cavallo | Ministro de Economía; Ministro de Economía y Obras y Servicios Públicos desde 1991-04-23 ( | 31/1/1991 | 26/7/1996 | *norma*: Decreto 220/1991, sanción 1991-01-31, B.O. n.º 27066, p. 2 (solo resumen) | *norma*: Decreto 872/1996 (texto: «Bs. As., 26/7/96»), B.O. n.º 28446, p. 2: acepta la renuncia al cargo de Ministro… | alta | coincide |
@@ -226,8 +264,8 @@ Los cortes salen de los otros períodos (`igual_a`) y heredan su fuente. El úni
 | `p.regimen.cepo-2011` | Cepo cambiario (2011–2015) | 31/10/2011 | 17/12/2015 | *comunicacion_bcra*: BCRA, Comunicación "A" 5239<br>*norma*: Resolución General AFIP 3210/2011 | *comunicacion_bcra*: BCRA, Comunicación "A" 5850 (vigencia «a partir del 17.12.2015 inclusive»; deroga la A 5245) | alta | coincide |
 | `p.regimen.flotacion-2015` | Flotación (2015–2018) | 17/12/2015 | 1/10/2018 | *comunicacion_bcra*: BCRA, Comunicación "A" 5850 | *oficial*: BCRA, «El BCRA implementa su nuevo marco de política monetaria» (zona de no intervención desde el 1/10/2018) | alta | coincide |
 | `p.regimen.zona-no-intervencion` | Bandas: zona de no intervención (2018–2019) | 1/10/2018 | 1/9/2019 | *oficial*: BCRA, «El BCRA implementa su nuevo marco de política monetaria» | *norma*: Decreto DNU 609/2019<br>*comunicacion_bcra*: BCRA, Comunicación "A" 6770 | alta | coincide |
-| `p.regimen.cepo-2019` | Cepo cambiario (2019–2023) | 1/9/2019 | 13/12/2023 | *norma*: Decreto DNU 609/2019 (vigente desde su publicación)<br>*comunicacion_bcra*: BCRA, Comunicación "A" 6770 | *comunicacion_bcra*: BCRA, Comunicación "A" 7916 (deja sin efecto la A 7915 «a partir del 13.12.23»)<br>*oficial*: BCRA, Informe Monetario Mensual, diciembre de 2023, p. 10 (TCN «a $800/USD» y «sendero de deslizamiento de 2%… | alta | coincide |
-| `p.regimen.crawling-peg-2023` | Crawling peg con cepo (2023–2025) | 13/12/2023 | 14/4/2025 | *comunicacion_bcra*: BCRA, Comunicación "A" 7916<br>*oficial*: BCRA, Informe Monetario Mensual, diciembre de 2023, p. 10 | *comunicacion_bcra*: BCRA, Comunicación "A" 8226 («resolución con vigencia a partir del 14/04/25») | alta | coincide |
+| `p.regimen.cepo-2019` | Cepo cambiario con deslizamiento administrado (2019–2023) | 1/9/2019 | 13/12/2023 | *norma*: Decreto DNU 609/2019 (vigente desde su publicación)<br>*comunicacion_bcra*: BCRA, Comunicación "A" 6770 | *comunicacion_bcra*: BCRA, Comunicación "A" 7916 (deja sin efecto la A 7915 «a partir del 13.12.23»)<br>*oficial*: BCRA, Informe Monetario Mensual, diciembre de 2023, p. 10 (TCN «a $800/USD» y «sendero de deslizamiento de 2%… | alta | coincide |
+| `p.regimen.crawling-peg-2023` | Cepo cambiario con salto y crawling peg preanunciado (2023–2025) | 13/12/2023 | 14/4/2025 | *comunicacion_bcra*: BCRA, Comunicación "A" 7916<br>*oficial*: BCRA, Informe Monetario Mensual, diciembre de 2023, p. 10 | *comunicacion_bcra*: BCRA, Comunicación "A" 8226 («resolución con vigencia a partir del 14/04/25») | alta | coincide |
 | `p.regimen.bandas-2025` | Bandas de flotación (desde abril de 2025) | 14/4/2025 | vigente | *comunicacion_bcra*: BCRA, Comunicación "A" 8226<br>*oficial*: BCRA, «Inicio de la Fase 3 del Programa Económico con flexibilización cambiaria y flotación entre bandas» | — | alta | **no_verificada** (hasta): —. Abierto; no verifiqué qué ocurrió entre abr-2025 y nov-2026 (posible cambio de régimen/bandas en ene-2026). |
 
 ### Eventos
@@ -240,7 +278,6 @@ Los cortes salen de los otros períodos (`igual_a`) y heredan su fuente. El úni
 | `e.1980-03-28.liquidacion-bir` | Liquidación del Banco de Intercambio Regional (BIR) | 28/3/1980 | — | crisis | *secundaria*: Gómez R., Hernando J. y Montenegro T., Armando (1980). «Breve descripción de los recientes desarrollos de la… | media | coincide |
 | `e.1982-07-05.seguros-de-cambio` | Seguros de cambio y reforma financiera de 1982 (licuación de deudas) | 5/7/1982 | 6/7/1982 | financiero | *comunicacion_bcra*: Comunicaciones «A» 136 y 137 (CAMEX 1-25 y 1-26, seguros de cambio)<br>*comunicacion_bcra*: Comunicación «A» 144 (REMON 1-22, régimen del préstamo básico y tasa regulada) | alta | coincide |
 | `e.1985-06-14.plan-austral` | Plan Austral | 14/6/1985 | 15/6/1985 | monetario | *comunicacion_bcra*: Comunicación «A» 674: remite «copia del Decreto 1096 de fecha 14.6.85 … por el que se instituye a partir del… | alta | coincide |
-| `e.1989-07-01.hiperinflacion` | Pico de la primera hiperinflación (julio de 1989) | 1/7/1989 | — | crisis | *oficial*: INDEC, IPC histórico nivel general (serie 178.1_NL_GENERAL_0_0_13; en Vaivén,… | media | **no_verificada** (fecha): 1989-07 (mes). No hallé serie primaria INDEC; el dia 1 es un marcador del mes, no un hecho |
 | `e.1990-01-03.plan-bonex` | Plan Bonex (Decreto 36/1990) | 3/1/1990 | — | financiero | *norma*: Decreto 36/1990 (DNU), sanción 1990-01-03, BO n.º 26.795, p. 9 | alta | coincide |
 | `e.1991-03-27.convertibilidad` | Ley de Convertibilidad 23.928 | 27/3/1991 | 1/4/1991 | cambiario | *norma*: Ley 23.928, sanción 1991-03-27, BO n.º 27.104, p. 1 | alta | coincide |
 | `e.1993-04-07.plan-brady` | Firma del Plan Brady | 7/4/1993 | — | deuda | *norma*: Resolución 809/2010 MEyFP: cita los «Collateral Pledge Agreements» con el Federal Reserve Bank of New York y…<br>*norma*: Decreto 2321/1992 (autoriza el acuerdo con la banca acreedora, «Plan Financiero República Argentina 1992»),… | alta | coincide |
