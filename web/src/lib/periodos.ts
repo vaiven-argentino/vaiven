@@ -189,7 +189,7 @@ export function textoLectura(d: {
   const dentro = (p: { desde: string; hasta: string | null }) => p.desde <= dia && (!p.hasta || dia < p.hasta);
   for (const ep of (d.episodios ?? []).filter(dentro)) {
     const fase = ep.fases?.find(dentro);
-    partes.push(fase ? `episodio: ${ep.nombre}, ${fase.nombre.toLowerCase()} (${rangoLegible(fase)})` : `episodio: ${ep.nombre} (${rangoLegible(ep)})`);
+    partes.push(fase ? `episodio: ${ep.nombre}, ${fase.nombre_corto.toLowerCase()} (${rangoLegible(fase)})` : `episodio: ${ep.nombre} (${rangoLegible(ep)})`);
   }
   const { desde, hasta } = diasDe(d.fecha, d.frecuencia);
   const eventos = (d.eventos ?? []).filter((e) => e.fecha >= desde && e.fecha <= hasta);
