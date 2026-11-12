@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { transformar, type DocumentoEventos, type DocumentoPeriodos } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
 import { estadoDesdeUrl, serieDeUrl, urlDesdeEstado, type Documento, type IndiceSerie } from "../src/lib/estado";
-import { accesoEvento, accesosDe, bandasDe, eventosEnRango, lineaDeTiempo, nombreSombreado, periodosEnRango, posicion } from "../src/lib/periodos";
+import { accesoEvento, accesosDe, bandasDe, categoriasEv, eventosEnRango, lineaDeTiempo, nombreSombreado, periodosEnRango, posicion } from "../src/lib/periodos";
 
 const EXPORT = join(import.meta.dirname, "..", "..", "export");
 const leer = <T>(r: string): T => JSON.parse(readFileSync(join(EXPORT, r), "utf-8"));
@@ -25,6 +25,15 @@ describe("sombreado en los gráficos", () => {
     const ev = eventosEnRango(eventos, r);
     expect(ev[0].letra).toBe("A");
     expect(ev.every((e) => e.fecha >= "1989-01-01" && e.fecha <= "1991-12-31")).toBe(true);
+  });
+  it("con un filtro, solo los eventos de esas categorías, con letras desde la A", () => {
+    const todos = eventosEnRango(eventos, r);
+    const filtrados = eventosEnRango(eventos, r, ["cambiario"]);
+    const categoria = new Map(eventos.eventos.map((e) => [e.fecha + e.nombre, e.categoria]));
+    expect(filtrados.length).toBeLessThan(todos.length);
+    expect(filtrados.length).toBeGreaterThan(0);
+    expect(filtrados.every((e) => categoria.get(e.fecha + e.nombre) === "cambiario")).toBe(true);
+    expect(filtrados.map((e) => e.letra)).toEqual(filtrados.map((_, k) => String.fromCharCode(65 + k)));
   });
   it("los de facto van marcados para el gris más oscuro", () => {
     const r70 = transformar(ipc as never, { desde: "1976", hasta: "1983" });
@@ -59,9 +68,9 @@ describe("accesos de /periodos/ al explorador", () => {
         const q = new URLSearchParams(a.url.split("?")[1]);
         const { serie, variante } = serieDeUrl(q, indice);
         const doc = leer<Documento>(`series/${serie.id}/${variante}.json`);
-        const { estado, avisos } = estadoDesdeUrl(q, serie.id, variante, doc);
+        const { estado, avisos } = estadoDesdeUrl(q, serie.id, variante, doc, categoriasEv(eventos));
         expect(avisos).toEqual([]);
-        expect(`/explorador/${urlDesdeEstado(estado, doc, indice)}`).toBe(a.url);
+        expect(`/explorador/${urlDesdeEstado(estado, doc, indice, categoriasEv(eventos))}`).toBe(a.url);
       }
     }
   });

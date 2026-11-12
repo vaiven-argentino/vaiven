@@ -2,9 +2,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { periodosDe, serieDeEntidad, transformar, ubicarFechas, type DocumentoPeriodos, type SeriePorPais } from "@vaiven/transformaciones";
-import { columnasDe } from "../src/lib/periodos";
+import { columnasDe, textoLectura } from "../src/lib/periodos";
 import { describe, expect, it } from "vitest";
-import { especificacion, filasFranja, separarRotulos, type BandaPeriodo, type Tema } from "../src/graficos/espec";
+import { SEPARACION_EVENTOS, especificacion, filasFranja, modoEventos, modoEventosDe, separarRotulos, type BandaPeriodo, type Tema } from "../src/graficos/espec";
 import { csvDeVista, hojasXlsx, type VistaDescarga } from "../src/lib/descarga";
 import { numerarQuiebres } from "../src/lib/ficha";
 
@@ -59,15 +59,77 @@ describe("sombreado por períodos", () => {
 });
 
 describe("eventos", () => {
-  it("una regla y una letra por evento dentro del período; las cercanas se escalonan", () => {
-    const eventos = [
-      { letra: "A", fecha: "2001-12-01", nombre: "Corralito" }, { letra: "B", fecha: "2001-12-23", nombre: "Default" },
-      { letra: "C", fecha: "2002-01-06", nombre: "Ley 25.561" }, { letra: "D", fecha: "1960-01-01", nombre: "Fuera de rango" },
-    ];
-    const layer = capas({ eventos, t: { desde: "1995", hasta: "2005" } });
-    const letras = layer.find((c) => c.mark.type === "text" && c.data.values.some((v) => v.letra === "A"))!.data.values;
-    expect(letras.map((v) => v.letra)).toEqual(["A", "B", "C"]);
-    expect(new Set(letras.map((v) => v.y)).size).toBeGreaterThan(1);
+  const juntos = [
+    { letra: "A", fecha: "2001-12-01", nombre: "Corralito" }, { letra: "B", fecha: "2001-12-23", nombre: "Default" },
+    { letra: "C", fecha: "2002-01-06", nombre: "Ley 25.561" }, { letra: "D", fecha: "1960-01-01", nombre: "Fuera de rango" },
+  ];
+  const separados = [
+    { letra: "A", fecha: "1996-06-01", nombre: "Uno" }, { letra: "B", fecha: "2001-12-23", nombre: "Default" },
+    { letra: "C", fecha: "1960-01-01", nombre: "Fuera de rango" },
+  ];
+  const conLetra = (layer: Capa[]) => layer.filter((c) => c.mark.type === "text" && c.data.values.some((v) => "letra" in v && "nombre" in v));
+  it("con lugar, una regla y una letra por evento dentro del período, en una sola fila", () => {
+    const layer = capas({ eventos: separados, t: { desde: "1995", hasta: "2005" } });
+    const letras = conLetra(layer)[0].data.values;
+    expect(letras.map((v) => v.letra)).toEqual(["A", "B"]);
+    expect(new Set(letras.map((v) => v.y)).size).toBe(1);
+    expect(layer.some((c) => c.mark.type === "rule" && (c.mark as { strokeDash?: number[] }).strokeDash?.join() === "1,3")).toBe(true);
+  });
+  it("si dos marcas quedan a menos de 18 px, todas pasan a rayitas: sin letras ni reglas punteadas", () => {
+    const layer = capas({ eventos: juntos, t: { desde: "1995", hasta: "2005" } });
+    expect(conLetra(layer)).toHaveLength(0);
+    expect(layer.some((c) => c.mark.type === "rule" && (c.mark as { strokeDash?: number[] }).strokeDash?.join() === "1,3")).toBe(false);
+    const rayitas = layer.filter((c) => c.mark.type === "rule" && c.data.values.some((v) => v.nombre === "Corralito"));
+    expect(rayitas.length).toBeGreaterThan(0);
+    // El nombre y la fecha, en el tooltip.
+    expect(JSON.stringify(rayitas[0].encoding.tooltip)).toContain("nombre");
+    expect(rayitas[0].data.values.find((v) => v.nombre === "Corralito")!.dia).toBe("1/12/2001");
+    expect(rayitas[0].data.values.some((v) => v.nombre === "Fuera de rango")).toBe(false);
+  });
+  it("la regla de densidad: 18 px o más entre marcas vecinas", () => {
+    // 120 meses en 1200 px: 10 px por mes.
+    expect(SEPARACION_EVENTOS).toBe(18);
+    expect(modoEventos(["2000-01-01", "2000-03-01"], 0 + 2000 * 12, 2010 * 12, 1200)).toBe("letras"); // 20 px
+    expect(modoEventos(["2000-03-01", "2000-01-01", "2000-02-15"], 2000 * 12, 2010 * 12, 1200)).toBe("rayitas"); // 14 px
+    expect(modoEventos([], 2000 * 12, 2010 * 12, 1200)).toBe("letras");
+  });
+  it("modoEventosDe usa el dominio del gráfico y deja afuera lo que no se ve", () => {
+    const doc = leer<never>("series/ipc/oficial.json") as never as Parameters<typeof transformar>[0];
+    const r = transformar(doc, { desde: "1995", hasta: "2005" } as never);
+    expect(modoEventosDe(r, separados, 900)).toBe("letras");
+    expect(modoEventosDe(r, juntos, 900)).toBe("rayitas");
+    expect(modoEventosDe(r, juntos, 9000)).toBe("letras");
+  });
+});
+
+describe("lector del gráfico: banda, episodio y eventos", () => {
+  const gobiernos = periodosDe(periodos, "gobierno");
+  const contexto = { agregacion: "promedio" as const, transformacion: "var_mensual" as const };
+  const episodio = {
+    desde: "1989-02-06", hasta: "1990-04-01", nombre: "Hiperinflación de 1989–1990", nombre_corto: "Hiperinflación",
+    fases: [{ desde: "1989-02-06", hasta: "1989-12-12", nombre: "Primer brote", nombre_corto: "Primer brote" },
+      { desde: "1989-12-12", hasta: "1990-04-01", nombre: "Segundo brote", nombre_corto: "Segundo brote" }],
+  };
+  it("julio de 1989: Menem con sus fechas, el reparto, la fase y sin eventos", () => {
+    const [u] = ubicarFechas(["1989-07"], ["mensual"], contexto, gobiernos, "gobierno");
+    const t = textoLectura({ fecha: "1989-07", frecuencia: "mensual", valor: "196,6 %", contexto, columna: "Gobierno", ubicacion: u, episodios: [episodio] });
+    expect(t).toContain("Carlos Saúl Menem (8/7/1989–");
+    expect(t).toContain("reparto:");
+    expect(t).toContain("episodio: Hiperinflación de 1989–1990, primer brote (6/2/1989–12/12/1989)");
+    expect(t).not.toContain("evento");
+  });
+  it("un dato sin mayoría lo dice, y la banda lleva sus fechas igual", () => {
+    const [u] = ubicarFechas(["1983-12"], ["mensual"], contexto, gobiernos, "gobierno");
+    const t = textoLectura({ fecha: "1983-12", frecuencia: "mensual", valor: "1", contexto, columna: "Gobierno", ubicacion: u });
+    expect(t).toMatch(/Gobierno: .+ \(\d+\/\d+\/\d{4}–\d+\/\d+\/\d{4}\)/);
+  });
+  it("los eventos marcados del intervalo del dato, con letra o, con rayitas, sin ella", () => {
+    const eventos = [{ letra: "A", fecha: "1990-01-03", nombre: "Plan Bonex" }, { letra: "B", fecha: "1991-03-27", nombre: "Convertibilidad" }];
+    const base = { frecuencia: "mensual", valor: "1", contexto, eventos };
+    expect(textoLectura({ ...base, fecha: "1990-01" })).toContain("evento: A. Plan Bonex (3/1/1990)");
+    expect(textoLectura({ ...base, fecha: "1990-01", modo: "rayitas" })).toContain("evento: Plan Bonex (3/1/1990)");
+    expect(textoLectura({ ...base, fecha: "1990-02" })).not.toContain("Bonex");
+    expect(textoLectura({ ...base, fecha: "1990", frecuencia: "anual" })).toContain("Plan Bonex");
   });
 });
 

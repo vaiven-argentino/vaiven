@@ -3,7 +3,7 @@
 // suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
 import { atraso, disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
 import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, insumosDe, periodos as leerPeriodos, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
+import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, eventos as leerEventos, insumosDe, periodos as leerPeriodos, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
 import { OPCIONES_SOMBREADO, nombreSombreado } from "../lib/periodos";
 import { aniosDe, crecimientoPorDecada, desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
 import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, cobertura, diaDeVersion, fechaCorta, textoAtraso, ultimoDato } from "../lib/formato";
@@ -65,6 +65,8 @@ const atrasoTexto = textoAtraso(atraso(doc, versionSitio));
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
 // Sombreado y eventos (fase 4b): apagados por defecto; los períodos y eventos se piden solo al activarlos.
 const tiposPeriodo = leerPeriodos()?.tipos;
+// Las categorías del filtro de eventos (parámetro `ev`); los episodios van al final.
+const categoriasEventos = leerEventos()?.categorias ?? [];
 // Fuentes de descarga manual (Bruegel, que bloquea a GitHub Actions): la ficha dice qué versión usa Vaivén
 // (segunda revisión de la 4a, 2.3). «Bruegel (Zsolt Darvas)» → «Bruegel».
 const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
@@ -205,7 +207,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
       <label class="casilla" id="campo-log"><input type="checkbox" id="c-log" /> Escala logarítmica</label>
       {tiposPeriodo && (
         <fieldset class="marcas">
-          <legend>Períodos y eventos</legend>
+          <legend>Sombreado y eventos</legend>
           <div class="campo">
             <label for="c-sombreado">Sombreado</label>
             <select id="c-sombreado">
@@ -214,6 +216,13 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
             </select>
           </div>
           <label class="casilla"><input type="checkbox" id="c-eventos" /> Marcar eventos</label>
+          <fieldset class="categorias" id="c-categorias" disabled>
+            <legend>Qué eventos <span class="secundario">(categorías)</span></legend>
+            <div class="categorias-lista">
+              {categoriasEventos.map((k) => <label class="casilla"><input type="checkbox" data-categoria={k.id} data-nombre={k.nombre} checked /> {k.nombre}</label>)}
+              <label class="casilla"><input type="checkbox" data-categoria="episodio" data-nombre="Episodios" checked /> Episodios</label>
+            </div>
+          </fieldset>
         </fieldset>
       )}
     </form>
@@ -247,6 +256,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
       </div>
       <div id="leyenda-eventos" hidden>
         <h3 class="etiqueta">Episodios y eventos</h3>
+        <p class="aviso-filtro secundario" id="aviso-filtro" hidden></p>
         <ul class="lista-periodos" id="lista-episodios" hidden></ul>
         <ol class="lista-eventos" id="lista-eventos"></ol>
       </div>
@@ -486,6 +496,12 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
   .leyendas:not(:has(> div:not([hidden]))) { display: none; }
   .lista-periodos, .lista-eventos { margin: 6px 0 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 0.9rem; }
   .lista-eventos { list-style: upper-alpha; }
+  .lista-eventos.con-fechas { list-style: none; padding-left: 0; }
+  .aviso-filtro { margin: 6px 0 0; font-size: 0.9rem; }
+  .categorias { border: 0; padding: 0; margin: 0; width: 100%; min-width: 0; }
+  .categorias legend { font-size: 0.85rem; padding: 0; margin-bottom: 4px; }
+  .categorias-lista { display: flex; flex-wrap: wrap; gap: 0 16px; }
+  .categorias:disabled .casilla { color: var(--secundario); }
   .lector { position: relative; border-radius: 4px; }
   .lector :global(.lector-regla) { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px solid var(--texto); pointer-events: none; }
   .lectura { margin: 0; min-height: 1.4em; font-size: 0.9rem; }

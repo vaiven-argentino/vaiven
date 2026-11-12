@@ -1,7 +1,7 @@
 // Interactividad de la ficha: transformaciones, período y escala, con el estado en la URL; gráfico (Vega-Lite,
 // cargado recién cuando hace falta); tabla, resumen, avisos, descargas de la vista y cita.
 import {
-  ErrorTransformacion, REGLA_UBICACION, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, serieDeEntidad, textoReparto,
+  ErrorTransformacion, REGLA_UBICACION, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, serieDeEntidad,
   tienePais, transformar, type DocumentoEventos, type DocumentoPeriodos, type Opciones, type Periodo, type Resultado,
   type SerieExportada, type Transformacion,
 } from "@vaiven/transformaciones";
@@ -9,10 +9,11 @@ import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
-import { especificacion, type BandaEpisodio, type MarcaEvento } from "./espec";
+import { diaLegible, especificacion, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
 import {
-  ACLARACION_ETAPAS, avisoConfianza, bandasDe, columnaPeriodo, columnasDe, contextoDe, episodiosEnRango, esSombreado,
-  eventosEnRango, periodosEnRango, textoSombreado, tipoDe, ubicacionesDe, type ColumnasPeriodo, type OpcionSombreado,
+  ACLARACION_ETAPAS, EPISODIO, avisoConfianza, avisoFiltroEventos, bandasDe, columnaPeriodo, columnasDe, contextoDe,
+  episodiosEnRango, escribirEv, esSombreado, eventosEnRango, leerEv, periodosEnRango, textoLectura, textoSombreado, tipoDe,
+  ubicacionesDe, type ColumnasPeriodo, type OpcionSombreado,
 } from "../lib/periodos";
 import { conectarLector, type Lectura } from "./lector";
 import { csvDeVista } from "../lib/descarga";
@@ -51,6 +52,13 @@ function iniciar(): void {
   const cLog = $<HTMLInputElement>("c-log")!;
   const cSombreado = $<HTMLSelectElement>("c-sombreado");
   const cEventos = $<HTMLInputElement>("c-eventos");
+  // Filtro de eventos (parámetro `ev`): una casilla por categoría de eventos.json y una para los episodios.
+  const cCampoCategorias = $<HTMLFieldSetElement>("c-categorias");
+  const cCategorias = [...document.querySelectorAll<HTMLInputElement>("#c-categorias input[data-categoria]")];
+  const CATEGORIAS = cCategorias.map((k) => k.dataset.categoria!);
+  const nombresCategorias = cCategorias.filter((k) => k.dataset.categoria !== EPISODIO).map((k) => ({ id: k.dataset.categoria!, nombre: k.dataset.nombre ?? k.dataset.categoria! }));
+  /** Las categorías marcadas, o ninguna si «Marcar eventos» está apagado. */
+  const evElegido = (): string[] => (cEventos?.checked ? cCategorias.filter((k) => k.checked).map((k) => k.dataset.categoria!) : []);
   let registroPeriodos: DocumentoPeriodos | null = null;
   let registroEventos: DocumentoEventos | null = null;
   const campoLog = $<HTMLLabelElement>("campo-log")!;
@@ -83,7 +91,12 @@ function iniciar(): void {
   cLog.checked = q.get("log") === "1" || (q.get("log") === null && escalaLogInicial());
   // Sombreado y eventos (fase 4b): apagados salvo que la URL los pida.
   if (cSombreado && esSombreado(q.get("sh"))) cSombreado.value = q.get("sh")!;
-  if (cEventos) cEventos.checked = q.get("ev") === "1";
+  if (cEventos) {
+    const { ev } = leerEv(q.get("ev"), CATEGORIAS);
+    cEventos.checked = ev.length > 0;
+    cCategorias.forEach((k) => (k.checked = !ev.length || ev.includes(k.dataset.categoria!)));
+    if (cCampoCategorias) cCampoCategorias.disabled = !ev.length;
+  }
   // En pantallas chicas el panel de opciones arranca cerrado (SPEC 6.5), para que el gráfico quede a la vista.
   const panel = $<HTMLDetailsElement>("panel-opciones");
   if (panel && window.matchMedia("(max-width: 700px)").matches) panel.open = false;
@@ -153,35 +166,38 @@ function iniciar(): void {
     if (cHasta.value) p.set("hasta", cHasta.value);
     if (cLog.checked !== escalaLogInicial()) p.set("log", cLog.checked ? "1" : "0");
     if (cSombreado?.value) p.set("sh", cSombreado.value);
-    if (cEventos?.checked) p.set("ev", "1");
+    const ev = escribirEv(evElegido(), CATEGORIAS);
+    if (ev) p.set("ev", ev);
     const nueva = `${location.pathname}${p.size ? `?${p}` : ""}${location.hash}`;
     history.replaceState(null, "", nueva);
   }
 
   let ultimo: {
     r: Resultado; o: Opciones; otras: Array<{ nombre: string; resultado: Resultado }>; periodos: Periodo[]; eventos: MarcaEvento[];
-    episodios: BandaEpisodio[];
+    episodios: BandaEpisodio[]; totalEventos: number;
   } | null = null;
   // Cómo se ubica cada dato (ubicacion.ts): con la agregación de la variante y la transformación pedida.
   const contexto = (o: Opciones) => contextoDe(serie.agregacion, o);
   const sombreado = () => (cSombreado && esSombreado(cSombreado.value) ? cSombreado.value as OpcionSombreado : null);
 
   /** Los períodos y eventos que se ven (se piden a /datos/ la primera vez que se activan). */
-  async function marcas(r: Resultado): Promise<{ periodos: Periodo[]; eventos: MarcaEvento[]; episodios: BandaEpisodio[] }> {
+  async function marcas(r: Resultado): Promise<{ periodos: Periodo[]; eventos: MarcaEvento[]; episodios: BandaEpisodio[]; totalEventos: number }> {
     const sh = sombreado();
-    const ev = !!cEventos?.checked;
+    const filtro = evElegido();
+    const ev = filtro.length > 0;
     try {
       // Los episodios están en periodos.json: se marcan junto con los eventos.
       if (sh || ev) registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
       if (ev) registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
     } catch (err) {
       estado.textContent = `No se pudieron leer los períodos o los eventos (${err instanceof Error ? err.message : String(err)}).`;
-      return { periodos: [], eventos: [], episodios: [] };
+      return { periodos: [], eventos: [], episodios: [], totalEventos: 0 };
     }
     return {
       periodos: sh && registroPeriodos ? periodosEnRango(registroPeriodos, sh, r) : [],
-      eventos: ev && registroEventos ? eventosEnRango(registroEventos, r) : [],
-      episodios: ev && registroPeriodos ? episodiosEnRango(registroPeriodos, r) : [],
+      eventos: ev && registroEventos ? eventosEnRango(registroEventos, r, filtro) : [],
+      episodios: filtro.includes(EPISODIO) && registroPeriodos ? episodiosEnRango(registroPeriodos, r) : [],
+      totalEventos: ev && registroEventos ? eventosEnRango(registroEventos, r).length : 0,
     };
   }
 
@@ -252,6 +268,7 @@ function iniciar(): void {
     const pico = picoQueComprime(r);
     if (pico) lineas.push(`El máximo (${pico}) comprime el resto del gráfico. Para ver mejor los otros años, elegí un período más corto (por ejemplo, «Desde 1991»)${cLog.disabled ? "" : " o la escala logarítmica"}.`);
     if (ultimo?.periodos.length) lineas.push(REGLA_UBICACION);
+    if (avisoFiltro()) lineas.push(avisoFiltro());
     const caja = $("avisos")!;
     caja.replaceChildren(...lineas.map((l) => Object.assign(document.createElement("p"), { textContent: l })));
     caja.hidden = !lineas.length;
@@ -298,9 +315,31 @@ function iniciar(): void {
       if (x.fases?.length) li.append(` (${x.fases.map((f) => `${f.nombre_corto.toLowerCase()}: ${rangoLegible(f)}`).join("; ")})`);
       return li;
     }));
-    $("lista-eventos")!.replaceChildren(...eventos.map((e) => {
+    listaEventos();
+    const filtro = avisoFiltro();
+    const nodoFiltro = $("aviso-filtro");
+    if (nodoFiltro) { nodoFiltro.textContent = filtro; nodoFiltro.hidden = !filtro; }
+  }
+
+  /** El aviso de los eventos que deja afuera el filtro («Se muestran 12 de 30 eventos…»), o vacío. */
+  function avisoFiltro(): string {
+    return ultimo ? avisoFiltroEventos(ultimo.eventos.length, ultimo.totalEventos, evElegido(), nombresCategorias) : "";
+  }
+
+  /** Cómo se marcan los eventos en el gráfico de la pantalla: con letras o, si no hay lugar, con rayitas (SPEC 6.2). */
+  const modoActual = (): ModoEventos => (ultimo ? modoEventosDe(ultimo.r, ultimo.eventos, contenedor.clientWidth || 600) : "letras");
+
+  /** La lista de los eventos marcados, siempre completa: con su letra o, con rayitas, con la fecha. */
+  function listaEventos(): void {
+    const lista = $("lista-eventos");
+    if (!ultimo || !lista) return;
+    const rayitas = modoActual() === "rayitas";
+    lista.classList.toggle("con-fechas", rayitas);
+    lista.replaceChildren(...ultimo.eventos.map((e) => {
       const li = document.createElement("li");
-      li.append(`${e.nombre} `, Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible({ desde: e.fecha, hasta: null }).replace("desde el ", "") }));
+      const fecha = Object.assign(document.createElement("span"), { className: "rango", textContent: diaLegible(e.fecha) });
+      if (rayitas) li.append(fecha, ` · ${e.nombre}`);
+      else li.append(`${e.nombre} `, fecha);
       return li;
     }));
   }
@@ -382,25 +421,25 @@ function iniciar(): void {
   let turno = 0;
   const lector = $("lector") && $("lectura") ? conectarLector($("lector")!, $("lectura")!) : null;
 
-  /** Lo que dice el lector del gráfico de cada dato: fecha, valor, período (con sus fechas) y reparto. */
+  /**
+   * Lo que dice el lector del gráfico de cada dato: fecha, valor, la banda del sombreado con sus fechas (y el reparto),
+   * el episodio y los eventos del dato (revisión externa de la 4b, 9.4).
+   */
   function lecturas(): Lectura[] {
     if (!ultimo) return [];
-    const { r, o, periodos } = ultimo;
+    const { r, o, periodos, episodios, eventos } = ultimo;
     const sh = sombreado();
     const ctx = contexto(o);
     const us = periodos.length && sh ? ubicacionesDe(periodos, sh, r, ctx) : [];
     const variacion = esVariacion(o.transformacion ?? "nivel");
+    const modo = modoActual();
     return r.datos.flatMap(([f, v], k) => {
       if (v === null) return [];
-      const partes = [`${fechaLegible(f, r.frecuencias[k])}: ${numero(v, variacion)}`];
-      const u = us[k];
-      if (u && sh) {
-        const p = u.vigentes[0];
-        partes.push(`${columnaPeriodo(sh)}: ${u.mayoria ? u.etiqueta : `${u.etiqueta} (sin mayoría)`}${p && u.vigentes.length === 1 ? ` (${rangoLegible(p)})` : ""}`);
-        const reparto = textoReparto(u);
-        if (reparto) partes.push(`reparto: ${reparto}`);
-      }
-      return [{ t: fechaDeDibujo(referenciaDe(f, r.frecuencias[k], ctx)), texto: partes.join(" · ") }];
+      const texto = textoLectura({
+        fecha: f, frecuencia: r.frecuencias[k], valor: numero(v, variacion), contexto: ctx,
+        ...(us[k] && sh ? { columna: columnaPeriodo(sh), ubicacion: us[k] } : {}), episodios, eventos, modo,
+      });
+      return [{ t: fechaDeDibujo(referenciaDe(f, r.frecuencias[k], ctx)), texto }];
     });
   }
   async function dibujar(): Promise<void> {
@@ -420,6 +459,8 @@ function iniciar(): void {
       vista?.finalize();
       vista = await dibujarEn(contenedor, spec);
       contenedor.dataset.listo = "1";
+      contenedor.dataset.eventos = ultimo.eventos.length ? modoActual() : "";
+      listaEventos();
       lector?.actualizar(lecturas(), vista);
     } catch (err) {
       estado.textContent = `No se pudo dibujar el gráfico (${err instanceof Error ? err.message : String(err)}). La tabla y las descargas siguen disponibles.`;
@@ -435,7 +476,8 @@ function iniciar(): void {
     const lineasMarcas = [
       ...(periodos.length && registroPeriodos ? [`Sombreado: ${cSombreado?.selectedOptions[0]?.textContent?.toLowerCase()}${sombreado() === "catedra" ? ` (${ACLARACION_ETAPAS})` : ""}. Cada dato, en el período vigente a mitad de su intervalo (los saldos en nivel, el último día). Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`] : []),
       ...(episodios.length ? [`Episodios: ${episodios.map((e) => e.nombre).join("; ")}.`] : []),
-      ...(eventos.length ? [`Eventos: ${eventos.map((e) => `${e.letra}. ${e.nombre}`).join("; ")}.`] : []),
+      // En la imagen (900 px) los eventos pueden ir con letras aunque en la pantalla vayan como rayitas.
+      ...(eventos.length ? [`Eventos: ${eventos.map((e) => (modoEventosDe(r, eventos, 900) === "letras" ? `${e.letra}. ${e.nombre}` : `${diaLegible(e.fecha)}, ${e.nombre}`)).join("; ")}.`] : []),
     ];
     const spec = especificacion({
       nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
@@ -525,6 +567,12 @@ function iniciar(): void {
   form.addEventListener("submit", (e) => e.preventDefault());
   form.addEventListener("change", (e) => {
     if (e.target === cEntidad && cEntidad) elegirEntidad(cEntidad.value);
+    // «Marcar eventos» habilita las categorías (y, si estaban todas desmarcadas, las vuelve a marcar); desmarcar todas
+    // las categorías apaga «Marcar eventos».
+    const t = e.target as HTMLInputElement;
+    if (t === cEventos && cEventos.checked && !cCategorias.some((k) => k.checked)) cCategorias.forEach((k) => (k.checked = true));
+    if (t.dataset?.categoria && !cCategorias.some((k) => k.checked) && cEventos) cEventos.checked = false;
+    if (cCampoCategorias) cCampoCategorias.disabled = !cEventos?.checked;
     void actualizar();
   });
   cBase?.addEventListener("input", () => { if (/^\d{4}(-\d{2})?$/.test(cBase.value.trim())) void actualizar(); });
@@ -556,7 +604,9 @@ function iniciar(): void {
   let anchoPrevio = contenedor.clientWidth;
   new ResizeObserver(() => {
     const ancho = contenedor.clientWidth;
-    if ((ancho < 520) !== (anchoPrevio < 520)) void dibujar();
+    // Se redibuja al cruzar los 520 px y con cambios grandes, porque el modo de los eventos (letras o rayitas) depende
+    // del ancho.
+    if ((ancho < 520) !== (anchoPrevio < 520) || Math.abs(ancho - anchoPrevio) > 80) void dibujar();
     anchoPrevio = ancho;
   }).observe(contenedor);
 

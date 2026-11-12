@@ -206,13 +206,11 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const { tema } = e;
   if (!filasLinea.length) return { $schema: "https://vega.github.io/schema/vega-lite/v6.json", data: { values: [] }, mark: "point" };
 
-  const ultimo = e.resultado.datos[e.resultado.datos.length - 1];
-  const ini = indiceMes(e.resultado.datos[0][0]);
   const frecUltima = e.resultado.frecuencias[e.resultado.frecuencias.length - 1];
-  // El eje va del primer día de la primera observación al día siguiente del último de la última: así entra el punto
-  // medio (o el último día) de cada dato. `meses` es la cantidad de meses que cubre (para las marcas del eje).
-  const meses = indiceMes(ultimo[0]) + (frecUltima === "semestral" ? 1 : (PASO[frecUltima as keyof typeof PASO] ?? 1)) - ini;
-  const fin = ini + meses;
+  // El eje va del primer día de la primera observación al día siguiente del último de la última (`dominioMeses`).
+  // `meses` es la cantidad de meses que cubre (para las marcas del eje).
+  const { ini, fin } = dominioMeses(e.resultado);
+  const meses = fin - ini;
   const dominioX = [iso(ini), iso(fin)];
   const x = (campo: string) => ({ field: campo, type: "temporal", scale: { type: "utc", domain: dominioX }, title: null });
 
@@ -271,17 +269,20 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   if (e.nombre) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
 
   const capas: Record<string, unknown>[] = [...sombra.capas(x)];
-  // Las letras de los eventos cercanos (menos de 13 px) se escalonan en filas, para que no se pisen.
-  const eventos = escalonar((e.eventos ?? []).filter((ev) => indiceDia(ev.fecha) >= ini && indiceDia(ev.fecha) <= fin), px);
-  const filasEventos = eventos.length ? Math.max(...eventos.map((ev) => ev.fila)) + 1 : 0;
+  // Eventos (SPEC 6.2): con una letra cada uno si hay lugar; si dos marcas quedarían a menos de 18 px, todas pasan a
+  // rayitas sobre el eje, sin letras ni reglas punteadas (el nombre, en el tooltip, el lector y la lista).
+  const eventos = (e.eventos ?? []).filter((ev) => indiceDia(ev.fecha) >= ini && indiceDia(ev.fecha) <= fin)
+    .sort((a, b) => a.fecha.localeCompare(b.fecha)).map((ev) => ({ ...ev, dia: diaLegible(ev.fecha) }));
+  const modo = modoEventos(eventos.map((ev) => ev.fecha), ini, fin, e.ancho);
+  const letras = eventos.length > 0 && modo === "letras";
   const franjaEpisodios = episodios(e, ini, fin, px);
   // Debajo del eje van, en orden: la franja de los episodios y las letras de los eventos; después, los años.
   const debajo = franjaEpisodios.alto;
-  if (eventos.length) {
+  if (letras) {
     capas.push({
       // La regla empieza debajo de los rótulos del sombreado, para no tacharlos (revisión visual de la 4b).
       data: { values: eventos }, mark: { type: "rule", color: tema.borde, strokeDash: [1, 3], strokeWidth: 1, clip: true },
-      encoding: { x: x("fecha"), y: { value: sombra.arriba }, y2: { value: e.alto }, tooltip: [{ field: "letra", title: "Evento" }, { field: "nombre", title: "Nombre" }] },
+      encoding: { x: x("fecha"), y: { value: sombra.arriba }, y2: { value: e.alto }, tooltip: [{ field: "letra", title: "Evento" }, { field: "nombre", title: "Nombre" }, { field: "dia", title: "Fecha" }] },
     });
   }
   if (bandas.length) {
@@ -383,19 +384,29 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       encoding: { x: x("t"), y: { ...y, field: "vy" }, text: { field: "pais" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
     });
   }
-  if (eventos.length) {
-    // Cada letra va sobre un cuadrado con el color del fondo, para que se lea aunque caiga sobre la serie o la línea
-    // del 0 (revisión visual de la 4b); las muy pegadas al borde izquierdo se corren un poco.
-    // Las letras van debajo del eje X (entre la línea del eje y los años), para no tapar la serie; las cercanas, en
-    // filas hacia abajo (revisión visual de la 4b).
-    eventos.forEach((ev) => Object.assign(ev, { y: e.alto + debajo + 11 + ev.fila * 15, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
+  if (letras) {
+    // Cada letra va sobre un cuadrado con el color del fondo, debajo del eje X (entre la línea del eje y los años), para
+    // que no tape la serie (revisión visual de la 4b); las muy pegadas al borde izquierdo se corren un poco.
+    const conY = eventos.map((ev) => ({ ...ev, y: e.alto + debajo + 11, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
+    const tooltipEvento = [{ field: "nombre", title: "Evento" }, { field: "dia", title: "Fecha" }];
     capas.push({
-      data: { values: eventos }, mark: { type: "point", shape: "square", size: 150, filled: true, color: tema.fondo, stroke: tema.borde, strokeWidth: 0.8, opacity: 1 },
-      encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, tooltip: [{ field: "nombre", title: "Evento" }] },
+      data: { values: conY }, mark: { type: "point", shape: "square", size: 150, filled: true, color: tema.fondo, stroke: tema.borde, strokeWidth: 0.8, opacity: 1 },
+      encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, tooltip: tooltipEvento },
     });
     capas.push({
-      data: { values: eventos }, mark: { type: "text", color: tema.texto, fontSize: 9.5, fontWeight: 700, baseline: "middle" },
-      encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, text: { field: "letra" }, tooltip: [{ field: "nombre", title: "Evento" }] },
+      data: { values: conY }, mark: { type: "text", color: tema.texto, fontSize: 9.5, fontWeight: 700, baseline: "middle" },
+      encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, text: { field: "letra" }, tooltip: tooltipEvento },
+    });
+  } else if (eventos.length) {
+    // Rayitas: una marca corta sobre el eje, en el color del texto, y una franja invisible más ancha para el tooltip.
+    const tooltipEvento = [{ field: "nombre", title: "Evento" }, { field: "dia", title: "Fecha" }];
+    capas.push({
+      data: { values: eventos }, mark: { type: "rule", color: tema.texto, strokeWidth: 1.5, clip: true },
+      encoding: { x: x("fecha"), y: { value: e.alto - 9 }, y2: { value: e.alto }, tooltip: tooltipEvento },
+    });
+    capas.push({
+      data: { values: eventos }, mark: { type: "rule", color: tema.fondo, strokeWidth: 9, opacity: 0, clip: true },
+      encoding: { x: x("fecha"), y: { value: e.alto - 14 }, y2: { value: e.alto + 2 }, tooltip: tooltipEvento },
     });
   }
   capas.push(...franjaEpisodios.capas(x));
@@ -425,7 +436,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
         labelColor: tema.secundario, titleColor: tema.secundario, gridColor: tema.linea, domainColor: tema.borde,
         tickColor: tema.borde, labelFontSize: 12, labelFont: tema.fuente, labelOverlap: true, labelFlush: true,
       },
-      axisX: { grid: false, labelPadding: 6 + debajo + filasEventos * 15, ...marcasX(meses, e.ancho < 520 ? 5 : 10) },
+      axisX: { grid: false, labelPadding: 6 + debajo + (letras ? 15 : 0), ...marcasX(meses, e.ancho < 520 ? 5 : 10) },
       legend: { labelColor: tema.texto, titleColor: tema.secundario, labelFontSize: 12, titleFontSize: 12, labelFont: tema.fuente, labelLimit: 320 },
       title: { color: tema.texto, subtitleColor: tema.secundario, anchor: "start", fontSize: 17, subtitleFontSize: 12, font: tema.fuente, subtitleFont: tema.fuente },
       text: { font: tema.fuente },
@@ -622,14 +633,36 @@ function episodios(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
   };
 }
 
-/** Fila (0 abajo) de la letra de cada evento: sube una fila si queda a menos de 13 px del anterior de esa fila (hasta 6). */
-function escalonar(eventos: MarcaEvento[], px: (i: number) => number): Array<MarcaEvento & { fila: number; y?: number }> {
-  const ultimoEnFila: number[] = [];
-  return [...eventos].sort((a, b) => a.fecha.localeCompare(b.fecha)).map((ev) => {
-    const x = px(indiceDia(ev.fecha));
-    let fila = ultimoEnFila.findIndex((u) => x - u >= 13);
-    if (fila === -1) fila = Math.min(ultimoEnFila.length, 5);
-    ultimoEnFila[fila] = x;
-    return { ...ev, fila };
-  });
+/** Separación mínima (px) entre las marcas de los eventos para que lleven letra (SPEC 6.2). */
+export const SEPARACION_EVENTOS = 18;
+export type ModoEventos = "letras" | "rayitas";
+
+/**
+ * Cómo se marcan los eventos: con letras si todas las marcas quedan a `SEPARACION_EVENTOS` px o más entre sí; si no,
+ * todas como rayitas sobre el eje. `ini` y `fin` son el dominio del eje en meses (`dominioMeses`).
+ */
+export function modoEventos(fechas: string[], ini: number, fin: number, ancho: number): ModoEventos {
+  const xs = fechas.map((f) => ((indiceDia(f) - ini) / Math.max(fin - ini, 1)) * ancho).sort((a, b) => a - b);
+  return xs.every((x, k) => k === 0 || x - xs[k - 1] >= SEPARACION_EVENTOS) ? "letras" : "rayitas";
 }
+
+/**
+ * Dominio del eje X en meses: del primer día de la primera observación al día siguiente del último de la última, para
+ * que entre el punto medio (o el último día) de cada dato.
+ */
+export function dominioMeses(r: Pick<Resultado, "datos" | "frecuencias">): { ini: number; fin: number } {
+  const ini = indiceMes(r.datos[0][0]);
+  const frecUltima = r.frecuencias[r.frecuencias.length - 1];
+  const fin = indiceMes(r.datos[r.datos.length - 1][0]) + (frecUltima === "semestral" ? 1 : (PASO[frecUltima as keyof typeof PASO] ?? 1));
+  return { ini, fin };
+}
+
+/** El modo de los eventos de un gráfico de `ancho` px (lo usan las listas de la ficha y del explorador). */
+export function modoEventosDe(r: Pick<Resultado, "datos" | "frecuencias">, eventos: MarcaEvento[], ancho: number): ModoEventos {
+  if (!r.datos.length) return "letras";
+  const { ini, fin } = dominioMeses(r);
+  return modoEventos(eventos.map((ev) => ev.fecha).filter((f) => indiceDia(f) >= ini && indiceDia(f) <= fin), ini, fin, ancho);
+}
+
+/** «1990-01-03» → «3/1/1990». */
+export const diaLegible = (d: string) => { const [a, m, dd] = d.split("-"); return `${Number(dd)}/${Number(m)}/${a}`; };
