@@ -69,7 +69,7 @@ export const DESCRIPCION = {
     "Dice qué regía en una fecha, según los registros de Vaivén: gobierno (y mandato), ministro de Economía, planes de estabilización, régimen " +
     "cambiario y etapa de la política económica, con sus fechas y fuentes, más los eventos económicos de ese día o mes " +
     "(por ejemplo, el corralito o la salida del cepo). `fecha`: AAAA-MM-DD (un día) o AAAA-MM (todo lo que estuvo " +
-    "vigente en algún momento de ese mes; en diciembre de 2001, cinco presidentes). Desde 1970. Usala para poner en " +
+    "vigente en algún momento de ese mes; en diciembre de 2001, cuatro presidentes). Desde 1970. Usala para poner en " +
     "contexto un dato de una serie.",
 } as const;
 
