@@ -21,6 +21,15 @@
   --graf-3: #00785A;
   --graf-4: #A8497F;
   --graf-5: #8F6400;
+  /* Países 6 a 8 del explorador (fase 4b): negro, celeste oscurecido y violeta; todos ≥ 4,1:1 contra el fondo. */
+  --graf-6: #22201B;
+  --graf-7: #3B7EA1;
+  --graf-8: #5B3A8E;
+  /* Sombreado por períodos (SPEC 6.3: neutros que no compitan con las series). Se alternan A y B; los gobiernos de facto
+     van en el más oscuro. Contra el fondo: 1,12, 1,25 y 1,47:1 (se distinguen por luminosidad, no por tono). */
+  --periodo-a: #F0EADD;
+  --periodo-b: #E6DECD;
+  --periodo-facto: #D8CDB5;
 
   --sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -35,6 +44,8 @@
     --sobre-acento: #17140F; --hoja: #E8B23A; --nervio: #17140F; --ocre: #E0B062; --oliva: #A9C48C;
     --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
     --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
+    --graf-6: #EFE9DE; --graf-7: #D55E00; --graf-8: #B9A3E3;
+    --periodo-a: #211C16; --periodo-b: #2A241C; --periodo-facto: #3A3127;
     color-scheme: dark;
   }
 }
@@ -43,6 +54,8 @@
   --sobre-acento: #17140F; --hoja: #E8B23A; --nervio: #17140F; --ocre: #E0B062; --oliva: #A9C48C;
   --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
   --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
+  --graf-6: #EFE9DE; --graf-7: #D55E00; --graf-8: #B9A3E3;
+  --periodo-a: #211C16; --periodo-b: #2A241C; --periodo-facto: #3A3127;
   color-scheme: dark;
 }
 

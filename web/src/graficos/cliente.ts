@@ -1,25 +1,17 @@
 // Interactividad de la ficha: transformaciones, período y escala, con el estado en la URL; gráfico (Vega-Lite,
 // cargado recién cuando hace falta); tabla, resumen, avisos, descargas de la vista y cita.
 import {
-  ErrorTransformacion, disponibles, serieDeEntidad, tienePais, transformar, type InsumosCargados, type Opciones, type Resultado,
+  ErrorTransformacion, disponibles, serieDeEntidad, tienePais, transformar, type Opciones, type Resultado,
   type SerieExportada, type Transformacion,
 } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, opcionesDelDenominador, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
+import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
-import { especificacion, type Tema } from "./espec";
+import { especificacion } from "./espec";
+import { bajar, cargarInsumos as pedirInsumos, dibujarEn, exportarImagen, licenciaImagen as licencia, tema, type Cargados } from "./comun";
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
-
-const LOCALE_NUMEROS = { decimal: ",", thousands: ".", grouping: [3], currency: ["$", ""] };
-const LOCALE_FECHAS = {
-  dateTime: "%e de %B de %Y, %X", date: "%d/%m/%Y", time: "%H:%M:%S", periods: ["a. m.", "p. m."],
-  days: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
-  shortDays: ["dom.", "lun.", "mar.", "mié.", "jue.", "vie.", "sáb."],
-  months: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
-  shortMonths: ["ene.", "feb.", "mar.", "abr.", "may.", "jun.", "jul.", "ago.", "sep.", "oct.", "nov.", "dic."],
-};
 
 function iniciar(): void {
   const nodoDatos = $<HTMLScriptElement>("datos-ficha");
@@ -32,7 +24,7 @@ function iniciar(): void {
   // en la lista «Quiebres»; el gráfico y los avisos muestran solo los de los países que se ven.
   let quiebres: QuiebreNumerado[] = numerarQuiebres({ ...serie, advertencias: doc.advertencias });
   // Insumos de las medidas, pedidos a /datos/ la primera vez que se eligen.
-  const cargados: InsumosCargados & { series: Record<string, SerieExportada> } = { series: {} };
+  const cargados: Cargados = { series: {} };
 
   const form = $<HTMLFormElement>("controles")!;
   const cTransf = $<HTMLSelectElement>("c-transformacion")!;
@@ -154,27 +146,7 @@ function iniciar(): void {
 
   /** Pide a /datos/ los insumos que la medida elegida todavía no tiene. */
   async function cargarInsumos(o: Opciones): Promise<void> {
-    const pedidos: Array<Promise<void>> = [];
-    const leer = async (archivo: string) => {
-      const res = await fetch(`/datos/${archivo}`);
-      if (!res.ok) throw new Error(`no se pudo leer /datos/${archivo} (${res.status})`);
-      return res.json();
-    };
-    if (o.pesosActuales && !cargados.signos) {
-      const archivo = serie.insumos?.pesos_actuales?.opciones[0].archivo;
-      if (archivo) pedidos.push(leer(archivo).then((s) => { cargados.signos = s; }));
-    }
-    if (o.medida) {
-      const insumo = serie.insumos?.[o.medida];
-      const ids = o.medida === "real" ? [o.deflactor ?? insumo?.por_defecto]
-        : insumo ? opcionesDelDenominador(insumo, o.denominador).map((x) => x.id) : [];
-      for (const op of insumo?.opciones ?? []) {
-        if (ids.includes(op.id) && !cargados.series[op.id]) pedidos.push(leer(op.archivo).then((s) => { cargados.series[op.id] = s; }));
-      }
-    }
-    if (!pedidos.length) return;
-    estado.textContent = "Cargando los datos que necesita la medida…";
-    await Promise.all(pedidos);
+    await pedirInsumos(serie, o, cargados, () => { estado.textContent = "Cargando los datos que necesita la medida…"; });
   }
 
   async function actualizar(): Promise<void> {
@@ -302,15 +274,6 @@ function iniciar(): void {
     $("cita-bibtex")!.textContent = bibtex(doc, tr, paises);
   }
 
-  function tema(): Tema {
-    const css = getComputedStyle(document.documentElement);
-    const v = (n: string) => css.getPropertyValue(n).trim();
-    return {
-      fondo: v("--fondo"), texto: v("--texto"), secundario: v("--secundario"), linea: v("--linea"), banda: v("--banda"),
-      borde: v("--borde"), serie: v("--graf-1"), fuente: "Inter Variable, system-ui, sans-serif",
-    };
-  }
-
   let vista: { finalize: () => void } | null = null;
   let turno = 0;
   async function dibujar(): Promise<void> {
@@ -324,14 +287,10 @@ function iniciar(): void {
       log: cLog.checked && !cLog.disabled, alto: ancho < 520 ? 240 : 320, ancho, descripcion: $("resumen-grafico")!.textContent ?? "",
     });
     try {
-      const { default: embed } = await import("vega-embed");
+      await import("vega-embed");
       if (mio !== turno) return;
       vista?.finalize();
-      const res = await embed(contenedor, spec as never, {
-        renderer: "svg", actions: false, formatLocale: LOCALE_NUMEROS, timeFormatLocale: LOCALE_FECHAS as never,
-        tooltip: { theme: "custom" },
-      });
-      vista = res;
+      vista = await dibujarEn(contenedor, spec);
       contenedor.dataset.listo = "1";
     } catch (err) {
       estado.textContent = `No se pudo dibujar el gráfico (${err instanceof Error ? err.message : String(err)}). La tabla y las descargas siguen disponibles.`;
@@ -343,7 +302,6 @@ function iniciar(): void {
   async function imagen(formato: "png" | "svg"): Promise<void> {
     if (!ultimo) return;
     const { r, o, otras } = ultimo;
-    const { vega, vegaLite } = await import("vega-embed");
     const fuentes = [...new Set(doc.fuentes.map((f) => f.organismo))].join("; ");
     const spec = especificacion({
       nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
@@ -356,14 +314,7 @@ function iniciar(): void {
           `Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. ${licenciaImagen()}`, location.href],
       },
     });
-    // Vega exporta `locale` (de vega-format), aunque sus tipos no lo declaren.
-    const locale = (vega as unknown as { locale?: (n: object, t: object) => unknown }).locale?.(LOCALE_NUMEROS, LOCALE_FECHAS);
-    const v = new vega.View(vega.parse(vegaLite.compile(spec as never).spec), { renderer: "none", ...(locale ? { locale } : {}) } as never);
-    const url = formato === "png"
-      ? await v.toImageURL("png", 2)
-      : URL.createObjectURL(new Blob([await v.toSVG()], { type: "image/svg+xml" }));
-    bajar(url, `${nombreArchivo()}.${formato}`);
-    v.finalize();
+    await exportarImagen(spec, formato, `${nombreArchivo()}.${formato}`);
   }
 
   function lineaPaises(): string[] {
@@ -371,25 +322,13 @@ function iniciar(): void {
     return primera ? [`Resaltado: ${primera}${resto.length ? `; en gris: ${resto.join(", ")}` : ""}.`] : [];
   }
 
-  /** Como en la cita: si una fuente tiene otros términos (Bruegel), se dice. */
-  function licenciaImagen(): string {
-    const otras = [...new Set(doc.fuentes.filter((f) => f.licencia !== "CC-BY-4.0").map((f) => f.organismo))];
-    return otras.length ? `Licencia de Vaivén CC BY 4.0; los datos de ${otras.join(" y ")} conservan sus términos.` : "Licencia CC BY 4.0.";
-  }
+  const licenciaImagen = () => licencia(doc.fuentes);
 
   function nombreArchivo(): string {
     const o = ultimo?.o;
     const partes = ["vaiven", doc.serie, doc.variante, pais ? cEntidad?.value : undefined, o?.pesosActuales ? "pesos_actuales" : undefined,
       o?.frecuencia, o?.medida, o?.transformacion !== "nivel" ? o?.transformacion : undefined, o?.mediaMovil ? `mm${o.mediaMovil}` : undefined];
     return partes.filter(Boolean).join("_");
-  }
-
-  function bajar(url: string, nombre: string): void {
-    const a = Object.assign(document.createElement("a"), { href: url, download: nombre });
-    document.body.append(a);
-    a.click();
-    a.remove();
-    if (url.startsWith("blob:")) setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
 
   function csvVista(): void {
