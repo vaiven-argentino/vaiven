@@ -586,3 +586,16 @@ También se documentaron las reglas de 2.4, el export de 2.5, el nombre público
   - `/periodos/` tiene 159 tarjetas y la línea de tiempo enlaza los tramos;
   - un acceso del Plan Austral abre el explorador sin cambiar la URL y con el sombreado.
 - **Revisión de enlaces:** 1593 enlaces internos, ninguno roto.
+- **Prueba de punta a punta completa** contra el Worker local (`wrangler dev`, que aplica las redirecciones de la descarga completa; `astro preview` no las aplica): las 22 fichas, el explorador, la ficha con sombreado y `/periodos/` funcionan en 390 y 1280 px.
+
+### Revisión visual (12/11/2026)
+
+- **Alcance:** el `revisor-visual` miró `/periodos/` y la ficha con sombreado (IPC, PIB por mandato, resultado fiscal, crecimiento internacional y PIB sin parámetros) en 1280 y 390 px, en modo claro y oscuro: 40 vistas.
+- **Se corrigió:**
+  - La línea de tiempo tenía `role="img"` con 159 enlaces adentro, y un lector de pantalla no los exponía (axe: *nested-interactive*). Pasa a `role="group"`, con título y descripción.
+  - Los accesos «Ver en el explorador» medían 17 px de alto. Ahora son botones de 44 px.
+  - «Fuentes» no parecía un desplegable: ahora lleva una flecha y el color de los enlaces.
+  - Las letras de los eventos tapaban la serie donde había varios eventos juntos (2001–2002, el mínimo de la Argentina en 2002). Ahora van debajo del eje X, entre la línea del eje y los años, escalonadas hacia abajo.
+  - Las reglas de los eventos tachaban los rótulos de las bandas: ahora empiezan debajo de los rótulos.
+- **Verificación:** axe no da violaciones en `/periodos/` (390 y 1280 px), en la ficha con sombreado ni en el explorador con planes y eventos.
+

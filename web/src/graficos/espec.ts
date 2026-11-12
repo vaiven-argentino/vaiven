@@ -232,12 +232,14 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   if (e.nombre) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
 
   const capas: Record<string, unknown>[] = [...sombra.capas(x)];
-  // Las letras de los eventos cercanos (menos de 12 px) se escalonan en dos o tres alturas, para que no se pisen.
+  // Las letras de los eventos cercanos (menos de 13 px) se escalonan en filas, para que no se pisen.
   const eventos = escalonar((e.eventos ?? []).filter((ev) => indiceDia(ev.fecha) >= ini && indiceDia(ev.fecha) <= fin), px);
+  const filasEventos = eventos.length ? Math.max(...eventos.map((ev) => ev.fila)) + 1 : 0;
   if (eventos.length) {
     capas.push({
+      // La regla empieza debajo de los rótulos del sombreado, para no tacharlos (revisión visual de la 4b).
       data: { values: eventos }, mark: { type: "rule", color: tema.borde, strokeDash: [1, 3], strokeWidth: 1, clip: true },
-      encoding: { x: x("fecha"), tooltip: [{ field: "letra", title: "Evento" }, { field: "nombre", title: "Nombre" }] },
+      encoding: { x: x("fecha"), y: { value: sombra.arriba }, y2: { value: e.alto }, tooltip: [{ field: "letra", title: "Evento" }, { field: "nombre", title: "Nombre" }] },
     });
   }
   if (bandas.length) {
@@ -342,7 +344,9 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   if (eventos.length) {
     // Cada letra va sobre un cuadrado con el color del fondo, para que se lea aunque caiga sobre la serie o la línea
     // del 0 (revisión visual de la 4b); las muy pegadas al borde izquierdo se corren un poco.
-    eventos.forEach((ev) => Object.assign(ev, { y: e.alto - 10 - ev.fila * 14, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
+    // Las letras van debajo del eje X (entre la línea del eje y los años), para no tapar la serie; las cercanas, en
+    // filas hacia abajo (revisión visual de la 4b).
+    eventos.forEach((ev) => Object.assign(ev, { y: e.alto + 11 + ev.fila * 15, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
     capas.push({
       data: { values: eventos }, mark: { type: "point", shape: "square", size: 150, filled: true, color: tema.fondo, stroke: tema.borde, strokeWidth: 0.8, opacity: 1 },
       encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, tooltip: [{ field: "nombre", title: "Evento" }] },
@@ -378,7 +382,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
         labelColor: tema.secundario, titleColor: tema.secundario, gridColor: tema.linea, domainColor: tema.borde,
         tickColor: tema.borde, labelFontSize: 12, labelFont: tema.fuente, labelOverlap: true, labelFlush: true,
       },
-      axisX: { grid: false, labelPadding: 6, ...marcasX(fin - ini + 1, e.ancho < 520 ? 5 : 10) },
+      axisX: { grid: false, labelPadding: 6 + filasEventos * 15, ...marcasX(fin - ini + 1, e.ancho < 520 ? 5 : 10) },
       legend: { labelColor: tema.texto, titleColor: tema.secundario, labelFontSize: 12, titleFontSize: 12, labelFont: tema.fuente, labelLimit: 320 },
       title: { color: tema.texto, subtitleColor: tema.secundario, anchor: "start", fontSize: 17, subtitleFontSize: 12, font: tema.fuente, subtitleFont: tema.fuente },
       text: { font: tema.fuente },

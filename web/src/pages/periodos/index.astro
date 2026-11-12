@@ -57,7 +57,7 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
       <h2 id="titulo-linea">Línea de tiempo</h2>
       <p class="secundario">Cada tramo lleva a su ficha más abajo. En pantallas chicas, desplazá la línea de costado.</p>
       <div class="linea-marco" tabindex="0" role="region" aria-label="Línea de tiempo (con desplazamiento)">
-        <svg viewBox={`0 0 ${MARGEN + ANCHO + 12} ${altoSvg}`} role="img" aria-labelledby="titulo-linea desc-linea">
+        <svg viewBox={`0 0 ${MARGEN + ANCHO + 12} ${altoSvg}`} role="group" aria-labelledby="titulo-linea" aria-describedby="desc-linea">
           <desc id="desc-linea">Línea de tiempo de {INICIO} a {anioHoy} con un carril por tipo de período y uno de eventos. El detalle de cada período está en las listas de abajo.</desc>
           {anios.map((a) => (
             <g class="anio">
@@ -115,9 +115,10 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
                   ))}
                 </ul>
               </details>
-              <p class="accesos"><span class="secundario">Ver en el explorador:</span>{" "}
-                {accesosDe(p, publicadas, anioHoy).map((a, k) => <>{k > 0 && " · "}<a href={a.url}>{a.texto}</a></>)}
-              </p>
+              <div class="accesos">
+                <span class="secundario">Ver en el explorador:</span>
+                <ul>{accesosDe(p, publicadas, anioHoy).map((a) => <li><a href={a.url}>{a.texto}</a></li>)}</ul>
+              </div>
             </li>
           ))}
         </ol>
@@ -138,7 +139,7 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
               <summary>Fuentes ({e.fuentes.length})</summary>
               <ul>{e.fuentes.map((f) => <li>{f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>)}</ul>
             </details>
-            <p class="accesos"><a href={accesoEvento(e.fecha, anioHoy).url}>{accesoEvento(e.fecha, anioHoy).texto}</a></p>
+            <div class="accesos"><ul><li><a href={accesoEvento(e.fecha, anioHoy).url}>{accesoEvento(e.fecha, anioHoy).texto}</a></li></ul></div>
           </li>
         ))}
       </ol>
@@ -188,9 +189,16 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
   .fechas { font-size: 0.92rem; }
   .convencional { font-size: 0.88rem; color: var(--ocre); }
   .mandatos { margin: 0; padding-left: 1.1em; font-size: 0.9rem; }
-  .fuentes summary { cursor: pointer; font-size: 0.9rem; min-height: 44px; display: flex; align-items: center; }
+  .fuentes summary { cursor: pointer; font-size: 0.9rem; min-height: 44px; display: flex; align-items: center; gap: 6px; color: var(--acento); }
+  .fuentes summary::before { content: "▸"; transition: transform 0.15s; }
+  .fuentes[open] summary::before { transform: rotate(90deg); }
+  @media (prefers-reduced-motion: reduce) { .fuentes summary::before { transition: none; } }
   .fuentes ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.85rem; overflow-wrap: anywhere; }
-  .accesos { font-size: 0.9rem; line-height: 1.9; }
+  /* Accesos como botones de 44 px: en el celular, enlaces en línea de 17 px se tocaban mal (revisión visual de la 4b). */
+  .accesos { display: grid; gap: 6px; font-size: 0.88rem; }
+  .accesos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .accesos a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border: 1px solid var(--borde); border-radius: 999px; text-decoration: none; color: var(--texto); }
+  .accesos a:hover { border-color: var(--acento); color: var(--acento); }
   .texto-cita { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--mono); font-size: 0.85rem; background: var(--superficie); padding: 12px; border-radius: var(--radio); }
   .lista-descargas { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
   .lista-descargas a { font-weight: 600; }
