@@ -682,3 +682,74 @@ Antes, la SPEC 6.2 decía que la columna del período era «la vigente el últim
 - **Sin verificar:** los huecos entre ministros del 28/5 al 1/6/1971 y del 21 al 22/12/1981, y la p. 25 del original de Cagan.
 - **A decidir:** el fin de Jesús Rodríguez, 7/7 (decreto, como está) u 8/7/1989 (CDI).
 - **De la 4b:** la prueba manual del MCP (preguntas 14 a 18) y los 19 extremos de regímenes sin norma.
+
+
+## 4b · Correcciones de la revisión externa: interfaz (PR B)
+
+*12/11/2026 · El PR «datos y método» (vaiven-argentino/vaiven#22) se mergeó y desplegó el 12/11. Este PR corrige la interfaz (REVISION_FASE4b.md, sección 9.4). No toca `ubicacion.ts`, `export/` ni `datos/`. La SPEC pasa a la v1.5.*
+
+### Decisiones tomadas con Camilo (12/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Ancho del explorador | Se queda en 72rem, alineado con el resto del sitio. En 1280 px el gráfico mide unos 790 px de ancho. |
+| Lista de eventos con filtro | Lista solo los eventos marcados, siempre completa. Un aviso dice cuántos quedan afuera. |
+| Franja «de episodios» con 1,47:1 o más | Son los carriles de planes y episodios de la línea de tiempo de `/periodos/`. En el gráfico, los episodios siguen como línea punteada en el gris secundario. |
+| Enlace del explorador a la ficha | Lleva también `sh` y `ev`, porque la ficha los admite desde el PR 3. |
+| Versión de la SPEC | v1.5: cambia el contrato de `ev` y el contenido de `/periodos/`. |
+
+### Qué se hizo
+
+- **Parámetro `ev`:**
+  - `ev=1` sigue siendo «todo», con los episodios.
+  - Una lista separada por comas marca solo esas categorías (`ev=cambiario,deuda`; `episodio` para los episodios).
+  - La forma canónica sigue el orden de `eventos.json`, con `episodio` al final; con las 8 categorías se escribe `ev=1`. Una categoría que no existe se ignora con un aviso.
+  - Funciones puras en `web/src/lib/periodos.ts`: `leerEv`, `escribirEv`, `categoriasEv` y `avisoFiltroEventos`. Las usan el explorador (`estado.ts`) y la ficha (`cliente.ts`).
+  - Casillas en «Sombreado y eventos», en el explorador y en la ficha, más el aviso «Se muestran 12 de 30 eventos (filtro: cambiario, deuda)».
+  - No hay campo de relevancia.
+  - Las URL canónicas escriben las comas sin codificar, también en `p` (`p=ARG,BRA`); la forma con `%2C` se sigue leyendo igual.
+- **Densidad de eventos** (`espec.ts`, `modoEventos` y `modoEventosDe`):
+  - si dos marcas quedarían a menos de 18 px, todos los eventos pasan a rayitas sobre el eje, sin letras ni reglas punteadas;
+  - el nombre y la fecha aparecen en el tooltip y en el lector;
+  - con letras, va una sola fila: se eliminó el escalonado, que ya no hace falta con 18 px de separación;
+  - la lista de debajo sigue completa: con la letra o, en el modo rayitas, con la fecha;
+  - el pie del PNG y del SVG decide letra o fecha con su propio ancho (900 px).
+- **Lector del gráfico** (`textoLectura`, en `lib/periodos.ts`):
+  - la banda del dato siempre con sus fechas, también si el dato cruza un cambio o los planes se superponen;
+  - el reparto;
+  - el episodio y la fase en que cae el día de referencia;
+  - los eventos marcados cuya fecha cae dentro de la observación.
+  - Por ejemplo, en julio de 1989 (inflación mensual por gobiernos): «Gobierno: Carlos Saúl Menem (8/7/1989–10/12/1999)», el reparto con Alfonsín, y la hiperinflación con su primer brote. Con esto, las bandas sin rótulo y las rayitas se leen con el foco.
+- **Explorador desde 1100 px:**
+  - a la izquierda, un panel fijo (sticky) de 300 px con todos los controles, serie y variante incluidas, en secciones plegables: Serie · Transformación · Período · Sombreado y eventos;
+  - a la derecha, el gráfico al 60 % del alto de la pantalla (antes, 360 px fijos), con los avisos debajo;
+  - la introducción, en una línea.
+  - En 1280 × 800, el gráfico pasa de empezar en 962 px a empezar en 289 px.
+  - Por debajo de 1100 px, el explorador se ve como antes: la serie arriba y el resto en «Opciones del gráfico», cerrado en 700 px o menos.
+- **`/periodos/`:**
+  - las 166 tarjetas pasan a una tabla compacta por tipo: nombre · desde · hasta · carácter o cargo · marcas (◇ corte convencional, ⚠ fecha a confirmar); en los eventos, nombre · fecha · vigente desde · categoría;
+  - cada fila es un `<details>` con la descripción, las notas, los mandatos o las fases, las fuentes con su confianza y los accesos al explorador, como lista de enlaces de 44 px de alto;
+  - se conservan las anclas `#id`, también las de los mandatos y las fases;
+  - un script en línea de unas 10 líneas abre la fila al cargar y con `hashchange`;
+  - se lee entera sin JavaScript;
+  - en el celular, cada fila va en una línea (nombre corto, fechas y marcas), y el nombre completo y el carácter van en el detalle.
+- **Contraste** (`global.css`):
+  - los grises del modo oscuro pasan de 1,09, 1,20 y 1,44:1 a 1,12, 1,26 y 1,50:1, en el rango del claro (1,12, 1,25 y 1,47:1);
+  - token nuevo, `--periodo-franja` (1,47:1 en el claro y 1,50:1 en el oscuro), para la franja de los planes y los carriles de planes y episodios de `/periodos/`;
+  - los planes contiguos de la franja se separan con un borde del color del fondo (antes, Austral y Primavera se fundían);
+  - lo controla `web/test/contraste.test.ts`, que lee `global.css` y compara también los dos bloques del modo oscuro.
+- **Revisor visual** (`revision-visual.mjs` y `.claude/agents/revisor-visual.md`):
+  - mide también el gráfico del explorador (`#x-grafico`) y suma `/explorador/` y `/periodos/`;
+  - corre siempre los casos fijos (`CASOS_FIJOS`), en claro y oscuro: los de la 4b y los seis de esta revisión;
+  - informa dónde empieza el gráfico, el modo de los eventos y el alto de la página.
+
+### Alturas medidas
+
+| Página | Antes | Después |
+|---|---|---|
+| `/periodos/` en 390 px | 70.248 px | 11.032 px |
+| `/periodos/` en 1280 px | 26.331 px | 10.179 px |
+| Explorador, inicio del gráfico en 1280 × 800 | 962 px | 289 px |
+| Explorador, inicio del gráfico en 390 × 800 | 935 px | 912 px (igual que antes: la intro es una línea más corta) |
+
+La meta en el celular era unos 10.000 px. Los 11.032 px restantes son las 166 filas de 45 px (7.470 px), la línea de tiempo, las introducciones de cada tipo y la cita.
