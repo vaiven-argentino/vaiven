@@ -496,3 +496,43 @@ def test_rebase_lleva_el_indice_a_la_base_declarada():
     assert list(s.round(6)) == [200.0, 100.0, 80.0]
     with pytest.raises(ErrorPipeline, match="rebase"):
         variantes.construir({**v, "rebase": {"fecha": "2010-01"}}, capa1, [])
+
+
+def test_periodos_y_eventos_se_exportan_y_cambian_la_version(repo, monkeypatch):
+    from datetime import date, datetime, timezone
+
+    from pipeline import actualizar
+    from tests.test_periodos import base
+    periodos, eventos = base()
+    (repo.metadatos / "periodos.yaml").write_text(yaml.safe_dump(periodos, allow_unicode=True), encoding="utf-8")
+    (repo.metadatos / "eventos.yaml").write_text(yaml.safe_dump(eventos, allow_unicode=True), encoding="utf-8")
+    res = ejecutar(repo, con_red=False)
+    assert res.publicado and not res.errores, res.informe()
+    assert any(c.startswith("periodos.json:") for c in res.cambios)
+    doc = json.loads((repo.export / "periodos.json").read_text(encoding="utf-8"))
+    catalogo = json.loads((repo.export / "catalogo.json").read_text(encoding="utf-8"))
+    assert doc["version_datos"] == catalogo["version_datos"]
+    assert catalogo["registros"]["periodos"]["archivo"] == "periodos.json"
+    paquete = json.loads((repo.export / "datapackage.json").read_text(encoding="utf-8"))
+    assert {"periodos", "eventos"} <= {r["name"] for r in paquete["resources"]}
+    assert (repo.export / "descargas" / "csv" / "periodos.csv").exists()
+
+    # Sin cambios, la segunda corrida no toca nada; con un período nuevo, cambia la versión.
+    assert ejecutar(repo, con_red=False).cambios == []
+    eventos.append({**eventos[0], "id": "e.2001-12-01.corralito", "fecha": date(2001, 12, 1),
+                    "vigencia": date(2001, 12, 3), "nombre_corto": "Corralito"})
+    (repo.metadatos / "eventos.yaml").write_text(yaml.safe_dump(eventos, allow_unicode=True), encoding="utf-8")
+    monkeypatch.setattr(actualizar, "ahora_utc", lambda: datetime(2026, 11, 12, 12, tzinfo=timezone.utc))
+    res3 = ejecutar(repo, con_red=False)
+    assert any(c.startswith("eventos.json:") for c in res3.cambios)
+    nuevo = json.loads((repo.export / "eventos.json").read_text(encoding="utf-8"))
+    assert nuevo["version_datos"] != doc["version_datos"] and len(nuevo["eventos"]) == 2
+
+
+def test_periodos_con_errores_frenan_la_corrida(repo):
+    from tests.test_periodos import base
+    periodos, eventos = base()
+    periodos[0]["fuentes"] = []
+    (repo.metadatos / "periodos.yaml").write_text(yaml.safe_dump(periodos, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ErrorPipeline, match="falta la fuente"):
+        ejecutar(repo, con_red=False)

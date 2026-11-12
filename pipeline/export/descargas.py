@@ -36,8 +36,9 @@ def generar(dir_export: Path, parquet: bool = True) -> list[Path]:
     with zipfile.ZipFile(ruta_zip, "w", compression=zipfile.ZIP_DEFLATED) as z:
         for csv in sorted((destino / "csv").rglob("*.csv")):
             z.write(csv, csv.relative_to(destino / "csv").as_posix())
-        for nombre in ("catalogo.json", "auxiliares.json", "datapackage.json", "quiebres.json"):
-            z.write(dir_export / nombre, nombre)
+        for nombre in ("catalogo.json", "auxiliares.json", "datapackage.json", "quiebres.json", "periodos.json", "eventos.json"):
+            if (dir_export / nombre).exists():
+                z.write(dir_export / nombre, nombre)
         licencia = dir_export.parent / "LICENSE-DATOS"
         if licencia.exists():
             z.write(licencia, "LICENSE-DATOS")

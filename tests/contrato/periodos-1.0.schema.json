@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vaiven.argentino.workers.dev/esquemas/periodos-1.0.json",
+  "title": "Vaivén · períodos (export/periodos.json)",
+  "description": "Gobiernos (con sus mandatos), ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política económica. Intervalos semiabiertos [desde, hasta): el día del traspaso es del período que empieza; `hasta` null quiere decir vigente. `cortes` dice si cada extremo es un hecho fechado o un corte convencional de Vaivén.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "esquema",
+    "version_datos",
+    "descripcion",
+    "fuente",
+    "licencia",
+    "tipos",
+    "periodos"
+  ],
+  "properties": {
+    "esquema": {
+      "const": "periodos-1.0"
+    },
+    "version_datos": {
+      "type": "string"
+    },
+    "descripcion": {
+      "type": "string"
+    },
+    "fuente": {
+      "type": "string"
+    },
+    "licencia": {
+      "type": "string"
+    },
+    "tipos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "nombre",
+          "cantidad"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "periodos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "tipo",
+          "nombre",
+          "nombre_corto",
+          "desde",
+          "hasta",
+          "cortes",
+          "fuentes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^p\\.(gobierno|ministro|plan|regimen|catedra)\\.[a-z0-9-]+$"
+          },
+          "tipo": {
+            "enum": [
+              "gobierno",
+              "ministro",
+              "plan",
+              "regimen_cambiario",
+              "catedra"
+            ]
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "nombre_corto": {
+            "type": "string",
+            "maxLength": 24
+          },
+          "desde": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "hasta": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "caracter": {
+            "enum": [
+              "constitucional",
+              "de_facto",
+              "interino"
+            ]
+          },
+          "cargo": {
+            "type": "string"
+          },
+          "orden": {
+            "type": "integer"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "notas": {
+            "type": "string"
+          },
+          "referencia_curso": {
+            "type": "string"
+          },
+          "cortes": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "desde"
+            ],
+            "properties": {
+              "desde": {
+                "enum": [
+                  "hecho",
+                  "convencional"
+                ]
+              },
+              "hasta": {
+                "enum": [
+                  "hecho",
+                  "convencional"
+                ]
+              }
+            }
+          },
+          "fuentes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "tipo"
+              ],
+              "properties": {
+                "para": {
+                  "enum": [
+                    "desde",
+                    "hasta",
+                    "ambas"
+                  ]
+                },
+                "tipo": {
+                  "enum": [
+                    "norma",
+                    "comunicacion_bcra",
+                    "oficial",
+                    "secundaria",
+                    "periodistica",
+                    "convencional"
+                  ]
+                },
+                "referencia": {
+                  "type": "string"
+                },
+                "publicado": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https?://"
+                },
+                "pagina": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "nota": {
+                  "type": "string"
+                }
+              }
+            },
+            "minItems": 1
+          },
+          "mandatos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "nombre",
+                "nombre_corto",
+                "desde",
+                "hasta",
+                "fuentes"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^p\\.gobierno\\.[a-z0-9-]+$"
+                },
+                "nombre": {
+                  "type": "string"
+                },
+                "nombre_corto": {
+                  "type": "string"
+                },
+                "desde": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "hasta": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "notas": {
+                  "type": "string"
+                },
+                "fuentes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "tipo"
+                    ],
+                    "properties": {
+                      "para": {
+                        "enum": [
+                          "desde",
+                          "hasta",
+                          "ambas"
+                        ]
+                      },
+                      "tipo": {
+                        "enum": [
+                          "norma",
+                          "comunicacion_bcra",
+                          "oficial",
+                          "secundaria",
+                          "periodistica",
+                          "convencional"
+                        ]
+                      },
+                      "referencia": {
+                        "type": "string"
+                      },
+                      "publicado": {
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                      },
+                      "url": {
+                        "type": "string",
+                        "pattern": "^https?://"
+                      },
+                      "pagina": {
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      },
+                      "nota": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "minItems": 1
+                }
+              }
+            },
+            "minItems": 2
+          }
+        }
+      }
+    }
+  }
+}

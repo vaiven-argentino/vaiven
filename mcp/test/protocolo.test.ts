@@ -28,10 +28,10 @@ describe.each([
   ["2026-07-28", { pin: "2026-07-28" }],
   ["2025 (initialize)", "legacy"],
 ] as const)("era %s", (_, modo) => {
-  it("lista las 4 herramientas, con descripciones en español y de solo lectura", async () => {
+  it("lista las 6 herramientas, con descripciones en español y de solo lectura", async () => {
     const c = await conectar(modo);
     const { tools } = await c.listTools();
-    expect(tools.map((t) => t.name).sort()).toEqual(["buscar_series", "citar", "describir_serie", "obtener_serie"]);
+    expect(tools.map((t) => t.name).sort()).toEqual(["buscar_series", "citar", "describir_serie", "listar_periodos", "obtener_serie", "periodo_en_fecha"]);
     for (const t of tools) {
       expect(t.description).toMatch(/Vaivén/);
       expect(t.annotations?.readOnlyHint).toBe(true);

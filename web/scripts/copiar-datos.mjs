@@ -16,8 +16,9 @@ const destinoEsquemas = join(PUBLICO, "esquemas");
 rmSync(destinoEsquemas, { recursive: true, force: true });
 mkdirSync(destinoEsquemas, { recursive: true });
 for (const nombre of readdirSync(join(RAIZ, "tests", "contrato"))) {
-  const version = /^serie-(.+)\.schema\.json$/.exec(nombre)?.[1];
-  if (version) cpSync(join(RAIZ, "tests", "contrato", nombre), join(destinoEsquemas, `serie-${version}.json`));
+  // serie-<versión>, periodos-<versión> y eventos-<versión>.
+  const base = /^((?:serie|periodos|eventos)-.+)\.schema\.json$/.exec(nombre)?.[1];
+  if (base) cpSync(join(RAIZ, "tests", "contrato", nombre), join(destinoEsquemas, `${base}.json`));
 }
 
 const reglas = ["# Generado por web/scripts/copiar-datos.mjs: no se edita a mano."];

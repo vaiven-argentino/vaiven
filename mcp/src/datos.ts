@@ -1,6 +1,9 @@
 // Lectura del export. El MCP no calcula empalmes: lee las variantes ya publicadas (SPEC 7.3).
 // La misma interfaz sirve para el Worker (static assets), la variante local (carpeta o URL) y las pruebas.
-import { ESQUEMAS_SOPORTADOS, type InsumosCargados, type SerieExportada, type SignosMonetarios } from "@vaiven/transformaciones";
+import {
+  ESQUEMAS_SOPORTADOS, ESQUEMA_EVENTOS, ESQUEMA_PERIODOS, type DocumentoEventos, type DocumentoPeriodos, type InsumosCargados,
+  type SerieExportada, type SignosMonetarios,
+} from "@vaiven/transformaciones";
 import type { Catalogo, DocumentoSerie, Quiebre, SerieCatalogo, VarianteCatalogo } from "./tipos";
 
 /** De dónde sale el export. `ruta` es relativa a la raíz del export (por ejemplo, «catalogo.json»). */
@@ -58,6 +61,26 @@ export class Repositorio {
 
   catalogo(): Promise<Catalogo> {
     return this.leer<Catalogo>("catalogo.json");
+  }
+
+  /** Los registros de períodos y eventos (desde la fase 4b). Sin ellos en el export, un error que entiende el modelo. */
+  async periodos(): Promise<DocumentoPeriodos> {
+    return this.registro<DocumentoPeriodos>("periodos.json", ESQUEMA_PERIODOS);
+  }
+
+  async eventos(): Promise<DocumentoEventos> {
+    return this.registro<DocumentoEventos>("eventos.json", ESQUEMA_EVENTOS);
+  }
+
+  private async registro<T extends { esquema: string }>(archivo: string, esquema: string): Promise<T> {
+    let doc: T;
+    try {
+      doc = await this.leer<T>(archivo);
+    } catch {
+      throw new ErrorHerramienta(`Los períodos y eventos todavía no están publicados en esta versión de Vaivén (falta ${archivo}).`);
+    }
+    if (doc.esquema !== esquema) throw new Error(`${archivo}: esquema ${doc.esquema} sin soporte (se espera ${esquema}).`);
+    return doc;
   }
 
   async quiebres(): Promise<Map<string, Quiebre>> {

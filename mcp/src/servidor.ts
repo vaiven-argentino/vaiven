@@ -1,4 +1,4 @@
-// El servidor MCP: las cuatro herramientas de la fase 3 sobre un Repositorio. Lo usan el Worker (/mcp) y la
+// El servidor MCP: las cuatro herramientas de la fase 3 y las dos de períodos de la 4b sobre un Repositorio. Lo usan el Worker (/mcp) y la
 // variante local por stdio. Los esquemas de los parámetros se arman una sola vez, al cargar el módulo, para no
 // gastar CPU en cada pedido (el plan gratuito de Workers da 10 ms por pedido).
 import { McpServer, type CallToolResult, type StandardSchemaWithJSON } from "@modelcontextprotocol/server";
@@ -10,6 +10,7 @@ import { citar } from "./herramientas/citar";
 import { PERIODO } from "./herramientas/comun";
 import { describirSerie } from "./herramientas/describir";
 import { obtenerSerie } from "./herramientas/obtener";
+import { listarPeriodos, periodoEnFecha } from "./herramientas/periodos";
 import { DESCRIPCION, INSTRUCCIONES, PARAMETRO, TITULO } from "./textos";
 
 /**
@@ -78,6 +79,13 @@ export const ESQUEMAS = {
     denominador: denominador.optional().describe(PARAMETRO.comoEnObtener),
     paises: paises.optional().describe(PARAMETRO.comoEnObtener),
   })),
+  listar_periodos: conJsonFijo(z.strictObject({
+    tipo: z.enum(["gobierno", "ministro", "plan", "regimen_cambiario", "catedra"]).optional().describe(PARAMETRO.tipoPeriodo),
+    por_mandato: z.boolean().optional().describe(PARAMETRO.porMandato),
+  })),
+  periodo_en_fecha: conJsonFijo(z.strictObject({
+    fecha: z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, "Usá AAAA-MM-DD (un día) o AAAA-MM (un mes).").describe(PARAMETRO.fechaPeriodo),
+  })),
 };
 
 // Solo leen datos públicos: no cambian nada y dan lo mismo si se repiten.
@@ -117,5 +125,9 @@ export function crearServidor(repo: Repositorio): McpServer {
     (a) => responder(() => obtenerSerie(repo, a)));
   servidor.registerTool("citar", { ...config("citar"), inputSchema: ESQUEMAS.citar },
     (a) => responder(() => citar(repo, a)));
+  servidor.registerTool("listar_periodos", { ...config("listar_periodos"), inputSchema: ESQUEMAS.listar_periodos },
+    (a) => responder(() => listarPeriodos(repo, a)));
+  servidor.registerTool("periodo_en_fecha", { ...config("periodo_en_fecha"), inputSchema: ESQUEMAS.periodo_en_fecha },
+    (a) => responder(() => periodoEnFecha(repo, a)));
   return servidor;
 }

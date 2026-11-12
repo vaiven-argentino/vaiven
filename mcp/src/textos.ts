@@ -1,7 +1,7 @@
 // Textos que lee el modelo: instrucciones del servidor y descripciones de herramientas y parámetros (SPEC 7.3:
 // en español, pensadas para que elija bien qué herramienta usar). Se aprobaron en el plan de la fase 3; los
 // agregados de la fase 4a (medidas, países e índice desde tasas), el 28/10/2026; los de la revisión de la 4a
-// (denominador del % del PIB, último dato, sin bibliografía), el 05/11/2026.
+// (denominador del % del PIB, último dato, sin bibliografía), el 05/11/2026; los de períodos (fase 4b), en el PR 1 de la 4b.
 
 export const INSTRUCCIONES =
   "Vaivén es una base curada de series económicas argentinas desde 1970, con sus quiebres metodológicos, variantes y " +
@@ -14,7 +14,9 @@ export const INSTRUCCIONES =
   "(u otro, si lo pedís con `denominador`), y suma sus advertencias. Algunas fuentes llevan meses de atraso: cada " +
   "respuesta dice el último dato de la serie (`ultimo_dato`); mencionalo si el usuario pregunta por meses recientes. " +
   "`atraso` dice si la serie está más atrasada que lo normal para su fuente (`esperado`: el mes que ya debería estar; " +
-  "`intermediario`: datos.gob.ar, si el atraso es de esa copia y no del organismo).";
+  "`intermediario`: datos.gob.ar, si el atraso es de esa copia y no del organismo). Para ubicar un dato en su contexto " +
+  "político (qué gobierno, ministro de Economía, plan o régimen cambiario regía), usá periodo_en_fecha; para las " +
+  "fechas de un gobierno o un plan (por ejemplo, para pedir una serie entre esas fechas), listar_periodos.";
 
 export const DESCRIPCION = {
   buscar_series:
@@ -54,6 +56,21 @@ export const DESCRIPCION = {
     "Vaivén. Las " +
     "respuestas de obtener_serie ya traen la cita en texto: usá esta herramienta " +
     "cuando necesites APA o BibTeX.",
+  listar_periodos:
+    "Lista los períodos de la historia económica argentina desde 1970 que usa Vaivén, con fechas exactas y la fuente " +
+    "de cada fecha (decreto, ley, comunicación del BCRA o bibliografía): gobiernos (incluidos los de facto y los " +
+    "interinos), ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política " +
+    "económica (periodización de un curso universitario; `catedra`). Sin `tipo`, todos. Con `por_mandato`, los " +
+    "gobiernos de dos mandatos (Menem, Fernández de Kirchner) van separados. Usala para saber entre qué fechas pedir " +
+    "una serie con obtener_serie (por ejemplo, la inflación durante el Plan Austral) o para nombrar bien un período. " +
+    "Algunos fines (los de los planes, sobre todo) son cortes convencionales de Vaivén y no un hecho fechado: la " +
+    "respuesta lo avisa en `advertencias`.",
+  periodo_en_fecha:
+    "Dice qué regía en una fecha, según los registros de Vaivén: gobierno (y mandato), ministro de Economía, planes de estabilización, régimen " +
+    "cambiario y etapa de la política económica, con sus fechas y fuentes, más los eventos económicos de ese día o mes " +
+    "(por ejemplo, el corralito o la salida del cepo). `fecha`: AAAA-MM-DD (un día) o AAAA-MM (todo lo que estuvo " +
+    "vigente en algún momento de ese mes; en diciembre de 2001, cinco presidentes). Desde 1970. Usala para poner en " +
+    "contexto un dato de una serie.",
 } as const;
 
 export const TITULO = {
@@ -61,6 +78,8 @@ export const TITULO = {
   describir_serie: "Describir una serie",
   obtener_serie: "Obtener los datos de una serie",
   citar: "Citar una serie",
+  listar_periodos: "Listar períodos (gobiernos, ministros, planes, regímenes)",
+  periodo_en_fecha: "Qué regía en una fecha",
 } as const;
 
 export const PARAMETRO = {
@@ -105,4 +124,9 @@ export const PARAMETRO = {
   transformacionCita: "La transformación que se usó con obtener_serie, si hubo alguna.",
   frecuenciaCita: "La frecuencia que se pidió a obtener_serie, si se cambió.",
   comoEnObtener: "El mismo valor que se pasó a obtener_serie, si se usó.",
+  tipoPeriodo:
+    "gobierno · ministro (de Economía o Hacienda) · plan (de estabilización) · regimen_cambiario · catedra (etapas de " +
+    "la política económica de un curso universitario). Si se omite, todos.",
+  porMandato: "true separa los gobiernos de dos mandatos (Menem 1989 y 1995, Fernández de Kirchner 2007 y 2011). Solo para gobiernos.",
+  fechaPeriodo: "AAAA-MM-DD para un día (por ejemplo, «1989-07-08») o AAAA-MM para un mes («2001-12»). Desde 1970.",
 } as const;

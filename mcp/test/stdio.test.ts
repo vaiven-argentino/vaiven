@@ -23,7 +23,7 @@ it.each([["legacy"], [{ pin: "2026-07-28" }]] as const)("responde por stdio con 
   const cliente = new Client({ name: "prueba-stdio", version: "1.0.0" }, { versionNegotiation: { mode: modo } });
   await cliente.connect(new StdioClientTransport({ command: process.execPath, args: [salida, "--export", EXPORT], stderr: "ignore" }));
   const { tools } = await cliente.listTools();
-  expect(tools).toHaveLength(4);
+  expect(tools).toHaveLength(6);
   const r = await cliente.callTool({ name: "obtener_serie", arguments: { id: "desocupacion", desde: "2002-05", hasta: "2002-05" } });
   expect(JSON.parse((r.content as Array<{ text: string }>)[0].text).datos).toEqual([["2002-05", 21.5]]);
   await cliente.close();

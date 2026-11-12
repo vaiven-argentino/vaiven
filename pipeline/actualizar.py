@@ -14,9 +14,11 @@ from pipeline.comun import (ErrorPipeline, Rutas, a_fecha, ahora_utc, escribir_c
                             leer_csv_serie, leer_yaml)
 from pipeline.export import catalogo as export_generales
 from pipeline.export import insumos as export_insumos
+from pipeline.export import periodos as export_periodos
 from pipeline.export import series as export_series
 from pipeline.fuentes import base
 from pipeline.fuentes import estado as estado_fuentes
+from pipeline.validacion import periodos as validacion_periodos
 from pipeline.validacion import reglas, revisiones
 
 
@@ -26,6 +28,8 @@ class Metadatos:
     fuentes: dict[str, dict]
     quiebres: dict[str, dict]
     signos: list[dict]
+    periodos: list[dict] = field(default_factory=list)
+    eventos: list[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -77,7 +81,7 @@ class Resultado:
         return "\n".join(lineas) + "\n"
 
 
-def cargar_metadatos(rutas: Rutas, solo: list[str] | None = None) -> Metadatos:
+def cargar_metadatos(rutas: Rutas, solo: list[str] | None = None, hoy: date | None = None) -> Metadatos:
     series = []
     # Las auxiliares (SPEC 2.6) tienen los mismos metadatos y la misma validación, pero no van al catálogo.
     rutas_meta = [(r, False) for r in sorted((rutas.metadatos / "series").glob("*.yaml"))]
@@ -96,7 +100,8 @@ def cargar_metadatos(rutas: Rutas, solo: list[str] | None = None) -> Metadatos:
     quiebres = {q["id"]: q for q in leer_yaml(rutas.metadatos / "quiebres.yaml")}
     signos = signos_monetarios.cargar_signos(rutas.metadatos / "signos_monetarios.yaml")
     _controlar_referencias(series, fuentes, quiebres)
-    return Metadatos(series, fuentes, quiebres, signos)
+    periodos, eventos = validacion_periodos.cargar(rutas.metadatos, hoy or ahora_utc().date())
+    return Metadatos(series, fuentes, quiebres, signos, periodos, eventos)
 
 
 def _controlar_referencias(series: list[dict], fuentes: dict, quiebres: dict) -> None:
@@ -335,9 +340,9 @@ def _sin_version(doc: dict) -> dict:
 def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: bool = True,
              hoy: date | None = None) -> Resultado:
     res = Resultado()
-    meta = cargar_metadatos(rutas, solo)
-    momento = ahora_utc().isoformat().replace("+00:00", "Z")
     hoy = hoy or ahora_utc().date()
+    meta = cargar_metadatos(rutas, solo, hoy)
+    momento = ahora_utc().isoformat().replace("+00:00", "Z")
     estado = estado_fuentes.EstadoFuentes(rutas.snapshots)
 
     # 1-2. Snapshot y capa 1.
@@ -513,10 +518,23 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
 
     # Variantes que dejaron de estar publicadas (pasaron a pendiente o se borraron de los metadatos): se quitan del
     # export y de la capa 2, para que despublicar sea solo cambiar el `estado` en el YAML.
-    quitadas = quitar_despublicadas(rutas, cargar_metadatos(rutas).series if solo else meta.series)
+    quitadas = quitar_despublicadas(rutas, cargar_metadatos(rutas, hoy=hoy).series if solo else meta.series)
     if quitadas:
         hubo_cambios = True
         res.cambios += [f"{vid}: despublicada (se quitaron su JSON y sus CSV)" for vid in quitadas]
+
+    # Períodos y eventos: si cambió su contenido, cuenta como cambio y lleva la versión nueva.
+    hay_periodos = bool(meta.periodos or meta.eventos)
+    if hay_periodos:
+        for nombre, doc in (("periodos.json", export_periodos.documento_periodos(meta.periodos, "", export_generales.PUBLICAR_BIBLIOGRAFIA)),
+                            ("eventos.json", export_periodos.documento_eventos(meta.eventos, ""))):
+            ruta = rutas.export / nombre
+            anterior = json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else None
+            if anterior is None or {**anterior, "version_datos": ""} != doc:
+                hubo_cambios = True
+                cantidad = len(doc.get("periodos", doc.get("eventos", [])))
+                res.cambios.append(f"{nombre}: {cantidad} {'períodos' if 'periodos' in doc else 'eventos'}"
+                                   f"{' (primera publicación)' if anterior is None else ' (cambiaron)'}")
 
     ruta_catalogo = rutas.export / "catalogo.json"
     version_general = momento
@@ -525,7 +543,7 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
     series_generales = meta.series
     if solo:
         # Corrida parcial: el catálogo y el datapackage siguen describiendo todas las series, con lo ya publicado.
-        series_generales = cargar_metadatos(rutas).series
+        series_generales = cargar_metadatos(rutas, hoy=hoy).series
         for s in series_generales:
             for v in publicadas(s):
                 vid = f"{s['id']}.{v['id']}"
@@ -533,7 +551,8 @@ def ejecutar(rutas: Rutas = Rutas(), solo: list[str] | None = None, con_red: boo
                 if vid not in documentos and ruta.exists():
                     documentos[vid] = json.loads(ruta.read_text(encoding="utf-8"))
     export_generales.escribir_generales(rutas.export, series_generales, documentos, meta.fuentes, meta.quiebres,
-                                        version_general, rutas.inventario, meta.signos)
+                                        version_general, rutas.inventario, meta.signos,
+                                        (meta.periodos, meta.eventos) if hay_periodos else None)
     export_generales.agregar_revisiones(rutas.export / "revisiones.json", entradas_revision)
     res.publicado = True
     return res
