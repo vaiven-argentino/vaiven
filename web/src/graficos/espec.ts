@@ -22,6 +22,8 @@ export interface Tema {
   periodoA?: string;
   periodoB?: string;
   periodoFacto?: string;
+  /** Franja de los planes (1,47:1 o más contra el fondo en los dos modos). */
+  periodoFranja?: string;
   /** Colores de los países, del resaltado (el primero) a los demás (hasta 8). */
   paleta?: string[];
 }
@@ -545,7 +547,8 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
     return {
       activo: true, arriba,
       capas: (x: (c: string) => Record<string, unknown>) => [
-        { data: { values: datos }, mark: { type: "rect", color: t.periodoFacto ?? t.banda, clip: true },
+        // Un borde del color del fondo separa los planes contiguos de una misma fila (Austral y Primavera).
+        { data: { values: datos }, mark: { type: "rect", color: t.periodoFranja ?? t.periodoFacto ?? t.banda, stroke: t.fondo, strokeWidth: 1, clip: true },
           encoding: { x: x("desde"), x2: { field: "hasta" }, y: { field: "y", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip } },
         { data: { values: datos.filter((d) => d.rotulo) }, mark: { type: "text", color: t.texto, fontSize: 9.5, align: "left", baseline: "middle", dx: 3 },
           encoding: { x: x("desde"), y: { field: "yc", type: "quantitative", scale: null }, text: { field: "rotulo" } } },

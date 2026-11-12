@@ -20,7 +20,7 @@ export function tema(): Tema {
   return {
     fondo: v("--fondo"), texto: v("--texto"), secundario: v("--secundario"), linea: v("--linea"), banda: v("--banda"),
     borde: v("--borde"), serie: v("--graf-1"), fuente: "Inter Variable, system-ui, sans-serif",
-    periodoA: v("--periodo-a"), periodoB: v("--periodo-b"), periodoFacto: v("--periodo-facto"),
+    periodoA: v("--periodo-a"), periodoB: v("--periodo-b"), periodoFacto: v("--periodo-facto"), periodoFranja: v("--periodo-franja"),
     paleta: [1, 2, 3, 4, 5, 6, 7, 8].map((k) => v(`--graf-${k}`)),
   };
 }

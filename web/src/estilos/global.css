@@ -26,10 +26,13 @@
   --graf-7: #3B7EA1;
   --graf-8: #5B3A8E;
   /* Sombreado por períodos (SPEC 6.3: neutros que no compitan con las series). Se alternan A y B; los gobiernos de facto
-     van en el más oscuro. Contra el fondo: 1,12, 1,25 y 1,47:1 (se distinguen por luminosidad, no por tono). */
+     van en el más oscuro. Contra el fondo, en los dos modos: 1,12, 1,25 y 1,47:1 o más (se distinguen por luminosidad,
+     no por tono; lo controla web/test/contraste.test.ts). La franja de los planes y los carriles de planes y episodios
+     de /periodos/ usan --periodo-franja, también de 1,47:1 o más (revisión externa de la 4b, 3.4). */
   --periodo-a: #F0EADD;
   --periodo-b: #E6DECD;
   --periodo-facto: #D8CDB5;
+  --periodo-franja: #D8CDB5;
 
   --sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -45,7 +48,7 @@
     --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
     --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
     --graf-6: #EFE9DE; --graf-7: #D55E00; --graf-8: #B9A3E3;
-    --periodo-a: #211C16; --periodo-b: #2A241C; --periodo-facto: #3A3127;
+    --periodo-a: #231F18; --periodo-b: #2D2820; --periodo-facto: #3B342A; --periodo-franja: #3B342A;
     color-scheme: dark;
   }
 }
@@ -55,7 +58,7 @@
   --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
   --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
   --graf-6: #EFE9DE; --graf-7: #D55E00; --graf-8: #B9A3E3;
-  --periodo-a: #211C16; --periodo-b: #2A241C; --periodo-facto: #3A3127;
+  --periodo-a: #231F18; --periodo-b: #2D2820; --periodo-facto: #3B342A; --periodo-franja: #3B342A;
   color-scheme: dark;
 }
 
