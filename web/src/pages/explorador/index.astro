@@ -1,0 +1,280 @@
+---
+// Explorador (SPEC 6.2; fase 4b: una serie por vez). La página es estática: lleva un índice liviano de las series y
+// las etapas del curso; el navegador pide el JSON de la variante elegida, y los períodos y eventos solo si se activan.
+// Todo el estado vive en la URL.
+import Base from "../../layouts/Base.astro";
+import { catalogo, periodos } from "../../lib/export";
+import type { IndiceSerie } from "../../lib/estado";
+
+const series: IndiceSerie[] = catalogo().series
+  .map((s) => ({
+    id: s.id, codigo: s.codigo, nombre: s.nombre, bloque: s.bloque, variante_por_defecto: s.variante_por_defecto,
+    variantes: s.variantes.filter((v) => v.estado === "publicada" && v.archivo).map((v) => ({ id: v.id, nombre: v.nombre, archivo: v.archivo! })),
+  }))
+  .filter((s) => s.variantes.length);
+const bloques = [...new Set(series.map((s) => s.bloque))];
+const registro = periodos();
+// Lo que la página necesita antes de pedir los períodos: los nombres de los tipos (con el nombre público de las
+// etapas del curso) y las etapas, para el selector de período.
+const tipos = registro?.tipos.map((t) => ({ id: t.id, nombre: t.nombre })) ?? [];
+const etapas = registro?.periodos.filter((p) => p.tipo === "catedra").map((p) => ({ id: p.id, nombre: p.nombre, desde: p.desde, hasta: p.hasta })) ?? [];
+const nombreTipo = new Map(tipos.map((t) => [t.id, t.nombre]));
+const SOMBREADOS = [
+  ["", "Sin sombreado"],
+  ["catedra", nombreTipo.get("catedra") ?? "Etapas de la política económica (curso)"],
+  ["gobierno", "Gobiernos"],
+  ["mandato", "Gobiernos, por mandato"],
+  ["ministro", "Ministros de Economía"],
+  ["plan", "Planes de estabilización"],
+  ["regimen_cambiario", "Regímenes cambiarios"],
+] as const;
+const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().version_datos }).replace(/</g, "\\u003c");
+---
+<Base titulo="Explorador" descripcion="Graficá una serie de Vaivén con sus transformaciones, sombreala por gobierno, ministro, plan o régimen cambiario, y descargá la vista en CSV, XLSX, PNG o SVG." seccion="explorador">
+  <article class="explorador contenedor">
+    <header class="cabeza">
+      <h1>Explorador</h1>
+      <p class="lectura">Elegí una serie, transformala y sombreala por períodos de la política económica. La dirección de la página guarda la vista: copiala para compartirla tal cual.</p>
+    </header>
+
+    <noscript><p class="sin-js">El explorador necesita JavaScript. Sin JavaScript, cada serie tiene su ficha en el <a href="/series/">catálogo</a>, con la tabla, las descargas y la cita.</p></noscript>
+
+    <section class="vista" aria-labelledby="titulo-grafico" data-requiere-js hidden>
+      <div class="eleccion">
+        <div class="campo">
+          <label for="x-serie">Serie</label>
+          <select id="x-serie">
+            {bloques.map((b) => (
+              <optgroup label={b}>
+                {series.filter((s) => s.bloque === b).map((s) => <option value={s.id}>{s.nombre} ({s.codigo})</option>)}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+        <div class="campo">
+          <label for="x-variante">Variante</label>
+          <select id="x-variante"></select>
+        </div>
+      </div>
+
+      <div class="vista-cabeza">
+        <h2 id="titulo-grafico">Gráfico</h2>
+        <p class="unidad" id="x-unidad"></p>
+      </div>
+      <p class="ultimo" id="x-ultimo"></p>
+
+      <details class="panel-opciones" id="x-panel" open>
+        <summary><span class="po-titulo">Opciones del gráfico</span> <span class="po-resumen secundario" id="x-resumen-opciones"></span></summary>
+        <form id="x-controles" class="controles" aria-label="Opciones del gráfico">
+          <fieldset class="paises" id="x-campo-paises" hidden>
+            <legend>Países y agregados <span class="secundario">(hasta 8)</span></legend>
+            <div class="paises-lista" id="x-paises"></div>
+            <div class="campo">
+              <label for="x-resaltado">Resaltado</label>
+              <select id="x-resaltado"></select>
+            </div>
+          </fieldset>
+          <label class="casilla" id="x-campo-pesos" hidden><input type="checkbox" id="x-pesos" /> En pesos actuales</label>
+          <div class="campo" id="x-campo-medida" hidden>
+            <label for="x-medida">Medida</label>
+            <select id="x-medida"></select>
+          </div>
+          <div class="campo" id="x-campo-deflactor" hidden>
+            <label for="x-deflactor">IPC para deflactar</label>
+            <select id="x-deflactor"></select>
+          </div>
+          <div class="campo" id="x-campo-pib" hidden>
+            <label for="x-pib">PIB para dividir</label>
+            <select id="x-pib"></select>
+          </div>
+          <div class="campo">
+            <label for="x-transformacion">Transformación</label>
+            <select id="x-transformacion"></select>
+          </div>
+          <div class="campo" id="x-campo-base" hidden>
+            <label for="x-base">Base (AAAA o AAAA-MM)</label>
+            <input id="x-base" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" />
+          </div>
+          <div class="campo" id="x-campo-frecuencia" hidden>
+            <label for="x-frecuencia">Frecuencia</label>
+            <select id="x-frecuencia"></select>
+          </div>
+          <div class="campo" id="x-campo-media" hidden>
+            <label for="x-media">Media móvil</label>
+            <select id="x-media">
+              <option value="">Sin media móvil</option>
+              {[2, 3, 4, 6, 12].map((n) => <option value={n}>{n} períodos</option>)}
+            </select>
+          </div>
+          <fieldset class="periodo">
+            <legend>Período</legend>
+            <div class="periodo-campos">
+              <label for="x-desde">Desde</label>
+              <input id="x-desde" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" placeholder="AAAA o AAAA-MM" />
+              <label for="x-hasta">Hasta</label>
+              <input id="x-hasta" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" placeholder="AAAA o AAAA-MM" />
+            </div>
+            <div class="atajos">
+              <button type="button" class="atajo" data-desde="" data-hasta="">Toda la serie</button>
+              {[1983, 1991, 2003].map((a) => <button type="button" class="atajo" data-desde={String(a)} data-hasta="">Desde {a}</button>)}
+            </div>
+            {etapas.length > 0 && (
+              <div class="campo">
+                <label for="x-etapa">{nombreTipo.get("catedra") ?? "Etapa"}</label>
+                <select id="x-etapa">
+                  <option value="">Elegí una etapa…</option>
+                  {etapas.map((e) => <option value={e.id}>{e.nombre}</option>)}
+                </select>
+              </div>
+            )}
+          </fieldset>
+          <label class="casilla" id="x-campo-log"><input type="checkbox" id="x-log" /> Escala logarítmica</label>
+          <fieldset class="marcas">
+            <legend>Períodos y eventos</legend>
+            <div class="campo">
+              <label for="x-sombreado">Sombreado</label>
+              <select id="x-sombreado">
+                {SOMBREADOS.map(([v, t]) => <option value={v}>{t}</option>)}
+              </select>
+            </div>
+            <label class="casilla"><input type="checkbox" id="x-eventos" /> Marcar eventos</label>
+          </fieldset>
+        </form>
+      </details>
+
+      <p id="x-estado" class="estado" role="status" aria-live="polite"></p>
+      <div id="x-avisos" class="avisos" role="status" aria-live="polite" hidden></div>
+
+      <figure class="figura">
+        <div id="x-grafico" class="grafico" aria-hidden="true"></div>
+        <p class="leyenda-paises" id="x-leyenda-paises" hidden></p>
+        <figcaption>
+          <span class="visualmente-oculto">Resumen del gráfico: </span><span id="x-resumen"></span>
+        </figcaption>
+      </figure>
+
+      <div class="leyendas">
+        <div id="x-leyenda-periodos" hidden>
+          <h3 class="etiqueta" id="x-titulo-periodos">Períodos</h3>
+          <ul class="lista-periodos" id="x-lista-periodos"></ul>
+        </div>
+        <div id="x-leyenda-eventos" hidden>
+          <h3 class="etiqueta">Eventos</h3>
+          <ol class="lista-eventos" id="x-lista-eventos"></ol>
+        </div>
+      </div>
+
+      <details class="tabla-datos">
+        <summary>Tabla de datos <span class="secundario" id="x-tabla-cantidad"></span></summary>
+        <div class="tabla-marco" tabindex="0" role="region" aria-label="Tabla de datos (con desplazamiento)">
+          <table>
+            <caption class="visualmente-oculto">Datos de la vista actual</caption>
+            <thead id="x-tabla-cabeza"></thead>
+            <tbody id="x-tabla-cuerpo"></tbody>
+          </table>
+        </div>
+      </details>
+
+      <div class="columnas">
+        <section aria-labelledby="titulo-descargas" class="grupo">
+          <h2 id="titulo-descargas">Descargar esta vista</h2>
+          <p class="secundario">Con la serie, la transformación, el período y el sombreado elegidos.</p>
+          <div class="botones">
+            <button type="button" class="boton secundario-btn" id="x-bajar-csv">CSV</button>
+            <button type="button" class="boton secundario-btn" id="x-bajar-xlsx">XLSX</button>
+            <button type="button" class="boton secundario-btn" id="x-bajar-png">Gráfico PNG</button>
+            <button type="button" class="boton secundario-btn" id="x-bajar-svg">Gráfico SVG</button>
+            <button type="button" class="boton secundario-btn" id="x-bajar-cita">Cita (.txt)</button>
+          </div>
+          <p class="secundario">El XLSX trae además una hoja de metadatos, la cita y, si hay sombreado, los períodos con sus fuentes.</p>
+          <p><a id="x-ficha" href="/series/">Ver la ficha de la serie</a> <span class="secundario">· metodología, quiebres, fuentes y descargas completas</span></p>
+        </section>
+        <section aria-labelledby="titulo-cita" class="cita">
+          <h2 id="titulo-cita">Cómo citar esta vista</h2>
+          <pre id="x-cita" class="texto-cita" tabindex="0"></pre>
+          <span class="acciones-cita"><button type="button" class="copiar" id="x-copiar">Copiar</button><span class="copiado" id="x-copiado" role="status"></span></span>
+        </section>
+      </div>
+    </section>
+  </article>
+  <script type="application/json" id="x-datos" set:html={datos} />
+</Base>
+
+<script>
+  import "../../graficos/explorador";
+</script>
+
+<style>
+  .explorador { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .cabeza { display: grid; gap: 10px; }
+  .lectura { max-width: 70ch; }
+  .sin-js { padding: 12px; background: var(--superficie); border-radius: var(--radio); }
+  .vista { display: grid; gap: 14px; min-width: 0; }
+  .eleccion { display: flex; flex-wrap: wrap; gap: 12px 18px; }
+  .eleccion .campo { flex: 1 1 18rem; }
+  .vista-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+  .unidad { color: var(--secundario); }
+  .ultimo { margin: -6px 0 0; font-size: 0.92rem; }
+  .ultimo :global(.atraso) { color: var(--secundario); }
+  .panel-opciones { border-radius: var(--radio); background: var(--superficie); }
+  .panel-opciones > summary { cursor: pointer; padding: 10px 14px; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .po-titulo { font-weight: 600; }
+  .po-resumen { font-size: 0.88rem; }
+  /* Los selectores en una grilla pareja; países, período y marcas ocupan una fila entera cada uno. */
+  .controles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: 14px 18px; align-items: end; padding: 4px 14px 14px; }
+  .paises, .periodo, .marcas { grid-column: 1 / -1; }
+  .periodo, .marcas { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 18px; }
+  .periodo legend, .marcas legend { width: 100%; }
+  .periodo .campo, .marcas .campo { flex: 0 1 22rem; }
+  .campo { display: grid; gap: 4px; min-width: 0; }
+  .campo select, .campo input { width: 100%; min-height: 44px; }
+  fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; min-width: 0; }
+  legend { font-size: 0.9rem; padding: 0; margin-bottom: 4px; }
+  .periodo-campos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+  .periodo-campos input { width: 11rem; min-height: 44px; }
+  .controles input::placeholder { color: var(--secundario); opacity: 1; }
+  .atajos { display: flex; flex-wrap: wrap; gap: 6px; }
+  .atajo { background: var(--fondo); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; min-height: 44px; cursor: pointer; font-size: 0.85rem; color: var(--texto); }
+  .atajo:hover { border-color: var(--acento); }
+  .paises-lista { display: flex; flex-wrap: wrap; gap: 0 16px; }
+  .casilla { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+  .casilla input { width: 20px; height: 20px; accent-color: var(--acento); }
+  .casilla.deshabilitado { color: var(--secundario); }
+  .estado:empty { display: none; }
+  .estado[data-tipo="error"] { color: var(--acento); font-weight: 600; }
+  .avisos { display: grid; gap: 6px; border: 1px solid var(--ocre); border-radius: var(--radio); padding: 12px 14px; font-size: 0.92rem; }
+  .figura { margin: 0; display: grid; gap: 10px; min-width: 0; }
+  .grafico { width: 100%; min-height: 260px; }
+  .grafico :global(svg) { max-width: 100%; }
+  figcaption { font-size: 0.92rem; color: var(--secundario); max-width: 75ch; }
+  .leyenda-paises { margin: 0; font-size: 0.9rem; color: var(--secundario); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .leyenda-paises :global(.muestra) { display: inline-block; width: 18px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 4px; }
+  .leyendas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 14px 32px; }
+  .lista-periodos, .lista-eventos { margin: 6px 0 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 0.9rem; }
+  .lista-eventos { list-style: upper-alpha; }
+  .lista-periodos :global(.rango), .lista-eventos :global(.rango) { color: var(--secundario); }
+  .tabla-datos summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; gap: 10px; }
+  .tabla-datos summary span { font-weight: 400; font-size: 0.9rem; }
+  .tabla-marco { overflow-x: auto; max-height: 28rem; overflow-y: auto; border: 1px solid var(--linea); border-radius: var(--radio); margin-top: 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+  .tabla-marco :global(th), .tabla-marco :global(td) { text-align: left; padding: 6px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+  .tabla-marco :global(thead th) { position: sticky; top: 0; background: var(--superficie); font-size: 0.8rem; font-weight: 600; color: var(--secundario); }
+  .tabla-marco :global(tbody th) { font-weight: 400; white-space: nowrap; }
+  .tabla-marco :global(td.valor) { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tabla-marco :global(tr.excluido td) { color: var(--acento); font-weight: 600; }
+  .columnas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 32px; margin-top: 12px; }
+  .grupo, .cita { display: grid; gap: 10px; align-content: start; min-width: 0; }
+  .botones { display: flex; flex-wrap: wrap; gap: 8px; }
+  .botones :global(.boton) { min-height: 44px; }
+  .texto-cita { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--mono); font-size: 0.85rem; background: var(--superficie); padding: 12px; border-radius: var(--radio); }
+  .copiar { background: transparent; border: 1px solid var(--borde); border-radius: var(--radio); padding: 4px 12px; min-height: 44px; cursor: pointer; font-size: 0.85rem; color: var(--texto); }
+  .copiar:hover { border-color: var(--acento); }
+  .copiado { font-size: 0.85rem; color: var(--secundario); margin-left: 8px; }
+</style>
+<style is:global>
+  #vg-tooltip-element.vg-tooltip.custom-theme {
+    background: var(--superficie); color: var(--texto); border: 1px solid var(--borde); border-radius: var(--radio);
+    font-family: var(--sans); font-size: 0.85rem; box-shadow: none; padding: 6px 10px;
+  }
+  #vg-tooltip-element.custom-theme td.key { color: var(--secundario); }
+</style>

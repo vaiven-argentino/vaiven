@@ -337,13 +337,15 @@ vaiven/
 | **Cómo citar / Acerca / Licencias** | Cita sugerida, DOI, créditos, licencias de cada fuente. |
 
 ### 6.2 Explorador
-- **Estado en la URL:** series, variantes, transformaciones, período y sombreado quedan en la URL, para compartir una vista exacta.
+En la fase 4b, el explorador (`/explorador/`) muestra **una serie por vez** (o una internacional con hasta 8 países); la comparación de hasta 4 series y los dos ejes llegan en la 4c.
+- **Estado en la URL:** series, variantes, transformaciones, período y sombreado quedan en la URL, para compartir una vista exacta. Los parámetros son los de la ficha (`t`, `m`, `d`, `pib`, `pa`, `f`, `mm`, `base`, `desde`, `hasta`, `log`) más `s` y `v` (serie y variante), `p` (países, el resaltado primero), `sh` (sombreado: `catedra`, `gobierno`, `mandato`, `ministro`, `plan`, `regimen_cambiario`) y `ev=1` (eventos). Lo que coincide con la vista inicial de la serie no se escribe; un parámetro que la serie no admite se ignora con un aviso.
+- **Sombreado y eventos:** bandas de fondo en dos grises que se alternan, con los gobiernos de facto en uno más oscuro (sin superposiciones: gobiernos, mandatos, ministros, regímenes y etapas); los planes, que pueden superponerse, en una franja arriba del gráfico. Con sombreado, los quiebres pierden el relleno y quedan como barra punteada con número. Los eventos van como reglas finas con una letra y una lista debajo del gráfico.
 - **Exportación:**
-  - gráfico en PNG y SVG (vega-embed), con título, fuentes, variante y versión de datos impresos en la imagen;
-  - datos de la vista en CSV y XLSX, con una hoja de metadatos y la cita.
+  - gráfico en PNG y SVG (vega-embed), con título, fuentes, variante, transformación, sombreado y versión de datos impresos en la imagen;
+  - datos de la vista en CSV y XLSX (con `write-excel-file`, que se carga solo al pedirlo), con la columna del período del sombreado (el vigente el último día de cada fila), una hoja de metadatos, la cita y, si hay sombreado, los períodos con sus fuentes.
 - **Advertencias visibles:** si el rango cruza un quiebre, aparece un aviso junto al gráfico y una marca en el eje temporal.
 - **Riesgo país:** se carga en vivo desde ArgentinaDatos, con la fuente indicada y sin opción de descarga masiva.
-- **Series internacionales:** cada una cuenta como una serie dentro del límite de 4, con hasta 8 países o agregados por gráfico (más líneas dejan de leerse). Selección inicial: Argentina, Brasil, Estados Unidos, América Latina y el Caribe y Mundo. Argentina queda resaltada y el resto en tonos secundarios. Además del gráfico de líneas, una vista de tabla por década (crecimiento promedio) para comparar sin ruido anual.
+- **Series internacionales:** cada una cuenta como una serie dentro del límite de 4, con hasta 8 países o agregados por gráfico (más líneas dejan de leerse). Selección inicial: Argentina, Brasil, Estados Unidos, América Latina y el Caribe y Mundo. En el explorador, cada país lleva su color (paleta de 8, probada para daltonismo) y su nombre al final de la línea, con el resaltado más grueso; en la ficha, el resaltado va en color y el resto en tono secundario. Además del gráfico de líneas, una vista de tabla por década (crecimiento promedio) para comparar sin ruido anual.
 
 ### 6.3 Identidad visual
 - **Concepto:** una hoja de árbol que cae sin dirección clara. Su trayectoria oscilante es la metáfora de Vaivén: la economía argentina como movimiento de ida y vuelta, y también la línea de una serie temporal.
@@ -492,4 +494,5 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
   - esquema y reglas de `periodos.yaml` y `eventos.yaml`: intervalos semiabiertos, fuente por extremo, cortes convencionales, mandatos, criterio de ministros y de regímenes, etapas con `igual_a`; Plan Austral desde el 15/6/1985 y Convertibilidad hasta el 7/1/2002 (2.4);
   - export de períodos y eventos con esquema propio, CSV y datapackage (2.5);
   - nombre público de las etapas del curso (6.4);
-  - parámetros de `listar_periodos` y `periodo_en_fecha` (7.2).
+  - parámetros de `listar_periodos` y `periodo_en_fecha` (7.2);
+  - explorador de una serie por vez en la 4b, parámetros de la URL, sombreado, eventos, exportación y colores por país (6.2).

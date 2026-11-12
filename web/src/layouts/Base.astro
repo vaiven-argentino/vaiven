@@ -8,13 +8,14 @@ import { diaDeVersion } from "../lib/formato";
 interface Props {
   titulo: string;
   descripcion: string;
-  seccion?: "inicio" | "catalogo" | "datos" | "acerca";
+  seccion?: "inicio" | "catalogo" | "explorador" | "datos" | "acerca";
 }
 const { titulo, descripcion, seccion } = Astro.props;
 const tituloCompleto = seccion === "inicio" ? "Vaivén · Series económicas argentinas, 1970–hoy" : `${titulo} · Vaivén`;
 const version = catalogo().version_datos;
 const enlaces = [
   { href: "/series/", texto: "Catálogo", id: "catalogo" },
+  { href: "/explorador/", texto: "Explorador", id: "explorador" },
   { href: "/datos/", texto: "Datos abiertos", id: "datos" },
   { href: "/acerca/", texto: "Acerca y cita", id: "acerca" },
 ];
