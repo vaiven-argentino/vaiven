@@ -263,7 +263,8 @@ export interface TramoLinea {
   x: number;
   ancho: number;
   fila: number;
-  clase: "a" | "b" | "facto";
+  /** Gris del tramo: A y B se alternan, los gobiernos de facto en el más oscuro; planes y episodios, en el de la franja. */
+  clase: "a" | "b" | "facto" | "franja";
   rotulo: boolean;
 }
 
@@ -297,7 +298,8 @@ export function lineaDeTiempo(registro: DocumentoPeriodos, eventos: DocumentoEve
       tipo, nombre: nombres.get(tipo) ?? tipo, filas: Math.max(0, ...filas) + 1,
       tramos: geom.map(({ p, a, b }, k) => ({
         id: p.id, nombre: p.nombre, corto: p.nombre_corto, rango: rangoCorto(p), x: a, ancho: Math.max(b - a, 1.5), fila: filas[k],
-        clase: p.caracter === "de_facto" ? "facto" : k % 2 ? "b" : "a", rotulo: b - a >= p.nombre_corto.length * 6.6 + 8,
+        clase: tipo === "plan" || tipo === "episodio" ? "franja" : p.caracter === "de_facto" ? "facto" : k % 2 ? "b" : "a",
+        rotulo: b - a >= p.nombre_corto.length * 6.6 + 8,
       })),
     });
   }

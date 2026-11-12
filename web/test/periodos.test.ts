@@ -92,5 +92,7 @@ describe("línea de tiempo", () => {
     const milei = gob.at(-1)!;
     expect(milei.x + milei.ancho).toBeCloseTo(posicion("2026-11-12", 1970, 2027, 1000), 5);
     expect(gob.find((t) => t.id === "p.gobierno.videla")!.clase).toBe("facto");
+    // Planes y episodios, en el gris de la franja (1,47:1 o más en los dos modos).
+    for (const tipo of ["plan", "episodio"]) expect(new Set(carriles.find((c) => c.tipo === tipo)!.tramos.map((t) => t.clase))).toEqual(new Set(["franja"]));
   });
 });
