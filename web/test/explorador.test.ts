@@ -1,7 +1,8 @@
 // Explorador: sombreado, eventos y países con color en la especificación; descargas de la vista.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { periodoDeCadaFecha, periodosDe, serieDeEntidad, transformar, type DocumentoPeriodos, type SeriePorPais } from "@vaiven/transformaciones";
+import { periodosDe, serieDeEntidad, transformar, ubicarFechas, type DocumentoPeriodos, type SeriePorPais } from "@vaiven/transformaciones";
+import { columnasDe } from "../src/lib/periodos";
 import { describe, expect, it } from "vitest";
 import { especificacion, filasFranja, separarRotulos, type BandaPeriodo, type Tema } from "../src/graficos/espec";
 import { csvDeVista, hojasXlsx, type VistaDescarga } from "../src/lib/descarga";
@@ -94,25 +95,29 @@ describe("países con color", () => {
 describe("descargas de la vista", () => {
   const gobiernos = periodosDe(periodos, "gobierno");
   const fechas = ["1989-06", "1989-07", "2001-12"];
-  const ps = periodoDeCadaFecha(gobiernos, fechas, ["mensual", "mensual", "mensual"]);
+  const us = ubicarFechas(fechas, ["mensual", "mensual", "mensual"], { agregacion: "promedio", transformacion: "var_mensual" }, gobiernos, "gobierno");
   const vista: VistaDescarga = {
     unidad: "variación % mensual", conPais: false, periodo: "Gobierno",
-    filas: fechas.map((f, k) => ({ fecha: f, valor: k === 1 ? null : 1.5 * (k + 1), periodo: ps[k]?.nombre })),
+    filas: fechas.map((f, k) => ({ fecha: f, valor: k === 1 ? null : 1.5 * (k + 1), ...columnasDe(us[k]) })),
     metadatos: [["Serie", "Inflación minorista (IPC)"]], cita: { texto: "T", apa: "A", bibtex: "B" },
-    periodos: gobiernos.slice(0, 2).map((p) => ({ nombre: p.nombre, desde: p.desde, hasta: p.hasta, fuentes: "x" })),
+    periodos: gobiernos.slice(0, 2).map((p) => ({ nombre: p.nombre, desde: p.desde, hasta: p.hasta, confianza: "inicio: alta", fuentes: "x" })),
   };
-  it("el período de cada fila es el vigente su último día", () => {
-    expect(ps.map((p) => p?.id)).toEqual(["p.gobierno.alfonsin", "p.gobierno.menem", "p.gobierno.camano"]);
+  it("cada fila va al período vigente a mitad del mes, con su reparto", () => {
+    expect(us.map((u) => u.vigentes[0]?.id)).toEqual(["p.gobierno.alfonsin", "p.gobierno.menem", "p.gobierno.de-la-rua"]);
+    expect(columnasDe(us[1])).toEqual({ periodo: "Carlos Saúl Menem", periodo_proporcion: 0.774, otros_periodos: "Alfonsín (23 %)" });
+    // Diciembre de 2001: De la Rúa gobernó 20 de 31 días; los otros tres, el resto.
+    expect(columnasDe(us[2]).otros_periodos).toBe("Puerta (6 %); Rodríguez Saá (23 %); Camaño (6 %)");
   });
-  it("CSV con la columna del período y celdas vacías sin dato", () => {
+  it("CSV con las tres columnas del período y celdas vacías sin dato", () => {
     const csv = csvDeVista(vista).split("\n");
-    expect(csv[0]).toBe("fecha,valor,periodo");
-    expect(csv[2]).toBe("1989-07,,Carlos Saúl Menem");
+    expect(csv[0]).toBe("fecha,valor,periodo,periodo_proporcion,otros_periodos");
+    expect(csv[2]).toBe("1989-07,,Carlos Saúl Menem,0.774,Alfonsín (23 %)");
   });
   it("XLSX: Datos, Metadatos, Cita y Períodos", () => {
     const hojas = hojasXlsx(vista);
     expect(hojas.map((h) => h.sheet)).toEqual(["Datos", "Metadatos", "Cita", "Períodos"]);
-    expect(hojas[0].data[0].map((c) => c?.value)).toEqual(["Fecha", "variación % mensual", "Gobierno"]);
+    expect(hojas[0].data[0].map((c) => c?.value)).toEqual(["Fecha", "variación % mensual", "Gobierno", "Proporción del período", "Otros períodos"]);
+    expect(hojas[0].data[2][3]).toEqual({ value: 0.774 });
     expect(hojas[0].data[2][1]).toBeNull();
     expect(hojasXlsx({ ...vista, periodo: undefined, periodos: undefined }).map((h) => h.sheet)).toEqual(["Datos", "Metadatos", "Cita"]);
   });

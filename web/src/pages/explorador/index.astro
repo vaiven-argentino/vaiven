@@ -146,7 +146,10 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
       <div id="x-avisos" class="avisos" role="status" aria-live="polite" hidden></div>
 
       <figure class="figura">
-        <div id="x-grafico" class="grafico" aria-hidden="true"></div>
+        <div id="x-lector" class="lector" tabindex="0" role="group" aria-label="Gráfico: con el foco, las flechas recorren los datos" aria-describedby="x-lectura">
+          <div id="x-grafico" class="grafico" aria-hidden="true"></div>
+        </div>
+        <p id="x-lectura" class="lectura secundario" aria-live="polite"></p>
         <p class="leyenda-paises" id="x-leyenda-paises" hidden></p>
         <figcaption>
           <span class="visualmente-oculto">Resumen del gráfico: </span><span id="x-resumen"></span>
@@ -159,7 +162,8 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
           <ul class="lista-periodos" id="x-lista-periodos"></ul>
         </div>
         <div id="x-leyenda-eventos" hidden>
-          <h3 class="etiqueta">Eventos</h3>
+          <h3 class="etiqueta">Episodios y eventos</h3>
+          <ul class="lista-periodos" id="x-lista-episodios" hidden></ul>
           <ol class="lista-eventos" id="x-lista-eventos"></ol>
         </div>
       </div>
@@ -245,6 +249,10 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
   .avisos { display: grid; gap: 6px; border: 1px solid var(--ocre); border-radius: var(--radio); padding: 12px 14px; font-size: 0.92rem; }
   .figura { margin: 0; display: grid; gap: 10px; min-width: 0; }
   .grafico { width: 100%; min-height: 260px; }
+  .lector { position: relative; border-radius: 4px; }
+  .lector :global(.lector-regla) { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px solid var(--texto); pointer-events: none; }
+  .lectura { margin: 0; min-height: 1.4em; font-size: 0.9rem; }
+  .lista-periodos :global(.a-confirmar) { color: var(--texto); font-weight: 600; }
   .grafico :global(svg) { max-width: 100%; }
   figcaption { font-size: 0.92rem; color: var(--secundario); max-width: 75ch; }
   .leyenda-paises { margin: 0; font-size: 0.9rem; color: var(--secundario); display: flex; flex-wrap: wrap; gap: 4px 14px; }

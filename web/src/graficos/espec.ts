@@ -2,7 +2,10 @@
 // la transformación y dibuja: la serie, cortada donde no hay continuidad; los quiebres como bandas o reglas
 // numeradas; y los datos excluidos como una «×» sobre el eje. En las series con dimensión pais, las demás entidades
 // de la selección inicial van como líneas finas en tono secundario y la elegida queda resaltada (SPEC 6.2).
-import { PASO, indiceFin, indiceMes, type Resultado, type Tramo } from "@vaiven/transformaciones";
+import {
+  PASO, fechaDeDibujo, indiceFin, indiceMes, referenciaDe, textoPeriodo, textoReparto, ubicar,
+  type ContextoUbicacion, type Periodo, type Resultado, type TipoPeriodo, type Tramo,
+} from "@vaiven/transformaciones";
 import type { QuiebreNumerado } from "../lib/ficha";
 import { fechaCorta, fechaLegible, numero } from "../lib/formato";
 
@@ -30,6 +33,11 @@ export interface BandaPeriodo {
   nombre: string;
   nombre_corto: string;
   facto?: boolean;
+}
+
+/** Un episodio (proceso de varios meses, que puede superponerse con otros) y sus fases, para la franja de debajo del eje. */
+export interface BandaEpisodio extends BandaPeriodo {
+  fases?: BandaPeriodo[];
 }
 
 /** Un evento marcado con una letra sobre el eje (la lista con los nombres va debajo del gráfico). */
@@ -61,6 +69,15 @@ export interface EntradaGrafico {
    * alternan dos grises. Con `franja` (planes, que pueden superponerse): barras en una franja arriba del gráfico.
    */
   sombreado?: { bandas: BandaPeriodo[]; franja?: boolean };
+  /**
+   * Cómo se ubica cada dato en el tiempo (ubicacion.ts de la librería): los saldos en nivel, el último día; lo demás,
+   * en el punto medio de la observación. Sin contexto, como un promedio.
+   */
+  ubicacion?: ContextoUbicacion;
+  /** Con sombreado: los períodos del tipo elegido, para decir en el tooltip a cuál se asigna cada dato y su reparto. */
+  asignacion?: { periodos: Periodo[]; tipo: TipoPeriodo };
+  /** Episodios (con «Marcar eventos»): una franja debajo del eje, del estilo de los quiebres largos. */
+  episodios?: BandaEpisodio[];
   eventos?: MarcaEvento[];
   /** Solo para exportar la imagen: título, subtítulo y pie impresos dentro del gráfico. */
   impreso?: { titulo: string; subtitulo: string; pie: string[] };
@@ -75,6 +92,9 @@ export interface Fila {
   valor: string;
   /** En las series con dimensión pais, el nombre de la entidad (para el tooltip). */
   pais?: string;
+  /** Con sombreado: el período al que se asigna el dato y, si cruza un cambio, el reparto. */
+  periodo?: string;
+  reparto?: string;
 }
 
 // En escala logarítmica con valores muy chicos (el tipo de cambio de 1970 en pesos actuales es 3,5 × 10⁻¹¹), los
@@ -144,7 +164,8 @@ export function nombreTramo(t: Tramo): string {
  * Filas de la línea. El segmento cambia (la línea se corta) en un dato nulo o excluido, en un hueco más largo que
  * la frecuencia y, si los tramos están yuxtapuestos sin empalmar, en el cambio de tramo.
  */
-export function filas(e: Pick<EntradaGrafico, "resultado" | "tramos" | "empalme" | "esVariacion">): Fila[] {
+export function filas(e: Pick<EntradaGrafico, "resultado" | "tramos" | "empalme" | "esVariacion" | "ubicacion" | "asignacion">): Fila[] {
+  const contexto = e.ubicacion ?? { agregacion: "promedio" as const };
   const salida: Fila[] = [];
   let segmento = 0;
   let anterior: { i: number; paso: number; tramo: number } | null = null;
@@ -162,10 +183,17 @@ export function filas(e: Pick<EntradaGrafico, "resultado" | "tramos" | "empalme"
     if (anterior && (i - anterior.i > Math.max(paso, anterior.paso) || (e.empalme === "yuxtaponer" && tramo !== anterior.tramo))) {
       segmento += 1;
     }
-    salida.push({
-      t: iso(i), v, segmento, tramo: tramo >= 0 ? nombreTramo(e.tramos[tramo]) : "",
+    const ref = referenciaDe(fecha, f, contexto);
+    const fila: Fila = {
+      t: fechaDeDibujo(ref), v, segmento, tramo: tramo >= 0 ? nombreTramo(e.tramos[tramo]) : "",
       fecha: fechaLegible(fecha, f), valor: numero(v, e.esVariacion),
-    });
+    };
+    if (e.asignacion) {
+      const u = ubicar(ref, e.asignacion.periodos, e.asignacion.tipo);
+      fila.periodo = textoPeriodo(u);
+      fila.reparto = textoReparto(u) || "—";
+    }
+    salida.push(fila);
     anterior = { i, paso, tramo };
   });
   return salida;
@@ -178,7 +206,11 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
 
   const ultimo = e.resultado.datos[e.resultado.datos.length - 1];
   const ini = indiceMes(e.resultado.datos[0][0]);
-  const fin = indiceMes(ultimo[0]) + (PASO[e.resultado.frecuencias[e.resultado.frecuencias.length - 1] as keyof typeof PASO] ?? 1) - 1;
+  const frecUltima = e.resultado.frecuencias[e.resultado.frecuencias.length - 1];
+  // El eje va del primer día de la primera observación al día siguiente del último de la última: así entra el punto
+  // medio (o el último día) de cada dato. `meses` es la cantidad de meses que cubre (para las marcas del eje).
+  const meses = indiceMes(ultimo[0]) + (frecUltima === "semestral" ? 1 : (PASO[frecUltima as keyof typeof PASO] ?? 1)) - ini;
+  const fin = ini + meses;
   const dominioX = [iso(ini), iso(fin)];
   const x = (campo: string) => ({ field: campo, type: "temporal", scale: { type: "utc", domain: dominioX }, title: null });
 
@@ -204,7 +236,11 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   });
   const marcadores = ubicarMarcadores([...rangos, ...reglas].map((q) => ({ n: q.n, i: q.medio })), ini, fin, e.ancho)
     .map((m) => ({ ...m, y: m.y + sombra.arriba }));
-  const excluidos = e.resultado.excluidos.map((x) => ({ t: iso(indiceMes(x.fecha)), texto: `Dato excluido (${fechaCorta(x.fecha)}): ${x.motivo}` }));
+  const frecDe = (fecha: string) => e.resultado.frecuencias[e.resultado.datos.findIndex((d) => d[0] === fecha)] ?? frecUltima;
+  const excluidos = e.resultado.excluidos.map((x) => ({
+    t: fechaDeDibujo(referenciaDe(x.fecha, frecDe(x.fecha), e.ubicacion ?? { agregacion: "promedio" })),
+    texto: `Dato excluido (${fechaCorta(x.fecha)}): ${x.motivo}`,
+  }));
 
   const filasOtras = (e.otras ?? []).flatMap((o) => filas({ ...e, resultado: o.resultado }).map((f) => ({ ...f, pais: o.nombre })));
   const todas = [...filasLinea, ...filasOtras];
@@ -228,13 +264,17 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     axis: log && minimo < 0.01 ? { labelExpr: ROTULO_POTENCIA, values: potenciasDeDiez(minimo, Math.max(...filasLinea.map((f) => f.v))) }
       : { format: ",~r", tickCount: 6 },
   };
-  const tooltip = [...(e.nombre ? [{ field: "pais", title: "País" }] : []), { field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" }];
+  const tooltip = [...(e.nombre ? [{ field: "pais", title: "País" }] : []), { field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" },
+    ...(e.asignacion ? [{ field: "periodo", title: "Período" }, { field: "reparto", title: "Reparto" }] : [])];
   if (e.nombre) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
 
   const capas: Record<string, unknown>[] = [...sombra.capas(x)];
   // Las letras de los eventos cercanos (menos de 13 px) se escalonan en filas, para que no se pisen.
   const eventos = escalonar((e.eventos ?? []).filter((ev) => indiceDia(ev.fecha) >= ini && indiceDia(ev.fecha) <= fin), px);
   const filasEventos = eventos.length ? Math.max(...eventos.map((ev) => ev.fila)) + 1 : 0;
+  const franjaEpisodios = episodios(e, ini, fin, px);
+  // Debajo del eje van, en orden: la franja de los episodios y las letras de los eventos; después, los años.
+  const debajo = franjaEpisodios.alto;
   if (eventos.length) {
     capas.push({
       // La regla empieza debajo de los rótulos del sombreado, para no tacharlos (revisión visual de la 4b).
@@ -346,7 +386,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     // del 0 (revisión visual de la 4b); las muy pegadas al borde izquierdo se corren un poco.
     // Las letras van debajo del eje X (entre la línea del eje y los años), para no tapar la serie; las cercanas, en
     // filas hacia abajo (revisión visual de la 4b).
-    eventos.forEach((ev) => Object.assign(ev, { y: e.alto + 11 + ev.fila * 15, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
+    eventos.forEach((ev) => Object.assign(ev, { y: e.alto + debajo + 11 + ev.fila * 15, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
     capas.push({
       data: { values: eventos }, mark: { type: "point", shape: "square", size: 150, filled: true, color: tema.fondo, stroke: tema.borde, strokeWidth: 0.8, opacity: 1 },
       encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, tooltip: [{ field: "nombre", title: "Evento" }] },
@@ -356,6 +396,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, text: { field: "letra" }, tooltip: [{ field: "nombre", title: "Evento" }] },
     });
   }
+  capas.push(...franjaEpisodios.capas(x));
   if (excluidos.length) {
     capas.push({
       data: { values: excluidos }, mark: { type: "text", text: "×", color: tema.texto, fontSize: 18, fontWeight: 700, baseline: "bottom" },
@@ -382,7 +423,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
         labelColor: tema.secundario, titleColor: tema.secundario, gridColor: tema.linea, domainColor: tema.borde,
         tickColor: tema.borde, labelFontSize: 12, labelFont: tema.fuente, labelOverlap: true, labelFlush: true,
       },
-      axisX: { grid: false, labelPadding: 6 + filasEventos * 15, ...marcasX(fin - ini + 1, e.ancho < 520 ? 5 : 10) },
+      axisX: { grid: false, labelPadding: 6 + debajo + filasEventos * 15, ...marcasX(meses, e.ancho < 520 ? 5 : 10) },
       legend: { labelColor: tema.texto, titleColor: tema.secundario, labelFontSize: 12, titleFontSize: 12, labelFont: tema.fuente, labelLimit: 320 },
       title: { color: tema.texto, subtitleColor: tema.secundario, anchor: "start", fontSize: 17, subtitleFontSize: 12, font: tema.fuente, subtitleFont: tema.fuente },
       text: { font: tema.fuente },
@@ -524,6 +565,56 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
         encoding: { x: x("desde"), x2: { field: "hasta" }, color: { field: "color", type: "nominal", scale: null, legend: null }, tooltip } },
       ...(conRotulo.length ? [{ data: { values: conRotulo }, mark: { type: "text", color: t.secundario, fontSize: 10, baseline: "top", dy: 0 },
         encoding: { x: x("medio"), y: { value: 3 }, text: { field: "rotulo" } } }] : []),
+    ],
+  };
+}
+
+/**
+ * Franja de los episodios, debajo del eje X, con el estilo de los quiebres largos: una línea punteada con topes en los
+ * extremos (y en el cambio de fase), y el nombre arriba si entra. Los superpuestos van en filas. El nombre y las fechas
+ * de cada fase, en el tooltip.
+ */
+function episodios(e: EntradaGrafico, ini: number, fin: number, px: (i: number) => number) {
+  const lista = (e.episodios ?? []).map((ep) => {
+    const a = Math.max(indiceDia(ep.desde), ini);
+    const z = Math.min(ep.hasta ? indiceDia(ep.hasta) : fin, fin);
+    return { ep, a, z };
+  }).filter((x) => x.z > x.a);
+  if (!lista.length) return { alto: 0, capas: () => [] as Record<string, unknown>[] };
+  const t = e.tema;
+  const filas = filasFranja(lista.map((x) => ({ a: x.a, b: x.z })));
+  const ALTO_FILA = 24;
+  const dentro = (d: string) => (indiceDia(d) < ini ? iso(ini) : indiceDia(d) > fin ? iso(fin) : d);
+  const rango = (b: BandaPeriodo) => {
+    const f = (d: string) => { const [a, m, dd] = d.split("-"); return `${Number(dd)}/${Number(m)}/${a}`; };
+    return b.hasta ? `${f(b.desde)}–${f(b.hasta)}` : `desde el ${f(b.desde)}`;
+  };
+  const tramos = lista.flatMap(({ ep }, k) => {
+    const y0 = e.alto + 6 + filas[k] * ALTO_FILA;
+    const partes = ep.fases?.length ? ep.fases : [ep];
+    return partes.map((f) => ({
+      desde: dentro(f.desde), hasta: dentro(f.hasta ?? iso(fin)), episodio: ep.nombre, nombre: f.nombre, rango: rango(f),
+      y: y0 + 16, y1: y0 + 12, y2: y0 + 20,
+    })).filter((f) => f.hasta > f.desde);
+  });
+  const topes = tramos.flatMap((f) => [{ t: f.desde, y1: f.y1, y2: f.y2 }, { t: f.hasta, y1: f.y1, y2: f.y2 }]);
+  const rotulos = lista.map(({ ep, a, z }, k) => ({
+    t: dentro(ep.desde), y: e.alto + 6 + filas[k] * ALTO_FILA + 5,
+    rotulo: px(z) - px(a) >= anchoTexto(ep.nombre_corto) ? ep.nombre_corto : "",
+  })).filter((r) => r.rotulo);
+  const tooltip = [{ field: "episodio", title: "Episodio" }, { field: "nombre", title: "Fase" }, { field: "rango", title: "Fechas" }];
+  return {
+    alto: (Math.max(...filas) + 1) * ALTO_FILA + 4,
+    capas: (x: (c: string) => Record<string, unknown>) => [
+      { data: { values: tramos }, mark: { type: "rule", color: t.secundario, strokeWidth: 1.5, strokeDash: [2, 3] },
+        encoding: { x: x("desde"), x2: { field: "hasta" }, y: { field: "y", type: "quantitative", scale: null }, tooltip } },
+      // Una franja invisible más ancha para que el tooltip aparezca sin apuntar a la línea fina.
+      { data: { values: tramos }, mark: { type: "rect", opacity: 0, color: t.fondo },
+        encoding: { x: x("desde"), x2: { field: "hasta" }, y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip } },
+      { data: { values: topes }, mark: { type: "rule", color: t.secundario, strokeWidth: 1.5 },
+        encoding: { x: x("t"), y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" } } },
+      ...(rotulos.length ? [{ data: { values: rotulos }, mark: { type: "text", color: t.secundario, fontSize: 10, align: "left", baseline: "middle", dx: 2 },
+        encoding: { x: x("t"), y: { field: "y", type: "quantitative", scale: null }, text: { field: "rotulo" } } }] : []),
     ],
   };
 }

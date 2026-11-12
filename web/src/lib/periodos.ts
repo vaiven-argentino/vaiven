@@ -1,9 +1,11 @@
 // Períodos y eventos en la web: qué se sombrea en un gráfico (ficha y explorador), cómo se nombra y qué accesos al
 // explorador ofrece la página /periodos/. Funciones puras (se prueban con Vitest).
 import {
-  diasDe, periodosDe, seCruzan, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type TipoPeriodo,
+  diasDe, extremosDudosos, fasesDe, periodosDe, proporcionDe, seCruzan, textoOtros, textoPeriodo, ubicarFechas,
+  type Agregacion, type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Opciones, type Periodo,
+  type Resultado, type TipoPeriodo, type Ubicacion,
 } from "@vaiven/transformaciones";
-import type { BandaPeriodo, MarcaEvento } from "../graficos/espec";
+import type { BandaEpisodio, BandaPeriodo, MarcaEvento } from "../graficos/espec";
 
 /** Opciones de sombreado (el valor va en el parámetro `sh` de la URL). */
 export const OPCIONES_SOMBREADO = ["catedra", "gobierno", "mandato", "ministro", "plan", "regimen_cambiario"] as const;
@@ -24,6 +26,46 @@ export function nombreSombreado(sh: OpcionSombreado, tipos?: Array<{ id: string;
 }
 export const columnaPeriodo = (sh: OpcionSombreado) => COLUMNA[sh];
 export const esSombreado = (x: string | null): x is OpcionSombreado => (OPCIONES_SOMBREADO as readonly string[]).includes(x ?? "");
+
+/** El tipo de período de una opción de sombreado (los mandatos son gobiernos). */
+export const tipoDe = (sh: OpcionSombreado): TipoPeriodo => (sh === "mandato" ? "gobierno" : sh);
+
+/** Lo que hace falta para ubicar los datos de una vista: la agregación de la variante y la transformación pedida. */
+export function contextoDe(agregacion: Agregacion, o: Pick<Opciones, "transformacion" | "mediaMovil">): ContextoUbicacion {
+  return { agregacion, transformacion: o.transformacion, mediaMovil: o.mediaMovil };
+}
+
+/** Las tres columnas del período de cada fila (SPEC 6.2): `periodo`, `periodo_proporcion` y `otros_periodos`. */
+export interface ColumnasPeriodo {
+  periodo: string;
+  periodo_proporcion: number | string;
+  otros_periodos: string;
+}
+
+/** Dónde cae cada dato de un resultado entre los períodos que se ven (una sola regla para el gráfico y las descargas). */
+export function ubicacionesDe(periodos: Periodo[], sh: OpcionSombreado, r: Resultado, contexto: ContextoUbicacion): Ubicacion[] {
+  return ubicarFechas(r.datos.map((d) => d[0]), r.frecuencias, contexto, periodos, tipoDe(sh));
+}
+
+export const columnasDe = (u: Ubicacion): ColumnasPeriodo =>
+  ({ periodo: textoPeriodo(u), periodo_proporcion: proporcionDe(u), otros_periodos: textoOtros(u) });
+
+/** Aviso de las fechas de confianza baja de un período («fecha a confirmar»), o vacío. */
+export function avisoConfianza(p: Pick<Periodo, "confianza">): string {
+  const dudosos = extremosDudosos(p);
+  if (!dudosos.length) return "";
+  return dudosos.length === 2 ? "fechas a confirmar" : dudosos[0] === "desde" ? "fecha de inicio a confirmar" : "fecha de fin a confirmar";
+}
+
+/** La confianza de las fechas de un período en una línea: «inicio: alta; fin: media». */
+export function textoConfianza(p: Pick<Periodo, "confianza">): string {
+  const c = p.confianza;
+  if (!c) return "";
+  return `inicio: ${c.desde}${c.hasta ? `; fin: ${c.hasta}` : ""}`;
+}
+
+/** Aclaración que acompaña a las etapas del curso fuera de /periodos/ (CSV, XLSX, pie de las imágenes). */
+export const ACLARACION_ETAPAS = "etapas según la periodización de un curso universitario";
 
 /** Primer y último día que cubre un resultado (para saber qué períodos y eventos se cruzan con lo que se ve). */
 function rangoDe(r: Resultado): { desde: string; hasta: string } | null {
@@ -50,6 +92,16 @@ export function eventosEnRango(registro: DocumentoEventos, r: Resultado): MarcaE
     .map((e, k) => ({ letra: letraEvento(k), fecha: e.fecha, nombre: e.nombre }));
 }
 
+/** Los episodios que se cruzan con lo que se ve, con sus fases (para la franja de debajo del eje). */
+export function episodiosEnRango(registro: DocumentoPeriodos, r: Resultado): BandaEpisodio[] {
+  const rango = rangoDe(r);
+  if (!rango) return [];
+  return seCruzan(periodosDe(registro, "episodio"), rango.desde, rango.hasta).map((p) => ({
+    desde: p.desde, hasta: p.hasta, nombre: p.nombre, nombre_corto: p.nombre_corto,
+    ...(p.fases?.length ? { fases: fasesDe(p).map((f) => ({ desde: f.desde, hasta: f.hasta, nombre: f.nombre, nombre_corto: f.nombre_corto })) } : {}),
+  }));
+}
+
 /** Las bandas que dibuja el gráfico (los gobiernos de facto, en el gris más oscuro). */
 export function bandasDe(periodos: Periodo[]): BandaPeriodo[] {
   return periodos.map((p) => ({ desde: p.desde, hasta: p.hasta, nombre: p.nombre, nombre_corto: p.nombre_corto, facto: p.caracter === "de_facto" }));
@@ -60,6 +112,7 @@ export function textoSombreado(sh: OpcionSombreado, periodos: Periodo[], eventos
   let t = "";
   if (periodos.length) {
     t += ` Sombreado por ${nombreSombreado(sh, tipos).toLowerCase()}: ${periodos.length === 1 ? "un período" : `${periodos.length} períodos`}, de ${periodos[0].nombre} a ${periodos[periodos.length - 1].nombre}.`;
+    t += " Cada dato se asigna al período vigente a mitad de su intervalo (los saldos en nivel, el último día).";
   }
   if (eventos.length) t += ` ${eventos.length === 1 ? "Un evento marcado" : `${eventos.length} eventos marcados`} (lista debajo del gráfico).`;
   return t;
@@ -94,16 +147,17 @@ const VISTAS_CORTAS: Array<[string, string, Record<string, string>]> = [
  */
 export function accesosDe(p: { tipo: TipoPeriodo | "mandato"; desde: string; hasta: string | null }, publicadas: Set<string>, hoy: number): Acceso[] {
   const largas = p.tipo === "gobierno" || p.tipo === "mandato" || p.tipo === "catedra";
+  // Los episodios no son un sombreado: se ven con «Marcar eventos».
+  const marca: [string, string] = p.tipo === "episodio" ? ["ev", "1"] : ["sh", p.tipo];
   const desde = String(Number(p.desde.slice(0, 4)) - 1);
   const hastaAnio = p.hasta ? Number(p.hasta.slice(0, 4)) + 1 : null;
-  const sh = p.tipo;
   return (largas ? VISTAS_LARGAS : VISTAS_CORTAS).filter(([s]) => publicadas.has(s)).map(([s, texto, extra]) => {
     const q = new URLSearchParams();
     if (s !== "ipc") q.set("s", s);
     for (const [k, v] of Object.entries(extra)) q.set(k, v);
     q.set("desde", desde);
     if (hastaAnio && hastaAnio < hoy) q.set("hasta", String(hastaAnio));
-    q.set("sh", sh);
+    q.set(...marca);
     return { texto, url: `/explorador/?${q}` };
   });
 }
@@ -152,11 +206,11 @@ export function posicion(dia: string, inicio: number, fin: number, ancho: number
 export function lineaDeTiempo(registro: DocumentoPeriodos, eventos: DocumentoEventos, ancho: number, inicio: number, fin: number, hoy: string): CarrilLinea[] {
   const carriles: CarrilLinea[] = [];
   const nombres = new Map(registro.tipos.map((t) => [t.id, t.nombre]));
-  for (const tipo of ["catedra", "gobierno", "ministro", "plan", "regimen_cambiario"] as TipoPeriodo[]) {
+  for (const tipo of ["catedra", "gobierno", "ministro", "plan", "regimen_cambiario", "episodio"] as TipoPeriodo[]) {
     const lista = periodosDe(registro, tipo);
     const x = (d: string) => posicion(d, inicio, fin, ancho);
     const geom = lista.map((p) => ({ p, a: x(p.desde), b: x(p.hasta ?? hoy) })).filter((g) => g.b > g.a);
-    const filas = tipo === "plan" ? filasSuperpuestas(geom) : geom.map(() => 0);
+    const filas = tipo === "plan" || tipo === "episodio" ? filasSuperpuestas(geom) : geom.map(() => 0);
     carriles.push({
       tipo, nombre: nombres.get(tipo) ?? tipo, filas: Math.max(0, ...filas) + 1,
       tramos: geom.map(({ p, a, b }, k) => ({
