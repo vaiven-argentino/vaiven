@@ -121,6 +121,11 @@ export function documento(archivo: string): DocumentoSerie {
   return doc;
 }
 
+/** Los períodos publicados (fase 4b), si están en el export. */
+export function periodos(): import("@vaiven/transformaciones").DocumentoPeriodos | null {
+  return existsSync(join(EXPORT, "periodos.json")) ? leer("periodos.json") : null;
+}
+
 export function quiebres(): Map<string, Quiebre> {
   return new Map(leer<Quiebre[]>("quiebres.json").map((q) => [q.id, q]));
 }

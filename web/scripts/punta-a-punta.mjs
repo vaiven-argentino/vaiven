@@ -3,7 +3,7 @@
 // la ficha, cambia de transformación, de medida (real, en dólares, % del PIB), de país y a pesos actuales cuando la
 // variante los ofrece (y en cada gráfico controla que los dos ejes tengan etiquetas), baja el CSV, el PNG y el ZIP, copia la cita y abre otra variante.
 //
-// Uso: node web/scripts/punta-a-punta.mjs --base http://localhost:8787 --salida <carpeta para las descargas>
+// Uso: node web/scripts/punta-a-punta.mjs --base http://localhost:8787 --salida <carpeta para las descargas> [--solo explorador]
 import { mkdirSync, readFileSync, statSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
@@ -39,12 +39,80 @@ async function bajar(pagina, accion, nombre) {
   return { ruta, nombre: descarga.suggestedFilename(), bytes: statSync(ruta).size, esperado: nombre };
 }
 
+// Vistas del explorador que se prueban: con sombreado, eventos, varios países, trimestral, negativos y atraso.
+const VISTAS_EXPLORADOR = [
+  { url: "?sh=gobierno&ev=1", sombreado: true, eventos: true },
+  { url: "?t=var_mensual&desde=1985-06&hasta=1988-08&sh=plan&ev=1", sombreado: true, eventos: true },
+  { url: "?s=pib&sh=mandato", sombreado: true },
+  { url: "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario", sombreado: true },
+  { url: "?s=int-pib&p=ARG%2CBRA%2CCHL%2CURY%2CUSA%2CWLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011", paises: 6 },
+  { url: "?s=reservas&sh=catedra", sombreado: true },
+];
+
+const controlesExplorador = (pagina) => pagina.$$eval("#x-controles select, #x-controles input, #x-serie, #x-variante",
+  (es) => es.filter((e) => !e.closest("[hidden]")).map((e) => `${e.id}=${e.type === "checkbox" ? e.checked : e.value}`).join("|"));
+
+async function explorador(pagina, ancho) {
+  for (const v of VISTAS_EXPLORADOR) {
+    const id = `explorador${v.url} @ ${ancho}px`;
+    await pagina.goto(`${base}/explorador/${v.url}`, { waitUntil: "networkidle" });
+    const listo = await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 }).then(() => true, () => false);
+    if (!ok(listo, `${id}: no se dibujó el gráfico`)) continue;
+    await conEjesEn(pagina, "#x-grafico", id, "la vista");
+    // La URL queda igual (es canónica) y no hay avisos de parámetros descartados.
+    ok(new URL(pagina.url()).search === v.url, `${id}: la URL cambió a ${new URL(pagina.url()).search}`);
+    const avisos = await pagina.$eval("#x-avisos", (e) => e.textContent);
+    ok(!/La URL (pedía|tiene)/.test(avisos), `${id}: avisos de parámetros: ${avisos}`);
+    if (v.sombreado) ok(await pagina.$$eval("#x-grafico svg .mark-rect path", (ps) => ps.length) > 0, `${id}: no se ve el sombreado`);
+    if (v.eventos) ok(await pagina.$$eval("#x-lista-eventos li", (ls) => ls.length) > 0, `${id}: no se listan los eventos`);
+    if (v.paises) ok(await pagina.$$eval("#x-leyenda-paises > span", (ls) => ls.length) === v.paises, `${id}: la leyenda no tiene ${v.paises} países`);
+    // Ida y vuelta: recargar la URL da los mismos controles.
+    const antes = await controlesExplorador(pagina);
+    await pagina.reload({ waitUntil: "networkidle" });
+    await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+    ok(await controlesExplorador(pagina) === antes, `${id}: al recargar cambian los controles`);
+  }
+  // Cambiar un control guarda la vista en la URL, y abrir esa URL la reproduce.
+  const id = `explorador (controles) @ ${ancho}px`;
+  await pagina.goto(`${base}/explorador/`, { waitUntil: "networkidle" });
+  await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+  if (!(await pagina.locator("#x-panel").evaluate((d) => d.open))) await pagina.click("#x-panel > summary");
+  await pagina.selectOption("#x-sombreado", "ministro");
+  await pagina.waitForTimeout(800);
+  await pagina.selectOption("#x-etapa", "p.catedra.convertibilidad");
+  await pagina.waitForTimeout(800);
+  const url = new URL(pagina.url()).search;
+  ok(url === "?desde=1991-04&hasta=1999-12&sh=ministro", `${id}: la URL no guarda la vista (${url})`);
+  const antes = await controlesExplorador(pagina);
+  await pagina.goto(`${base}/explorador/${url}`, { waitUntil: "networkidle" });
+  await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+  ok(await controlesExplorador(pagina) === antes, `${id}: la URL no reproduce la vista`);
+  // Descargas de la vista: no vacías.
+  const csv = await bajar(pagina, () => pagina.click("#x-bajar-csv"), "csv");
+  ok(csv.bytes > 100 && /^fecha,valor,periodo/.test(readFileSync(csv.ruta, "utf-8")), `${id}: CSV vacío o sin la columna del período`);
+  const xlsx = await bajar(pagina, () => pagina.click("#x-bajar-xlsx"), "xlsx");
+  ok(xlsx.bytes > 3000 && xlsx.nombre.endsWith(".xlsx") && readFileSync(xlsx.ruta).subarray(0, 2).toString() === "PK", `${id}: XLSX vacío o no es un ZIP (${xlsx.bytes} B)`);
+  const png = await bajar(pagina, () => pagina.click("#x-bajar-png"), "png");
+  ok(png.bytes > 5000, `${id}: PNG vacío (${png.bytes} B)`);
+  const svg = await bajar(pagina, () => pagina.click("#x-bajar-svg"), "svg");
+  ok(svg.bytes > 5000 && readFileSync(svg.ruta, "utf-8").includes("Sombreado: ministros de Economía"), `${id}: el SVG no lleva el sombreado impreso`);
+  console.log(`${id}: URL ${url}; CSV ${csv.bytes} B, XLSX ${xlsx.bytes} B (${xlsx.ruta}), PNG ${png.bytes} B, SVG ${svg.bytes} B`);
+}
+
+async function conEjesEn(pagina, sel, id, que) {
+  const e = await pagina.$$eval(`${sel} svg g.role-axis`, (gs) => gs.map((g) => ({
+    eje: (g.getAttribute("aria-label") ?? "").slice(0, 6), etiquetas: g.querySelectorAll(".role-axis-label text").length,
+  })));
+  ok(e.some((x) => x.eje === "X-axis" && x.etiquetas >= 2), `${id}: ${que} sin etiquetas en el eje X`);
+  ok(e.some((x) => x.eje === "Y-axis" && x.etiquetas >= 2), `${id}: ${que} sin etiquetas en el eje Y`);
+}
+
 const navegador = await chromium.launch();
 for (const ancho of [390, 1280]) {
   const contexto = await navegador.newContext({ viewport: { width: ancho, height: 900 }, acceptDownloads: true });
   await contexto.grantPermissions(["clipboard-read", "clipboard-write"], { origin: base });
   const pagina = await contexto.newPage();
-  for (const s of catalogo.series) {
+  for (const s of args.solo === "explorador" ? [] : catalogo.series) {
     const id = `${s.id} @ ${ancho}px`;
     // Encontrar
     await pagina.goto(`${base}/series/`, { waitUntil: "networkidle" });
@@ -125,6 +193,8 @@ for (const ancho of [390, 1280]) {
     }
     console.log(`${id}: encontrar, graficar${probadas.length ? ` (${probadas.join(", ")})` : ""}, descargar (CSV ${csv.bytes} B, PNG ${png.bytes} B, ZIP ${zip.bytes} B) y citar${otraVariante ? `; variante ${otraVariante.id}` : ""}`);
   }
+  // Explorador (fase 4b): abrir una URL reproduce la vista; cambiar un control, recargar y comparar; descargas.
+  await explorador(pagina, ancho);
   await contexto.close();
 }
 await navegador.close();
@@ -132,4 +202,6 @@ if (fallas.length) {
   console.error(`\n${fallas.length} fallas:\n${fallas.join("\n")}`);
   process.exit(1);
 }
-console.log(`\nTodo bien: las ${catalogo.series.length} series se pueden encontrar, graficar, descargar y citar en 390 y 1280 px.`);
+console.log(args.solo === "explorador"
+  ? "\nTodo bien: el explorador reproduce sus vistas desde la URL y descarga CSV, XLSX, PNG y SVG en 390 y 1280 px."
+  : `\nTodo bien: las ${catalogo.series.length} series se pueden encontrar, graficar, descargar y citar en 390 y 1280 px, y el explorador reproduce sus vistas desde la URL.`);

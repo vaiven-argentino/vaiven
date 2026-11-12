@@ -232,7 +232,8 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   if (e.nombre) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
 
   const capas: Record<string, unknown>[] = [...sombra.capas(x)];
-  const eventos = (e.eventos ?? []).filter((ev) => indiceDia(ev.fecha) >= ini && indiceDia(ev.fecha) <= fin);
+  // Las letras de los eventos cercanos (menos de 12 px) se escalonan en dos o tres alturas, para que no se pisen.
+  const eventos = escalonar((e.eventos ?? []).filter((ev) => indiceDia(ev.fecha) >= ini && indiceDia(ev.fecha) <= fin), px);
   if (eventos.length) {
     capas.push({
       data: { values: eventos }, mark: { type: "rule", color: tema.borde, strokeDash: [1, 3], strokeWidth: 1, clip: true },
@@ -328,8 +329,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   // Explorador con varios países: el nombre al final de cada línea, en su color (si hay lugar a la derecha).
   const rotulos = e.colores && filasOtras.length && e.ancho >= 520 ? rotulosFinales(e, filasLinea, filasOtras, colorDe) : [];
   if (rotulos.length) {
-    const rango = Math.max(...todas.map((f) => f.v)) - Math.min(...todas.map((f) => f.v));
-    const vy = separarRotulos(rotulos.map((r) => r.v), (rango || 1) * 13 / e.alto);
+    // La separación mínima, en unidades del eje: 13 px sobre el dominio que se dibuja (con el 0 si el eje lo incluye).
+    const alto = tope ?? Math.max(...todas.map((f) => f.v));
+    const bajo = piso ?? (cero ? Math.min(0, ...todas.map((f) => f.v)) : Math.min(...todas.map((f) => f.v)));
+    const vy = separarRotulos(rotulos.map((r) => r.v), ((alto - bajo) || 1) * 13 / e.alto);
     capas.push({
       data: { values: rotulos.map((r, k) => ({ ...r, vy: log ? r.v : vy[k] })) },
       mark: { type: "text", align: "left", baseline: "middle", dx: 5, fontSize: 11, fontWeight: 600 },
@@ -337,9 +340,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   if (eventos.length) {
+    eventos.forEach((ev) => Object.assign(ev, { y: e.alto - 4 - ev.fila * 11 }));
     capas.push({
       data: { values: eventos }, mark: { type: "text", color: tema.texto, fontSize: 10, fontWeight: 700, baseline: "bottom", dy: -1 },
-      encoding: { x: x("fecha"), y: { value: e.alto - 4 }, text: { field: "letra" }, tooltip: [{ field: "nombre", title: "Evento" }] },
+      encoding: { x: x("fecha"), y: { field: "y", type: "quantitative", scale: null }, text: { field: "letra" }, tooltip: [{ field: "nombre", title: "Evento" }] },
     });
   }
   if (excluidos.length) {
@@ -512,4 +516,16 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
         encoding: { x: x("medio"), y: { value: 3 }, text: { field: "rotulo" } } }] : []),
     ],
   };
+}
+
+/** Fila (0 abajo) de la letra de cada evento: baja una fila si queda a menos de 12 px del anterior de esa fila. */
+function escalonar(eventos: MarcaEvento[], px: (i: number) => number): Array<MarcaEvento & { fila: number; y?: number }> {
+  const ultimoEnFila: number[] = [];
+  return [...eventos].sort((a, b) => a.fecha.localeCompare(b.fecha)).map((ev) => {
+    const x = px(indiceDia(ev.fecha));
+    let fila = ultimoEnFila.findIndex((u) => x - u >= 12);
+    if (fila === -1) fila = Math.min(ultimoEnFila.length, 2);
+    ultimoEnFila[fila] = x;
+    return { ...ev, fila };
+  });
 }

@@ -479,3 +479,51 @@ También se documentaron las reglas de 2.4, el export de 2.5, el nombre público
 - **Verificar con el Boletín Oficial**, desde otra red, las fechas de 1969–1983 que no tienen segunda fuente. En especial: Lacoste, Saint-Jean, el inicio del Plan Gelbard (30/5, 6/6 u 8/6/1973) y las salidas de Moyano Llerena y de Bonanni.
 - `export/periodos.json` pesa 185 KB, por lo largas que son las referencias. La web lo va a leer solo cuando se pida el sombreado; si hace falta, se puede publicar una versión sin fuentes.
 - Prueba manual del MCP con las preguntas 14 a 16.
+
+## 4b · Explorador de una serie (PR 2)
+
+*12/11/2026 · El PR 1 (vaiven-argentino/vaiven#19) se mergeó y desplegó el 12/11; en producción responden `/datos/periodos.json`, `/datos/eventos.json`, los esquemas y `periodo_en_fecha`. Este PR suma `/explorador/`.*
+
+### Qué se hizo
+
+- **`/explorador/`**: una serie por vez (o una internacional con hasta 8 países). Los controles se arman según lo que admite la variante (`disponibles()` de la librería), y hay atajos de período y un selector de etapas del curso.
+  - **Sombreado:** etapas del curso, gobiernos, gobiernos por mandato, ministros, planes o regímenes cambiarios.
+  - **Eventos:** marcas con una letra sobre el eje, más una lista debajo del gráfico.
+- **Accesibilidad:** el panel de opciones arranca cerrado en 700 px o menos. Hay resumen textual (que menciona el sombreado y los eventos), leyendas en texto y la tabla con la columna del período.
+- **Estado en la URL** (`web/src/lib/estado.ts`, funciones puras): se usan los parámetros de la ficha más `s`, `v`, `p`, `sh` y `ev`, y no se escribe lo que coincide con la vista inicial. Lo que la serie no admite se ignora y deja un aviso visible.
+- **Gráfico** (`espec.ts`):
+  - bandas que alternan dos grises (`--periodo-a`, `--periodo-b`), con los gobiernos de facto en `--periodo-facto`;
+  - franja de planes arriba, con filas si se superponen;
+  - eventos con letras escalonadas cuando están cerca;
+  - países con color (`--graf-1` a `--graf-8`) y nombre al final de la línea, separados para no pisarse;
+  - con sombreado, los quiebres pierden el relleno.
+- **Descargas:**
+  - CSV con la columna del período (el vigente el último día de cada fila);
+  - XLSX con las hojas Datos, Metadatos, Cita y Períodos (`write-excel-file` 4.1.1, MIT; 70 KB minificado, cargado solo con el clic);
+  - PNG y SVG con fuentes, países, transformación, sombreado, eventos y versión impresos;
+  - cita en `.txt`.
+- **Enlace a la ficha** con la vista equivalente (el período, en años).
+- **`web/src/graficos/comun.ts`:** reúne lo que comparten la ficha y el explorador (formato, tema, insumos, descargas e imagen). La ficha lo usa sin cambiar su comportamiento.
+- **Navegación:** «Explorador» en el menú.
+- **Dependencias:** en `package-lock.json` se sumaron solo `write-excel-file` y `fflate`. El npm local reescribía campos `libc` de otros paquetes y esos cambios se descartaron.
+
+### Decisiones de diseño (revisables)
+
+- **Colores 6 a 8 de la paleta:**
+
+  | Modo | 6 | 7 | 8 |
+  |---|---|---|---|
+  | Claro | `#22201B` (negro) | `#3B7EA1` (celeste oscurecido) | `#5B3A8E` (violeta) |
+  | Oscuro | `#EFE9DE` | `#D55E00` (bermellón) | `#B9A3E3` (lavanda) |
+
+  Todos tienen contraste de 4,1:1 o más contra el fondo. Los nombres al final de la línea evitan depender solo del color.
+- **Grises del sombreado:** contraste contra el fondo de 1,12, 1,25 y 1,47:1 en modo claro. Se distinguen por luminosidad, no por tono.
+- **Período por fila en las descargas:** el vigente el último día de cada observación, la misma regla que el signo monetario de los pesos actuales.
+- **Al cambiar de serie** se conservan el sombreado y los eventos; lo demás vuelve a la vista inicial de la serie.
+- **Estilos:** la ficha conserva por ahora sus estilos propios; el explorador repite los del panel y la tabla. Se pueden unificar en el PR 3, que vuelve a tocar la ficha.
+- **Los pendientes de la 4a** (atajos de 44 px y contraste del placeholder) ya estaban resueltos en la ficha; el explorador usa los mismos criterios.
+
+### Verificación
+
+- **Vitest:** 53 pruebas de la web. Incluyen la ida y vuelta de la URL en 9 vistas canónicas, el descarte de parámetros con aviso, el sombreado (grises, gobiernos de facto, mandatos, franja de planes), los eventos, los colores por país, el CSV y las hojas del XLSX.
+- **Punta a punta** (`web/scripts/punta-a-punta.mjs --solo explorador`), en 390 y 1280 px: seis vistas reproducidas desde la URL, con ejes, sombreado, eventos y leyenda de países. La URL queda igual después de recargar. Un cambio de controles se guarda en la URL y la reproduce. CSV, XLSX (ZIP válido con sus 4 hojas), PNG y SVG (con el sombreado impreso) salen no vacíos.
