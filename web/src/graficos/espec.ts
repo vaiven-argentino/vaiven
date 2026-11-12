@@ -340,10 +340,16 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   if (eventos.length) {
-    eventos.forEach((ev) => Object.assign(ev, { y: e.alto - 4 - ev.fila * 11 }));
+    // Cada letra va sobre un cuadrado con el color del fondo, para que se lea aunque caiga sobre la serie o la línea
+    // del 0 (revisión visual de la 4b); las muy pegadas al borde izquierdo se corren un poco.
+    eventos.forEach((ev) => Object.assign(ev, { y: e.alto - 10 - ev.fila * 14, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
     capas.push({
-      data: { values: eventos }, mark: { type: "text", color: tema.texto, fontSize: 10, fontWeight: 700, baseline: "bottom", dy: -1 },
-      encoding: { x: x("fecha"), y: { field: "y", type: "quantitative", scale: null }, text: { field: "letra" }, tooltip: [{ field: "nombre", title: "Evento" }] },
+      data: { values: eventos }, mark: { type: "point", shape: "square", size: 150, filled: true, color: tema.fondo, stroke: tema.borde, strokeWidth: 0.8, opacity: 1 },
+      encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, tooltip: [{ field: "nombre", title: "Evento" }] },
+    });
+    capas.push({
+      data: { values: eventos }, mark: { type: "text", color: tema.texto, fontSize: 9.5, fontWeight: 700, baseline: "middle" },
+      encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, text: { field: "letra" }, tooltip: [{ field: "nombre", title: "Evento" }] },
     });
   }
   if (excluidos.length) {
@@ -518,13 +524,13 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
   };
 }
 
-/** Fila (0 abajo) de la letra de cada evento: baja una fila si queda a menos de 12 px del anterior de esa fila. */
+/** Fila (0 abajo) de la letra de cada evento: sube una fila si queda a menos de 13 px del anterior de esa fila (hasta 6). */
 function escalonar(eventos: MarcaEvento[], px: (i: number) => number): Array<MarcaEvento & { fila: number; y?: number }> {
   const ultimoEnFila: number[] = [];
   return [...eventos].sort((a, b) => a.fecha.localeCompare(b.fecha)).map((ev) => {
     const x = px(indiceDia(ev.fecha));
-    let fila = ultimoEnFila.findIndex((u) => x - u >= 12);
-    if (fila === -1) fila = Math.min(ultimoEnFila.length, 2);
+    let fila = ultimoEnFila.findIndex((u) => x - u >= 13);
+    if (fila === -1) fila = Math.min(ultimoEnFila.length, 5);
     ultimoEnFila[fila] = x;
     return { ...ev, fila };
   });

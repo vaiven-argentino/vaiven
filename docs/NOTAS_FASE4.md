@@ -527,3 +527,21 @@ También se documentaron las reglas de 2.4, el export de 2.5, el nombre público
 
 - **Vitest:** 53 pruebas de la web. Incluyen la ida y vuelta de la URL en 9 vistas canónicas, el descarte de parámetros con aviso, el sombreado (grises, gobiernos de facto, mandatos, franja de planes), los eventos, los colores por país, el CSV y las hojas del XLSX.
 - **Punta a punta** (`web/scripts/punta-a-punta.mjs --solo explorador`), en 390 y 1280 px: seis vistas reproducidas desde la URL, con ejes, sombreado, eventos y leyenda de países. La URL queda igual después de recargar. Un cambio de controles se guarda en la URL y la reproduce. CSV, XLSX (ZIP válido con sus 4 hojas), PNG y SVG (con el sombreado impreso) salen no vacíos.
+
+### Revisión visual (12/11/2026)
+
+- **Alcance:** el `revisor-visual` miró 6 casos (negativos, internacional con 6 países, trimestral por mandato, fuga, IPC con gobiernos y eventos, Plan Austral) en 1280 y 390 px, en modo claro y oscuro, en total 24 vistas. No encontró problemas graves.
+- **Lo que está bien:**
+  - sin scroll horizontal;
+  - foco visible con teclado;
+  - controles de 44 px;
+  - panel cerrado en el celular;
+  - contraste de rótulos, letras y nombres de países de 4,5:1 o más en los dos modos.
+- **Se corrigió:**
+  - Las letras de los eventos se pisaban en 2001–2002 y caían sobre la línea del 0. Ahora van sobre un cuadrado con el color del fondo, en hasta 6 alturas, y se corren si quedan pegadas al eje.
+  - El formato de Desde/Hasta («AAAA o AAAA-MM») se cortaba en 390 px: los campos pasan a 11rem.
+  - El explorador no decía el último dato ni el atraso de la serie (el revisor lo notó con la fuga). Ahora lo muestra debajo del título del gráfico, como la ficha.
+- **Queda como está:**
+  - los números de quiebre ② y ③ de 2015–2016 se tocan apenas, como en la ficha;
+  - los selectores de serie cortan los nombres largos en 390 px (el nombre completo se ve al abrirlos).
+

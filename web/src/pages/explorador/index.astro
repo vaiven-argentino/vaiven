@@ -28,7 +28,7 @@ const SOMBREADOS = [
   ["plan", "Planes de estabilización"],
   ["regimen_cambiario", "Regímenes cambiarios"],
 ] as const;
-const datos = JSON.stringify({ series, tipos, etapas }).replace(/</g, "\\u003c");
+const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().version_datos }).replace(/</g, "\\u003c");
 ---
 <Base titulo="Explorador" descripcion="Graficá una serie de Vaivén con sus transformaciones, sombreala por gobierno, ministro, plan o régimen cambiario, y descargá la vista en CSV, XLSX, PNG o SVG." seccion="explorador">
   <article class="explorador contenedor">
@@ -61,6 +61,7 @@ const datos = JSON.stringify({ series, tipos, etapas }).replace(/</g, "\\u003c")
         <h2 id="titulo-grafico">Gráfico</h2>
         <p class="unidad" id="x-unidad"></p>
       </div>
+      <p class="ultimo" id="x-ultimo"></p>
 
       <details class="panel-opciones" id="x-panel" open>
         <summary><span class="po-titulo">Opciones del gráfico</span> <span class="po-resumen secundario" id="x-resumen-opciones"></span></summary>
@@ -213,6 +214,8 @@ const datos = JSON.stringify({ series, tipos, etapas }).replace(/</g, "\\u003c")
   .eleccion .campo { flex: 1 1 18rem; }
   .vista-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
   .unidad { color: var(--secundario); }
+  .ultimo { margin: -6px 0 0; font-size: 0.92rem; }
+  .ultimo :global(.atraso) { color: var(--secundario); }
   .panel-opciones { border-radius: var(--radio); background: var(--superficie); }
   .panel-opciones > summary { cursor: pointer; padding: 10px 14px; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
   .po-titulo { font-weight: 600; }
@@ -228,7 +231,7 @@ const datos = JSON.stringify({ series, tipos, etapas }).replace(/</g, "\\u003c")
   fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; min-width: 0; }
   legend { font-size: 0.9rem; padding: 0; margin-bottom: 4px; }
   .periodo-campos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
-  .periodo-campos input { width: 9rem; min-height: 44px; }
+  .periodo-campos input { width: 11rem; min-height: 44px; }
   .controles input::placeholder { color: var(--secundario); opacity: 1; }
   .atajos { display: flex; flex-wrap: wrap; gap: 6px; }
   .atajo { background: var(--fondo); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; min-height: 44px; cursor: pointer; font-size: 0.85rem; color: var(--texto); }

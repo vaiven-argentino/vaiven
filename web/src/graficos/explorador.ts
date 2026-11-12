@@ -3,13 +3,13 @@
 // períodos, eventos y, en las series internacionales, un color por país.
 import { apa, bibtex, citaRegistro, NOMBRE_DENOMINADOR, nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
-  ErrorTransformacion, diasDe, disponibles, periodoDeCadaFecha, periodosDe, rangoLegible, serieDeEntidad, seCruzan, tienePais,
+  ErrorTransformacion, atraso, diasDe, disponibles, periodoDeCadaFecha, periodosDe, rangoLegible, serieDeEntidad, seCruzan, tienePais,
   transformar, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type TipoPeriodo, type Transformacion,
 } from "@vaiven/transformaciones";
 import { csvDeVista, hojasXlsx, type VistaDescarga } from "../lib/descarga";
 import { estadoDesdeUrl, MAX_PAISES, MEDIAS, opcionesDe, porDefecto, serieDeUrl, serieVista, urlDesdeEstado, type Documento, type Estado, type IndiceSerie } from "../lib/estado";
 import { esVariacion, numerarQuiebres, rangoQuiebre, resumen, type QuiebreNumerado } from "../lib/ficha";
-import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
+import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato } from "../lib/formato";
 import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen, tema, type Cargados } from "./comun";
 import { especificacion, type BandaPeriodo, type MarcaEvento } from "./espec";
 
@@ -25,6 +25,7 @@ interface DatosPagina {
   series: IndiceSerie[];
   tipos: Array<{ id: string; nombre: string }>;
   etapas: Array<{ id: string; nombre: string; desde: string; hasta: string | null }>;
+  version_sitio: string;
 }
 
 const NOMBRE_SOMBREADO: Record<string, string> = {
@@ -234,6 +235,7 @@ function iniciar(): void {
     c.log.disabled = !positivos;
     c.campoLog.classList.toggle("deshabilitado", !positivos);
     $("x-unidad").textContent = r.unidad;
+    ultimoDatoSerie();
     leyendas();
     avisos();
     tabla();
@@ -242,6 +244,17 @@ function iniciar(): void {
     history.replaceState(null, "", `${location.pathname}${urlDesdeEstado(estado, doc, indice)}${location.hash}`);
     resumenOpciones();
     void dibujar();
+  }
+
+  /** El último dato de la variante y su atraso respecto del calendario de la fuente, como en la ficha. */
+  function ultimoDatoSerie(): void {
+    const d = doc as DocumentoCompleto & { cobertura: { hasta: string }; tramos: Array<{ frecuencia: string }>; frecuencia: string };
+    const nodo = $("x-ultimo");
+    const version = [pagina.version_sitio, doc.version_datos].sort().at(-1)!;
+    const texto = textoAtraso(atraso(d as never, version));
+    nodo.replaceChildren("Último dato de la serie: ", Object.assign(document.createElement("strong"), {
+      textContent: ultimoDato(d.cobertura.hasta, d.tramos.at(-1)?.frecuencia ?? d.frecuencia),
+    }), ...(texto ? [Object.assign(document.createElement("span"), { className: "atraso", textContent: ` · ${texto}` })] : []));
   }
 
   function resumenOpciones(): void {
