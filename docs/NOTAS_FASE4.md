@@ -753,3 +753,47 @@ Antes, la SPEC 6.2 decía que la columna del período era «la vigente el últim
 | Explorador, inicio del gráfico en 390 × 800 | 935 px | 912 px (igual que antes: la intro es una línea más corta) |
 
 La meta en el celular era unos 10.000 px. Los 11.032 px restantes son las 166 filas de 45 px (7.470 px), la línea de tiempo, las introducciones de cada tipo y la cita.
+
+### Verificación
+
+- **Pruebas:**
+  - pytest: 302 pruebas, más 7 omitidas, que esperan valores de referencia;
+  - Vitest de la web: 129 pruebas. Las nuevas cubren el contraste de los tokens en los dos modos, `leerEv` y `escribirEv` (ida y vuelta, forma canónica, `ev=1`, categorías desconocidas), las URL canónicas con `ev`, el filtro de `eventosEnRango`, la regla de los 18 px, las rayitas sin letras, `textoLectura` y los carriles de planes y episodios;
+  - las demás pruebas de `npm test`: 7, 140 y 69;
+  - `astro check`: 0 errores.
+- **Revisión de enlaces:** 1625 enlaces internos, ninguno roto (también las anclas `#id` de `/periodos/`).
+- **Punta a punta completa,** contra `wrangler dev`, en 390 y 1280 px: las 22 series, el explorador y la ficha con el filtro de eventos, y `/periodos/`. Además, en 1280 × 800, el gráfico desde 289 px y el panel de 300 px.
+  - Para esta prueba hace falta el ZIP de la descarga completa, que no está en el repositorio: se genera con `uv run python -m pipeline descargas`. En este entorno el Parquet no sale, porque falta `pyarrow`, y la prueba no lo usa.
+- **Lector, a mano:**
+  - julio de 1989, inflación mensual: «Gobierno: Carlos Saúl Menem (8/7/1989–10/12/1999) · reparto: Menem 77 % · Alfonsín 23 % · episodio: Hiperinflación de 1989–1990, primer brote (6/2/1989–12/12/1989)»;
+  - reservas de julio de 1989: Menem, por el último día del mes.
+
+### Revisión visual (12/11/2026)
+
+- **Alcance:** el `revisor-visual` corrió 7 páginas en 1280 y 390 px, en claro y oscuro, más los 14 casos fijos: 84 vistas.
+- **Lo que está bien:**
+  - en todos los gráficos que miró, los dos ejes tienen etiquetas;
+  - el explorador en 390 px se ve como antes;
+  - en 1970–hoy los eventos van como rayitas, con la lista completa con fechas;
+  - en julio de 1989 y en el PIB 1995–2020 por gobierno, el sombreado, la franja de la hiperinflación y los eventos no tapan la serie;
+  - las bandas alternadas y la franja de los planes se distinguen en los dos modos.
+  - Los gobiernos de facto no aparecían en las capturas de la revisión. Se miraron a mano en `/explorador/?desde=1970&hasta=1990&sh=gobierno`, en oscuro y en 1280 px: Lanusse, y de Videla a Bignone, se distinguen de los constitucionales.
+- **Se corrigió:**
+  - En el internacional de 6 países, los nombres al final de las líneas se pisaban por 1 px en 1280 px («Argentina» y «Chile», «Brasil» y «Uruguay»): con el gráfico más alto, el redondeo del eje dejaba menos de 13 px entre rótulos. La separación mínima pasa a 15 px.
+  - El lector repetía los meses de la fase del episodio. Ahora la nombra por su nombre corto.
+  - `--paginas` del revisor partía en las comas de las URL. Ahora separa solo en una coma seguida de «/».
+- **Queda como está:**
+  - Con una serie de muchos controles (reservas, PIB), el panel fijo del explorador es más alto que la ventana y se desplaza por dentro hasta «Sombreado y eventos». Las secciones se pueden plegar.
+  - `/periodos/` mide 11.032 px en 390 px, un 10 % arriba de la meta.
+
+### Diferencias con la SPEC
+
+La SPEC pasa a la v1.5:
+- 6.1: `/periodos/` en tablas;
+- 6.2: parámetro `ev`, panel, densidad de eventos y lector;
+- 6.5: panel en escritorio y contraste del sombreado.
+
+### Pendientes
+
+- **Panel del explorador:** si molesta que se desplace por dentro, las secciones Transformación y Período podrían arrancar plegadas en ventanas de menos de 900 px de alto.
+- **Lo que sigue de la 4b y la 4c,** como en la sección anterior: eventos y episodios candidatos, la prueba manual del MCP y los extremos sin norma.

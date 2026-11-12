@@ -374,10 +374,12 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   // Explorador con varios países: el nombre al final de cada línea, en su color (si hay lugar a la derecha).
   const rotulos = e.colores && filasOtras.length && e.ancho >= 520 ? rotulosFinales(e, filasLinea, filasOtras, colorDe) : [];
   if (rotulos.length) {
-    // La separación mínima, en unidades del eje: 13 px sobre el dominio que se dibuja (con el 0 si el eje lo incluye).
+    // La separación mínima, en unidades del eje: 15 px sobre el dominio que se dibuja (con el 0 si el eje lo incluye).
+    // Con 13 px, la caja de un rótulo de 11 px (unos 14 px de alto) se pisaba con la de al lado cuando el eje redondea
+    // su dominio (revisión visual de la interfaz de la 4b: «Argentina» y «Chile» en int-pib, 1280 px).
     const alto = tope ?? Math.max(...todas.map((f) => f.v));
     const bajo = piso ?? (cero ? Math.min(0, ...todas.map((f) => f.v)) : Math.min(...todas.map((f) => f.v)));
-    const vy = separarRotulos(rotulos.map((r) => r.v), ((alto - bajo) || 1) * 13 / e.alto);
+    const vy = separarRotulos(rotulos.map((r) => r.v), ((alto - bajo) || 1) * 15 / e.alto);
     capas.push({
       data: { values: rotulos.map((r, k) => ({ ...r, vy: log ? r.v : vy[k] })) },
       mark: { type: "text", align: "left", baseline: "middle", dx: 5, fontSize: 11, fontWeight: 600 },

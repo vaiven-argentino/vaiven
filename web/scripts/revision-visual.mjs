@@ -7,7 +7,7 @@
 // gráfico (`topGrafico`), el alto de la página (`altoPagina`) y cómo se marcan los eventos (`eventos`: letras o rayitas).
 //
 // Uso: node web/scripts/revision-visual.mjs --base http://localhost:8787 --salida <carpeta>
-//        [--paginas /,/series/ipc/] [--anchos 390,1280] [--modos claro,oscuro] [--sin-casos 1]
+//        [--paginas /,/series/ipc/] (se separan con una coma seguida de «/»: las URL pueden llevar comas) [--anchos 390,1280] [--modos claro,oscuro] [--sin-casos 1]
 // Usa el Playwright preinstalado (no instala navegadores). No escribe nada fuera de --salida.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -62,8 +62,8 @@ const CASOS_FIJOS = [
   { ruta: "/explorador/?desde=1970&ev=1" }, // 1970–hoy con todos los eventos: rayitas
 ];
 const vistas = [
-  ...(args.paginas ? args.paginas.split(",") : paginasPorDefecto()).map((ruta) => ({ ruta })),
-  ...(args["sin-casos"] ? [] : CASOS_FIJOS.filter((c) => !args.paginas || !args.paginas.split(",").includes(c.ruta)).map((c) => ({ ...c, fijo: true }))),
+  ...(args.paginas ? args.paginas.split(/,(?=\/)/) : paginasPorDefecto()).map((ruta) => ({ ruta })),
+  ...(args["sin-casos"] ? [] : CASOS_FIJOS.filter((c) => !args.paginas || !args.paginas.split(/,(?=\/)/).includes(c.ruta)).map((c) => ({ ...c, fijo: true }))),
 ];
 
 // Se evalúa dentro de la página: desbordes, gráficos y contraste del SVG.
