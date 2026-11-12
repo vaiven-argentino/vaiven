@@ -545,3 +545,57 @@ También se documentaron las reglas de 2.4, el export de 2.5, el nombre público
   - los números de quiebre ② y ③ de 2015–2016 se tocan apenas, como en la ficha;
   - los selectores de serie cortan los nombres largos en 390 px (el nombre completo se ve al abrirlos).
 
+
+## 4b · Ficha con períodos, página `/periodos/` y enlaces (PR 3)
+
+*12/11/2026 · El PR 2 (vaiven-argentino/vaiven#20) se mergeó y desplegó el 12/11.*
+
+### Qué se hizo
+
+- **Ficha:**
+  - **Opciones nuevas:** «Sombreado» (las mismas opciones que el explorador) y «Marcar eventos», apagados por defecto, en el panel de opciones. Se guardan en la URL con `sh` y `ev`.
+  - **Lo que cambia con ellas:** leyendas de períodos y eventos debajo del gráfico, resumen textual, columna del período en la tabla y en el CSV de la vista, y una línea de sombreado en el pie del PNG y el SVG.
+  - **Carga:** `periodos.json` y `eventos.json` se piden recién cuando se activan.
+  - **Enlace al explorador:** «Abrir esta vista en el explorador» lleva la serie, la variante y los parámetros de la ficha.
+- **`/periodos/`** (entra en el menú), una página estática que se lee sin JavaScript:
+  - **Línea de tiempo** 1970–hoy en un SVG armado en el build. Tiene carriles para etapas del curso, gobiernos, ministros, planes (dos filas cuando se superponen), regímenes y eventos. Cada tramo enlaza a su tarjeta, con título y fechas. En el celular se desplaza de costado.
+  - **Tarjetas:** una por período y una por evento (159 en total). Cada una lleva fechas, carácter o cargo, aviso de corte convencional, descripción, notas, mandatos, fuentes con enlace y accesos al explorador.
+  - **Al final:** la cita del registro y las descargas (JSON y CSV).
+- **Accesos al explorador** (`web/src/lib/periodos.ts`, `accesosDe`): van de un año antes del inicio a un año después del fin (los vigentes, hasta el último dato) y llevan el sombreado de ese tipo.
+
+  | Desde | Series |
+  |---|---|
+  | Gobiernos, mandatos y etapas | inflación interanual, PIB real, desocupación, tipo de cambio real, reservas y resultado fiscal |
+  | Ministros, planes y regímenes | inflación mensual, tipo de cambio oficial, tipo de cambio real y reservas |
+  | Eventos | inflación mensual, con los eventos marcados |
+
+  Cada acceso es una URL canónica del explorador: está probado que abrirla no la cambia.
+- **Código compartido:** `web/src/lib/periodos.ts` reúne lo que comparten la ficha, el explorador y `/periodos/` (períodos y eventos que se ven, bandas, nombres, accesos y línea de tiempo).
+
+### Corrección del PR 1
+
+`cortes.hasta` marcaba como «hecho» el fin de 8 de los 9 planes con corte convencional. El motivo: además de la nota del corte, esos planes tienen una fuente que respalda la fecha elegida (por ejemplo, el inicio del Plan Primavera). Ahora un extremo es convencional si lleva una fuente de tipo `convencional`, con prueba. Esto afectaba los avisos de `listar_periodos` y `periodo_en_fecha` en producción. Se regeneró el export sin red (`periodos.json`, su CSV y los archivos generales).
+
+### Verificación
+
+- **pytest:** 291 pruebas, entre ellas el caso nuevo del corte convencional con una fuente que respalda la fecha.
+- **Vitest de la web:** 64 pruebas. Las nuevas cubren los períodos y eventos que se ven, los mandatos, el nombre público de las etapas, los accesos (ventana, tipos, series sin publicar, URL canónica), la línea de tiempo y los gobiernos de facto.
+- **Punta a punta**, en 390 y 1280 px:
+  - la ficha con `?sh=gobierno&ev=1` muestra bandas, leyendas y la columna del período, y su enlace abre el explorador con la misma vista;
+  - sin parámetros, la ficha arranca sin sombreado;
+  - `/periodos/` tiene 159 tarjetas y la línea de tiempo enlaza los tramos;
+  - un acceso del Plan Austral abre el explorador sin cambiar la URL y con el sombreado.
+- **Revisión de enlaces:** 1593 enlaces internos, ninguno roto.
+- **Prueba de punta a punta completa** contra el Worker local (`wrangler dev`, que aplica las redirecciones de la descarga completa; `astro preview` no las aplica): las 22 fichas, el explorador, la ficha con sombreado y `/periodos/` funcionan en 390 y 1280 px.
+
+### Revisión visual (12/11/2026)
+
+- **Alcance:** el `revisor-visual` miró `/periodos/` y la ficha con sombreado (IPC, PIB por mandato, resultado fiscal, crecimiento internacional y PIB sin parámetros) en 1280 y 390 px, en modo claro y oscuro: 40 vistas.
+- **Se corrigió:**
+  - La línea de tiempo tenía `role="img"` con 159 enlaces adentro, y un lector de pantalla no los exponía (axe: *nested-interactive*). Pasa a `role="group"`, con título y descripción.
+  - Los accesos «Ver en el explorador» medían 17 px de alto. Ahora son botones de 44 px.
+  - «Fuentes» no parecía un desplegable: ahora lleva una flecha y el color de los enlaces.
+  - Las letras de los eventos tapaban la serie donde había varios eventos juntos (2001–2002, el mínimo de la Argentina en 2002). Ahora van debajo del eje X, entre la línea del eje y los años, escalonadas hacia abajo.
+  - Las reglas de los eventos tachaban los rótulos de las bandas: ahora empiezan debajo de los rótulos.
+- **Verificación:** axe no da violaciones en `/periodos/` (390 y 1280 px), en la ficha con sombreado ni en el explorador con planes y eventos.
+

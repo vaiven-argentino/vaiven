@@ -1,6 +1,6 @@
 {
   "esquema": "periodos-1.0",
-  "version_datos": "2026-11-12T03:11:09Z",
+  "version_datos": "2026-11-12T17:24:06Z",
   "descripcion": "Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política económica, 1970–hoy. Intervalos semiabiertos [desde, hasta): el día del traspaso es del período que empieza; `hasta` null quiere decir vigente.",
   "fuente": "metadatos/periodos.yaml",
   "licencia": "CC-BY-4.0",
@@ -2687,7 +2687,7 @@
       "notas": "Se superpone con el programa del 20 de diciembre de 1978.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {
@@ -2723,7 +2723,7 @@
       "descripcion": "Reordenamiento del programa de Martínez de Hoz: cronograma preanunciado del tipo de cambio, rebajas arancelarias trimestrales, pautas de tarifas y salarios y liberalización de la entrada de capitales.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {
@@ -2775,7 +2775,7 @@
       "notas": "Anunciado el 14/6/1985; el decreto rige desde el 15/6/1985.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {
@@ -2816,7 +2816,7 @@
       "descripcion": "Acuerdo de precios con grandes empresas y desdoblamiento cambiario: el BCRA compraba parte de las exportaciones a tipo oficial y vendía en el mercado libre, para anclar el tipo libre.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {
@@ -2850,7 +2850,7 @@
       "descripcion": "Programa de los ministros Roig y Rapanelli al inicio del gobierno de Menem: fuerte devaluación inicial, tipo de cambio fijo, acuerdo de precios con empresas y aumento de tarifas, con las leyes de Reforma del Estado y de Emergencia Económica.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {
@@ -2884,7 +2884,7 @@
       "descripcion": "Canje compulsivo de los depósitos a plazo y de deuda pública interna por Bonos Externos 1989 (Bonex), para cortar la hiperinflación reduciendo la liquidez, con flotación del tipo de cambio.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {
@@ -2955,7 +2955,7 @@
       "descripcion": "Compromiso de crecimiento nulo de la base monetaria (octubre de 2018–junio de 2019, luego extendido) con flotación dentro de una zona de no intervención, en el marco del acuerdo stand-by con el FMI.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {
@@ -2997,7 +2997,7 @@
       "notas": "Mismo gobierno y equipo que el programa de abril de 2025: puede leerse como un solo programa con fases.",
       "cortes": {
         "desde": "hecho",
-        "hasta": "hecho"
+        "hasta": "convencional"
       },
       "fuentes": [
         {

@@ -1,0 +1,205 @@
+---
+// Períodos (SPEC 6.1): línea de tiempo de gobiernos, ministros de Economía, planes, regímenes cambiarios y etapas de la
+// política económica, con los eventos; desde cada período, accesos al explorador ya filtrados. Página estática: se lee
+// sin JavaScript.
+import Base from "../../layouts/Base.astro";
+import { citaRegistro } from "@vaiven/cita";
+import { periodosDe, rangoLegible, type FuentePeriodo, type Periodo, type TipoPeriodo } from "@vaiven/transformaciones";
+import { catalogo, eventos as leerEventos, periodos as leerPeriodos, tamano } from "../../lib/export";
+import { accesoEvento, accesosDe, lineaDeTiempo } from "../../lib/periodos";
+
+const registro = leerPeriodos();
+const registroEventos = leerEventos();
+if (!registro || !registroEventos) throw new Error("Faltan export/periodos.json o export/eventos.json: corré el pipeline.");
+const hoy = new Date().toISOString().slice(0, 10);
+const anioHoy = Number(hoy.slice(0, 4));
+const publicadas = new Set(catalogo().series.filter((s) => s.variantes.some((v) => v.estado === "publicada")).map((s) => s.id));
+
+// Línea de tiempo: 1970 a fin del año en curso, en un lienzo de 1160 px que ocupa el ancho de la página y en el celular
+// se desplaza de costado (nunca baja de 1100 px, para que los rótulos se lean).
+const INICIO = 1970, FIN = anioHoy + 1, ANCHO = 1000, MARGEN = 150, ALTO_FILA = 24, SEP = 10;
+const NOMBRE_CARRIL: Record<string, string> = { catedra: "Etapas (curso)", gobierno: "Gobiernos", ministro: "Ministros", plan: "Planes", regimen_cambiario: "Regímenes cambiarios", evento: "Eventos" };
+const carriles = lineaDeTiempo(registro, registroEventos, ANCHO, INICIO, FIN, hoy);
+let y = 30;
+const ubicados = carriles.map((c) => { const salida = { ...c, y }; y += c.filas * ALTO_FILA + SEP; return salida; });
+const altoSvg = y + 6;
+const anios = Array.from({ length: Math.floor((FIN - INICIO) / 5) + 1 }, (_, k) => INICIO + k * 5);
+const xAnio = (a: number) => MARGEN + ((a - INICIO) / (FIN - INICIO)) * ANCHO;
+
+const ORDEN: TipoPeriodo[] = ["catedra", "gobierno", "ministro", "plan", "regimen_cambiario"];
+const nombreTipo = new Map(registro.tipos.map((t) => [t.id, t.nombre]));
+const ancla = (id: string) => id;
+const fuenteTexto = (f: FuentePeriodo) => `${f.referencia ?? f.nota ?? ""}${f.pagina !== undefined ? `, p. ${f.pagina}` : ""}${f.publicado ? ` (publicado ${f.publicado})` : ""}`;
+const PARA: Record<string, string> = { desde: "Inicio", hasta: "Fin", ambas: "Inicio y fin" };
+const CARACTER: Record<string, string> = { constitucional: "Constitucional", de_facto: "De facto", interino: "Interino" };
+const CATEGORIA = new Map(registroEventos.categorias.map((c) => [c.id, c.nombre]));
+const fechaLarga = (d: string) => { const [a, m, dd] = d.split("-"); return `${Number(dd)}/${Number(m)}/${a}`; };
+const cita = citaRegistro("periodos", registro.version_datos);
+const tamanos = { pj: tamano("periodos.json"), ej: tamano("eventos.json"), pc: tamano("descargas/csv/periodos.csv"), ec: tamano("descargas/csv/eventos.csv") };
+const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
+---
+<Base titulo="Períodos" descripcion="Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política económica argentina desde 1970, con fechas, fuentes y accesos a gráficos ya filtrados." seccion="periodos">
+  <article class="periodos contenedor">
+    <header class="cabeza">
+      <h1>Períodos de la política económica, 1970–hoy</h1>
+      <p class="lectura">Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política económica, con la fuente de cada fecha. Desde cada período podés abrir gráficos ya filtrados en el explorador.</p>
+      <p class="lectura secundario">Los períodos van del día de inicio al día en que empieza el siguiente: el día del traspaso es del que entra. Cuando un fin no es un hecho fechado (sobre todo en los planes), lo dice: es un corte convencional de Vaivén.</p>
+      <nav aria-label="Tipos de período" class="indice">
+        <ul>
+          {ORDEN.map((t) => <li><a href={`#${t}`}>{nombreTipo.get(t)}</a></li>)}
+          <li><a href="#eventos">Eventos</a></li>
+          <li><a href="#citar">Cómo citar y descargar</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section aria-labelledby="titulo-linea" class="linea">
+      <h2 id="titulo-linea">Línea de tiempo</h2>
+      <p class="secundario">Cada tramo lleva a su ficha más abajo. En pantallas chicas, desplazá la línea de costado.</p>
+      <div class="linea-marco" tabindex="0" role="region" aria-label="Línea de tiempo (con desplazamiento)">
+        <svg viewBox={`0 0 ${MARGEN + ANCHO + 12} ${altoSvg}`} role="group" aria-labelledby="titulo-linea" aria-describedby="desc-linea">
+          <desc id="desc-linea">Línea de tiempo de {INICIO} a {anioHoy} con un carril por tipo de período y uno de eventos. El detalle de cada período está en las listas de abajo.</desc>
+          {anios.map((a) => (
+            <g class="anio">
+              <line x1={xAnio(a)} x2={xAnio(a)} y1={22} y2={altoSvg - 4} />
+              <text x={xAnio(a)} y={14} text-anchor="middle">{a}</text>
+            </g>
+          ))}
+          {ubicados.map((c) => (
+            <g class="carril">
+              <text class="nombre-carril" x={MARGEN - 10} y={c.y + (c.filas * ALTO_FILA) / 2 + 4} text-anchor="end">{NOMBRE_CARRIL[c.tipo] ?? c.nombre}</text>
+              {c.tipo === "evento"
+                ? c.tramos.map((t) => (
+                  <a href={`#${ancla(t.id)}`}>
+                    <title>{t.nombre} ({t.rango})</title>
+                    <line class="evento" x1={MARGEN + t.x} x2={MARGEN + t.x} y1={c.y + 2} y2={c.y + ALTO_FILA - 4} />
+                  </a>
+                ))
+                : c.tramos.map((t) => (
+                  <a href={`#${ancla(t.id)}`}>
+                    <title>{t.nombre} ({t.rango})</title>
+                    <rect class={`tramo ${t.clase}`} x={MARGEN + t.x} y={c.y + t.fila * ALTO_FILA} width={t.ancho} height={ALTO_FILA - 4} />
+                    {t.rotulo && <text class="rotulo" x={MARGEN + t.x + 4} y={c.y + t.fila * ALTO_FILA + 14}>{t.corto}</text>}
+                  </a>
+                ))}
+            </g>
+          ))}
+        </svg>
+      </div>
+    </section>
+
+    {ORDEN.map((tipo) => (
+      <section aria-labelledby={tipo} class="tipo">
+        <h2 id={tipo}>{nombreTipo.get(tipo)} <span class="secundario cantidad">({lista(tipo).length})</span></h2>
+        {tipo === "catedra" && <p class="lectura secundario">Periodización de un curso universitario de política económica argentina. Los nombres son los del curso; las fechas de corte las fijó Vaivén a partir de hechos fechados, con su fuente.</p>}
+        {tipo === "ministro" && <p class="lectura secundario">Titular de la cartera de Hacienda o Economía según la estructura de cada época (en 1971–1973, Hacienda y Finanzas; en 2017–2019, Hacienda). Puede haber días sin titular entre una renuncia y la jura del siguiente.</p>}
+        {tipo === "regimen_cambiario" && <p class="lectura secundario">Un tramo nuevo empieza cuando se crea o se elimina un mercado de cambios o cambia la forma de fijar el tipo de cambio; una devaluación dentro del mismo esquema no abre un tramo.</p>}
+        <ol class="tarjetas">
+          {lista(tipo).map((p) => (
+            <li class="tarjeta" id={ancla(p.id)}>
+              <h3>{p.nombre}</h3>
+              <p class="fechas"><strong>{rangoLegible(p)}</strong>{p.caracter && <> · {CARACTER[p.caracter]}</>}{p.cargo && <> · {p.cargo}</>}</p>
+              {p.cortes.hasta === "convencional" && <p class="convencional">El fin es un corte convencional de Vaivén, no un hecho fechado.</p>}
+              {p.descripcion && <p>{p.descripcion}</p>}
+              {p.notas && <p class="secundario">{p.notas}</p>}
+              {p.mandatos && (
+                <ul class="mandatos">
+                  {p.mandatos.map((m) => <li id={ancla(m.id)}>{m.nombre}: {rangoLegible(m)}</li>)}
+                </ul>
+              )}
+              <details class="fuentes">
+                <summary>Fuentes ({p.fuentes.length})</summary>
+                <ul>
+                  {p.fuentes.map((f) => (
+                    <li><span class="secundario">{PARA[f.para ?? "ambas"]}:</span> {f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>
+                  ))}
+                </ul>
+              </details>
+              <div class="accesos">
+                <span class="secundario">Ver en el explorador:</span>
+                <ul>{accesosDe(p, publicadas, anioHoy).map((a) => <li><a href={a.url}>{a.texto}</a></li>)}</ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+
+    <section aria-labelledby="eventos" class="tipo">
+      <h2 id="eventos">Eventos <span class="secundario cantidad">({registroEventos.eventos.length})</span></h2>
+      <p class="lectura secundario">Hechos económicos o institucionales con efecto económico. La fecha es la del hecho que nombran (anuncio, sanción, firma); la vigencia, si es otra, va aparte.</p>
+      <ol class="tarjetas">
+        {registroEventos.eventos.map((e) => (
+          <li class="tarjeta" id={ancla(e.id)}>
+            <h3>{e.nombre}</h3>
+            <p class="fechas"><strong>{fechaLarga(e.fecha)}</strong>{e.vigencia && <> · vigente desde el {fechaLarga(e.vigencia)}</>} · {CATEGORIA.get(e.categoria) ?? e.categoria}</p>
+            <p>{e.descripcion}</p>
+            {e.notas && <p class="secundario">{e.notas}</p>}
+            <details class="fuentes">
+              <summary>Fuentes ({e.fuentes.length})</summary>
+              <ul>{e.fuentes.map((f) => <li>{f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>)}</ul>
+            </details>
+            <div class="accesos"><ul><li><a href={accesoEvento(e.fecha, anioHoy).url}>{accesoEvento(e.fecha, anioHoy).texto}</a></li></ul></div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section aria-labelledby="citar" class="tipo">
+      <h2 id="citar">Cómo citar y descargar</h2>
+      <pre class="texto-cita" tabindex="0">{cita}</pre>
+      <ul class="lista-descargas">
+        <li><a href="/datos/periodos.json" download>periodos.json</a> <span class="secundario">{tamanos.pj} · con las fuentes de cada fecha</span></li>
+        <li><a href="/datos/descargas/csv/periodos.csv" download>periodos.csv</a> <span class="secundario">{tamanos.pc} · una fila por período o mandato</span></li>
+        <li><a href="/datos/eventos.json" download>eventos.json</a> <span class="secundario">{tamanos.ej}</span></li>
+        <li><a href="/datos/descargas/csv/eventos.csv" download>eventos.csv</a> <span class="secundario">{tamanos.ec}</span></li>
+      </ul>
+      <p class="secundario">Versión de los períodos: {fechaLarga(registro.version_datos.slice(0, 10))}. Licencia CC BY 4.0. Los agentes de IA pueden consultarlos con las herramientas <code>listar_periodos</code> y <code>periodo_en_fecha</code> del <a href="/agentes/">MCP</a>.</p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .periodos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .cabeza { display: grid; gap: 10px; }
+  .lectura { max-width: 72ch; }
+  .indice ul { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .indice a { display: inline-block; padding: 10px 0; }
+  .linea { display: grid; gap: 8px; min-width: 0; }
+  .linea-marco { overflow-x: auto; border: 1px solid var(--linea); border-radius: var(--radio); background: var(--fondo); }
+  .linea-marco svg { display: block; font-family: var(--sans); width: 100%; min-width: 1100px; max-width: none; height: auto; }
+  .anio line { stroke: var(--linea); stroke-width: 1; }
+  .anio text, .nombre-carril { fill: var(--secundario); font-size: 12px; }
+  .nombre-carril { font-weight: 600; fill: var(--texto); }
+  .tramo { stroke: var(--borde); stroke-width: 0.5; }
+  .tramo.a { fill: var(--periodo-a); }
+  .tramo.b { fill: var(--periodo-b); }
+  .tramo.facto { fill: var(--periodo-facto); }
+  a:hover .tramo, a:focus .tramo { stroke: var(--acento); stroke-width: 2; }
+  .rotulo { fill: var(--texto); font-size: 11px; pointer-events: none; }
+  .evento { stroke: var(--texto); stroke-width: 2; }
+  a:hover .evento, a:focus .evento { stroke: var(--acento); stroke-width: 3; }
+  .tipo { display: grid; gap: 12px; min-width: 0; }
+  .cantidad { font-weight: 400; font-size: 1rem; }
+  .tarjetas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); gap: 14px; }
+  .tarjeta { border: 1px solid var(--linea); border-radius: var(--radio); padding: 12px 14px; display: grid; gap: 6px; align-content: start; scroll-margin-top: 16px; min-width: 0; }
+  .tarjeta:target { border-color: var(--acento); box-shadow: 0 0 0 2px var(--acento); }
+  .tarjeta h3 { margin: 0; font-size: 1.05rem; }
+  .tarjeta p { margin: 0; }
+  .fechas { font-size: 0.92rem; }
+  .convencional { font-size: 0.88rem; color: var(--ocre); }
+  .mandatos { margin: 0; padding-left: 1.1em; font-size: 0.9rem; }
+  .fuentes summary { cursor: pointer; font-size: 0.9rem; min-height: 44px; display: flex; align-items: center; gap: 6px; color: var(--acento); }
+  .fuentes summary::before { content: "▸"; transition: transform 0.15s; }
+  .fuentes[open] summary::before { transform: rotate(90deg); }
+  @media (prefers-reduced-motion: reduce) { .fuentes summary::before { transition: none; } }
+  .fuentes ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.85rem; overflow-wrap: anywhere; }
+  /* Accesos como botones de 44 px: en el celular, enlaces en línea de 17 px se tocaban mal (revisión visual de la 4b). */
+  .accesos { display: grid; gap: 6px; font-size: 0.88rem; }
+  .accesos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .accesos a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border: 1px solid var(--borde); border-radius: 999px; text-decoration: none; color: var(--texto); }
+  .accesos a:hover { border-color: var(--acento); color: var(--acento); }
+  .texto-cita { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--mono); font-size: 0.85rem; background: var(--superficie); padding: 12px; border-radius: var(--radio); }
+  .lista-descargas { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+  .lista-descargas a { font-weight: 600; }
+</style>

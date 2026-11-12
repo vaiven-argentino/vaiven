@@ -140,6 +140,10 @@ def test_export_cumple_el_contrato_y_oculta_la_referencia_al_curso():
     assert {t["id"]: t["nombre"] for t in doc_p["tipos"]}["catedra"] == "Etapas de la política económica (curso)"
     plan = next(x for x in doc_p["periodos"] if x["id"] == "p.plan.austral")
     assert plan["cortes"] == {"desde": "hecho", "hasta": "convencional"}
+    # Con una fuente que respalda la fecha además de la nota del corte, el fin sigue siendo convencional.
+    p[3]["fuentes"].append({"para": "hasta", "tipo": "norma", "referencia": "Inicio del Plan Primavera"})
+    plan = next(x for x in exp.documento_periodos(val.resolver(p), "v")["periodos"] if x["id"] == "p.plan.austral")
+    assert plan["cortes"]["hasta"] == "convencional"
     assert next(x for x in doc_p["periodos"] if x["id"] == "p.gobierno.dos")["hasta"] is None
 
 

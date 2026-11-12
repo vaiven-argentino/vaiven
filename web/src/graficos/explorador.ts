@@ -3,15 +3,16 @@
 // períodos, eventos y, en las series internacionales, un color por país.
 import { apa, bibtex, citaRegistro, NOMBRE_DENOMINADOR, nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
-  ErrorTransformacion, atraso, diasDe, disponibles, periodoDeCadaFecha, periodosDe, rangoLegible, serieDeEntidad, seCruzan, tienePais,
-  transformar, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type TipoPeriodo, type Transformacion,
+  ErrorTransformacion, atraso, disponibles, periodoDeCadaFecha, rangoLegible, serieDeEntidad, tienePais,
+  transformar, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
 import { csvDeVista, hojasXlsx, type VistaDescarga } from "../lib/descarga";
 import { estadoDesdeUrl, MAX_PAISES, MEDIAS, opcionesDe, porDefecto, serieDeUrl, serieVista, urlDesdeEstado, type Documento, type Estado, type IndiceSerie } from "../lib/estado";
 import { esVariacion, numerarQuiebres, rangoQuiebre, resumen, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato } from "../lib/formato";
 import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen, tema, type Cargados } from "./comun";
-import { especificacion, type BandaPeriodo, type MarcaEvento } from "./espec";
+import { especificacion, type MarcaEvento } from "./espec";
+import { bandasDe, eventosEnRango, periodosEnRango } from "../lib/periodos";
 
 type DocumentoCompleto = Documento & {
   nombre: string; nombre_variante: string; variante: string; serie: string; codigo: string; version_datos: string; cita: string;
@@ -179,24 +180,14 @@ function iniciar(): void {
   async function periodosVisibles(r: Resultado): Promise<Periodo[]> {
     if (!estado.sh) return [];
     registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
-    const tipo = (estado.sh === "mandato" ? "gobierno" : estado.sh) as TipoPeriodo;
-    const todos = periodosDe(registroPeriodos, tipo, estado.sh === "mandato");
-    const fechas = r.datos.map((d) => d[0]);
-    if (!fechas.length) return [];
-    const desde = diasDe(fechas[0], r.frecuencias[0]).desde;
-    const hasta = diasDe(fechas[fechas.length - 1], r.frecuencias[r.frecuencias.length - 1]).hasta;
-    return seCruzan(todos, desde, hasta);
+    return periodosEnRango(registroPeriodos, estado.sh, r);
   }
 
   async function eventosVisibles(r: Resultado): Promise<MarcaEvento[]> {
-    if (!estado.ev || !r.datos.length) return [];
+    if (!estado.ev) return [];
     registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
-    const desde = diasDe(r.datos[0][0], r.frecuencias[0]).desde;
-    const hasta = diasDe(r.datos[r.datos.length - 1][0], r.frecuencias[r.frecuencias.length - 1]).hasta;
-    return registroEventos.eventos.filter((e) => e.fecha >= desde && e.fecha <= hasta)
-      .map((e, k) => ({ letra: letra(k), fecha: e.fecha, nombre: e.nombre }));
+    return eventosEnRango(registroEventos, r);
   }
-  const letra = (k: number) => (k < 26 ? String.fromCharCode(65 + k) : `${String.fromCharCode(64 + Math.floor(k / 26))}${String.fromCharCode(65 + (k % 26))}`);
 
   // ---- Vista ----
   let ultimo: {
@@ -392,7 +383,7 @@ function iniciar(): void {
 
   function entrada(ancho: number, alto: number, impreso?: { titulo: string; subtitulo: string; pie: string[] }) {
     const { r, otras, quiebres, periodos, eventos } = ultimo!;
-    const bandas: BandaPeriodo[] = periodos.map((p) => ({ desde: p.desde, hasta: p.hasta, nombre: p.nombre, nombre_corto: p.nombre_corto, facto: p.caracter === "de_facto" }));
+    const bandas = bandasDe(periodos);
     const serie = serieVista(doc, estado.p);
     return especificacion({
       resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(estado.t),

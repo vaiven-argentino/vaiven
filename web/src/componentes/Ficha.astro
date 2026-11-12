@@ -3,7 +3,8 @@
 // suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
 import { atraso, disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
 import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, insumosDe, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
+import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, insumosDe, periodos as leerPeriodos, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
+import { OPCIONES_SOMBREADO, nombreSombreado } from "../lib/periodos";
 import { aniosDe, crecimientoPorDecada, desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
 import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, cobertura, diaDeVersion, fechaCorta, textoAtraso, ultimoDato } from "../lib/formato";
 
@@ -62,6 +63,8 @@ const ultimo = ultimoDato(doc.cobertura.hasta, doc.tramos.at(-1)?.frecuencia ?? 
 const versionSitio = [catalogo().version_datos, doc.version_datos].sort().at(-1)!;
 const atrasoTexto = textoAtraso(atraso(doc, versionSitio));
 const titulo = doc.es_variante_por_defecto ? doc.nombre : `${doc.nombre} · ${doc.nombre_variante}`;
+// Sombreado y eventos (fase 4b): apagados por defecto; los períodos y eventos se piden solo al activarlos.
+const tiposPeriodo = leerPeriodos()?.tipos;
 // Fuentes de descarga manual (Bruegel, que bloquea a GitHub Actions): la ficha dice qué versión usa Vaivén
 // (segunda revisión de la 4a, 2.3). «Bruegel (Zsolt Darvas)» → «Bruegel».
 const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
@@ -200,8 +203,22 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
         </div>
       </fieldset>
       <label class="casilla" id="campo-log"><input type="checkbox" id="c-log" /> Escala logarítmica</label>
+      {tiposPeriodo && (
+        <fieldset class="marcas">
+          <legend>Períodos y eventos</legend>
+          <div class="campo">
+            <label for="c-sombreado">Sombreado</label>
+            <select id="c-sombreado">
+              <option value="">Sin sombreado</option>
+              {OPCIONES_SOMBREADO.map((o) => <option value={o}>{nombreSombreado(o, tiposPeriodo)}</option>)}
+            </select>
+          </div>
+          <label class="casilla"><input type="checkbox" id="c-eventos" /> Marcar eventos</label>
+        </fieldset>
+      )}
     </form>
     </details>
+    <p class="a-explorador" data-requiere-js hidden><a id="abrir-explorador" href={`/explorador/?s=${doc.serie}`}>Abrir esta vista en el explorador</a> <span class="secundario">· para elegir países, sombrear por períodos y bajar la vista en XLSX</span></p>
 
     <p id="estado-grafico" class="estado" role="status" aria-live="polite"></p>
     <div id="avisos" class="avisos" role="status" aria-live="polite" hidden></div>
@@ -219,6 +236,17 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
         <span class="visualmente-oculto">Resumen del gráfico: </span><span id="resumen-grafico">{resumen(r, r.unidad, variacion, numerados)}</span>
       </figcaption>
     </figure>
+
+    <div class="leyendas">
+      <div id="leyenda-periodos" hidden>
+        <h3 class="etiqueta" id="titulo-periodos">Períodos</h3>
+        <ul class="lista-periodos" id="lista-periodos"></ul>
+      </div>
+      <div id="leyenda-eventos" hidden>
+        <h3 class="etiqueta">Eventos</h3>
+        <ol class="lista-eventos" id="lista-eventos"></ol>
+      </div>
+    </div>
 
     {decadas && (
       <div class="decadas">
@@ -243,7 +271,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
       <div class="tabla-marco" tabindex="0" role="region" aria-label="Tabla de datos (con desplazamiento)">
         <table>
           <caption class="visualmente-oculto">{titulo}: datos de la vista actual</caption>
-          <thead><tr><th scope="col">Fecha</th><th scope="col" id="tabla-unidad">{r.unidad}</th></tr></thead>
+          <thead><tr><th scope="col">Fecha</th><th scope="col" id="tabla-unidad">{r.unidad}</th><th scope="col" id="tabla-periodo" hidden></th></tr></thead>
           <tbody id="tabla-cuerpo">
             {filasTabla(r, variacion).map((f) => (
               <tr class={f.excluido ? "excluido" : undefined}><th scope="row">{f.etiqueta}</th><td>{f.valor}</td></tr>
@@ -446,6 +474,15 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
   .casilla { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
   .casilla input { width: 20px; height: 20px; accent-color: var(--acento); }
   .casilla.deshabilitado { color: var(--secundario); }
+  .marcas { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 18px; min-width: 0; flex: 1 1 100%; }
+  .marcas legend { font-size: 0.9rem; padding: 0; margin-bottom: 4px; width: 100%; }
+  .marcas .campo { flex: 0 1 22rem; }
+  .a-explorador { margin: 0; font-size: 0.92rem; }
+  .leyendas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 14px 32px; }
+  .leyendas:not(:has(> div:not([hidden]))) { display: none; }
+  .lista-periodos, .lista-eventos { margin: 6px 0 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 0.9rem; }
+  .lista-eventos { list-style: upper-alpha; }
+  .lista-periodos :global(.rango), .lista-eventos :global(.rango) { color: var(--secundario); }
   .estado:empty { display: none; }
   .estado[data-tipo="error"] { color: var(--acento); font-weight: 600; }
   .avisos { display: grid; gap: 6px; border: 1px solid var(--ocre); border-radius: var(--radio); padding: 12px 14px; font-size: 0.92rem; }
