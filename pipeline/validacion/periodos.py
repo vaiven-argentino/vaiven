@@ -8,7 +8,11 @@ Convenciones (fase 4b, decididas con Camilo el 11/11/2026):
 - Las etapas del curso (`catedra`) toman sus fechas de otros períodos con `igual_a` (por ejemplo,
   `p.gobierno.menem.desde`), y con ellas su fuente.
 - Los gobiernos de más de un mandato (Menem, Fernández de Kirchner) llevan `mandatos`, que cubren el gobierno entero y
-  permiten sombrear por persona o por mandato.
+  permiten sombrear por persona o por mandato. Los episodios (procesos de varios meses, como la hiperinflación de
+  1989–1990) pueden superponerse y llevan `fases`, con la misma estructura y las mismas reglas que los mandatos
+  (correcciones de la revisión externa, 12/11/2026).
+- Cada extremo con fecha propia lleva su `confianza` (alta, media o baja; SPEC 2.4). Las etapas la heredan del extremo
+  que citan con `igual_a`.
 
 Un error acá frena la publicación entera (no se puede atribuir a una fuente ni a una variante).
 """
@@ -22,25 +26,29 @@ from pathlib import Path
 
 from pipeline.comun import ErrorPipeline, leer_yaml
 
-TIPOS = ("gobierno", "ministro", "plan", "regimen_cambiario", "catedra")
+TIPOS = ("gobierno", "ministro", "plan", "regimen_cambiario", "catedra", "episodio")
 # Prefijo del id de cada tipo (SPEC 2.2: `p.<tipo>.<slug>`; el régimen cambiario usa `p.regimen`).
-PREFIJO = {"gobierno": "gobierno", "ministro": "ministro", "plan": "plan", "regimen_cambiario": "regimen", "catedra": "catedra"}
+PREFIJO = {"gobierno": "gobierno", "ministro": "ministro", "plan": "plan", "regimen_cambiario": "regimen", "catedra": "catedra",
+           "episodio": "episodio"}
 SIN_SUPERPOSICION = ("gobierno", "ministro", "regimen_cambiario", "catedra")
 CARACTERES = ("constitucional", "de_facto", "interino")
+CONFIANZAS = ("alta", "media", "baja")
 TIPOS_FUENTE = ("norma", "comunicacion_bcra", "oficial", "secundaria", "periodistica", "convencional")
 CATEGORIAS = ("cambiario", "monetario", "financiero", "fiscal", "deuda", "crisis", "institucional")
 INICIO = date(1970, 1, 1)
 LARGO_NOMBRE_CORTO = 24
 
 SLUG = r"[a-z0-9]+(?:-[a-z0-9]+)*"
-RE_PERIODO = re.compile(rf"^p\.(gobierno|ministro|plan|regimen|catedra)\.({SLUG})$")
+RE_PERIODO = re.compile(rf"^p\.(gobierno|ministro|plan|regimen|catedra|episodio)\.({SLUG})$")
 RE_EVENTO = re.compile(rf"^e\.(\d{{4}}-\d{{2}}-\d{{2}})\.({SLUG})$")
 RE_PUBLICADO = re.compile(r"^\d{4}(-\d{2})?$")   # bibliografía con solo año o mes
 RE_IGUAL_A = re.compile(r"^(p\.[a-z_]+\.[a-z0-9-]+)\.(desde|hasta)$")
 
 CAMPOS_PERIODO = {"id", "tipo", "nombre", "nombre_corto", "desde", "hasta", "caracter", "cargo", "orden", "descripcion",
-                  "notas", "fuentes", "mandatos", "referencia_curso"}
-CAMPOS_MANDATO = {"id", "nombre", "nombre_corto", "desde", "hasta", "notas", "fuentes"}
+                  "notas", "fuentes", "mandatos", "fases", "referencia_curso", "confianza"}
+CAMPOS_MANDATO = {"id", "nombre", "nombre_corto", "desde", "hasta", "descripcion", "notas", "fuentes", "confianza"}
+# Subtramos de un período: los mandatos de un gobierno y las fases de un episodio (misma estructura y reglas).
+SUBTRAMOS = {"gobierno": "mandatos", "episodio": "fases"}
 CAMPOS_FUENTE = {"para", "tipo", "referencia", "publicado", "url", "pagina", "nota"}
 CAMPOS_EVENTO = {"id", "fecha", "vigencia", "nombre", "nombre_corto", "categoria", "descripcion", "notas", "fuentes"}
 
@@ -70,7 +78,11 @@ def resolver(periodos: list[dict]) -> list[dict]:
                 p[extremo] = origen[ext_ref]
                 heredadas += [{**f, "para": extremo, "nota": f"Fecha de {ref} ({ext_ref})."}
                               for f in origen["fuentes"] if f["para"] in (ext_ref, "ambas")]
+                if ext_ref in origen.get("confianza", {}):
+                    p.setdefault("confianza", {})[extremo] = origen["confianza"][ext_ref]
         p["fuentes"] = heredadas + p.get("fuentes", [])
+        if "confianza" in p:
+            p["confianza"] = {e: p["confianza"][e] for e in ("desde", "hasta") if e in p["confianza"]}
     return sorted(salida, key=lambda p: (TIPOS.index(p["tipo"]), p["desde"], p["id"]))
 
 
@@ -186,6 +198,8 @@ def validar(periodos, eventos, hoy: date) -> list[str]:
             errores.append(f"{pid}: `caracter` tiene que ser uno de {', '.join(CARACTERES)}")
         if tipo != "gobierno" and ("caracter" in p or "mandatos" in p):
             errores.append(f"{pid}: `caracter` y `mandatos` son solo de los gobiernos")
+        if tipo != "episodio" and "fases" in p:
+            errores.append(f"{pid}: `fases` es solo de los episodios")
         if tipo == "ministro" and not str(p.get("cargo") or "").strip():
             errores.append(f"{pid}: falta `cargo` (el nombre de la cartera en esa época)")
         if tipo != "ministro" and "cargo" in p:
@@ -206,8 +220,10 @@ def validar(periodos, eventos, hoy: date) -> list[str]:
         propios = [e for e in ("desde", "hasta") if (p.get(e) is not None and not isinstance(p.get(e), dict))]
         if propios or p.get("fuentes"):
             _fuentes(errores, pid, p.get("fuentes"), propios)
-        if "mandatos" in p:
-            _mandatos(errores, p, ids, hoy, desde, hasta)
+        _confianza(errores, pid, p.get("confianza"), propios)
+        campo = SUBTRAMOS.get(tipo)
+        if campo and campo in p:
+            _subtramos(errores, p, campo, ids, hoy, desde, hasta)
 
     # Por tipo: un solo abierto (el último), sin superposiciones, sin huecos en los gobiernos y etapas contiguas.
     for tipo in TIPOS:
@@ -242,18 +258,40 @@ def validar(periodos, eventos, hoy: date) -> list[str]:
     return errores
 
 
-def _mandatos(errores: list[str], p: dict, ids: set[str], hoy: date, desde: date, hasta) -> None:
+def _confianza(errores: list[str], quien: str, confianza, extremos: list[str]) -> None:
+    """Cada extremo con fecha propia lleva su confianza; los que vienen de `igual_a` la heredan y no la repiten."""
+    if not extremos and confianza is None:
+        return
+    if not isinstance(confianza, dict):
+        errores.append(f"{quien}: falta `confianza` ({{desde: alta|media|baja, hasta: …}})")
+        return
+    sobra = set(confianza) - set(extremos)
+    if sobra:
+        errores.append(f"{quien}: `confianza` de {', '.join(sorted(sobra))} sobra (el extremo no tiene fecha propia)")
+    for extremo in extremos:
+        if confianza.get(extremo) not in CONFIANZAS:
+            errores.append(f"{quien}: la confianza de «{extremo}» tiene que ser {', '.join(CONFIANZAS)}")
+
+
+def _subtramos(errores: list[str], p: dict, campo: str, ids: set[str], hoy: date, desde: date, hasta) -> None:
+    """Mandatos de un gobierno o fases de un episodio: dos o más, contiguos y cubriendo el período entero."""
     pid = p["id"]
-    mandatos = p["mandatos"]
-    if not isinstance(mandatos, list) or len(mandatos) < 2:
-        errores.append(f"{pid}: `mandatos` va solo cuando hay dos o más")
+    prefijo = PREFIJO[p["tipo"]]
+    singular, primero, ultimo, contiguos, todo = {
+        "mandatos": ("mandato", "el primer mandato", "el último mandato", "contiguos", "el gobierno"),
+        "fases": ("fase", "la primera fase", "la última fase", "contiguas", "el episodio"),
+    }[campo]
+    tramos = p[campo]
+    nombre_tramos = {"mandatos": "los mandatos", "fases": "las fases"}[campo]
+    if not isinstance(tramos, list) or len(tramos) < 2:
+        errores.append(f"{pid}: `{campo}` va solo cuando hay dos o más")
         return
     anterior = None
-    for k, mt in enumerate(mandatos):
+    for k, mt in enumerate(tramos):
         mid = mt.get("id") if isinstance(mt, dict) else None
-        quien = f"{pid}, mandato {k + 1}"
-        if not isinstance(mid, str) or not RE_PERIODO.match(mid) or not mid.startswith("p.gobierno."):
-            errores.append(f"{quien}: el id tiene que tener la forma p.gobierno.<slug>")
+        quien = f"{pid}, {singular} {k + 1}"
+        if not isinstance(mid, str) or not RE_PERIODO.match(mid) or not mid.startswith(f"p.{prefijo}."):
+            errores.append(f"{quien}: el id tiene que tener la forma p.{prefijo}.<slug>")
             continue
         if mid in ids:
             errores.append(f"{mid}: id repetido")
@@ -268,13 +306,14 @@ def _mandatos(errores: list[str], p: dict, ids: set[str], hoy: date, desde: date
             continue
         extremos = ["desde"] + (["hasta"] if mt.get("hasta") is not None else [])
         _fuentes(errores, mid, mt.get("fuentes"), extremos)
+        _confianza(errores, mid, mt.get("confianza"), extremos)
         if k == 0 and mt["desde"] != desde:
-            errores.append(f"{mid}: el primer mandato tiene que empezar con el gobierno ({desde})")
+            errores.append(f"{mid}: {primero} tiene que empezar con {todo} ({desde})")
         if anterior is not None and anterior != mt["desde"]:
-            errores.append(f"{mid}: los mandatos tienen que ser contiguos (el anterior termina el {anterior})")
+            errores.append(f"{mid}: {nombre_tramos} tienen que ser {contiguos} (el tramo anterior termina el {anterior})")
         anterior = mt.get("hasta")
     if anterior != hasta:
-        errores.append(f"{pid}: el último mandato tiene que terminar con el gobierno ({hasta})")
+        errores.append(f"{pid}: {ultimo} tiene que terminar con {todo} ({hasta})")
 
 
 def _eventos(errores: list[str], eventos: list, hoy: date) -> None:

@@ -11,7 +11,7 @@ import io
 from datetime import date
 from pathlib import Path
 
-ESQUEMA_PERIODOS = "periodos-1.0"
+ESQUEMA_PERIODOS = "periodos-1.1"
 ESQUEMA_EVENTOS = "eventos-1.0"
 
 NOMBRE_TIPO = {
@@ -20,6 +20,7 @@ NOMBRE_TIPO = {
     "plan": "Planes de estabilización",
     "regimen_cambiario": "Regímenes cambiarios",
     "catedra": "Etapas de la política económica (curso)",
+    "episodio": "Episodios",
 }
 NOMBRE_TIPO_CATEDRA_PUBLICA = "Periodización de la cátedra"
 NOMBRE_CATEGORIA = {
@@ -52,6 +53,18 @@ def _cortes(p: dict) -> dict:
     return salida
 
 
+def _subtramo(m: dict) -> dict:
+    """Un mandato o una fase, con la misma estructura."""
+    return {
+        "id": m["id"], "nombre": m["nombre"], "nombre_corto": m["nombre_corto"],
+        "desde": _f(m["desde"]), "hasta": _f(m.get("hasta")),
+        **({"descripcion": m["descripcion"]} if m.get("descripcion") else {}),
+        **({"notas": m["notas"]} if m.get("notas") else {}),
+        **({"confianza": m["confianza"]} if m.get("confianza") else {}),
+        "fuentes": [_fuente(f) for f in m.get("fuentes", [])],
+    }
+
+
 def periodo_export(p: dict, nombrar_catedra: bool = False) -> dict:
     salida = {
         "id": p["id"], "tipo": p["tipo"], "nombre": p["nombre"], "nombre_corto": p["nombre_corto"],
@@ -63,14 +76,12 @@ def periodo_export(p: dict, nombrar_catedra: bool = False) -> dict:
     if nombrar_catedra and p.get("referencia_curso"):
         salida["referencia_curso"] = p["referencia_curso"]
     salida["cortes"] = _cortes(p)
+    if p.get("confianza"):
+        salida["confianza"] = p["confianza"]
     salida["fuentes"] = [_fuente(f) for f in p.get("fuentes", [])]
-    if p.get("mandatos"):
-        salida["mandatos"] = [{
-            "id": m["id"], "nombre": m["nombre"], "nombre_corto": m["nombre_corto"],
-            "desde": _f(m["desde"]), "hasta": _f(m.get("hasta")),
-            **({"notas": m["notas"]} if m.get("notas") else {}),
-            "fuentes": [_fuente(f) for f in m.get("fuentes", [])],
-        } for m in p["mandatos"]]
+    for campo in ("mandatos", "fases"):
+        if p.get(campo):
+            salida[campo] = [_subtramo(m) for m in p[campo]]
     return salida
 
 
@@ -79,9 +90,10 @@ def documento_periodos(periodos: list[dict], version_datos: str, nombrar_catedra
     return {
         "esquema": ESQUEMA_PERIODOS,
         "version_datos": version_datos,
-        "descripcion": ("Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la "
-                        "política económica, 1970–hoy. Intervalos semiabiertos [desde, hasta): el día del traspaso es del "
-                        "período que empieza; `hasta` null quiere decir vigente."),
+        "descripcion": ("Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios, etapas de la "
+                        "política económica según la periodización de un curso universitario y episodios, 1970–hoy. "
+                        "Intervalos semiabiertos [desde, hasta): el día del traspaso es del período que empieza; `hasta` "
+                        "null quiere decir vigente. `confianza` dice cuán firme es cada fecha (alta, media o baja)."),
         "fuente": "metadatos/periodos.yaml",
         "licencia": "CC-BY-4.0",
         "tipos": [{"id": t, "nombre": nombres[t], "cantidad": sum(p["tipo"] == t for p in periodos)} for t in NOMBRE_TIPO],
@@ -118,22 +130,26 @@ def _texto_fuentes(fuentes: list[dict]) -> str:
 
 
 COLUMNAS_PERIODOS = ["id", "tipo", "nombre", "nombre_corto", "desde", "hasta", "caracter", "cargo", "orden", "padre",
-                     "corte_desde", "corte_hasta", "descripcion", "fuentes"]
+                     "corte_desde", "corte_hasta", "confianza_desde", "confianza_hasta", "descripcion", "fuentes"]
 COLUMNAS_EVENTOS = ["id", "fecha", "vigencia", "nombre", "nombre_corto", "categoria", "descripcion", "fuentes"]
 
 
 def csv_periodos(doc: dict) -> str:
-    """Una fila por período; los mandatos van como filas propias con `padre` (el gobierno) y tipo `gobierno`."""
+    """Una fila por período; los mandatos y las fases van como filas propias, con `padre` y el tipo del período."""
     filas = []
     for p in doc["periodos"]:
         base = {k: p.get(k) for k in COLUMNAS_PERIODOS}
+        conf = p.get("confianza", {})
         base.update(corte_desde=p["cortes"].get("desde"), corte_hasta=p["cortes"].get("hasta"),
+                    confianza_desde=conf.get("desde"), confianza_hasta=conf.get("hasta"),
                     fuentes=_texto_fuentes(p["fuentes"]), padre=None)
         filas.append(base)
-        for m in p.get("mandatos", []):
-            filas.append({"id": m["id"], "tipo": "gobierno", "nombre": m["nombre"], "nombre_corto": m["nombre_corto"],
+        for m in p.get("mandatos", []) + p.get("fases", []):
+            cm = m.get("confianza", {})
+            filas.append({"id": m["id"], "tipo": p["tipo"], "nombre": m["nombre"], "nombre_corto": m["nombre_corto"],
                           "desde": m["desde"], "hasta": m["hasta"], "caracter": p.get("caracter"), "padre": p["id"],
-                          "fuentes": _texto_fuentes(m["fuentes"])})
+                          "confianza_desde": cm.get("desde"), "confianza_hasta": cm.get("hasta"),
+                          "descripcion": m.get("descripcion"), "fuentes": _texto_fuentes(m["fuentes"])})
     return _a_csv(COLUMNAS_PERIODOS, filas)
 
 
@@ -158,19 +174,22 @@ def recursos_datapackage(perfil_recurso: str, perfil_tabla: str, cc_by: dict) ->
             "$schema": perfil_recurso, "name": "periodos", "title": "Períodos de la política económica argentina, 1970–hoy",
             "path": "descargas/csv/periodos.csv", "type": "table", "format": "csv", "mediatype": "text/csv",
             "encoding": "utf-8",
-            "description": "Gobiernos (con sus mandatos), ministros de Economía, planes, regímenes cambiarios y etapas. "
-                           "También en JSON: periodos.json.",
+            "description": "Gobiernos (con sus mandatos), ministros de Economía, planes, regímenes cambiarios, etapas "
+                           "según la periodización de un curso universitario y episodios (con sus fases). También en JSON: "
+                           "periodos.json.",
             "schema": {"$schema": perfil_tabla, "primaryKey": ["id"], "fields": [
                 texto("id", "Identificador estable (p.<tipo>.<slug>)."),
-                texto("tipo", "gobierno, ministro, plan, regimen_cambiario o catedra."),
+                texto("tipo", "gobierno, ministro, plan, regimen_cambiario, catedra o episodio."),
                 texto("nombre", "Nombre."), texto("nombre_corto", "Rótulo corto."),
                 {"name": "desde", "type": "date", "description": "Primer día (incluido)."},
                 {"name": "hasta", "type": "date", "description": "Día en que termina (excluido); vacío si sigue vigente."},
                 texto("caracter", "Gobiernos: constitucional, de_facto o interino."),
                 texto("cargo", "Ministros: nombre de la cartera en esa época."),
                 {"name": "orden", "type": "integer", "description": "Etapas: orden."},
-                texto("padre", "Mandatos: el gobierno al que pertenecen."),
+                texto("padre", "Mandatos y fases: el gobierno o el episodio al que pertenecen."),
                 texto("corte_desde", "hecho o convencional."), texto("corte_hasta", "hecho o convencional."),
+                texto("confianza_desde", "alta, media o baja (SPEC 2.4)."),
+                texto("confianza_hasta", "alta, media o baja (SPEC 2.4)."),
                 texto("descripcion", "Descripción breve."),
                 texto("fuentes", "Fuentes de las fechas, separadas por « | »."),
             ]},

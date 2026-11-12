@@ -10,6 +10,7 @@
   nombre_corto: Onganía
   desde: 1966-06-29
   hasta: 1970-06-08
+  confianza: {desde: media, hasta: media}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -33,6 +34,7 @@
   nombre_corto: Junta (1970)
   desde: 1970-06-08
   hasta: 1970-06-18
+  confianza: {desde: media, hasta: media}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -55,6 +57,7 @@
   nombre_corto: Levingston
   desde: 1970-06-18
   hasta: 1971-03-23
+  confianza: {desde: media, hasta: alta}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -78,6 +81,7 @@
   nombre_corto: Junta (1971)
   desde: 1971-03-23
   hasta: 1971-03-26
+  confianza: {desde: alta, hasta: alta}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -104,6 +108,7 @@
   nombre_corto: Lanusse
   desde: 1971-03-26
   hasta: 1973-05-25
+  confianza: {desde: alta, hasta: alta}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -128,6 +133,7 @@
   nombre_corto: Cámpora
   desde: 1973-05-25
   hasta: 1973-07-13
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -150,6 +156,7 @@
   nombre_corto: Lastiri
   desde: 1973-07-13
   hasta: 1973-10-12
+  confianza: {desde: alta, hasta: alta}
   caracter: interino
   fuentes:
   - para: desde
@@ -174,6 +181,7 @@
   nombre_corto: Perón
   desde: 1973-10-12
   hasta: 1974-07-01
+  confianza: {desde: media, hasta: media}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -199,6 +207,7 @@
   nombre_corto: Isabel Perón
   desde: 1974-07-01
   hasta: 1976-03-24
+  confianza: {desde: media, hasta: media}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -224,6 +233,7 @@
   nombre_corto: Junta Militar (1976)
   desde: 1976-03-24
   hasta: 1976-03-29
+  confianza: {desde: alta, hasta: alta}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -247,6 +257,7 @@
   nombre_corto: Videla
   desde: 1976-03-29
   hasta: 1981-03-29
+  confianza: {desde: alta, hasta: alta}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -271,6 +282,7 @@
   nombre_corto: Viola
   desde: 1981-03-29
   hasta: 1981-12-11
+  confianza: {desde: media, hasta: media}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -300,6 +312,7 @@
   nombre_corto: Lacoste
   desde: 1981-12-11
   hasta: 1981-12-22
+  confianza: {desde: baja, hasta: media}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -326,6 +339,7 @@
   nombre_corto: Galtieri
   desde: 1981-12-22
   hasta: 1982-06-18
+  confianza: {desde: media, hasta: media}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -346,6 +360,7 @@
   nombre_corto: Saint-Jean
   desde: 1982-06-18
   hasta: 1982-07-01
+  confianza: {desde: baja, hasta: media}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -371,6 +386,7 @@
   nombre_corto: Bignone
   desde: 1982-07-01
   hasta: 1983-12-10
+  confianza: {desde: alta, hasta: alta}
   caracter: de_facto
   fuentes:
   - para: desde
@@ -395,6 +411,7 @@
   nombre_corto: Alfonsín
   desde: 1983-12-10
   hasta: 1989-07-08
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -417,6 +434,7 @@
   nombre_corto: Menem
   desde: 1989-07-08
   hasta: 1999-12-10
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -438,6 +456,7 @@
     nombre_corto: Menem I
     desde: 1989-07-08
     hasta: 1995-07-08
+    confianza: {desde: alta, hasta: alta}
     fuentes:
     - para: desde
       tipo: norma
@@ -458,6 +477,7 @@
     nombre_corto: Menem II
     desde: 1995-07-08
     hasta: 1999-12-10
+    confianza: {desde: alta, hasta: alta}
     fuentes:
     - para: desde
       tipo: norma
@@ -480,6 +500,7 @@
   nombre_corto: De la Rúa
   desde: 1999-12-10
   hasta: 2001-12-21
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -501,6 +522,7 @@
   nombre_corto: Puerta
   desde: 2001-12-21
   hasta: 2001-12-23
+  confianza: {desde: alta, hasta: alta}
   caracter: interino
   fuentes:
   - para: desde
@@ -523,6 +545,7 @@
   nombre_corto: Rodríguez Saá
   desde: 2001-12-23
   hasta: 2001-12-30
+  confianza: {desde: media, hasta: media}
   caracter: interino
   fuentes:
   - para: desde
@@ -545,6 +568,7 @@
   nombre_corto: Camaño
   desde: 2001-12-30
   hasta: 2002-01-02
+  confianza: {desde: media, hasta: media}
   caracter: interino
   fuentes:
   - para: desde
@@ -570,6 +594,7 @@
   nombre_corto: Duhalde
   desde: 2002-01-02
   hasta: 2003-05-25
+  confianza: {desde: media, hasta: media}
   caracter: interino
   fuentes:
   - para: desde
@@ -594,6 +619,7 @@
   nombre_corto: Néstor Kirchner
   desde: 2003-05-25
   hasta: 2007-12-10
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -615,6 +641,7 @@
   nombre_corto: Fernández de Kirchner
   desde: 2007-12-10
   hasta: 2015-12-10
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -636,6 +663,7 @@
     nombre_corto: Cristina Fernández de Kirchner I
     desde: 2007-12-10
     hasta: 2011-12-10
+    confianza: {desde: alta, hasta: alta}
     fuentes:
     - para: desde
       tipo: norma
@@ -656,6 +684,7 @@
     nombre_corto: Cristina Fernández de Kirchner II
     desde: 2011-12-10
     hasta: 2015-12-10
+    confianza: {desde: alta, hasta: alta}
     fuentes:
     - para: desde
       tipo: norma
@@ -676,6 +705,7 @@
   nombre_corto: Macri
   desde: 2015-12-10
   hasta: 2019-12-10
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -699,6 +729,7 @@
   nombre_corto: Alberto Fernández
   desde: 2019-12-10
   hasta: 2023-12-10
+  confianza: {desde: alta, hasta: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -721,6 +752,7 @@
   nombre_corto: Milei
   desde: 2023-12-10
   hasta: null
+  confianza: {desde: alta}
   caracter: constitucional
   fuentes:
   - para: desde
@@ -737,6 +769,7 @@
   cargo: Ministro de Economía y Trabajo
   desde: 1969-06-11
   hasta: 1970-06-18
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: oficial
@@ -771,6 +804,7 @@
   cargo: Ministro de Economía y Trabajo
   desde: 1970-06-18
   hasta: 1970-10-15
+  confianza: {desde: media, hasta: alta}
   fuentes:
   - para: desde
     tipo: secundaria
@@ -792,6 +826,36 @@
     publicado: 2021-07
     pagina: '6'
     url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1829/1970 (Bs. As., 15/10/1970): acepta la renuncia de Carlos M. Moyano Llerena (texto escaneado
+      del BO)'
+    publicado: 1970-10-20
+    url: https://www.boletinoficial.gob.ar/detalleAviso/primera/7039658/19701020
+  notas: El listado del CDI le da fin el 26/10/1970 porque no registra el interinato de Aldo Ferrer (Decreto 1831/1970).
+- id: p.ministro.ferrer-interino
+  tipo: ministro
+  nombre: Aldo Ferrer (interino)
+  nombre_corto: Ferrer (interino)
+  cargo: Ministro de Obras y Servicios Públicos; «encomiéndase interinamente» el Ministerio de Economía y Trabajo
+  desde: 1970-10-15
+  hasta: 1970-10-26
+  confianza: {desde: alta, hasta: alta}
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1831/1970 (Bs. As., 15/10/1970): «VISTO que se encuentra acéfalo el Ministerio de Economía y Trabajo
+      […] Encomiéndase interinamente el Ministerio de Economía y Trabajo, al señor Ministro de Obras y Servicios Públicos,
+      doctor don Aldo Ferrer» (texto escaneado del BO)'
+    publicado: 1970-10-22
+    url: https://www.boletinoficial.gob.ar/detalleAviso/primera/7039752/19701022
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 2042/1970 (Bs. As., 26/10/1970): «Nómbrase Ministro de Economía y Trabajo al doctor Aldo Ferrer» (texto
+      escaneado del BO)'
+    publicado: 1970-10-30
+    url: https://www.boletinoficial.gob.ar/detalleAviso/primera/7039861/19701030
+  notas: Interino designado por decreto durante la vacante, antes de ser nombrado titular.
 - id: p.ministro.ferrer
   tipo: ministro
   nombre: Aldo Ferrer
@@ -799,6 +863,7 @@
   cargo: Ministro de Economía y Trabajo
   desde: 1970-10-26
   hasta: 1971-05-28
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: secundaria
@@ -842,6 +907,7 @@
   cargo: Ministro de Hacienda y Finanzas
   desde: 1971-06-01
   hasta: 1971-10-11
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: secundaria
@@ -876,6 +942,7 @@
   cargo: Ministro de Hacienda y Finanzas
   desde: 1971-10-11
   hasta: 1972-10-13
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: secundaria
@@ -910,6 +977,7 @@
   cargo: Ministro de Hacienda y Finanzas
   desde: 1972-10-13
   hasta: 1973-05-25
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: secundaria
@@ -951,6 +1019,7 @@
   cargo: Ministro de Hacienda y Finanzas; Ministro de Economía desde 1973-08-21 (Ley 20.524)
   desde: 1973-05-25
   hasta: 1974-10-21
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -985,6 +1054,7 @@
   cargo: Ministro de Economía
   desde: 1974-10-21
   hasta: 1975-06-02
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: norma
@@ -1012,6 +1082,7 @@
   cargo: Ministro de Economía
   desde: 1975-06-02
   hasta: 1975-07-19
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: oficial
@@ -1040,7 +1111,28 @@
     publicado: 2021-07
     pagina: '6'
     url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
-  notas: Entre su salida y la asunción de Bonanni quedó a cargo un interino no designado como titular.
+  notas: Entre su salida y la asunción de Bonanni quedó a cargo del despacho, por el mismo decreto, el ministro de Justicia
+    Ernesto A. Corvalán Nanclares.
+- id: p.ministro.corvalan-nanclares-1975a
+  tipo: ministro
+  nombre: Ernesto A. Corvalán Nanclares (a cargo del despacho)
+  nombre_corto: Corvalán Nanclares
+  cargo: Ministro de Justicia; interinamente se hará cargo del despacho del Ministerio de Economía
+  desde: 1975-07-19
+  hasta: 1975-07-22
+  confianza: {desde: alta, hasta: alta}
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1957/1975, art. 3 (Bs. As., 19/7/1975): «interinamente se hará cargo del despacho del Ministerio de Economía» (texto escaneado del BO)'
+    publicado: 1975-07-24
+    url: https://www.boletinoficial.gob.ar/detalleAviso/primera/7066137/19750724
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 1976/1975 (Bs. As., 22/7/1975): designa ministro de Economía a Pedro J. Bonanni'
+    publicado: 1975-07-28
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-182811
+  notas: Designado por el mismo decreto que acepta la renuncia de Celestino Rodrigo, hasta la designación de Bonanni.
 - id: p.ministro.bonanni
   tipo: ministro
   nombre: Pedro José Bonanni
@@ -1048,6 +1140,7 @@
   cargo: Ministro de Economía
   desde: 1975-07-22
   hasta: 1975-08-11
+  confianza: {desde: media, hasta: baja}
   fuentes:
   - para: desde
     tipo: norma
@@ -1064,6 +1157,26 @@
     pagina: '6'
     url: https://cl2.ucema.edu.ar/sites/default/files/2023-02/800.pdf
   notas: El decreto de designación lo nombra «José Bonanni».
+- id: p.ministro.corvalan-nanclares-1975b
+  tipo: ministro
+  nombre: Ernesto A. Corvalán Nanclares (a cargo del despacho)
+  nombre_corto: Corvalán Nanclares
+  cargo: Ministro de Justicia; se hará cargo interinamente del despacho del Ministerio de Economía
+  desde: 1975-08-11
+  hasta: 1975-08-14
+  confianza: {desde: alta, hasta: alta}
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 2188/1975 (11/8/1975; la fecha del escaneo se lee mal y se toma de los decretos vecinos): «se hará cargo interinamente del despacho del Ministerio de Economía» (texto escaneado del BO)'
+    publicado: 1975-08-18
+    url: https://www.boletinoficial.gob.ar/detalleAviso/primera/7066289/19750818
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 2200/1975 (Bs. As., 14/8/1975): designa ministro de Economía a Antonio F. Cafiero'
+    publicado: 1975-08-21
+    url: https://www.boletinoficial.gob.ar/detalleAviso/primera/7066315/19750821
+  notas: Entre la renuncia de Bonanni (Decreto 2177/1975, 11/8/1975) y la designación de Cafiero.
 - id: p.ministro.cafiero
   tipo: ministro
   nombre: Antonio Francisco Cafiero
@@ -1071,6 +1184,7 @@
   cargo: Ministro de Economía
   desde: 1975-08-14
   hasta: 1976-02-03
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: oficial
@@ -1105,6 +1219,7 @@
   cargo: Ministro de Economía
   desde: 1976-02-03
   hasta: 1976-03-24
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: oficial
@@ -1139,8 +1254,32 @@
       y CSV ministros.csv)
     nota: 'Publicación: sin fecha (consultado 2026-11-12).'
     url: https://cdi.mecon.gob.ar/ministros-de-economia
-  notas: Entre el golpe del 24/3/1976 y la asunción de Martínez de Hoz, el área estuvo a cargo de un delegado de la Junta
-    Militar.
+  notas: Entre el golpe del 24/3/1976 y la asunción de Martínez de Hoz, el área estuvo a cargo de Joaquín De Las Heras,
+    delegado de la Junta Militar.
+- id: p.ministro.de-las-heras
+  tipo: ministro
+  nombre: Joaquín De Las Heras (delegado de la Junta Militar)
+  nombre_corto: De Las Heras
+  cargo: General de Brigada; «Delegado de la Junta Militar» en el Ministerio de Economía
+  desde: 1976-03-24
+  hasta: 1976-03-29
+  confianza: {desde: alta, hasta: alta}
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1/1976 de la Junta Militar (Bs. As., 24/3/1976): «Nómbranse Delegados de la Junta Militar […] Economía
+      al señor General de Brigada D. Joaquín De Las Heras»; BO n.º 23373, p. 2'
+    publicado: 1976-03-29
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-183353
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 5/1976 (29/3/1976): designa a José A. Martínez de Hoz Ministro Secretario de Estado en el Departamento
+      de Economía (texto escaneado del BO)'
+    publicado: 1976-04-05
+    url: https://www.boletinoficial.gob.ar/detalleAviso/primera/7069122/19760405
+  notas: No fue ministro interino sino delegado de un gobierno de facto; se incluye porque estuvo a cargo de la cartera por
+    decreto durante la vacante (criterio de las correcciones de la revisión externa, 12/11/2026).
 - id: p.ministro.martinez-de-hoz
   tipo: ministro
   nombre: José Alfredo Martínez de Hoz
@@ -1148,6 +1287,7 @@
   cargo: Ministro de Economía
   desde: 1976-03-29
   hasta: 1981-03-29
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: oficial
@@ -1182,6 +1322,7 @@
   cargo: Ministro de Economía, Hacienda y Finanzas
   desde: 1981-03-29
   hasta: 1981-12-21
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: norma
@@ -1208,6 +1349,7 @@
   cargo: Ministro de Economía
   desde: 1981-12-22
   hasta: 1982-07-02
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: norma
@@ -1233,6 +1375,7 @@
   cargo: Ministro de Economía
   desde: 1982-07-02
   hasta: 1982-08-24
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1253,6 +1396,7 @@
   cargo: Ministro de Economía
   desde: 1982-08-25
   hasta: 1983-12-10
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1272,6 +1416,7 @@
   cargo: Ministro de Economía
   desde: 1983-12-10
   hasta: 1985-02-19
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1292,6 +1437,7 @@
   cargo: Ministro de Economía
   desde: 1985-02-19
   hasta: 1989-04-04
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: norma
@@ -1324,6 +1470,7 @@
   cargo: Ministro de Economía
   desde: 1989-04-04
   hasta: 1989-05-26
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1343,6 +1490,7 @@
   cargo: Ministro de Economía
   desde: 1989-05-26
   hasta: 1989-07-07
+  confianza: {desde: media, hasta: media}
   fuentes:
   - para: desde
     tipo: norma
@@ -1363,6 +1511,7 @@
   cargo: Ministro de Economía
   desde: 1989-07-08
   hasta: 1989-07-14
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1387,9 +1536,10 @@
   tipo: ministro
   nombre: Eduardo Bauzá
   nombre_corto: Bauzá
-  cargo: Ministro de Economía (interino)
+  cargo: Ministro del Interior; «Ministro Interino de Economía»
   desde: 1989-07-14
   hasta: 1989-07-15
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1410,6 +1560,7 @@
   cargo: Ministro de Economía
   desde: 1989-07-15
   hasta: 1989-12-15
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1429,6 +1580,7 @@
   cargo: Ministro de Economía
   desde: 1989-12-15
   hasta: 1991-01-31
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1448,6 +1600,7 @@
   cargo: Ministro de Economía; Ministro de Economía y Obras y Servicios Públicos desde 1991-04-23 (Ley 23.930)
   desde: 1991-01-31
   hasta: 1996-07-26
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1469,6 +1622,7 @@
   cargo: Ministro de Economía y Obras y Servicios Públicos
   desde: 1996-07-26
   hasta: 1999-12-10
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1490,6 +1644,7 @@
   cargo: Ministro de Economía
   desde: 1999-12-10
   hasta: 2001-03-05
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1511,6 +1666,7 @@
   cargo: Ministro de Economía
   desde: 2001-03-05
   hasta: 2001-03-20
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1532,6 +1688,7 @@
   cargo: Ministro de Economía
   desde: 2001-03-20
   hasta: 2001-12-20
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1545,8 +1702,53 @@
     publicado: 2001-12-24
     pagina: '18'
     url: https://www.argentina.gob.ar/normativa/nacional/norma-71020
-  notas: 'Entre su salida y la asunción de Remes Lenicov no hubo ministro titular: hubo funcionarios a cargo o interinos (Nicolás
-    Gallo, Jorge Capitanich).'
+  notas: 'Después de su salida quedaron a cargo Nicolás Gallo (20/12/2001) y Jorge Capitanich (21/12/2001). Del 22/12/2001 al
+    3/1/2002 no hubo ministro de Economía: Rodolfo Frigeri fue secretario de Hacienda (Decreto 14/2001), no ministro.'
+- id: p.ministro.gallo
+  tipo: ministro
+  nombre: Nicolás Vicente Gallo (a cargo)
+  nombre_corto: Gallo
+  cargo: Secretario General de la Presidencia; «a cargo de los Ministerios de Economía y de Infraestructura y Vivienda»
+  desde: 2001-12-20
+  hasta: 2001-12-21
+  confianza: {desde: alta, hasta: alta}
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 1685/2001 (20/12/2001): «Desígnase […] a cargo de los MINISTERIOS DE ECONOMIA y de INFRAESTRUCTURA
+      Y VIVIENDA, sin perjuicio de sus funciones como Secretario General de la Presidencia»; BO n.º 29802, p. 2'
+    publicado: 2001-12-24
+    pagina: '2'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71015
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 2/2001 (21/12/2001, Puerta): acepta la renuncia de Nicolás V. Gallo'
+    publicado: 2001-12-24
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71023
+- id: p.ministro.capitanich
+  tipo: ministro
+  nombre: Jorge Milton Capitanich (interino)
+  nombre_corto: Capitanich
+  cargo: «Ministro de Infraestructura y Vivienda e interino de Economía», de Desarrollo Social, Salud, Trabajo y Seguridad
+    Social
+  desde: 2001-12-21
+  hasta: 2001-12-22
+  confianza: {desde: alta, hasta: alta}
+  fuentes:
+  - para: desde
+    tipo: norma
+    referencia: 'Decreto 11/2001 (21/12/2001, Puerta): «Desígnase MINISTRO DE INFRAESTRUCTURA Y VIVIENDA e interino de ECONOMIA
+      […]»; BO n.º 29802, p. 19'
+    publicado: 2001-12-24
+    pagina: '19'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71032
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 25/2001 (22/12/2001): acepta la renuncia de Jorge M. Capitanich; BO n.º 29804, p. 1'
+    publicado: 2001-12-27
+    pagina: '1'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-71056
+  notas: Algunos listados lo extienden hasta el 23/12/2001; el Decreto 25/2001 acepta su renuncia el 22/12.
 - id: p.ministro.remes-lenicov
   tipo: ministro
   nombre: Jorge Luis Remes Lenicov
@@ -1555,6 +1757,7 @@
     Ministro de Economía desde 2002-03-08 (DNU 473/2002 y Decreto 476/2002)
   desde: 2002-01-03
   hasta: 2002-04-26
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1576,6 +1779,7 @@
     5/2003)
   desde: 2002-04-26
   hasta: 2005-11-28
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1596,6 +1800,7 @@
   cargo: Ministra de Economía y Producción
   desde: 2005-12-01
   hasta: 2007-07-16
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1621,6 +1826,7 @@
   cargo: Ministro de Economía y Producción
   desde: 2007-07-16
   hasta: 2007-12-10
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1642,6 +1848,7 @@
   cargo: Ministro de Economía y Producción
   desde: 2007-12-10
   hasta: 2008-04-25
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1663,6 +1870,7 @@
     por Decreto 2026/2008)
   desde: 2008-04-25
   hasta: 2009-07-08
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1683,6 +1891,7 @@
   cargo: Ministro de Economía y Finanzas Públicas
   desde: 2009-07-08
   hasta: 2011-12-10
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1704,6 +1913,7 @@
   cargo: Ministro de Economía y Finanzas Públicas
   desde: 2011-12-10
   hasta: 2013-11-19
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1724,6 +1934,7 @@
   cargo: Ministro de Economía y Finanzas Públicas
   desde: 2013-11-19
   hasta: 2015-12-10
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1745,6 +1956,7 @@
   cargo: Ministro de Hacienda y Finanzas Públicas
   desde: 2015-12-10
   hasta: 2016-12-31
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1760,6 +1972,7 @@
     pagina: '2'
     url: https://www.argentina.gob.ar/normativa/nacional/norma-270228
   notas: El DNU 13/2015 reemplaza el Ministerio de Economía y Finanzas Públicas por el de Hacienda y Finanzas Públicas.
+    Entre el 31/12/2016 y el 2/1/2017 no hubo ministro titular ni interino.
 - id: p.ministro.dujovne
   tipo: ministro
   nombre: Nicolás Dujovne
@@ -1767,6 +1980,7 @@
   cargo: Ministro de Hacienda
   desde: 2017-01-02
   hasta: 2019-08-20
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1791,6 +2005,7 @@
   cargo: Ministro de Hacienda
   desde: 2019-08-20
   hasta: 2019-12-10
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1813,6 +2028,7 @@
   cargo: Ministro de Economía
   desde: 2019-12-10
   hasta: 2022-07-04
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1833,6 +2049,7 @@
   cargo: Ministra de Economía
   desde: 2022-07-04
   hasta: 2022-08-03
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1854,6 +2071,7 @@
   cargo: Ministro de Economía
   desde: 2022-08-03
   hasta: 2023-12-10
+  confianza: {desde: alta, hasta: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1875,6 +2093,7 @@
   cargo: Ministro de Economía
   desde: 2023-12-10
   hasta: null
+  confianza: {desde: alta}
   fuentes:
   - para: desde
     tipo: norma
@@ -1888,6 +2107,7 @@
   nombre_corto: Plan Gelbard
   desde: 1973-06-08
   hasta: 1974-10-21
+  confianza: {desde: baja, hasta: media}
   descripcion: 'Programa del ministro José Ber Gelbard basado en un acuerdo entre el gobierno, la CGE y la CGT: congelamiento
     de precios, aumento salarial de suma fija y suspensión de las paritarias por dos años, con tipo de cambio fijo.'
   fuentes:
@@ -1914,6 +2134,7 @@
   nombre_corto: Martínez de Hoz
   desde: 1976-04-02
   hasta: 1981-03-29
+  confianza: {desde: media, hasta: media}
   descripcion: 'Programa del ministro José A. Martínez de Hoz: liberalización de precios, unificación cambiaria, reforma financiera
     de 1977 y apertura comercial y financiera.'
   fuentes:
@@ -1941,6 +2162,7 @@
   nombre_corto: 20 de diciembre de 1978
   desde: 1978-12-21
   hasta: 1981-04-02
+  confianza: {desde: alta, hasta: alta}
   descripcion: 'Reordenamiento del programa de Martínez de Hoz: cronograma preanunciado del tipo de cambio, rebajas arancelarias
     trimestrales, pautas de tarifas y salarios y liberalización de la entrada de capitales.'
   fuentes:
@@ -1977,6 +2199,7 @@
   nombre_corto: Austral
   desde: 1985-06-15
   hasta: 1988-08-04
+  confianza: {desde: media, hasta: media}
   descripcion: 'Programa de Juan V. Sourrouille: nueva moneda (austral), congelamiento de precios, salarios y tipo de cambio
     (0,80 australes por dólar), desagio de contratos y compromiso de no financiar al Tesoro con emisión.'
   fuentes:
@@ -2005,6 +2228,7 @@
   nombre_corto: Primavera
   desde: 1988-08-04
   hasta: 1989-02-07
+  confianza: {desde: media, hasta: media}
   descripcion: 'Acuerdo de precios con grandes empresas y desdoblamiento cambiario: el BCRA compraba parte de las exportaciones
     a tipo oficial y vendía en el mercado libre, para anclar el tipo libre.'
   fuentes:
@@ -2028,6 +2252,7 @@
   nombre_corto: Bunge y Born
   desde: 1989-07-10
   hasta: 1989-12-12
+  confianza: {desde: media, hasta: media}
   descripcion: 'Programa de los ministros Roig y Rapanelli al inicio del gobierno de Menem: fuerte devaluación inicial, tipo
     de cambio fijo, acuerdo de precios con empresas y aumento de tarifas, con las leyes de Reforma del Estado y de Emergencia
     Económica.'
@@ -2051,6 +2276,7 @@
   nombre_corto: Bonex
   desde: 1990-01-03
   hasta: 1991-04-01
+  confianza: {desde: media, hasta: media}
   descripcion: Canje compulsivo de los depósitos a plazo y de deuda pública interna por Bonos Externos 1989 (Bonex), para
     cortar la hiperinflación reduciendo la liquidez, con flotación del tipo de cambio.
   fuentes:
@@ -2078,6 +2304,7 @@
   nombre_corto: Convertibilidad
   desde: 1991-04-01
   hasta: 2002-01-07
+  confianza: {desde: media, hasta: media}
   descripcion: Tipo fijo por ley de 10.000 australes (luego un peso) por dólar con respaldo de la base monetaria en reservas,
     acompañado de privatizaciones y apertura.
   fuentes:
@@ -2092,12 +2319,54 @@
     publicado: 2002-01-07
     url: https://www.argentina.gob.ar/normativa/nacional/norma-71477
   notas: Termina con la Ley 25.561, que deroga la paridad fija.
+- id: p.plan.metas-inflacion
+  tipo: plan
+  nombre: Régimen de metas de inflación
+  nombre_corto: Metas de inflación
+  desde: 2017-01-01
+  hasta: 2018-10-01
+  confianza: {desde: alta, hasta: alta}
+  descripcion: El BCRA fija metas anuales de inflación y usa como instrumento la tasa de interés central del corredor de pases
+    en pesos a 7 días.
+  fuentes:
+  - para: desde
+    tipo: oficial
+    referencia: 'BCRA, Informe Monetario Mensual, diciembre de 2016: «El principal instrumento de política monetaria desde el
+      1 de enero de 2017 es la tasa de interés central del corredor de pases en pesos a 7 días»'
+    publicado: 2017-01
+    url: https://www.bcra.gob.ar/publicaciones/informe-monetario-mensual-diciembre-de-2016/
+  - para: desde
+    tipo: oficial
+    referencia: 'BCRA, comunicado de política monetaria del 27/12/2016: «a partir de la semana próxima la tasa de política
+      monetaria será la tasa de pases a 7 días»'
+    publicado: 2016-12-27
+    url: https://www.bcra.gob.ar/noticias/el-bcra-mantuvo-inalterada-su-tasa-de-politica-monetaria-en-2475-4/
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: lo reemplaza el programa monetario de octubre de 2018, que fija una meta de base monetaria en lugar
+      de la meta de inflación.'
+  - para: hasta
+    tipo: oficial
+    referencia: BCRA, «El BCRA implementa su nuevo marco de política monetaria» (base monetaria con crecimiento nulo desde octubre
+      y zona de no intervención desde el 1/10/2018)
+    publicado: 2018-09-28
+    url: https://www.bcra.gob.ar/noticias/el-bcra-implementa-su-nuevo-marco-de-politica-monetaria/
+  - para: hasta
+    tipo: oficial
+    referencia: 'FMI, comunicado de prensa 18/362: el nuevo marco consiste en «replacing the inflation targeting regime with a
+      monetary base target»'
+    publicado: 2018-09-26
+    url: https://www.imf.org/en/news/articles/2018/09/26/pr18362-argentina-imf-and-argentina-authorities-reach-staff-level-agreement
+  notas: El BCRA presentó el régimen y sus metas el 26/9/2016 (12–17 % para 2017, 8–12 % para 2018 y 5 % para 2019); en 2016
+    había anunciado el rumbo sin metas numéricas. Las metas se recalibraron el 28/12/2017 (15 % para 2018, 10 % para 2019 y 5 %
+    para 2020) y se revisaron con el FMI el 7/6/2018. No hay una Comunicación «A» del cambio de instrumento.
 - id: p.plan.base-cero-2018
   tipo: plan
   nombre: Programa monetario de octubre de 2018 (base monetaria cero y zona de no intervención)
   nombre_corto: Base cero 2018
   desde: 2018-10-01
   hasta: 2019-09-01
+  confianza: {desde: media, hasta: media}
   descripcion: Compromiso de crecimiento nulo de la base monetaria (octubre de 2018–junio de 2019, luego extendido) con flotación
     dentro de una zona de no intervención, en el marco del acuerdo stand-by con el FMI.
   fuentes:
@@ -2125,6 +2394,7 @@
   nombre_corto: Diciembre 2023
   desde: 2023-12-13
   hasta: 2025-04-14
+  confianza: {desde: media, hasta: media}
   descripcion: 'Programa del ministro Luis Caputo: devaluación a 800 pesos por dólar con deslizamiento del 2 % mensual, ajuste
     fiscal y cambios en el acceso al mercado de cambios para importaciones.'
   fuentes:
@@ -2147,6 +2417,19 @@
     referencia: BCRA, Comunicación "A" 8226
     publicado: 2025-04-11
     url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 269/2025 (DNU, 11/4/2025): deroga el Decreto 28/2023 (dólar blend) desde su publicación; BO n.º 35647,
+      p. 5'
+    publicado: 2025-04-14
+    pagina: '5'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-411653
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: 'BCRA, Comunicación "A" 8227: aplica la derogación del Decreto 28/23 dispuesta por el Decreto 269/25 «a partir
+      del 14/04/25»'
+    publicado: 2025-04-14
+    url: https://www.bcra.gob.ar/Pdfs/comytexord/A8227.pdf
   notas: 'Mismo gobierno y equipo que el programa de abril de 2025: puede leerse como un solo programa con fases.'
 - id: p.plan.abril-2025
   tipo: plan
@@ -2154,6 +2437,7 @@
   nombre_corto: Abril 2025
   desde: 2025-04-14
   hasta: null
+  confianza: {desde: alta}
   descripcion: Flotación entre bandas, fin del cepo para personas humanas y nuevo programa de facilidades extendidas con el
     FMI; desde 2026, bandas ajustadas por inflación y programa de compra de reservas.
   fuentes:
@@ -2181,6 +2465,7 @@
   nombre_corto: Paridad ajustable
   desde: 1967-03-13
   hasta: 1971-09-17
+  confianza: {desde: media, hasta: media}
   descripcion: Mercado de cambios único con un tipo fijo respecto del dólar que el gobierno ajustaba por saltos; desde abril
     de 1971, con minidevaluaciones.
   fuentes:
@@ -2205,6 +2490,7 @@
   nombre_corto: Comercial y financiero
   desde: 1971-09-17
   hasta: 1975-08-26
+  confianza: {desde: media, hasta: media}
   descripcion: Control de cambios con un mercado comercial a tipo fijo para el valor FOB de exportaciones e importaciones
     y un mercado financiero para el resto; desde 1972 el financiero también quedó estable, y ambos tipos se ajustaron por
     saltos dispuestos por el Ministerio de Economía.
@@ -2237,6 +2523,7 @@
   nombre_corto: Tres mercados 1975
   desde: 1975-08-26
   hasta: 1975-11-18
+  confianza: {desde: alta, hasta: alta}
   descripcion: Se agrega un mercado financiero especial (para las exportaciones promocionadas, entre otras operaciones) y
     los tres tipos pasan a ajustarse en forma gradual cada dos o tres semanas.
   fuentes:
@@ -2274,6 +2561,7 @@
   nombre_corto: Financiero y especial
   desde: 1975-11-18
   hasta: 1976-01-05
+  confianza: {desde: alta, hasta: alta}
   descripcion: 'Desaparece el mercado comercial: sus operaciones pasan al financiero, que convive con el financiero especial,
     ambos con ajustes graduales.'
   fuentes:
@@ -2304,6 +2592,7 @@
   nombre_corto: Con mercado libre 1976
   desde: 1976-01-05
   hasta: 1976-03-08
+  confianza: {desde: media, hasta: media}
   descripcion: Al financiero y al financiero especial se suma un mercado libre (inicialmente para viajes y turismo), con devaluaciones
     semanales en los mercados regulados.
   fuentes:
@@ -2336,6 +2625,7 @@
   nombre_corto: Oficial y libre 1976
   desde: 1976-03-08
   hasta: 1976-11-22
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado oficial (que absorbe el financiero y el financiero especial) para el comercio exterior y mercado libre
     para el resto; desde abril, la proporción de exportaciones liquidada en el libre se fue ampliando hasta la unificación.
   fuentes:
@@ -2373,6 +2663,7 @@
   nombre_corto: Unificación 1976
   desde: 1976-11-22
   hasta: 1978-12-21
+  confianza: {desde: alta, hasta: alta}
   descripcion: Todas las operaciones pasaron al mercado libre, con intervención del BCRA y ajustes frecuentes del tipo de
     cambio.
   fuentes:
@@ -2396,6 +2687,7 @@
   nombre_corto: Tablita
   desde: 1978-12-21
   hasta: 1981-04-02
+  confianza: {desde: alta, hasta: alta}
   descripcion: El BCRA fijó y anunció por adelantado las cotizaciones diarias del dólar, con un ritmo de devaluación decreciente,
     como ancla del programa del 20 de diciembre de 1978.
   fuentes:
@@ -2425,6 +2717,7 @@
   nombre_corto: Devaluaciones 1981
   desde: 1981-04-02
   hasta: 1981-06-22
+  confianza: {desde: alta, hasta: alta}
   descripcion: 'Fin de la pauta preanunciada: mercado único con tipos límite que el BCRA fija día a día, con devaluaciones
     por saltos.'
   fuentes:
@@ -2444,6 +2737,7 @@
   nombre_corto: Desdoblamiento 1981
   desde: 1981-06-22
   hasta: 1981-12-24
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado comercial con cotización fijada diariamente por el BCRA para exportaciones e importaciones y mercado
     financiero de cotización libre para el resto.
   fuentes:
@@ -2469,6 +2763,7 @@
   nombre_corto: Flotación 1982
   desde: 1981-12-24
   hasta: 1982-07-06
+  confianza: {desde: alta, hasta: alta}
   descripcion: Unificación del mercado con cotización libre, fijada por la oferta y la demanda.
   fuentes:
   - para: desde
@@ -2487,6 +2782,7 @@
   nombre_corto: Desdoblamiento 1982
   desde: 1982-07-06
   hasta: 1982-11-01
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado comercial con cotización fijada diariamente por el BCRA para el comercio exterior y mercado financiero
     para los demás movimientos.
   fuentes:
@@ -2506,6 +2802,7 @@
   nombre_corto: Minidevaluaciones 1982
   desde: 1982-11-01
   hasta: 1985-06-15
+  confianza: {desde: media, hasta: media}
   descripcion: Mercado único con cotización oficial que el BCRA ajustaba casi a diario, con mercado paralelo ilegal.
   fuentes:
   - para: desde
@@ -2530,6 +2827,7 @@
   nombre_corto: Austral fijo
   desde: 1985-06-15
   hasta: 1986-04-07
+  confianza: {desde: media, hasta: media}
   descripcion: Congelamiento del tipo de cambio en 0,80 australes por dólar como parte del congelamiento de precios y salarios
     del Plan Austral.
   fuentes:
@@ -2562,6 +2860,7 @@
   nombre_corto: Minidevaluaciones 1986
   desde: 1986-04-07
   hasta: 1987-10-15
+  confianza: {desde: media, hasta: media}
   descripcion: Mercado único con tipo oficial administrado por el BCRA mediante pequeñas devaluaciones periódicas.
   fuentes:
   - para: desde
@@ -2586,6 +2885,7 @@
   nombre_corto: Desdoblamiento 1987
   desde: 1987-10-15
   hasta: 1988-08-04
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado oficial con tipos fijados diariamente por el BCRA para el comercio exterior y ciertas deudas, y mercado
     libre de cotización libre para el resto.
   fuentes:
@@ -2606,6 +2906,7 @@
   nombre_corto: Desdoblamiento Primavera
   desde: 1988-08-04
   hasta: 1989-02-07
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado oficial para parte de las exportaciones (50 % del valor FOB de la mayoría) y el petróleo, y mercado
     libre para el resto, en el que el BCRA vendía divisas por licitación.
   fuentes:
@@ -2626,6 +2927,7 @@
   nombre_corto: Desdoblamiento 1989
   desde: 1989-02-07
   hasta: 1989-04-17
+  confianza: {desde: media, hasta: media}
   descripcion: El BCRA deja de sostener el tipo de cambio del Plan Primavera y reordena qué operaciones van al mercado oficial
     y cuáles al libre.
   fuentes:
@@ -2646,6 +2948,7 @@
   nombre_corto: Flotación abril 1989
   desde: 1989-04-17
   hasta: 1989-05-30
+  confianza: {desde: alta, hasta: alta}
   descripcion: Todas las operaciones pasan al mercado libre con cotización por oferta y demanda; las exportaciones registradas
     antes del 14/4/1989 se ceden al BCRA a un tipo que fija diariamente.
   fuentes:
@@ -2666,6 +2969,7 @@
   nombre_corto: Mercado único 1989
   desde: 1989-05-30
   hasta: 1989-07-10
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado único de cambios con cotización fijada por el BCRA, en hiperinflación.
   fuentes:
   - para: desde
@@ -2690,6 +2994,7 @@
   nombre_corto: Tipo fijo BB
   desde: 1989-07-10
   hasta: 1989-12-12
+  confianza: {desde: media, hasta: media}
   descripcion: Mercado único con un tipo de cambio fijado por el BCRA y mantenido estable como ancla del plan de estabilización
     de julio de 1989.
   fuentes:
@@ -2715,6 +3020,7 @@
   nombre_corto: Desdoblamiento dic. 1989
   desde: 1989-12-12
   hasta: 1989-12-20
+  confianza: {desde: alta, hasta: alta}
   descripcion: 'Breve desdoblamiento: mercado oficial a tipos que fija el BCRA para los conceptos comerciales y mercado libre
     para el resto.'
   fuentes:
@@ -2741,6 +3047,7 @@
   nombre_corto: Flotación 1989–91
   desde: 1989-12-20
   hasta: 1991-04-01
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado libre único con cotización por oferta y demanda e intervenciones del BCRA.
   fuentes:
   - para: desde
@@ -2759,6 +3066,7 @@
   nombre_corto: Convertibilidad
   desde: 1991-04-01
   hasta: 2002-01-07
+  confianza: {desde: media, hasta: media}
   descripcion: Tipo fijo de 10.000 australes (desde 1992, un peso) por dólar, con respaldo de la base monetaria en reservas.
   fuentes:
   - para: desde
@@ -2785,6 +3093,7 @@
   nombre_corto: Desdoblamiento 2002
   desde: 2002-01-11
   hasta: 2002-02-11
+  confianza: {desde: media, hasta: media}
   descripcion: 'Fin de la convertibilidad: mercado oficial a $ 1,40 por dólar para el comercio exterior y ciertas operaciones,
     y mercado libre para el resto.'
   fuentes:
@@ -2811,6 +3120,7 @@
   nombre_corto: Flotación administrada
   desde: 2002-02-11
   hasta: 2011-10-31
+  confianza: {desde: alta, hasta: alta}
   descripcion: Mercado Único y Libre de Cambios con fuerte intervención del BCRA para sostener un tipo de cambio competitivo
     y acumular reservas.
   fuentes:
@@ -2840,6 +3150,7 @@
   nombre_corto: Cepo 2011–15
   desde: 2011-10-31
   hasta: 2015-12-17
+  confianza: {desde: alta, hasta: alta}
   descripcion: Tipo oficial administrado con validación fiscal previa para comprar divisas y, desde 2012, prohibición de comprar
     para atesoramiento, con brecha frente al dólar paralelo.
   fuentes:
@@ -2864,6 +3175,7 @@
   nombre_corto: Flotación 2015–18
   desde: 2015-12-17
   hasta: 2018-10-01
+  confianza: {desde: alta, hasta: alta}
   descripcion: Levantamiento del cepo y flotación del peso; desde 2017, con metas de inflación como ancla nominal.
   fuentes:
   - para: desde
@@ -2883,6 +3195,7 @@
   nombre_corto: Zona de no intervención
   desde: 2018-10-01
   hasta: 2019-09-01
+  confianza: {desde: alta, hasta: alta}
   descripcion: Flotación dentro de una zona de no intervención (inicialmente 34–44 pesos por dólar, ajustada 3 % mensual hasta
     fin de 2018), con ventas del BCRA por encima del techo.
   fuentes:
@@ -2903,10 +3216,11 @@
     url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A6770.pdf
 - id: p.regimen.cepo-2019
   tipo: regimen_cambiario
-  nombre: Cepo cambiario (2019–2023)
-  nombre_corto: Cepo 2019–23
+  nombre: Cepo cambiario con deslizamiento administrado (2019–2023)
+  nombre_corto: Cepo, crawl administrado
   desde: 2019-09-01
   hasta: 2023-12-13
+  confianza: {desde: alta, hasta: alta}
   descripcion: Controles de cambio con acceso restringido al mercado oficial, tipo oficial con deslizamiento administrado
     y varios tipos de cambio paralelos.
   fuentes:
@@ -2934,10 +3248,11 @@
     url: https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/informe-monetario-mensual-dic-2023.pdf
 - id: p.regimen.crawling-peg-2023
   tipo: regimen_cambiario
-  nombre: Crawling peg con cepo (2023–2025)
-  nombre_corto: Crawling peg
+  nombre: Cepo cambiario con salto y crawling peg preanunciado (2023–2025)
+  nombre_corto: Cepo, salto y crawl fijo
   desde: 2023-12-13
   hasta: 2025-04-14
+  confianza: {desde: alta, hasta: alta}
   descripcion: Devaluación a 800 pesos por dólar y deslizamiento preanunciado del 2 % mensual, reducido al 1 % mensual desde
     febrero de 2025, con los controles de cambio vigentes.
   fuentes:
@@ -2957,13 +3272,30 @@
     referencia: BCRA, Comunicación "A" 8226 («resolución con vigencia a partir del 14/04/25»)
     publicado: 2025-04-11
     url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf
-  notas: El deslizamiento mensual pasó del 2 % al 1 % en febrero de 2025.
+  - para: hasta
+    tipo: norma
+    referencia: 'Decreto 269/2025 (DNU, 11/4/2025): deroga el Decreto 28/2023 (dólar blend) desde su publicación; BO n.º 35647,
+      p. 5'
+    publicado: 2025-04-14
+    pagina: '5'
+    url: https://www.argentina.gob.ar/normativa/nacional/norma-411653
+  - para: hasta
+    tipo: comunicacion_bcra
+    referencia: 'BCRA, Comunicación "A" 8227: aplica la derogación del Decreto 28/23 dispuesta por el Decreto 269/25 «a partir
+      del 14/04/25»'
+    publicado: 2025-04-14
+    url: https://www.bcra.gob.ar/Pdfs/comytexord/A8227.pdf
+  notas: 'El deslizamiento mensual pasó del 2 % al 1 % desde el 1/2/2025 (BCRA, comunicado del 14/1/2025). Dólar blend: las
+    exportaciones liquidaban el 80 % en el mercado oficial y el 20 % con operaciones de contado con liquidación, desde el
+    Decreto 28/2023 (DNU, BO 13/12/2023, vigente ese día) hasta el Decreto 269/2025 (BO y vigencia 14/4/2025), que lo deroga;
+    el BCRA lo aplicó con la Comunicación "A" 8227. El 80/20 no cambió en ese lapso.'
 - id: p.regimen.bandas-2025
   tipo: regimen_cambiario
   nombre: Bandas de flotación (desde abril de 2025)
   nombre_corto: Bandas 2025
   desde: 2025-04-14
   hasta: null
+  confianza: {desde: alta}
   descripcion: Flotación del peso entre una banda de 1.000 a 1.400 pesos por dólar que se ampliaba 1 % mensual, con compras
     del BCRA en el piso y ventas en el techo; fin del cepo para personas humanas.
   fuentes:
@@ -3047,6 +3379,7 @@
   desde:
     igual_a: p.regimen.convertibilidad.hasta
   hasta: 2008-03-13
+  confianza: {hasta: alta}
   referencia_curso: Cronograma 2026 de la materia, clase 8–9
   fuentes:
   - para: hasta
@@ -3063,6 +3396,7 @@
   desde: 2008-03-13
   hasta:
     igual_a: p.gobierno.macri.desde
+  confianza: {desde: alta}
   referencia_curso: Cronograma 2026 de la materia, clase 10
   fuentes:
   - para: desde
@@ -3100,3 +3434,93 @@
     igual_a: p.gobierno.milei.desde
   hasta: null
   referencia_curso: Cronograma 2026 de la materia, clase 13
+- id: p.episodio.hiperinflacion-1989-1990
+  tipo: episodio
+  nombre: Hiperinflación de 1989–1990
+  nombre_corto: Hiperinflación 1989–90
+  desde: 1989-02-06
+  hasta: 1990-04-01
+  confianza: {desde: media, hasta: alta}
+  descripcion: Dos brotes de inflación mensual de tres dígitos o cerca, con una tregua en agosto–noviembre de 1989 (Plan Bunge
+    y Born). El IPC subió 196,6 % en julio de 1989 y 95,5 % en marzo de 1990.
+  fuentes:
+  - para: desde
+    tipo: secundaria
+    referencia: 'Almansi, Aquiles y Rodríguez, Carlos (1989), «Reforma monetaria y financiera en hiperinflación», CEMA, Documento
+      de Trabajo n.º 67: «La economía argentina entró en un claro proceso hiperinflacionario a partir del día 6 de Febrero de
+      1989. En esa fecha el Banco Central abandonó la política de vender divisas en licitaciones públicas»'
+    publicado: 1989-08
+    pagina: '1'
+    url: https://ucema.edu.ar/sites/default/files/2025-12/67.pdf
+  - para: desde
+    tipo: comunicacion_bcra
+    referencia: BCRA, Comunicación "A" 1326 (6/2/1989), con vigencia desde la apertura de los mercados del 7/2/1989
+    publicado: 1989-02-06
+    url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1326.pdf
+  - para: hasta
+    tipo: convencional
+    nota: 'Fin convencional: el último mes con inflación mensual por encima del 50 % es marzo de 1990 (95,5 %); en abril baja
+      a 11,4 % y no vuelve a superar ese nivel.'
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Fischer, Stanley; Sahay, Ratna y Végh, Carlos (2002), «Modern Hyper- and High Inflations», NBER Working Paper
+      8930, tabla 2: Argentina, «May-89 Mar-90», 11 meses'
+    publicado: 2002-05
+    pagina: '46'
+    url: https://www.nber.org/papers/w8930.pdf
+  - para: hasta
+    tipo: secundaria
+    referencia: 'Kiguel, Miguel y Liviatan, Nissan (1995), «Stopping Three Big Inflations: Argentina, Brazil, and Peru», en
+      Dornbusch y Edwards (eds.), Reform, Recovery, and Growth, NBER y University of Chicago Press: el Plan Bonex «failed to
+      control inflation, and the government responded with a new stabilization effort in March 1990 (Decree 435)»'
+    publicado: '1995'
+    pagina: '394'
+    url: https://www.nber.org/system/files/chapters/c7663/c7663.pdf
+  fases:
+  - id: p.episodio.hiperinflacion-1989
+    nombre: Primer brote (febrero–diciembre de 1989)
+    nombre_corto: Primer brote
+    desde: 1989-02-06
+    hasta: 1989-12-12
+    confianza: {desde: media, hasta: media}
+    descripcion: La inflación mensual pasa del 50 % en mayo, junio y julio de 1989 (78,5, 114,5 y 196,6 %); con el Plan Bunge
+      y Born baja a 37,9 % en agosto y a menos del 10 % de septiembre a noviembre.
+    fuentes:
+    - para: desde
+      tipo: secundaria
+      referencia: Almansi y Rodríguez (1989), CEMA, Documento de Trabajo n.º 67
+      publicado: 1989-08
+      pagina: '1'
+      url: https://ucema.edu.ar/sites/default/files/2025-12/67.pdf
+    - para: hasta
+      tipo: comunicacion_bcra
+      referencia: 'BCRA, Comunicación "A" 1584 (11/12/1989): mercados oficial y libre «a partir del 12.12.89»; termina el tipo
+        fijo del Plan Bunge y Born'
+      publicado: 1989-12-11
+      url: https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A1584.pdf
+    notas: El corte del 12/12/1989 es criterio de Vaivén; la literatura da «diciembre de 1989», sin día.
+  - id: p.episodio.hiperinflacion-1990
+    nombre: Segundo brote (diciembre de 1989–marzo de 1990)
+    nombre_corto: Segundo brote
+    desde: 1989-12-12
+    hasta: 1990-04-01
+    confianza: {desde: media, hasta: alta}
+    descripcion: La inflación mensual sube a 40,1 % en diciembre de 1989 y pasa del 50 % en enero, febrero y marzo de 1990
+      (79,2, 61,6 y 95,5 %).
+    fuentes:
+    - para: desde
+      tipo: secundaria
+      referencia: 'Kiguel y Liviatan (1995): «a new inflationary explosion started in December 1989, prompted by a new run toward
+        foreign currency as the government announced the Plan Bonex»'
+      publicado: '1995'
+      pagina: '397'
+      url: https://www.nber.org/system/files/chapters/c7663/c7663.pdf
+    - para: hasta
+      tipo: convencional
+      nota: 'Fin convencional: marzo de 1990 es el último mes por encima del 50 %.'
+  notas: 'Criterio de Cagan (1956, p. 25, citado por Kiguel y Liviatan, 1995, p. 371): una hiperinflación empieza el mes en que
+    los precios suben más del 50 % y termina el mes anterior a que la suba baje de ese nivel y se mantenga abajo al menos un
+    año. Con ese criterio va de mayo de 1989 a marzo de 1990: el IPC subió 78,5, 114,5 y 196,6 % en mayo, junio y julio de
+    1989, y 79,2, 61,6 y 95,5 % en enero, febrero y marzo de 1990. Entre los dos brotes no pasó un año por debajo del 50 %, así
+    que al pie de la letra es un solo episodio (Fischer, Sahay y Végh, 2002, tabla 2: mayo de 1989 a marzo de 1990, 11 meses).
+    Las cifras son las de la serie del IPC de Vaivén y coinciden con Kiguel y Liviatan (1995), tabla 12.A.2.'
