@@ -6,3 +6,7 @@ export {
 export { atraso, type Atraso, type DocumentoAtraso } from "./atraso";
 export { ErrorFecha, PASO, etiqueta, frecuenciasPorFecha, indiceFin, indiceMes, type FrecuenciaRegular } from "./fechas";
 export type * from "./tipos";
+export {
+  ESQUEMA_EVENTOS, ESQUEMA_PERIODOS, TIPOS_PERIODO, diasDe, periodoDeCadaFecha, periodosDe, rangoLegible, seCruzan, vigenteEl,
+  type DocumentoEventos, type DocumentoPeriodos, type Evento, type FuentePeriodo, type Mandato, type Periodo, type TipoPeriodo,
+} from "./periodos";

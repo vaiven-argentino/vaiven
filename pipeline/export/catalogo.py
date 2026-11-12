@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from pipeline.comun import ErrorPipeline, escribir_json
+from pipeline.export import periodos as export_periodos
 from pipeline.export.series import URL_SITIO, ruta_csv_relativa
 
 PERFIL_DATAPACKAGE = "https://datapackage.org/profiles/2.0/datapackage.json"
@@ -137,7 +138,8 @@ def quiebres_export(quiebres: dict[str, dict]) -> list[dict]:
     return salida
 
 
-def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_datos: str) -> dict:
+def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_datos: str,
+                con_periodos: bool = False) -> dict:
     recursos = []
     for vid, doc in sorted(documentos.items()):
         recursos.append({
@@ -175,7 +177,8 @@ def datapackage(documentos: dict[str, dict], fuentes: dict[str, dict], version_d
         "licenses": [{"name": "CC-BY-4.0", "path": "https://creativecommons.org/licenses/by/4.0/",
                       "title": "Creative Commons Attribution 4.0"}],
         "contributors": [{"title": "Camilo Gómez Ortega von Zeschau", "roles": ["creator"]}],
-        "resources": recursos,
+        "resources": recursos + (export_periodos.recursos_datapackage(PERFIL_RECURSO, PERFIL_TABLA, CC_BY)
+                                 if con_periodos else []),
     }
 
 
@@ -219,15 +222,28 @@ def especificacion_vega(serie_meta: dict, doc: dict) -> dict:
 
 
 def escribir_generales(dir_export: Path, series: list[dict], documentos: dict, fuentes: dict, quiebres: dict,
-                       version_datos: str, ruta_inventario: Path | None = None, signos: list[dict] | None = None) -> None:
+                       version_datos: str, ruta_inventario: Path | None = None, signos: list[dict] | None = None,
+                       periodos_eventos: tuple[list[dict], list[dict]] | None = None) -> None:
     usa_bibliografia = any(s.get("bibliografia") for s in series)
     inventario = leer_inventario(ruta_inventario) if usa_bibliografia and ruta_inventario else {}
-    escribir_json(dir_export / "catalogo.json", catalogo(series, documentos, version_datos, inventario))
+    doc_catalogo = catalogo(series, documentos, version_datos, inventario)
+    if periodos_eventos is not None:
+        # Las etapas del curso se nombran como de la cátedra solo cuando se publique la bibliografía (SPEC 12).
+        doc_p = export_periodos.documento_periodos(periodos_eventos[0], version_datos, PUBLICAR_BIBLIOGRAFIA)
+        doc_e = export_periodos.documento_eventos(periodos_eventos[1], version_datos)
+        escribir_json(dir_export / "periodos.json", doc_p)
+        escribir_json(dir_export / "eventos.json", doc_e)
+        export_periodos.escribir_csv(dir_export, doc_p, doc_e)
+        doc_catalogo["registros"] = {
+            "periodos": {"archivo": "periodos.json", "esquema": doc_p["esquema"], "tipos": doc_p["tipos"]},
+            "eventos": {"archivo": "eventos.json", "esquema": doc_e["esquema"], "cantidad": len(doc_e["eventos"])},
+        }
+    escribir_json(dir_export / "catalogo.json", doc_catalogo)
     escribir_json(dir_export / "auxiliares.json", auxiliares(series, documentos, version_datos))
     escribir_json(dir_export / "quiebres.json", quiebres_export(quiebres))
     if signos is not None:
         escribir_json(dir_export / "auxiliares" / "signos-monetarios.json", signos_monetarios(signos, version_datos))
-    escribir_json(dir_export / "datapackage.json", datapackage(documentos, fuentes, version_datos))
+    escribir_json(dir_export / "datapackage.json", datapackage(documentos, fuentes, version_datos, periodos_eventos is not None))
     for s in series:
         doc = documentos.get(f"{s['id']}.{s['variante_por_defecto']}")
         if doc and not s.get("auxiliar"):

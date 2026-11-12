@@ -31,6 +31,9 @@ it("cada llamada tarda pocos milisegundos con la caché caliente", async () => {
       paises: ["ARG", "USA", "CHN", "MEX", "BRA", "BOL", "CHL", "COL", "ECU", "GUY", "PRY", "PER", "SUR", "URY", "VEN", "WLD", "LCN", "EUU", "EMU"],
     } }),
     citar: () => cliente.callTool({ name: "citar", arguments: { id: "reservas" } }),
+    "listar_periodos (compacta)": () => cliente.callTool({ name: "listar_periodos", arguments: {} }),
+    "listar_periodos (ministros)": () => cliente.callTool({ name: "listar_periodos", arguments: { tipo: "ministro" } }),
+    "periodo_en_fecha (diciembre de 2001)": () => cliente.callTool({ name: "periodo_en_fecha", arguments: { fecha: "2001-12" } }),
   };
   const tiempos: Record<string, string> = {};
   for (const [nombre, f] of Object.entries(llamadas)) {

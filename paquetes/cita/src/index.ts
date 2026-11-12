@@ -123,3 +123,9 @@ export function bibtex(d: DatosCita, transformacion?: string, entidad?: string |
     `}`,
   ].join("\n");
 }
+
+/** Cita de los registros de períodos o eventos (export/periodos.json y eventos.json), igual en la web y en el MCP. */
+export function citaRegistro(registro: "periodos" | "eventos", version_datos: string, sitio = "https://vaiven.argentino.workers.dev"): string {
+  const nombre = registro === "periodos" ? "Períodos de la política económica argentina, 1970–hoy" : "Eventos económicos argentinos, 1970–hoy";
+  return `Vaivén (${version_datos.slice(0, 4)}). ${nombre}. Versión de datos ${version_datos.slice(0, 10)}. ${sitio}/periodos/`;
+}

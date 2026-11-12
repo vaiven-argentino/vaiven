@@ -1,0 +1,676 @@
+{
+  "esquema": "eventos-1.0",
+  "version_datos": "2026-11-12T03:11:09Z",
+  "descripcion": "Hitos económicos e institucionales con efecto económico, 1970–hoy. `fecha` es la del hecho que nombra (anuncio, sanción, firma); `vigencia`, si es otra, la de su entrada en vigor.",
+  "fuente": "metadatos/eventos.yaml",
+  "licencia": "CC-BY-4.0",
+  "categorias": [
+    {
+      "id": "cambiario",
+      "nombre": "Cambiario"
+    },
+    {
+      "id": "monetario",
+      "nombre": "Monetario"
+    },
+    {
+      "id": "financiero",
+      "nombre": "Financiero"
+    },
+    {
+      "id": "fiscal",
+      "nombre": "Fiscal"
+    },
+    {
+      "id": "deuda",
+      "nombre": "Deuda"
+    },
+    {
+      "id": "crisis",
+      "nombre": "Crisis"
+    },
+    {
+      "id": "institucional",
+      "nombre": "Institucional"
+    }
+  ],
+  "eventos": [
+    {
+      "id": "e.1975-06-04.rodrigazo",
+      "fecha": "1975-06-04",
+      "vigencia": "1975-06-09",
+      "nombre": "Rodrigazo: plan de ajuste de Celestino Rodrigo",
+      "nombre_corto": "Rodrigazo",
+      "categoria": "cambiario",
+      "descripcion": "El ministro de Economía Celestino Rodrigo anunció una fuerte devaluación del peso junto con aumentos de tarifas públicas y combustibles.",
+      "fuentes": [
+        {
+          "tipo": "secundaria",
+          "referencia": "Vitto, Cecilia (2013). «La política económica del tercer gobierno peronista y las principales rupturas entre las gestiones de Gelbard y Rodrigo». Cadernos PROLAM/USP, año 12, vol. 1, pp. 9-24; p. 13",
+          "publicado": "2013",
+          "pagina": "13",
+          "url": "https://journals.usp.br/prolam/article/download/82513/108516/197344"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "BCRA, Memoria anual 1975, p. 76: desde el 9/6/1975 el tipo comercial pasa de 10 a 26 pesos por dólar y el financiero de 15,05 a 30 (Resolución 8 del Ministerio de Economía)",
+          "publicado": "1976",
+          "pagina": "76",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/Memorias/mem1975.pdf"
+        }
+      ]
+    },
+    {
+      "id": "e.1977-02-14.ley-entidades-financieras",
+      "fecha": "1977-02-14",
+      "nombre": "Ley de Entidades Financieras 21.526",
+      "nombre_corto": "Ley 21.526",
+      "categoria": "financiero",
+      "descripcion": "Ley de facto que estableció el nuevo régimen de las entidades financieras, eje de la reforma financiera de 1977 junto con la descentralización de depósitos (Ley 21.495).",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Ley 21.526, sanción 1977-02-14, BO n.º 23.602, p. 3",
+          "publicado": "1977-02-21",
+          "pagina": "3",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-16071"
+        },
+        {
+          "tipo": "norma",
+          "referencia": "Ley 21.495 (descentralización de depósitos), sanción 1977-01-17, BO n.º 23.581, p. 2",
+          "publicado": "1977-01-21",
+          "pagina": "2",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-183491"
+        }
+      ]
+    },
+    {
+      "id": "e.1978-12-20.tablita",
+      "fecha": "1978-12-20",
+      "nombre": "Anuncio de la «tablita» cambiaria",
+      "nombre_corto": "Tablita",
+      "categoria": "cambiario",
+      "descripcion": "El equipo económico de Martínez de Hoz anunció un sendero preanunciado y decreciente de devaluación mensual del peso, junto con pautas para los salarios públicos y el crédito interno.",
+      "fuentes": [
+        {
+          "tipo": "secundaria",
+          "referencia": "Dornbusch, Rudiger y de Pablo, Juan Carlos (1990). «From Martinez de Hoz to Alfonsin», en Sachs, Jeffrey D. (ed.), Developing Country Debt and Economic Performance, vol. 2, University of Chicago Press / NBER; p. 67",
+          "publicado": "1990",
+          "pagina": "67",
+          "url": "https://www.nber.org/chapters/c8925.pdf"
+        }
+      ]
+    },
+    {
+      "id": "e.1980-03-28.liquidacion-bir",
+      "fecha": "1980-03-28",
+      "nombre": "Liquidación del Banco de Intercambio Regional (BIR)",
+      "nombre_corto": "Cierre del BIR",
+      "categoria": "crisis",
+      "descripcion": "Cayó el Banco de Intercambio Regional, entonces el mayor banco privado del país, y el BCRA dispuso su liquidación; el hecho abrió la crisis bancaria de 1980.",
+      "fuentes": [
+        {
+          "tipo": "secundaria",
+          "referencia": "Gómez R., Hernando J. y Montenegro T., Armando (1980). «Breve descripción de los recientes desarrollos de la economía argentina». Revista del Banco de la República (Bogotá), julio de 1980; p. 968",
+          "publicado": "1980-07",
+          "pagina": "968",
+          "url": "https://publicaciones.banrepcultural.org/index.php/banrep/article/download/15143/15536/30560"
+        }
+      ]
+    },
+    {
+      "id": "e.1982-07-05.seguros-de-cambio",
+      "fecha": "1982-07-05",
+      "vigencia": "1982-07-06",
+      "nombre": "Seguros de cambio y reforma financiera de 1982 (licuación de deudas)",
+      "nombre_corto": "Seguros de cambio",
+      "categoria": "financiero",
+      "descripcion": "El BCRA estableció seguros de cambio para los préstamos privados en moneda extranjera y un régimen de préstamos con tasas reguladas, medidas asociadas a la licuación de los pasivos de las empresas.",
+      "fuentes": [
+        {
+          "tipo": "comunicacion_bcra",
+          "referencia": "Comunicaciones «A» 136 y 137 (CAMEX 1-25 y 1-26, seguros de cambio)",
+          "publicado": "1982-07-05",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0137.pdf"
+        },
+        {
+          "tipo": "comunicacion_bcra",
+          "referencia": "Comunicación «A» 144 (REMON 1-22, régimen del préstamo básico y tasa regulada)",
+          "publicado": "1982-07-05",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0144.pdf"
+        }
+      ]
+    },
+    {
+      "id": "e.1985-06-14.plan-austral",
+      "fecha": "1985-06-14",
+      "vigencia": "1985-06-15",
+      "nombre": "Plan Austral",
+      "nombre_corto": "Plan Austral",
+      "categoria": "monetario",
+      "descripcion": "Por el Decreto 1096/1985 el gobierno creó el austral como nueva unidad monetaria, en reemplazo del peso argentino, como eje de un plan de estabilización.",
+      "fuentes": [
+        {
+          "tipo": "comunicacion_bcra",
+          "referencia": "Comunicación «A» 674: remite «copia del Decreto 1096 de fecha 14.6.85 … por el que se instituye a partir del 15.6.85 un nuevo ordenamiento monetario»",
+          "publicado": "1985-06-15",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A0674.pdf"
+        }
+      ]
+    },
+    {
+      "id": "e.1989-07-01.hiperinflacion",
+      "fecha": "1989-07-01",
+      "nombre": "Pico de la primera hiperinflación (julio de 1989)",
+      "nombre_corto": "Hiperinflación",
+      "categoria": "crisis",
+      "descripcion": "La inflación minorista mensual alcanzó su máximo histórico en julio de 1989, con una suba del IPC de 196,6% respecto de junio.",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "INDEC, IPC histórico nivel general (serie 178.1_NL_GENERAL_0_0_13; en Vaivén, f.indec.ipc-historico-1943-2008); variación jul-1989/jun-1989",
+          "nota": "Publicación: sin fecha (consulta 2026-10-24).",
+          "url": "https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13"
+        }
+      ]
+    },
+    {
+      "id": "e.1990-01-03.plan-bonex",
+      "fecha": "1990-01-03",
+      "nombre": "Plan Bonex (Decreto 36/1990)",
+      "nombre_corto": "Plan Bonex",
+      "categoria": "financiero",
+      "descripcion": "Decreto de necesidad y urgencia que dispuso que las entidades financieras devolvieran los depósitos a plazo fijo en australes con Bonos Externos 1989 (Bonex) y que esos bonos se usaran para canjear deuda pública interna.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Decreto 36/1990 (DNU), sanción 1990-01-03, BO n.º 26.795, p. 9",
+          "publicado": "1990-01-05",
+          "pagina": "9",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-2559"
+        }
+      ]
+    },
+    {
+      "id": "e.1991-03-27.convertibilidad",
+      "fecha": "1991-03-27",
+      "vigencia": "1991-04-01",
+      "nombre": "Ley de Convertibilidad 23.928",
+      "nombre_corto": "Convertibilidad",
+      "categoria": "cambiario",
+      "descripcion": "El Congreso sancionó la convertibilidad del austral con el dólar a 10.000 australes por dólar desde el 1 de abril de 1991 y prohibió la indexación.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Ley 23.928, sanción 1991-03-27, BO n.º 27.104, p. 1",
+          "publicado": "1991-03-28",
+          "pagina": "1",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-328"
+        }
+      ]
+    },
+    {
+      "id": "e.1993-04-07.plan-brady",
+      "fecha": "1993-04-07",
+      "nombre": "Firma del Plan Brady",
+      "nombre_corto": "Plan Brady",
+      "categoria": "deuda",
+      "descripcion": "Argentina cerró la reestructuración de su deuda con la banca comercial: se firmaron los convenios de garantía y de agencia de los bonos Par y Discount (Bonos Brady).",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Resolución 809/2010 MEyFP: cita los «Collateral Pledge Agreements» con el Federal Reserve Bank of New York y la enmienda del convenio de agencia con Citibank, «de fecha 7 de abril de 1993»",
+          "publicado": "2010-12-06",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-176099"
+        },
+        {
+          "tipo": "norma",
+          "referencia": "Decreto 2321/1992 (autoriza el acuerdo con la banca acreedora, «Plan Financiero República Argentina 1992»), sanción 1992-12-04",
+          "publicado": "1992-12-14",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-10994"
+        }
+      ]
+    },
+    {
+      "id": "e.1994-12-20.efecto-tequila",
+      "fecha": "1994-12-20",
+      "nombre": "Devaluación del peso mexicano (inicio del efecto Tequila)",
+      "nombre_corto": "Efecto Tequila",
+      "categoria": "crisis",
+      "descripcion": "México elevó alrededor de 15% el techo de su banda cambiaria y días después dejó flotar el peso; la crisis se propagó a otros mercados emergentes, entre ellos la Argentina.",
+      "fuentes": [
+        {
+          "tipo": "secundaria",
+          "referencia": "Borja, Galia (2025). «Lecciones institucionales y fortalecimiento de mercados tras la crisis de 1994», en Campos Vázquez, R. M. y Vélez Grajales, R. (coords.), A 30 años de la crisis financiera de 1994-1995, Centro de Estudios Espinosa Yglesias, pp. 97-114; p. 101 (separata publicada por el Banco de México)",
+          "publicado": "2025",
+          "pagina": "101",
+          "url": "https://www.banxico.org.mx/publicaciones-y-prensa/articulos-y-otras-publicaciones/%7B482713D0-BFA8-F600-BBC2-A58025AFD4E8%7D.pdf"
+        }
+      ]
+    },
+    {
+      "id": "e.2000-12-18.blindaje",
+      "fecha": "2000-12-18",
+      "vigencia": "2001-01-12",
+      "nombre": "Blindaje financiero",
+      "nombre_corto": "Blindaje",
+      "categoria": "deuda",
+      "descripcion": "El FMI anunció un acuerdo con el gobierno argentino sobre un programa económico reforzado, base del paquete de asistencia financiera internacional conocido como «blindaje».",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "FMI, News Brief 00/117: «Statement by IMF Managing Director Horst Köhler on Agreement on Strengthened Argentine Program»",
+          "publicado": "2000-12-18",
+          "url": "https://www.imf.org/external/np/sec/nb/2000/nb00117.htm"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "FMI, comunicado de prensa 01/3: «IMF Approves Augmentation of Argentina's Stand-By Credit» (DEG 10.600 millones, unos US$ 14.000 millones)",
+          "publicado": "2001-01-12",
+          "url": "https://www.imf.org/external/np/sec/pr/2001/pr0103.htm"
+        }
+      ]
+    },
+    {
+      "id": "e.2001-07-30.deficit-cero",
+      "fecha": "2001-07-30",
+      "vigencia": "2001-07-31",
+      "nombre": "Ley de Déficit Cero (25.453)",
+      "nombre_corto": "Déficit cero",
+      "categoria": "fiscal",
+      "descripcion": "El Congreso sancionó la Ley de Equilibrio Fiscal («déficit cero»), que modificó varios impuestos y fijó como regla que el gasto del Estado nacional no superara sus ingresos.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Ley 25.453, sanción 2001-07-30, BO n.º 29.700, p. 2",
+          "publicado": "2001-07-31",
+          "pagina": "2",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-68098"
+        }
+      ]
+    },
+    {
+      "id": "e.2001-12-01.corralito",
+      "fecha": "2001-12-01",
+      "nombre": "Corralito (Decreto 1570/2001)",
+      "nombre_corto": "Corralito",
+      "categoria": "financiero",
+      "descripcion": "El gobierno restringió los retiros de efectivo de los bancos y las transferencias al exterior, y prohibió exportar billetes y monedas extranjeras.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Decreto 1570/2001 (DNU), sanción 2001-12-01, BO n.º 29.787 (extraordinario), p. 1",
+          "publicado": "2001-12-03",
+          "pagina": "1",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-70355"
+        }
+      ]
+    },
+    {
+      "id": "e.2001-12-23.anuncio-default",
+      "fecha": "2001-12-23",
+      "nombre": "Anuncio de la suspensión de pagos de la deuda pública",
+      "nombre_corto": "Default",
+      "categoria": "deuda",
+      "descripcion": "En su discurso de asunción ante la Asamblea Legislativa, el presidente Adolfo Rodríguez Saá anunció la suspensión del pago de la deuda pública externa.",
+      "fuentes": [
+        {
+          "tipo": "periodistica",
+          "referencia": "Página/12, «El día que Rodríguez Saá subió al sulky prestado» (edición del 24/12/2001; el discurso fue «ayer»)",
+          "publicado": "2001-12-24",
+          "url": "https://www.pagina12.com.ar/2001/01-12/01-12-24/pag04.htm"
+        }
+      ]
+    },
+    {
+      "id": "e.2002-01-06.ley-emergencia",
+      "fecha": "2002-01-06",
+      "nombre": "Ley de Emergencia Pública 25.561",
+      "nombre_corto": "Ley de Emergencia",
+      "categoria": "cambiario",
+      "descripcion": "El Congreso declaró la emergencia pública, derogó la paridad fija de la convertibilidad y facultó al Poder Ejecutivo para establecer el nuevo régimen cambiario.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Ley 25.561, sanción 2002-01-06, BO n.º 29.810, p. 1",
+          "publicado": "2002-01-07",
+          "pagina": "1",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-71477"
+        }
+      ]
+    },
+    {
+      "id": "e.2002-02-03.pesificacion-asimetrica",
+      "fecha": "2002-02-03",
+      "nombre": "Pesificación asimétrica (Decreto 214/2002)",
+      "nombre_corto": "Pesificación",
+      "categoria": "financiero",
+      "descripcion": "Decreto que convirtió a pesos los depósitos en moneda extranjera a $1,40 por dólar y las deudas con el sistema financiero a $1 por dólar, y creó el Coeficiente de Estabilización de Referencia (CER).",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Decreto 214/2002 (DNU), sanción 2002-02-03, BO n.º 29.830",
+          "publicado": "2002-02-04",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-72017"
+        }
+      ]
+    },
+    {
+      "id": "e.2005-02-25.canje-deuda",
+      "fecha": "2005-02-25",
+      "vigencia": "2005-06-02",
+      "nombre": "Cierre del canje de deuda de 2005",
+      "nombre_corto": "Canje 2005",
+      "categoria": "deuda",
+      "descripcion": "Venció el período de adhesión a la oferta de canje de los bonos en cesación de pagos desde 2001 por nuevos bonos y valores ligados al PBI.",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "República Argentina, suplemento de prospecto (SEC, formulario 424B5): cronograma con período de adhesión del 14/1 al 25/2/2005",
+          "publicado": "2005-01-12",
+          "url": "https://www.sec.gov/Archives/edgar/data/914021/000095012305000302/y04567e424b5.htm"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "República Argentina, formulario 424B3 (SEC): «the exchange offer that settled on June 2, 2005»",
+          "publicado": "2005-08-11",
+          "url": "https://www.sec.gov/Archives/edgar/data/914021/000090342305000595/roa424b3-0810.htm"
+        },
+        {
+          "tipo": "periodistica",
+          "referencia": "Al Jazeera, «Argentina gets nod for debt swap»",
+          "publicado": "2005-03-03",
+          "url": "https://www.aljazeera.com/news/2005/3/3/argentinia-gets-nod-for-debt-swap"
+        }
+      ]
+    },
+    {
+      "id": "e.2005-12-15.pago-fmi",
+      "fecha": "2005-12-15",
+      "vigencia": "2006-01-04",
+      "nombre": "Cancelación anticipada de la deuda con el FMI",
+      "nombre_corto": "Pago al FMI",
+      "categoria": "deuda",
+      "descripcion": "El gobierno anunció y dispuso por decreto el pago total y anticipado de la deuda con el FMI con reservas del BCRA, por DEG 6.876 millones.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Decreto 1601/2005 (cancelación total de la deuda con el FMI), sanción 2005-12-15, BO n.º 30.803, p. 2",
+          "publicado": "2005-12-16",
+          "pagina": "2",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-112208"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "FMI, comunicado de prensa 05/278: «Argentina Announces its Intention to Complete Early Repayment of its Entire Outstanding Obligations to the IMF»",
+          "publicado": "2005-12-15",
+          "url": "https://www.imf.org/external/np/sec/pr/2005/pr05278.htm"
+        },
+        {
+          "tipo": "norma",
+          "referencia": "Resolución Conjunta 1/2006 SF y 4/2006 SH: Letra Intransferible por US$ 9.530.110.689, «fecha de emisión: 3 de enero de 2006»",
+          "publicado": "2006-01-06",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-112815"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "FMI, Press Release 06/15: el repago de la Argentina se completó el 4 de enero de 2006",
+          "nota": "Publicación: 2006-01 |."
+        }
+      ]
+    },
+    {
+      "id": "e.2007-01-29.intervencion-indec",
+      "fecha": "2007-01-29",
+      "nombre": "Intervención del INDEC",
+      "nombre_corto": "Intervención INDEC",
+      "categoria": "institucional",
+      "descripcion": "Fue removida del área de precios del INDEC su directora, Graciela Bevacqua; el hecho se toma como inicio de la intervención del organismo, que afectó la confiabilidad del IPC.",
+      "fuentes": [
+        {
+          "tipo": "periodistica",
+          "referencia": "La Nación, «Precios: revelan cómo el gobierno intervino el Indec»: «la remoción, el 29 de enero pasado, de Graciela Bevacqua del área de precios»",
+          "publicado": "2007-03-17",
+          "url": "https://www.lanacion.com.ar/economia/precios-revelan-como-el-gobierno-intervino-el-indec-nid892253"
+        }
+      ]
+    },
+    {
+      "id": "e.2008-03-10.resolucion-125",
+      "fecha": "2008-03-10",
+      "vigencia": "2008-03-13",
+      "nombre": "Resolución 125/2008 (retenciones móviles)",
+      "nombre_corto": "Resolución 125",
+      "categoria": "fiscal",
+      "descripcion": "El Ministerio de Economía y Producción fijó derechos de exportación móviles para cereales y oleaginosas, atados a los precios internacionales; la medida desató el conflicto con el sector agropecuario.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Resolución 125/2008 MEyP, sanción (firma) 2008-03-10, BO n.º 31.364, p. 18",
+          "publicado": "2008-03-12",
+          "pagina": "18",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-138567"
+        },
+        {
+          "tipo": "periodistica",
+          "referencia": "Página/12, edición del 12/3/2008: el ministro Lousteau presentó el esquema «ayer por la tarde» en conferencia de prensa en la Casa de Gobierno",
+          "publicado": "2008-03-12",
+          "url": "https://www.pagina12.com.ar/imprimir/diario/elpais/1-100535-2008-03-12.html"
+        }
+      ]
+    },
+    {
+      "id": "e.2008-11-20.fin-afjp",
+      "fecha": "2008-11-20",
+      "vigencia": "2008-12-09",
+      "nombre": "Fin de las AFJP (Ley 26.425)",
+      "nombre_corto": "Fin de las AFJP",
+      "categoria": "institucional",
+      "descripcion": "El Congreso unificó el sistema previsional en un único régimen público de reparto, el Sistema Integrado Previsional Argentino (SIPA), y eliminó el régimen de capitalización administrado por las AFJP.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Ley 26.425, sanción 2008-11-20, BO n.º 31.548, p. 1",
+          "publicado": "2008-12-09",
+          "pagina": "1",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-148141"
+        }
+      ]
+    },
+    {
+      "id": "e.2011-10-28.cepo-cambiario",
+      "fecha": "2011-10-28",
+      "vigencia": "2011-10-31",
+      "nombre": "Cepo cambiario (RG AFIP 3210)",
+      "nombre_corto": "Cepo cambiario",
+      "categoria": "cambiario",
+      "descripcion": "La AFIP creó el Programa de Consulta de Operaciones Cambiarias, que condicionó las compras de moneda extranjera a su validación previa.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Resolución General AFIP 3210/2011, sanción 2011-10-28, BO n.º 32.266, p. 38",
+          "publicado": "2011-10-31",
+          "pagina": "38",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-188904"
+        }
+      ]
+    },
+    {
+      "id": "e.2015-12-16.salida-cepo",
+      "fecha": "2015-12-16",
+      "vigencia": "2015-12-17",
+      "nombre": "Salida del cepo cambiario",
+      "nombre_corto": "Fin del cepo",
+      "categoria": "cambiario",
+      "descripcion": "El ministro de Hacienda y Finanzas Públicas, Alfonso Prat-Gay, anunció el levantamiento de las restricciones cambiarias; al día siguiente el BCRA dejó sin efecto la consulta a la AFIP y el tipo de cambio oficial saltó de $9,83 a $13,76.",
+      "fuentes": [
+        {
+          "tipo": "periodistica",
+          "referencia": "Ámbito, «El Gobierno levanta el cepo: se unifica tipo de cambio y se podrán comprar US$2 millones al mes» (anuncio «a las 18 horas y dos minutos de este miércoles»)",
+          "publicado": "2015-12-16",
+          "url": "https://www.ambito.com/el-gobierno-levanta-el-cepo-se-unifica-tipo-cambio-y-se-podran-comprar-us-2-millones-al-mes-n3920079"
+        },
+        {
+          "tipo": "comunicacion_bcra",
+          "referencia": "Comunicación «A» 5850 (CAMEX 1-749), «con vigencia a partir del 17.12.2015 inclusive»",
+          "publicado": "2015-12-17",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A5850.pdf"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "BCRA, Comunicación «A» 3500 (serie diaria): 9,8268 el 16/12/2015 y 13,7633 el 17/12/2015",
+          "publicado": "2026-11-11",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/com3500.xls"
+        }
+      ]
+    },
+    {
+      "id": "e.2016-04-22.pago-holdouts",
+      "fecha": "2016-04-22",
+      "nombre": "Pago a los holdouts y salida del default",
+      "nombre_corto": "Pago a holdouts",
+      "categoria": "deuda",
+      "descripcion": "El Tesoro pagó unos US$ 9.300 millones a tenedores de bonos en cesación de pagos que no habían aceptado los canjes anteriores, con fondos de una emisión de hasta US$ 16.500 millones autorizada por la Ley 27.249.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Ley 27.249 (deroga la «ley cerrojo» y autoriza los pagos), sanción 2016-03-31, BO n.º 33.348, p. 1",
+          "publicado": "2016-04-01",
+          "pagina": "1",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-259940"
+        },
+        {
+          "tipo": "norma",
+          "referencia": "Resolución 146/2016 MHyFP (emisión de Bonos Internacionales por hasta VNO US$ 16.500 millones), sanción 2016-04-21",
+          "publicado": "2016-04-22",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-260740"
+        },
+        {
+          "tipo": "periodistica",
+          "referencia": "El Cronista, «Fin del default: Argentina pagó a los holdouts y Griesa levantó las cautelares» («se acreditaron los u$s 9.300 millones»)",
+          "publicado": "2016-04-22",
+          "url": "https://www.cronista.com/economia-politica/fin-del-default-argentina-pago-a-los-holdouts-y-griesa-levanto-las-cautelares"
+        }
+      ]
+    },
+    {
+      "id": "e.2018-06-20.acuerdo-fmi-2018",
+      "fecha": "2018-06-20",
+      "nombre": "Acuerdo stand-by con el FMI",
+      "nombre_corto": "Stand-by FMI",
+      "categoria": "deuda",
+      "descripcion": "El Directorio del FMI aprobó un acuerdo stand-by con la Argentina por US$ 50.000 millones, con un desembolso inicial de US$ 15.000 millones.",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "FMI, comunicado de prensa 18/245: «IMF Executive Board Approves US$50 Billion Stand-By Arrangement for Argentina»",
+          "publicado": "2018-06-20",
+          "url": "https://www.imf.org/en/News/Articles/2018/06/20/pr18245-argentina-imf-executive-board-approves-us50-billion-stand-by-arrangement"
+        }
+      ]
+    },
+    {
+      "id": "e.2019-08-28.reperfilamiento",
+      "fecha": "2019-08-28",
+      "vigencia": "2019-08-29",
+      "nombre": "Reperfilamiento de la deuda de corto plazo",
+      "nombre_corto": "Reperfilamiento",
+      "categoria": "deuda",
+      "descripcion": "El gobierno postergó por decreto los pagos de las letras del Tesoro de corto plazo: 15% al vencimiento, 25% a los 90 días y el saldo 180 días después.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Decreto 596/2019 (DNU), sanción 2019-08-28, BO n.º 34.185, p. 3",
+          "publicado": "2019-08-29",
+          "pagina": "3",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-327357"
+        }
+      ]
+    },
+    {
+      "id": "e.2020-08-31.reestructuracion-deuda",
+      "fecha": "2020-08-31",
+      "vigencia": "2020-09-04",
+      "nombre": "Resultado de la reestructuración de la deuda en ley extranjera",
+      "nombre_corto": "Reestructuración",
+      "categoria": "deuda",
+      "descripcion": "Argentina anunció que, con la aceptación del 93,40% de los tenedores y las cláusulas de acción colectiva, canjeaba o modificaba el 99,01% de sus bonos elegibles bajo ley extranjera.",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "República Argentina, «The Republic of Argentina Announces Results of Invitation to Exchange» (SEC, formulario FWP)",
+          "publicado": "2020-08-31",
+          "url": "https://www.sec.gov/Archives/edgar/data/914021/000119312520236624/d31762dfwp.htm"
+        }
+      ]
+    },
+    {
+      "id": "e.2022-03-25.acuerdo-fmi-2022",
+      "fecha": "2022-03-25",
+      "nombre": "Acuerdo de facilidades extendidas con el FMI",
+      "nombre_corto": "EFF FMI 2022",
+      "categoria": "deuda",
+      "descripcion": "El Directorio del FMI aprobó un acuerdo de facilidades extendidas con la Argentina por 30 meses y unos US$ 44.000 millones (DEG 31.914 millones).",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "FMI, comunicado de prensa 22/89: «IMF Executive Board Approves 30-month US$44 billion Extended Arrangement for Argentina and Concludes 2022 Article IV Consultation»",
+          "publicado": "2022-03-25",
+          "url": "https://www.imf.org/en/News/Articles/2022/03/25/pr2289-argentina-imf-exec-board-approves-extended-arrangement-concludes-2022-article-iv-consultation"
+        }
+      ]
+    },
+    {
+      "id": "e.2023-12-12.devaluacion",
+      "fecha": "2023-12-12",
+      "vigencia": "2023-12-13",
+      "nombre": "Devaluación del peso (sinceramiento cambiario)",
+      "nombre_corto": "Devaluación 2023",
+      "categoria": "cambiario",
+      "descripcion": "El Ministerio de Economía anunció un tipo de cambio oficial de $800 por dólar, con un deslizamiento posterior de 2% mensual.",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "BCRA, «Nuevo marco de política monetaria y cambiaria» (comunicado del 12/12/2023)",
+          "publicado": "2023-12-12",
+          "url": "https://www.bcra.gob.ar/politica-monetaria/nuevo-marco-de-politica-monetaria-y-cambiaria/"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "BCRA, Comunicación «A» 3500 (serie diaria): 366,50 el 12/12/2023 y 799,975 el 13/12/2023",
+          "publicado": "2026-11-11",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/com3500.xls"
+        }
+      ]
+    },
+    {
+      "id": "e.2025-04-11.acuerdo-fmi-salida-cepo",
+      "fecha": "2025-04-11",
+      "vigencia": "2025-04-14",
+      "nombre": "Acuerdo con el FMI y salida del cepo para personas",
+      "nombre_corto": "FMI y fin del cepo",
+      "categoria": "cambiario",
+      "descripcion": "El Directorio del FMI aprobó un acuerdo de facilidades extendidas por 48 meses y US$ 20.000 millones y el BCRA habilitó a las personas humanas a comprar moneda extranjera sin conformidad previa.",
+      "fuentes": [
+        {
+          "tipo": "oficial",
+          "referencia": "FMI, comunicado de prensa 25/101: «IMF Executive Board Approves 48-month US$20 billion Extended Arrangement for Argentina»",
+          "publicado": "2025-04-12",
+          "url": "https://www.imf.org/en/news/articles/2025/04/12/pr25101-argentina-imf-executive-board-approves-48-month-usd20-billion-extended-arrangement"
+        },
+        {
+          "tipo": "comunicacion_bcra",
+          "referencia": "Comunicación «A» 8226 (CAMEX 1-1041), del 11/4/2025, «con vigencia a partir del 14/04/25»",
+          "publicado": "2025-04-11",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A8226.pdf"
+        },
+        {
+          "tipo": "oficial",
+          "referencia": "BCRA, Comunicación «A» 3500 (serie diaria): 1.078,375 el 11/4/2025 y 1.182,4167 el 14/4/2025",
+          "publicado": "2026-11-11",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/PublicacionesEstadisticas/com3500.xls"
+        }
+      ]
+    }
+  ]
+}

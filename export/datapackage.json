@@ -4,8 +4,8 @@
   "title": "Vaivén: series económicas argentinas, 1970–hoy",
   "description": "Base histórica curada de series económicas argentinas, con variantes de empalme y quiebres documentados.",
   "homepage": "https://vaiven.argentino.workers.dev",
-  "version": "2026-11-11T22:35:39Z",
-  "created": "2026-11-11T22:35:39Z",
+  "version": "2026-11-12T03:11:09Z",
+  "created": "2026-11-12T03:11:09Z",
   "licenses": [
     {
       "name": "CC-BY-4.0",
@@ -2697,6 +2697,168 @@
           "name": "other-at",
           "title": "Bruegel, uso libre con atribución",
           "path": "https://www.bruegel.org/publications/datasets/real-effective-exchange-rates-for-178-countries-a-new-database"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "periodos",
+      "title": "Períodos de la política económica argentina, 1970–hoy",
+      "path": "descargas/csv/periodos.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Gobiernos (con sus mandatos), ministros de Economía, planes, regímenes cambiarios y etapas. También en JSON: periodos.json.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "primaryKey": [
+          "id"
+        ],
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "Identificador estable (p.<tipo>.<slug>)."
+          },
+          {
+            "name": "tipo",
+            "type": "string",
+            "description": "gobierno, ministro, plan, regimen_cambiario o catedra."
+          },
+          {
+            "name": "nombre",
+            "type": "string",
+            "description": "Nombre."
+          },
+          {
+            "name": "nombre_corto",
+            "type": "string",
+            "description": "Rótulo corto."
+          },
+          {
+            "name": "desde",
+            "type": "date",
+            "description": "Primer día (incluido)."
+          },
+          {
+            "name": "hasta",
+            "type": "date",
+            "description": "Día en que termina (excluido); vacío si sigue vigente."
+          },
+          {
+            "name": "caracter",
+            "type": "string",
+            "description": "Gobiernos: constitucional, de_facto o interino."
+          },
+          {
+            "name": "cargo",
+            "type": "string",
+            "description": "Ministros: nombre de la cartera en esa época."
+          },
+          {
+            "name": "orden",
+            "type": "integer",
+            "description": "Etapas: orden."
+          },
+          {
+            "name": "padre",
+            "type": "string",
+            "description": "Mandatos: el gobierno al que pertenecen."
+          },
+          {
+            "name": "corte_desde",
+            "type": "string",
+            "description": "hecho o convencional."
+          },
+          {
+            "name": "corte_hasta",
+            "type": "string",
+            "description": "hecho o convencional."
+          },
+          {
+            "name": "descripcion",
+            "type": "string",
+            "description": "Descripción breve."
+          },
+          {
+            "name": "fuentes",
+            "type": "string",
+            "description": "Fuentes de las fechas, separadas por « | »."
+          }
+        ]
+      },
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
+        }
+      ]
+    },
+    {
+      "$schema": "https://datapackage.org/profiles/2.0/dataresource.json",
+      "name": "eventos",
+      "title": "Eventos económicos argentinos, 1970–hoy",
+      "path": "descargas/csv/eventos.csv",
+      "type": "table",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Hitos puntuales. También en JSON: eventos.json.",
+      "schema": {
+        "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+        "primaryKey": [
+          "id"
+        ],
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "Identificador estable (e.<fecha>.<slug>)."
+          },
+          {
+            "name": "fecha",
+            "type": "date",
+            "description": "Fecha del hecho (anuncio, sanción, firma)."
+          },
+          {
+            "name": "vigencia",
+            "type": "date",
+            "description": "Entrada en vigor, si es otro día."
+          },
+          {
+            "name": "nombre",
+            "type": "string",
+            "description": "Nombre."
+          },
+          {
+            "name": "nombre_corto",
+            "type": "string",
+            "description": "Rótulo corto."
+          },
+          {
+            "name": "categoria",
+            "type": "string",
+            "description": "cambiario, monetario, financiero, fiscal, deuda, crisis o institucional."
+          },
+          {
+            "name": "descripcion",
+            "type": "string",
+            "description": "Descripción breve."
+          },
+          {
+            "name": "fuentes",
+            "type": "string",
+            "description": "Fuentes, separadas por « | »."
+          }
+        ]
+      },
+      "licenses": [
+        {
+          "name": "CC-BY-4.0",
+          "path": "https://creativecommons.org/licenses/by/4.0/",
+          "title": "Creative Commons Attribution 4.0"
         }
       ]
     }
