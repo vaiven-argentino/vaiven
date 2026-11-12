@@ -80,7 +80,7 @@ export const ESQUEMAS = {
     paises: paises.optional().describe(PARAMETRO.comoEnObtener),
   })),
   listar_periodos: conJsonFijo(z.strictObject({
-    tipo: z.enum(["gobierno", "ministro", "plan", "regimen_cambiario", "catedra"]).optional().describe(PARAMETRO.tipoPeriodo),
+    tipo: z.enum(["gobierno", "ministro", "plan", "regimen_cambiario", "catedra", "episodio"]).optional().describe(PARAMETRO.tipoPeriodo),
     por_mandato: z.boolean().optional().describe(PARAMETRO.porMandato),
   })),
   periodo_en_fecha: conJsonFijo(z.strictObject({

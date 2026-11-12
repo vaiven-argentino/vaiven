@@ -144,9 +144,36 @@ describe("con los períodos publicados", () => {
     expect(gob.periodos.every((p) => "fuentes" in p && (p as { fuentes: string[] }).fuentes.length > 0)).toBe(true);
     expect(gob.periodos.at(-1)).toMatchObject({ id: "p.gobierno.milei", hasta: null });
   });
-  it("las etapas del curso no nombran a la cátedra", async () => {
+  it("las etapas del curso no nombran a la cátedra y aclaran que son de un curso", async () => {
     const r = await listarPeriodos(real, { tipo: "catedra" });
     expect(JSON.stringify(r)).not.toMatch(/cátedra|Cronograma/);
     expect(r.periodos).toHaveLength(11);
+    expect(r.aclaracion_etapas).toMatch(/periodización de un curso universitario/);
+  });
+  it("lista los episodios con sus fases y su confianza", async () => {
+    const r = await listarPeriodos(real, { tipo: "episodio" });
+    expect(r.periodos.map((p) => p.id)).toEqual(["p.episodio.hiperinflacion-1989-1990"]);
+    const hiper = r.periodos[0] as { confianza: unknown; fases: Array<{ id: string }> };
+    expect(hiper.confianza).toEqual({ desde: "media", hasta: "alta" });
+    expect(hiper.fases.map((x) => x.id)).toEqual(["p.episodio.hiperinflacion-1989", "p.episodio.hiperinflacion-1990"]);
+  });
+  it("julio de 1989: el dato mensual va a Menem (77 %) y la hiperinflación está vigente", async () => {
+    const r = await periodoEnFecha(real, { fecha: "1989-07" }, HOY);
+    expect(r.episodio.map((p) => p.id)).toEqual(["p.episodio.hiperinflacion-1989-1990"]);
+    const gob = r.asignacion!.gobierno as { promedio_o_suma: string; saldo_fin_de_mes: string; reparto: Array<{ nombre: string; dias: number }> };
+    expect(gob.promedio_o_suma).toBe("Carlos Saúl Menem");
+    expect(gob.saldo_fin_de_mes).toBe("Carlos Saúl Menem");
+    expect(gob.reparto.map((x) => [x.nombre, x.dias])).toEqual([["Raúl Ricardo Alfonsín", 7], ["Carlos Saúl Menem", 24]]);
+  });
+  it("diciembre de 2016: avisa los días sin ministro", async () => {
+    const r = await periodoEnFecha(real, { fecha: "2016-12" }, HOY);
+    expect(r.advertencias.join(" ")).toMatch(/sin ministro de Economía titular ni interino/);
+  });
+  it("avisa las fechas de confianza baja", async () => {
+    const r = await periodoEnFecha(real, { fecha: "1981-12-15" }, HOY);
+    expect(r.gobierno.map((p) => p.id)).toEqual(["p.gobierno.lacoste"]);
+    expect(r.advertencias.join(" ")).toMatch(/Lacoste: la fecha de inicio \(1981-12-11\) es dudosa/);
+    const lista = await listarPeriodos(real, {});
+    expect(lista.periodos.find((p) => p.id === "p.gobierno.lacoste")).toMatchObject({ a_confirmar: ["desde"] });
   });
 });
