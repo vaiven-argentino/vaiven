@@ -1,5 +1,11 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { Ajv2020 } from "ajv/dist/2020.js";
 import { describe, expect, it } from "vitest";
-import { diasDe, periodoDeCadaFecha, periodosDe, rangoLegible, seCruzan, vigenteEl, type DocumentoPeriodos } from "../src";
+import {
+  ESQUEMAS_PERIODOS, ESQUEMA_PERIODOS, diasDe, extremosDudosos, fasesDe, periodoDeCadaFecha, periodosDe, rangoLegible,
+  seCruzan, vigenteEl, type DocumentoPeriodos,
+} from "../src";
 
 const fuente = [{ para: "ambas" as const, tipo: "norma" as const, referencia: "D" }];
 const doc: DocumentoPeriodos = {
@@ -39,6 +45,8 @@ describe("períodos", () => {
     expect(diasDe("1989-04", "trimestral")).toEqual({ desde: "1989-04-01", hasta: "1989-06-30" });
     expect(diasDe("1988", "anual")).toEqual({ desde: "1988-01-01", hasta: "1988-12-31" });
     expect(diasDe("2000-02")).toEqual({ desde: "2000-02-01", hasta: "2000-02-29" });
+    // Las semestrales de la EPH puntual cubren el mes de la onda.
+    expect(diasDe("1989-05", "semestral")).toEqual({ desde: "1989-05-01", hasta: "1989-05-31" });
   });
 
   it("asigna a cada observación el período vigente su último día", () => {
@@ -55,5 +63,34 @@ describe("períodos", () => {
   it("escribe el rango legible", () => {
     expect(rangoLegible(doc.periodos[0])).toBe("10/12/1983–8/7/1989");
     expect(rangoLegible(doc.periodos[2])).toBe("desde el 14/6/1985");
+  });
+
+  it("arma las fases de un episodio como períodos y marca las fechas dudosas", () => {
+    const hiper = {
+      id: "p.episodio.h", tipo: "episodio" as const, nombre: "H", nombre_corto: "H", desde: "1989-02-06", hasta: "1990-04-01",
+      cortes: { desde: "hecho" as const, hasta: "convencional" as const }, fuentes: fuente,
+      confianza: { desde: "baja" as const, hasta: "alta" as const },
+      fases: [
+        { id: "p.episodio.h1", nombre: "Uno", nombre_corto: "1", desde: "1989-02-06", hasta: "1989-12-12", fuentes: fuente },
+        { id: "p.episodio.h2", nombre: "Dos", nombre_corto: "2", desde: "1989-12-12", hasta: "1990-04-01", fuentes: fuente },
+      ],
+    };
+    expect(fasesDe(hiper).map((f) => [f.id, f.padre, f.tipo])).toEqual([
+      ["p.episodio.h1", "p.episodio.h", "episodio"], ["p.episodio.h2", "p.episodio.h", "episodio"]]);
+    expect(extremosDudosos(hiper)).toEqual(["desde"]);
+    expect(extremosDudosos(doc.periodos[0])).toEqual([]);
+  });
+});
+
+describe("contrato de periodos.json", () => {
+  const raiz = join(import.meta.dirname, "..", "..", "..");
+  const leer = (ruta: string) => JSON.parse(readFileSync(join(raiz, ruta), "utf-8"));
+
+  it("hay un esquema por cada versión que se lee, y el export usa la vigente", () => {
+    for (const v of ESQUEMAS_PERIODOS) expect(leer(`tests/contrato/${v}.schema.json`).properties.esquema).toEqual({ const: v });
+    const publicado = leer("export/periodos.json");
+    expect(publicado.esquema).toBe(ESQUEMA_PERIODOS);
+    const validar = new Ajv2020({ strict: false }).compile(leer(`tests/contrato/${ESQUEMA_PERIODOS}.schema.json`));
+    expect(validar(publicado), JSON.stringify(validar.errors)).toBe(true);
   });
 });
