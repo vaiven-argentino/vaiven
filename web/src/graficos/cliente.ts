@@ -168,7 +168,7 @@ function iniciar(): void {
     if (cSombreado?.value) p.set("sh", cSombreado.value);
     const ev = escribirEv(evElegido(), CATEGORIAS);
     if (ev) p.set("ev", ev);
-    const nueva = `${location.pathname}${p.size ? `?${p}` : ""}${location.hash}`;
+    const nueva = `${location.pathname}${p.size ? `?${p.toString().replaceAll("%2C", ",")}` : ""}${location.hash}`;
     history.replaceState(null, "", nueva);
   }
 
@@ -516,7 +516,7 @@ function iniciar(): void {
     if (doc.serie !== "ipc") salida.set("s", doc.serie);
     if (!doc.es_variante_por_defecto) salida.set("v", doc.variante);
     for (const [k, v] of q) salida.set(k, v);
-    a.href = `/explorador/${salida.size ? `?${salida}` : ""}`;
+    a.href = `/explorador/${salida.size ? `?${salida.toString().replaceAll("%2C", ",")}` : ""}`;
   }
 
   function lineaPaises(): string[] {

@@ -17,6 +17,9 @@ if (!salida) { console.error("Falta --salida <carpeta>."); process.exit(2); }
 mkdirSync(salida, { recursive: true });
 
 const catalogo = JSON.parse(readFileSync(join(import.meta.dirname, "..", "..", "export", "catalogo.json"), "utf-8"));
+const registroEventos = JSON.parse(readFileSync(join(import.meta.dirname, "..", "..", "export", "eventos.json"), "utf-8"));
+/** Cuántos eventos hay desde un año, con un filtro de categorías opcional. */
+const eventosDesde = (anio, categorias) => registroEventos.eventos.filter((e) => e.fecha >= `${anio}-01-01` && (!categorias || categorias.includes(e.categoria))).length;
 const fallas = [];
 const ok = (cond, mensaje) => { if (!cond) fallas.push(mensaje); return cond; };
 // Los dos ejes con etiquetas (revisión del 07/11/2026: la línea del 0 había apagado el eje Y de los gráficos con
@@ -45,8 +48,12 @@ const VISTAS_EXPLORADOR = [
   { url: "?t=var_mensual&desde=1985-06&hasta=1988-08&sh=plan&ev=1", sombreado: true, eventos: true },
   { url: "?s=pib&sh=mandato", sombreado: true },
   { url: "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario", sombreado: true },
-  { url: "?s=int-pib&p=ARG%2CBRA%2CCHL%2CURY%2CUSA%2CWLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011", paises: 6 },
+  { url: "?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011", paises: 6 },
   { url: "?s=reservas&sh=catedra", sombreado: true },
+  // Filtro y densidad de eventos (revisión externa de la 4b, 9.4): 1970–hoy con todos los eventos va en rayitas, con la
+  // lista completa; con un filtro, solo esas categorías y el aviso de cuántos quedan afuera.
+  { url: "?desde=1970&ev=1", eventos: eventosDesde(1970), rayitas: true },
+  { url: "?desde=1970&ev=cambiario,deuda", eventos: eventosDesde(1970, ["cambiario", "deuda"]), filtro: ["cambiario", "deuda"] },
 ];
 
 const controlesExplorador = (pagina) => pagina.$$eval("#x-controles select, #x-controles input, #x-serie, #x-variante",
@@ -65,6 +72,20 @@ async function explorador(pagina, ancho) {
     ok(!/La URL (pedía|tiene)/.test(avisos), `${id}: avisos de parámetros: ${avisos}`);
     if (v.sombreado) ok(await pagina.$$eval("#x-grafico svg .mark-rect path", (ps) => ps.length) > 0, `${id}: no se ve el sombreado`);
     if (v.eventos) ok(await pagina.$$eval("#x-lista-eventos li", (ls) => ls.length) > 0, `${id}: no se listan los eventos`);
+    if (typeof v.eventos === "number") {
+      const n = await pagina.$$eval("#x-lista-eventos li", (ls) => ls.length);
+      ok(n === v.eventos, `${id}: la lista tiene ${n} eventos y se esperaban ${v.eventos}`);
+    }
+    if (v.rayitas) {
+      ok(await pagina.$eval("#x-grafico", (g) => g.dataset.eventos) === "rayitas", `${id}: los eventos no pasan a rayitas`);
+      ok(await pagina.$eval("#x-lista-eventos", (l) => l.classList.contains("con-fechas")), `${id}: la lista no lleva las fechas`);
+    }
+    if (v.filtro) {
+      const marcadas = await pagina.$$eval("#x-categorias input:checked", (is) => is.map((i) => i.dataset.categoria));
+      ok(marcadas.join(",") === v.filtro.join(","), `${id}: las casillas marcadas son ${marcadas.join(",")}`);
+      const aviso = await pagina.$eval("#x-aviso-filtro", (p) => (p.hidden ? "" : p.textContent));
+      ok(aviso.startsWith(`Se muestran ${v.eventos} de ${eventosDesde(1970)} eventos (filtro: cambiario, deuda)`), `${id}: el aviso del filtro dice «${aviso}»`);
+    }
     if (v.paises) ok(await pagina.$$eval("#x-leyenda-paises > span", (ls) => ls.length) === v.paises, `${id}: la leyenda no tiene ${v.paises} países`);
     // Ida y vuelta: recargar la URL da los mismos controles.
     const antes = await controlesExplorador(pagina);
@@ -97,6 +118,39 @@ async function explorador(pagina, ancho) {
   const svg = await bajar(pagina, () => pagina.click("#x-bajar-svg"), "svg");
   ok(svg.bytes > 5000 && readFileSync(svg.ruta, "utf-8").includes("Sombreado: ministros de Economía"), `${id}: el SVG no lleva el sombreado impreso`);
   console.log(`${id}: URL ${url}; CSV ${csv.bytes} B, XLSX ${xlsx.bytes} B (${xlsx.ruta}), PNG ${png.bytes} B, SVG ${svg.bytes} B`);
+
+  // Una casilla de categoría escribe `ev` en forma canónica; «Marcar eventos» apagado lo saca.
+  const idFiltro = `explorador (filtro de eventos) @ ${ancho}px`;
+  await pagina.goto(`${base}/explorador/?ev=1`, { waitUntil: "networkidle" });
+  await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+  if (!(await pagina.locator("#x-panel").evaluate((d) => d.open))) await pagina.click("#x-panel > summary");
+  await pagina.uncheck("#x-categorias input[data-categoria='episodio']");
+  await pagina.waitForTimeout(600);
+  let q = new URL(pagina.url()).search;
+  ok(q === "?ev=cambiario,monetario,financiero,fiscal,deuda,crisis,institucional", `${idFiltro}: la URL quedó ${q}`);
+  ok(await pagina.$eval("#x-lista-episodios", (l) => l.hidden), `${idFiltro}: sin la categoría, siguen los episodios`);
+  await pagina.uncheck("#x-eventos");
+  await pagina.waitForTimeout(600);
+  q = new URL(pagina.url()).search;
+  ok(q === "", `${idFiltro}: sin eventos, la URL quedó ${q}`);
+  console.log(`${idFiltro}: casillas → URL canónica`);
+}
+
+// Escritorio (revisión externa de la 4b, 9.4): en 1280 × 800, el gráfico empieza en la primera mitad de la pantalla.
+async function explorador1280x800(navegador) {
+  const contexto = await navegador.newContext({ viewport: { width: 1280, height: 800 } });
+  const pagina = await contexto.newPage();
+  for (const url of ["", "?sh=gobierno&ev=1"]) {
+    const id = `explorador${url} @ 1280×800`;
+    await pagina.goto(`${base}/explorador/${url}`, { waitUntil: "networkidle" });
+    await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+    const arriba = await pagina.$eval("#x-grafico", (g) => Math.round(g.getBoundingClientRect().top));
+    ok(arriba < 400, `${id}: el gráfico empieza en ${arriba} px (tiene que ser menos de 400)`);
+    const panel = await pagina.$eval("#x-controles", (f) => ({ ancho: Math.round(f.getBoundingClientRect().width), posicion: getComputedStyle(f).position }));
+    ok(panel.ancho >= 290 && panel.ancho <= 310 && panel.posicion === "sticky", `${id}: el panel mide ${panel.ancho} px (${panel.posicion})`);
+    console.log(`${id}: gráfico desde ${arriba} px; panel de ${panel.ancho} px`);
+  }
+  await contexto.close();
 }
 
 // Ficha con sombreado y eventos, su enlace al explorador, y los accesos de /periodos/ (fase 4b, PR 3).
@@ -116,16 +170,35 @@ async function fichaYPeriodos(pagina, ancho) {
     await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
     ok(await pagina.$eval("#x-sombreado", (s) => s.value) === "gobierno" && await pagina.$eval("#x-eventos", (c) => c.checked), `${id}: el explorador no abre con la misma vista`);
   }
+  // La ficha con un filtro de eventos: solo esa categoría, las casillas y el aviso.
+  id = `ficha /series/ipc/?desde=todo&ev=deuda @ ${ancho}px`;
+  await pagina.goto(`${base}/series/ipc/?desde=todo&ev=deuda`, { waitUntil: "networkidle" });
+  if (ok(await pagina.waitForSelector("#grafico[data-listo='1'] svg", { timeout: 15000 }).then(() => true, () => false), `${id}: no se dibujó el gráfico`)) {
+    const marcadas = await pagina.$$eval("#c-categorias input:checked", (is) => is.map((i) => i.dataset.categoria));
+    ok(marcadas.join(",") === "deuda", `${id}: las casillas marcadas son ${marcadas.join(",")}`);
+    const n = await pagina.$$eval("#lista-eventos li", (ls) => ls.length);
+    ok(n > 0 && n <= eventosDesde(1943, ["deuda"]), `${id}: la lista tiene ${n} eventos`);
+    ok(await pagina.$eval("#aviso-filtro", (p) => !p.hidden && p.textContent.includes("(filtro: deuda)")), `${id}: falta el aviso del filtro`);
+    ok(new URL(pagina.url()).search === "?desde=todo&ev=deuda", `${id}: la URL cambió a ${new URL(pagina.url()).search}`);
+  }
   // Sin parámetros, la ficha no sombrea (el sombreado viene apagado).
   id = `ficha /series/pib/ @ ${ancho}px`;
   await pagina.goto(`${base}/series/pib/`, { waitUntil: "networkidle" });
   await pagina.waitForSelector("#grafico[data-listo='1'] svg", { timeout: 15000 });
   ok(await pagina.$eval("#c-sombreado", (s) => s.value) === "" && await pagina.$eval("#leyenda-periodos", (d) => d.hidden), `${id}: el sombreado no arranca apagado`);
-  // /periodos/: una tarjeta por período y evento, y sus accesos abren el explorador con esa vista.
+  // /periodos/: una fila por período y evento (cada una, un <details>), y sus accesos abren el explorador con esa vista.
   id = `/periodos/ @ ${ancho}px`;
   await pagina.goto(`${base}/periodos/`, { waitUntil: "networkidle" });
-  const tarjetas = await pagina.$$eval(".tarjeta", (ts) => ts.length);
-  ok(tarjetas >= 150, `${id}: hay ${tarjetas} tarjetas`);
+  const tarjetas = await pagina.$$eval("li.fila > details", (ts) => ts.length);
+  ok(tarjetas >= 160, `${id}: hay ${tarjetas} filas`);
+  const altoPagina = await pagina.evaluate(() => document.documentElement.scrollHeight);
+  if (ancho === 390) ok(altoPagina < 12000, `${id}: la página mide ${altoPagina} px (meta: unos 10.000)`);
+  // Llegar con #id abre la fila (y la que contiene un mandato).
+  await pagina.goto(`${base}/periodos/#p.plan.austral`, { waitUntil: "networkidle" });
+  ok(await pagina.$eval("[id='p.plan.austral'] > details", (d) => d.open), `${id}: #p.plan.austral no abre su fila`);
+  await pagina.goto(`${base}/periodos/#p.gobierno.menem-1995`, { waitUntil: "networkidle" });
+  ok(await pagina.$eval("[id='p.gobierno.menem-1995']", (li) => li.closest("details").open), `${id}: el mandato no abre la fila de Menem`);
+  await pagina.goto(`${base}/periodos/#p.plan.austral`, { waitUntil: "networkidle" });
   ok(await pagina.$$eval(".linea-marco svg a", (as) => as.length) >= 150, `${id}: la línea de tiempo no enlaza los tramos`);
   ok(await pagina.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), `${id}: la página se desborda de costado`);
   const acceso = pagina.locator("[id='p.plan.austral'] .accesos a").first();
@@ -135,7 +208,7 @@ async function fichaYPeriodos(pagina, ancho) {
   await pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
   ok(new URL(pagina.url()).pathname + new URL(pagina.url()).search === destino, `${id}: el acceso cambió de URL al abrirse`);
   ok(await pagina.$$eval("#x-grafico svg .mark-rect path", (ps) => ps.length) > 0, `${id}: el acceso no muestra el sombreado`);
-  console.log(`${id}: ${tarjetas} tarjetas; acceso ${destino} reproducido; ficha con sombreado y enlace al explorador`);
+  console.log(`${id}: ${tarjetas} filas, página de ${altoPagina} px; acceso ${destino} reproducido; ficha con sombreado, filtro de eventos y enlace al explorador`);
 }
 
 async function conEjesEn(pagina, sel, id, que) {
@@ -237,6 +310,7 @@ for (const ancho of [390, 1280]) {
   await fichaYPeriodos(pagina, ancho);
   await contexto.close();
 }
+await explorador1280x800(navegador);
 await navegador.close();
 if (fallas.length) {
   console.error(`\n${fallas.length} fallas:\n${fallas.join("\n")}`);

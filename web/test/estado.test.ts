@@ -32,13 +32,13 @@ describe("ida y vuelta de la URL", () => {
     "?t=var_mensual&desde=1985-06&hasta=1988-08&sh=plan&ev=1",
     "?s=pib&t=nivel&log=1&sh=gobierno",
     "?s=resultado-fiscal&v=financiero&desde=1993&sh=mandato",
-    "?s=int-pib&p=ARG%2CBRA%2CCHL%2CURY%2CUSA%2CWLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011",
+    "?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011",
     "?s=tc-oficial&v=moneda-de-epoca&pa=1&t=var_interanual&sh=regimen_cambiario",
     "?s=salario-real&m=&mm=12",
     "?s=reservas&f=anual&desde=1983&sh=ministro",
     "?s=desocupacion&sh=catedra&ev=1",
-    "?desde=1970&ev=cambiario%2Cdeuda",
-    "?s=pib&sh=gobierno&ev=deuda%2Cepisodio",
+    "?desde=1970&ev=cambiario,deuda",
+    "?s=pib&sh=gobierno&ev=deuda,episodio",
     "?t=var_mensual&desde=1988&hasta=1991&ev=episodio",
   ];
   it.each(canonicas)("%s", (url) => {

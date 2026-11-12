@@ -461,7 +461,7 @@ function iniciar(): void {
     for (const k of ["s", "v", "p"]) q.delete(k);
     if (tienePais(doc) && estado.p[0] !== doc.entidades_por_defecto[0]) q.set("e", estado.p[0]);
     for (const k of ["desde", "hasta"]) { const v = q.get(k); if (v && v !== "todo") q.set(k, v.slice(0, 4)); }
-    return `${ruta}${q.size ? `?${q}` : ""}`;
+    return `${ruta}${q.size ? `?${q.toString().replaceAll("%2C", ",")}` : ""}`;
   }
 
   // ---- Gráfico ----

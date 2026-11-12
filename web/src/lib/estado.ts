@@ -201,7 +201,8 @@ export function urlDesdeEstado(e: Estado, doc: Documento, indice: IndiceSerie[],
   if (e.sh) q.set("sh", e.sh);
   const ev = escribirEv(e.ev, categorias);
   if (ev) q.set("ev", ev);
-  const texto = q.toString();
+  // Las comas de las listas (p, ev) van sin codificar: «ev=cambiario,deuda» se lee mejor y se interpreta igual.
+  const texto = q.toString().replaceAll("%2C", ",");
   return texto ? `?${texto}` : "";
 }
 
