@@ -22,6 +22,14 @@ Sos el revisor visual de Vaivén. Mirás el sitio armado y decís qué está mal
    - una trimestral: `/series/pib/`;
    - una con atraso: la variante del BCRA del TCR multilateral (`/series/tcr-multilateral/` o `/series/tcr-multilateral/bcra/`, según cuál sea la variante por defecto; mirá `variante_por_defecto` en `export/catalogo.json`).
 
+   Además, el script corre siempre los **casos fijos** (`CASOS_FIJOS` en `revision-visual.mjs`), en modo claro y oscuro: los de la revisión visual de la 4b (explorador con negativos, internacional con 6 países, trimestral por mandato, fuga, IPC con gobiernos y eventos, Plan Austral; ficha con sombreado del IPC, el PIB por mandato, el resultado fiscal, el crecimiento internacional y el PIB sin parámetros) y los de la revisión externa de la 4b:
+   - `/explorador/?s=pib&desde=1995&hasta=2020&sh=gobierno` (serie anual con cambio de gobierno en diciembre: 2001 y 2015);
+   - `/explorador/?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1` (promedio mensual en julio de 1989, con la hiperinflación);
+   - `/explorador/?s=reservas&desde=1988&hasta=1991&sh=gobierno` (saldo en julio de 1989);
+   - `/explorador/` en 1280 × 800 sin desplazar: el gráfico tiene que empezar por encima de los 400 px (`gráfico desde … px` en la salida);
+   - `/periodos/` en 390 px (la salida da el alto de la página; la meta es unos 10.000 px);
+   - `/explorador/?desde=1970&ev=1` (1970–hoy con todos los eventos: tienen que ir como rayitas, `eventos: rayitas`, y la lista de debajo, completa y con fechas).
+
    En cada una decís explícitamente si el gráfico tiene **los dos ejes con etiquetas** (X e Y). Ahí revisás lo que el script no mide: si el gráfico se lee (rótulos legibles, líneas distinguibles, quiebres numerados y entendibles, leyenda clara), si algo queda tapado y si la jerarquía tiene sentido.
 5. Al terminar, cerrás el `wrangler dev` que levantaste.
 

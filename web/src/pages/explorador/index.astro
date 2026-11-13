@@ -3,7 +3,7 @@
 // las etapas del curso; el navegador pide el JSON de la variante elegida, y los períodos y eventos solo si se activan.
 // Todo el estado vive en la URL.
 import Base from "../../layouts/Base.astro";
-import { catalogo, periodos } from "../../lib/export";
+import { catalogo, eventos, periodos } from "../../lib/export";
 import type { IndiceSerie } from "../../lib/estado";
 
 const series: IndiceSerie[] = catalogo().series
@@ -19,6 +19,8 @@ const registro = periodos();
 const tipos = registro?.tipos.map((t) => ({ id: t.id, nombre: t.nombre })) ?? [];
 const etapas = registro?.periodos.filter((p) => p.tipo === "catedra").map((p) => ({ id: p.id, nombre: p.nombre, desde: p.desde, hasta: p.hasta })) ?? [];
 const nombreTipo = new Map(tipos.map((t) => [t.id, t.nombre]));
+// Las categorías del filtro de eventos (parámetro `ev`): las de eventos.json y los episodios, al final.
+const categorias = eventos()?.categorias.map((c) => ({ id: c.id, nombre: c.nombre })) ?? [];
 const SOMBREADOS = [
   ["", "Sin sombreado"],
   ["catedra", nombreTipo.get("catedra") ?? "Etapas de la política económica (curso)"],
@@ -28,119 +30,145 @@ const SOMBREADOS = [
   ["plan", "Planes de estabilización"],
   ["regimen_cambiario", "Regímenes cambiarios"],
 ] as const;
-const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().version_datos }).replace(/</g, "\\u003c");
+const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio: catalogo().version_datos }).replace(/</g, "\\u003c");
 ---
 <Base titulo="Explorador" descripcion="Graficá una serie de Vaivén con sus transformaciones, sombreala por gobierno, ministro, plan o régimen cambiario, y descargá la vista en CSV, XLSX, PNG o SVG." seccion="explorador">
   <article class="explorador contenedor">
     <header class="cabeza">
       <h1>Explorador</h1>
-      <p class="lectura">Elegí una serie, transformala y sombreala por períodos de la política económica. La dirección de la página guarda la vista: copiala para compartirla tal cual.</p>
+      <p class="lectura">Elegí una serie, transformala y sombreala por períodos. La dirección de la página guarda la vista: copiala para compartirla.</p>
     </header>
 
     <noscript><p class="sin-js">El explorador necesita JavaScript. Sin JavaScript, cada serie tiene su ficha en el <a href="/series/">catálogo</a>, con la tabla, las descargas y la cita.</p></noscript>
 
-    <section class="vista" aria-labelledby="titulo-grafico" data-requiere-js hidden>
-      <div class="eleccion">
-        <div class="campo">
-          <label for="x-serie">Serie</label>
-          <select id="x-serie">
-            {bloques.map((b) => (
-              <optgroup label={b}>
-                {series.filter((s) => s.bloque === b).map((s) => <option value={s.id}>{s.nombre} ({s.codigo})</option>)}
-              </optgroup>
-            ))}
-          </select>
-        </div>
-        <div class="campo">
-          <label for="x-variante">Variante</label>
-          <select id="x-variante"></select>
-        </div>
-      </div>
+    <div class="vista" data-requiere-js hidden>
+      <!-- En escritorio (1100 px o más), un panel fijo a la izquierda con todos los controles en secciones plegables; en
+           pantallas chicas, la serie arriba y el resto en «Opciones del gráfico», como antes (SPEC 6.2 y 6.5). -->
+      <form id="x-controles" class="panel" aria-label="Opciones del gráfico">
+        <details class="seccion seccion-serie" open>
+          <summary>Serie</summary>
+          <div class="seccion-cuerpo eleccion">
+            <div class="campo">
+              <label for="x-serie">Serie</label>
+              <select id="x-serie">
+                {bloques.map((b) => (
+                  <optgroup label={b}>
+                    {series.filter((s) => s.bloque === b).map((s) => <option value={s.id}>{s.nombre} ({s.codigo})</option>)}
+                  </optgroup>
+                ))}
+              </select>
+            </div>
+            <div class="campo">
+              <label for="x-variante">Variante</label>
+              <select id="x-variante"></select>
+            </div>
+          </div>
+        </details>
 
+        <details class="panel-opciones" id="x-panel" open>
+          <summary><span class="po-titulo">Opciones del gráfico</span> <span class="po-resumen secundario" id="x-resumen-opciones"></span></summary>
+          <div class="controles">
+            <fieldset class="paises" id="x-campo-paises" hidden>
+              <legend>Países y agregados <span class="secundario">(hasta 8)</span></legend>
+              <div class="paises-lista" id="x-paises"></div>
+              <div class="campo">
+                <label for="x-resaltado">Resaltado</label>
+                <select id="x-resaltado"></select>
+              </div>
+            </fieldset>
+            <details class="seccion" open>
+              <summary>Transformación</summary>
+              <div class="seccion-cuerpo">
+                <label class="casilla" id="x-campo-pesos" hidden><input type="checkbox" id="x-pesos" /> En pesos actuales</label>
+                <div class="campo" id="x-campo-medida" hidden>
+                  <label for="x-medida">Medida</label>
+                  <select id="x-medida"></select>
+                </div>
+                <div class="campo" id="x-campo-deflactor" hidden>
+                  <label for="x-deflactor">IPC para deflactar</label>
+                  <select id="x-deflactor"></select>
+                </div>
+                <div class="campo" id="x-campo-pib" hidden>
+                  <label for="x-pib">PIB para dividir</label>
+                  <select id="x-pib"></select>
+                </div>
+                <div class="campo">
+                  <label for="x-transformacion">Transformación</label>
+                  <select id="x-transformacion"></select>
+                </div>
+                <div class="campo" id="x-campo-base" hidden>
+                  <label for="x-base">Base (AAAA o AAAA-MM)</label>
+                  <input id="x-base" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" />
+                </div>
+                <div class="campo" id="x-campo-frecuencia" hidden>
+                  <label for="x-frecuencia">Frecuencia</label>
+                  <select id="x-frecuencia"></select>
+                </div>
+                <div class="campo" id="x-campo-media" hidden>
+                  <label for="x-media">Media móvil</label>
+                  <select id="x-media">
+                    <option value="">Sin media móvil</option>
+                    {[2, 3, 4, 6, 12].map((n) => <option value={n}>{n} períodos</option>)}
+                  </select>
+                </div>
+                <label class="casilla" id="x-campo-log"><input type="checkbox" id="x-log" /> Escala logarítmica</label>
+              </div>
+            </details>
+            <details class="seccion" open>
+              <summary>Período</summary>
+              <fieldset class="seccion-cuerpo periodo">
+                <legend class="repetida">Período</legend>
+                <div class="periodo-campos">
+                  <label for="x-desde">Desde</label>
+                  <input id="x-desde" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" placeholder="AAAA o AAAA-MM" />
+                  <label for="x-hasta">Hasta</label>
+                  <input id="x-hasta" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" placeholder="AAAA o AAAA-MM" />
+                </div>
+                <div class="atajos">
+                  <button type="button" class="atajo" data-desde="" data-hasta="">Toda la serie</button>
+                  {[1983, 1991, 2003].map((a) => <button type="button" class="atajo" data-desde={String(a)} data-hasta="">Desde {a}</button>)}
+                </div>
+                {etapas.length > 0 && (
+                  <div class="campo">
+                    <label for="x-etapa">{nombreTipo.get("catedra") ?? "Etapa"}</label>
+                    <select id="x-etapa">
+                      <option value="">Elegí una etapa…</option>
+                      {etapas.map((e) => <option value={e.id}>{e.nombre}</option>)}
+                    </select>
+                  </div>
+                )}
+              </fieldset>
+            </details>
+            <details class="seccion" open>
+              <summary>Sombreado y eventos</summary>
+              <fieldset class="seccion-cuerpo marcas">
+                <legend class="repetida">Sombreado y eventos</legend>
+                <div class="campo">
+                  <label for="x-sombreado">Sombreado</label>
+                  <select id="x-sombreado">
+                    {SOMBREADOS.map(([v, t]) => <option value={v}>{t}</option>)}
+                  </select>
+                </div>
+                <label class="casilla"><input type="checkbox" id="x-eventos" /> Marcar eventos</label>
+                <fieldset class="categorias" id="x-categorias" disabled>
+                  <legend>Qué eventos <span class="secundario">(categorías)</span></legend>
+                  <div class="categorias-lista">
+                    {categorias.map((k) => <label class="casilla"><input type="checkbox" data-categoria={k.id} checked /> {k.nombre}</label>)}
+                    <label class="casilla"><input type="checkbox" data-categoria="episodio" checked /> Episodios</label>
+                  </div>
+                </fieldset>
+              </fieldset>
+            </details>
+          </div>
+        </details>
+      </form>
+
+      <section class="vista-grafico" aria-labelledby="titulo-grafico">
       <div class="vista-cabeza">
         <h2 id="titulo-grafico">Gráfico</h2>
         <p class="unidad" id="x-unidad"></p>
       </div>
       <p class="ultimo" id="x-ultimo"></p>
-
-      <details class="panel-opciones" id="x-panel" open>
-        <summary><span class="po-titulo">Opciones del gráfico</span> <span class="po-resumen secundario" id="x-resumen-opciones"></span></summary>
-        <form id="x-controles" class="controles" aria-label="Opciones del gráfico">
-          <fieldset class="paises" id="x-campo-paises" hidden>
-            <legend>Países y agregados <span class="secundario">(hasta 8)</span></legend>
-            <div class="paises-lista" id="x-paises"></div>
-            <div class="campo">
-              <label for="x-resaltado">Resaltado</label>
-              <select id="x-resaltado"></select>
-            </div>
-          </fieldset>
-          <label class="casilla" id="x-campo-pesos" hidden><input type="checkbox" id="x-pesos" /> En pesos actuales</label>
-          <div class="campo" id="x-campo-medida" hidden>
-            <label for="x-medida">Medida</label>
-            <select id="x-medida"></select>
-          </div>
-          <div class="campo" id="x-campo-deflactor" hidden>
-            <label for="x-deflactor">IPC para deflactar</label>
-            <select id="x-deflactor"></select>
-          </div>
-          <div class="campo" id="x-campo-pib" hidden>
-            <label for="x-pib">PIB para dividir</label>
-            <select id="x-pib"></select>
-          </div>
-          <div class="campo">
-            <label for="x-transformacion">Transformación</label>
-            <select id="x-transformacion"></select>
-          </div>
-          <div class="campo" id="x-campo-base" hidden>
-            <label for="x-base">Base (AAAA o AAAA-MM)</label>
-            <input id="x-base" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" />
-          </div>
-          <div class="campo" id="x-campo-frecuencia" hidden>
-            <label for="x-frecuencia">Frecuencia</label>
-            <select id="x-frecuencia"></select>
-          </div>
-          <div class="campo" id="x-campo-media" hidden>
-            <label for="x-media">Media móvil</label>
-            <select id="x-media">
-              <option value="">Sin media móvil</option>
-              {[2, 3, 4, 6, 12].map((n) => <option value={n}>{n} períodos</option>)}
-            </select>
-          </div>
-          <fieldset class="periodo">
-            <legend>Período</legend>
-            <div class="periodo-campos">
-              <label for="x-desde">Desde</label>
-              <input id="x-desde" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" placeholder="AAAA o AAAA-MM" />
-              <label for="x-hasta">Hasta</label>
-              <input id="x-hasta" type="text" inputmode="numeric" autocomplete="off" pattern="\d{4}(-\d{2})?" placeholder="AAAA o AAAA-MM" />
-            </div>
-            <div class="atajos">
-              <button type="button" class="atajo" data-desde="" data-hasta="">Toda la serie</button>
-              {[1983, 1991, 2003].map((a) => <button type="button" class="atajo" data-desde={String(a)} data-hasta="">Desde {a}</button>)}
-            </div>
-            {etapas.length > 0 && (
-              <div class="campo">
-                <label for="x-etapa">{nombreTipo.get("catedra") ?? "Etapa"}</label>
-                <select id="x-etapa">
-                  <option value="">Elegí una etapa…</option>
-                  {etapas.map((e) => <option value={e.id}>{e.nombre}</option>)}
-                </select>
-              </div>
-            )}
-          </fieldset>
-          <label class="casilla" id="x-campo-log"><input type="checkbox" id="x-log" /> Escala logarítmica</label>
-          <fieldset class="marcas">
-            <legend>Períodos y eventos</legend>
-            <div class="campo">
-              <label for="x-sombreado">Sombreado</label>
-              <select id="x-sombreado">
-                {SOMBREADOS.map(([v, t]) => <option value={v}>{t}</option>)}
-              </select>
-            </div>
-            <label class="casilla"><input type="checkbox" id="x-eventos" /> Marcar eventos</label>
-          </fieldset>
-        </form>
-      </details>
 
       <p id="x-estado" class="estado" role="status" aria-live="polite"></p>
       <div id="x-avisos" class="avisos" role="status" aria-live="polite" hidden></div>
@@ -163,6 +191,7 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
         </div>
         <div id="x-leyenda-eventos" hidden>
           <h3 class="etiqueta">Episodios y eventos</h3>
+          <p class="aviso-filtro secundario" id="x-aviso-filtro" hidden></p>
           <ul class="lista-periodos" id="x-lista-episodios" hidden></ul>
           <ol class="lista-eventos" id="x-lista-eventos"></ol>
         </div>
@@ -199,7 +228,8 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
           <span class="acciones-cita"><button type="button" class="copiar" id="x-copiar">Copiar</button><span class="copiado" id="x-copiado" role="status"></span></span>
         </section>
       </div>
-    </section>
+      </section>
+    </div>
   </article>
   <script type="application/json" id="x-datos" set:html={datos} />
 </Base>
@@ -214,6 +244,8 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
   .lectura { max-width: 70ch; }
   .sin-js { padding: 12px; background: var(--superficie); border-radius: var(--radio); }
   .vista { display: grid; gap: 14px; min-width: 0; }
+  .vista-grafico { display: grid; gap: 14px; min-width: 0; align-content: start; }
+  .panel { display: grid; gap: 14px; min-width: 0; }
   .eleccion { display: flex; flex-wrap: wrap; gap: 12px 18px; }
   .eleccion .campo { flex: 1 1 18rem; }
   .vista-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
@@ -224,12 +256,18 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
   .panel-opciones > summary { cursor: pointer; padding: 10px 14px; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
   .po-titulo { font-weight: 600; }
   .po-resumen { font-size: 0.88rem; }
-  /* Los selectores en una grilla pareja; países, período y marcas ocupan una fila entera cada uno. */
-  .controles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: 14px 18px; align-items: end; padding: 4px 14px 14px; }
-  .paises, .periodo, .marcas { grid-column: 1 / -1; }
+  /* Pantallas chicas (como antes de la revisión externa): los selectores en una grilla pareja; países, período y marcas
+     ocupan una fila entera cada uno. Las secciones están siempre abiertas y sin título (lo pone explorador.ts). */
+  .controles { display: grid; gap: 14px 18px; padding: 4px 14px 14px; }
+  .seccion > summary { display: none; }
+  .seccion-cuerpo:not(.periodo):not(.marcas):not(.eleccion) { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: 14px 18px; align-items: end; }
   .periodo, .marcas { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 18px; }
   .periodo legend, .marcas legend { width: 100%; }
   .periodo .campo, .marcas .campo { flex: 0 1 22rem; }
+  .categorias { width: 100%; }
+  .categorias legend { font-size: 0.85rem; }
+  .categorias-lista { display: flex; flex-wrap: wrap; gap: 0 16px; }
+  .categorias:disabled .casilla { color: var(--secundario); }
   .campo { display: grid; gap: 4px; min-width: 0; }
   .campo select, .campo input { width: 100%; min-height: 44px; }
   fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; min-width: 0; }
@@ -278,6 +316,45 @@ const datos = JSON.stringify({ series, tipos, etapas, version_sitio: catalogo().
   .copiar { background: transparent; border: 1px solid var(--borde); border-radius: var(--radio); padding: 4px 12px; min-height: 44px; cursor: pointer; font-size: 0.85rem; color: var(--texto); }
   .copiar:hover { border-color: var(--acento); }
   .copiado { font-size: 0.85rem; color: var(--secundario); margin-left: 8px; }
+  .aviso-filtro { margin: 6px 0 0; font-size: 0.9rem; }
+  .lista-eventos.con-fechas { list-style: none; padding-left: 0; }
+
+  /* Escritorio (revisión externa de la 4b, 9.4): dos columnas. A la izquierda, un panel fijo de 300 px con todos los
+     controles en secciones plegables; a la derecha, el gráfico (60 % del alto de la pantalla, en explorador.ts). */
+  @media (min-width: 1100px) {
+    .cabeza { gap: 4px; }
+    .cabeza .lectura { max-width: none; }
+    .explorador { gap: 18px; }
+    .vista { grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
+    .panel {
+      position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; gap: 0;
+      background: var(--superficie); border-radius: var(--radio); padding: 4px 0 8px;
+    }
+    .panel-opciones > summary { display: none; }
+    .controles { padding: 0; gap: 0; }
+    .seccion { border-top: 1px solid var(--linea); padding: 0 14px; }
+    .seccion-serie { border-top: 0; }
+    .seccion > summary {
+      display: flex; align-items: center; gap: 6px; min-height: 44px; cursor: pointer; font-weight: 600; font-size: 0.95rem;
+    }
+    .seccion > summary::before { content: "▸"; color: var(--secundario); transition: transform 0.15s; }
+    .seccion[open] > summary::before { transform: rotate(90deg); }
+    .seccion > .seccion-cuerpo { padding-bottom: 14px; }
+    .seccion-cuerpo:not(.periodo):not(.marcas):not(.eleccion) { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .eleccion { display: grid; gap: 10px; }
+    .eleccion .campo, .periodo .campo, .marcas .campo { flex: 1 1 100%; }
+    .periodo, .marcas { gap: 10px; }
+    .paises { padding: 0 14px 14px; }
+    .periodo-campos { display: grid; grid-template-columns: auto minmax(0, 1fr); width: 100%; }
+    .periodo-campos input { width: 100%; }
+    .repetida { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    /* Los avisos (la regla de ubicación, los quiebres) van debajo del gráfico, junto a él, para que el gráfico empiece
+       arriba. */
+    .figura { order: 1; }
+    .avisos { order: 2; }
+    .leyendas, .tabla-datos, .columnas { order: 3; }
+  }
+  @media (min-width: 1100px) and (prefers-reduced-motion: reduce) { .seccion > summary::before { transition: none; } }
 </style>
 <style is:global>
   #vg-tooltip-element.vg-tooltip.custom-theme {

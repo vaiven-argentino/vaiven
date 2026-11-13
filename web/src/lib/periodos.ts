@@ -1,11 +1,13 @@
 // Períodos y eventos en la web: qué se sombrea en un gráfico (ficha y explorador), cómo se nombra y qué accesos al
 // explorador ofrece la página /periodos/. Funciones puras (se prueban con Vitest).
 import {
-  diasDe, extremosDudosos, fasesDe, periodosDe, proporcionDe, seCruzan, textoOtros, textoPeriodo, ubicarFechas,
+  diaDeReferencia, diasDe, extremosDudosos, fasesDe, periodosDe, proporcionDe, rangoLegible, referenciaDe, seCruzan,
+  textoOtros, textoPeriodo, textoReparto, ubicarFechas,
   type Agregacion, type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Opciones, type Periodo,
   type Resultado, type TipoPeriodo, type Ubicacion,
 } from "@vaiven/transformaciones";
-import type { BandaEpisodio, BandaPeriodo, MarcaEvento } from "../graficos/espec";
+import type { BandaEpisodio, BandaPeriodo, MarcaEvento, ModoEventos } from "../graficos/espec";
+import { fechaLegible } from "./formato";
 
 /** Opciones de sombreado (el valor va en el parámetro `sh` de la URL). */
 export const OPCIONES_SOMBREADO = ["catedra", "gobierno", "mandato", "ministro", "plan", "regimen_cambiario"] as const;
@@ -81,14 +83,56 @@ export function periodosEnRango(registro: DocumentoPeriodos, sh: OpcionSombreado
   return seCruzan(periodosDe(registro, tipo, sh === "mandato"), rango.desde, rango.hasta);
 }
 
+// ---- Filtro de eventos (parámetro `ev`, SPEC 6.2) ----
+
+/** La categoría de los episodios en el filtro de eventos (no está en eventos.json: los episodios son períodos). */
+export const EPISODIO = "episodio";
+
+/** Las categorías del filtro, en orden canónico: las de eventos.json y, al final, los episodios. */
+export const categoriasEv = (registro: Pick<DocumentoEventos, "categorias">): string[] => [...registro.categorias.map((c) => c.id), EPISODIO];
+
+/**
+ * Lee `ev` de la URL: sin valor, nada; `1`, todas las categorías (con los episodios); si no, la lista separada por
+ * comas, en orden canónico. Lo que no es una categoría se ignora con un aviso.
+ */
+export function leerEv(valor: string | null, categorias: readonly string[]): { ev: string[]; avisos: string[] } {
+  if (!valor) return { ev: [], avisos: [] };
+  if (valor === "1") return { ev: [...categorias], avisos: [] };
+  const pedidas = valor.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean);
+  const desconocidas = pedidas.filter((x) => !categorias.includes(x));
+  const avisos = desconocidas.length
+    ? [`La URL pedía ${desconocidas.length === 1 ? "una categoría de eventos que no existe" : "categorías de eventos que no existen"} («${desconocidas.join(", ")}»): se ${desconocidas.length === 1 ? "ignoró" : "ignoraron"}.`]
+    : [];
+  return { ev: categorias.filter((c) => pedidas.includes(c)), avisos };
+}
+
+/** El valor canónico de `ev`: vacío sin eventos, `1` con todas las categorías, si no la lista en orden canónico. */
+export function escribirEv(ev: readonly string[], categorias: readonly string[]): string {
+  const elegidas = categorias.filter((c) => ev.includes(c));
+  if (!elegidas.length) return "";
+  return elegidas.length === categorias.length ? "1" : elegidas.join(",");
+}
+
+/** Si el filtro deja eventos afuera: «Se muestran 12 de 30 eventos (filtro: cambiario, deuda)». Vacío si no. */
+export function avisoFiltroEventos(mostrados: number, total: number, ev: readonly string[], categorias: Array<{ id: string; nombre: string }>): string {
+  const todas = [...categorias.map((c) => c.id), EPISODIO];
+  if (!ev.length || todas.every((c) => ev.includes(c))) return "";
+  const nombres = todas.filter((c) => ev.includes(c))
+    .map((c) => (c === EPISODIO ? "episodios" : (categorias.find((x) => x.id === c)?.nombre ?? c).toLowerCase()));
+  return `Se ${mostrados === 1 ? "muestra" : "muestran"} ${mostrados} de ${total} ${total === 1 ? "evento" : "eventos"} (filtro: ${nombres.join(", ")}).`;
+}
+
 export const letraEvento = (k: number) => (k < 26 ? String.fromCharCode(65 + k)
   : `${String.fromCharCode(64 + Math.floor(k / 26))}${String.fromCharCode(65 + (k % 26))}`);
 
-/** Los eventos dentro de lo que se ve, con su letra (A, B…) en orden de fecha. */
-export function eventosEnRango(registro: DocumentoEventos, r: Resultado): MarcaEvento[] {
+/**
+ * Los eventos dentro de lo que se ve, con su letra (A, B…) en orden de fecha. Con `ev`, solo los de esas categorías
+ * (las letras se asignan después de filtrar).
+ */
+export function eventosEnRango(registro: DocumentoEventos, r: Resultado, ev?: readonly string[]): MarcaEvento[] {
   const rango = rangoDe(r);
   if (!rango) return [];
-  return registro.eventos.filter((e) => e.fecha >= rango.desde && e.fecha <= rango.hasta)
+  return registro.eventos.filter((e) => e.fecha >= rango.desde && e.fecha <= rango.hasta && (!ev || ev.includes(e.categoria)))
     .map((e, k) => ({ letra: letraEvento(k), fecha: e.fecha, nombre: e.nombre }));
 }
 
@@ -116,6 +160,44 @@ export function textoSombreado(sh: OpcionSombreado, periodos: Periodo[], eventos
   }
   if (eventos.length) t += ` ${eventos.length === 1 ? "Un evento marcado" : `${eventos.length} eventos marcados`} (lista debajo del gráfico).`;
   return t;
+}
+
+// ---- Lector del gráfico ----
+
+/** El día AAAA-MM-DD en forma corta: «3/1/1990». */
+const diaCorto = (d: string) => { const [a, m, dd] = d.split("-"); return `${Number(dd)}/${Number(m)}/${a}`; };
+
+/**
+ * Lo que dice el lector del gráfico de un dato (revisión externa de la 4b, 9.4): fecha y valor; con sombreado, la
+ * banda donde se dibuja (o las superpuestas) con sus fechas, y el reparto si cruza un cambio; el episodio y la fase en
+ * que cae el día de referencia; y los eventos marcados cuya fecha cae dentro de la observación (con su letra, si el
+ * gráfico las muestra).
+ */
+export function textoLectura(d: {
+  fecha: string; frecuencia: string; valor: string; contexto: ContextoUbicacion;
+  columna?: string; ubicacion?: Ubicacion; episodios?: BandaEpisodio[]; eventos?: MarcaEvento[]; modo?: ModoEventos;
+}): string {
+  const partes = [`${fechaLegible(d.fecha, d.frecuencia)}: ${d.valor}`];
+  const u = d.ubicacion;
+  if (u && d.columna) {
+    const banda = u.vigentes.length ? u.vigentes.map((p) => `${p.nombre} (${rangoLegible(p)})`).join("; ") : u.etiqueta;
+    partes.push(`${d.columna}: ${banda}${u.mayoria ? "" : " (sin mayoría)"}`);
+    const reparto = textoReparto(u);
+    if (reparto) partes.push(`reparto: ${reparto}`);
+  }
+  const dia = diaDeReferencia(referenciaDe(d.fecha, d.frecuencia, d.contexto));
+  const dentro = (p: { desde: string; hasta: string | null }) => p.desde <= dia && (!p.hasta || dia < p.hasta);
+  for (const ep of (d.episodios ?? []).filter(dentro)) {
+    const fase = ep.fases?.find(dentro);
+    partes.push(fase ? `episodio: ${ep.nombre}, ${fase.nombre_corto.toLowerCase()} (${rangoLegible(fase)})` : `episodio: ${ep.nombre} (${rangoLegible(ep)})`);
+  }
+  const { desde, hasta } = diasDe(d.fecha, d.frecuencia);
+  const eventos = (d.eventos ?? []).filter((e) => e.fecha >= desde && e.fecha <= hasta);
+  if (eventos.length) {
+    const letra = d.modo !== "rayitas";
+    partes.push(`${eventos.length === 1 ? "evento" : "eventos"}: ${eventos.map((e) => `${letra ? `${e.letra}. ` : ""}${e.nombre} (${diaCorto(e.fecha)})`).join("; ")}`);
+  }
+  return partes.join(" · ");
 }
 
 // ---- Accesos al explorador desde /periodos/ ----
@@ -181,7 +263,8 @@ export interface TramoLinea {
   x: number;
   ancho: number;
   fila: number;
-  clase: "a" | "b" | "facto";
+  /** Gris del tramo: A y B se alternan, los gobiernos de facto en el más oscuro; planes y episodios, en el de la franja. */
+  clase: "a" | "b" | "facto" | "franja";
   rotulo: boolean;
 }
 
@@ -215,7 +298,8 @@ export function lineaDeTiempo(registro: DocumentoPeriodos, eventos: DocumentoEve
       tipo, nombre: nombres.get(tipo) ?? tipo, filas: Math.max(0, ...filas) + 1,
       tramos: geom.map(({ p, a, b }, k) => ({
         id: p.id, nombre: p.nombre, corto: p.nombre_corto, rango: rangoCorto(p), x: a, ancho: Math.max(b - a, 1.5), fila: filas[k],
-        clase: p.caracter === "de_facto" ? "facto" : k % 2 ? "b" : "a", rotulo: b - a >= p.nombre_corto.length * 6.6 + 8,
+        clase: tipo === "plan" || tipo === "episodio" ? "franja" : p.caracter === "de_facto" ? "facto" : k % 2 ? "b" : "a",
+        rotulo: b - a >= p.nombre_corto.length * 6.6 + 8,
       })),
     });
   }

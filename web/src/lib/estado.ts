@@ -1,9 +1,10 @@
 // Estado del explorador en la URL (SPEC 6.2): abrir una URL reproduce exactamente la vista. Funciones puras, para
 // probar la ida y vuelta con Vitest. Los parámetros son los de la ficha (t, m, d, pib, pa, f, mm, base, desde, hasta,
-// log, e) más s y v (serie y variante), p (países), sh (sombreado) y ev (eventos). Lo que coincide con la vista inicial
-// de la serie no se escribe, así las URL quedan cortas y estables.
+// log, e) más s y v (serie y variante), p (países), sh (sombreado) y ev (eventos: `1`, todos, o categorías separadas
+// por comas). Lo que coincide con la vista inicial de la serie no se escribe, así las URL quedan cortas y estables.
 import { disponibles, serieDeEntidad, tienePais, type DocumentoExportado, type Opciones, type SerieExportada, type Transformacion } from "@vaiven/transformaciones";
 import { desdeInicial, frecuenciaInicial, medidaInicial, transformacionInicial } from "./ficha";
+import { escribirEv, leerEv } from "./periodos";
 
 export const SOMBREADOS = ["", "catedra", "gobierno", "mandato", "ministro", "plan", "regimen_cambiario"] as const;
 export type Sombreado = (typeof SOMBREADOS)[number];
@@ -30,7 +31,8 @@ export interface Estado {
   /** Solo series internacionales: países que se ven (hasta 8) y el resaltado (el primero de la lista). */
   p: string[];
   sh: Sombreado;
-  ev: boolean;
+  /** Categorías de eventos marcadas (con `episodio` para los episodios); vacío, sin eventos. */
+  ev: string[];
 }
 
 /** Lo que el explorador sabe de cada serie antes de pedir sus datos (índice embebido en la página). */
@@ -83,15 +85,15 @@ export function porDefecto(s: string, v: string, doc: Documento): Estado {
   const m = medidaInicial(serie) ?? "";
   return {
     s, v, t, m, d: "", pib: "", pa: false, f: frecuenciaInicial(serie) ?? "", mm: 0, base: "",
-    desde: desdeInicial(serie) ?? "", hasta: "", log: logInicial(serie, t, m), p, sh: "", ev: false,
+    desde: desdeInicial(serie) ?? "", hasta: "", log: logInicial(serie, t, m), p, sh: "", ev: [],
   };
 }
 
 /**
  * Segunda etapa, con el JSON de la variante: el estado completo, sin nada que la serie no admita. Cada cosa descartada
- * deja un aviso para mostrar junto al gráfico.
+ * deja un aviso para mostrar junto al gráfico. `categorias` son las del filtro de eventos (`categoriasEv`).
  */
-export function estadoDesdeUrl(q: URLSearchParams, s: string, v: string, doc: Documento): { estado: Estado; avisos: string[] } {
+export function estadoDesdeUrl(q: URLSearchParams, s: string, v: string, doc: Documento, categorias: readonly string[]): { estado: Estado; avisos: string[] } {
   const avisos: string[] = [];
   const def = porDefecto(s, v, doc);
   const e: Estado = { ...def };
@@ -170,12 +172,14 @@ export function estadoDesdeUrl(q: URLSearchParams, s: string, v: string, doc: Do
   const sh = q.get("sh") ?? "";
   if ((SOMBREADOS as readonly string[]).includes(sh)) e.sh = sh as Sombreado;
   else descartar("sh", "un sombreado");
-  e.ev = q.get("ev") === "1";
+  const ev = leerEv(q.get("ev"), categorias);
+  e.ev = ev.ev;
+  avisos.push(...ev.avisos);
   return { estado: e, avisos };
 }
 
 /** La URL canónica de un estado: solo lo que difiere de la vista inicial, siempre en el mismo orden. */
-export function urlDesdeEstado(e: Estado, doc: Documento, indice: IndiceSerie[]): string {
+export function urlDesdeEstado(e: Estado, doc: Documento, indice: IndiceSerie[], categorias: readonly string[]): string {
   const def = porDefecto(e.s, e.v, doc);
   const q = new URLSearchParams();
   if (e.s !== SERIE_INICIAL) q.set("s", e.s);
@@ -195,8 +199,10 @@ export function urlDesdeEstado(e: Estado, doc: Documento, indice: IndiceSerie[])
   if (e.hasta) q.set("hasta", e.hasta);
   if (e.log !== logInicial(serieVista(doc, e.p), e.t, e.m)) q.set("log", e.log ? "1" : "0");
   if (e.sh) q.set("sh", e.sh);
-  if (e.ev) q.set("ev", "1");
-  const texto = q.toString();
+  const ev = escribirEv(e.ev, categorias);
+  if (ev) q.set("ev", ev);
+  // Las comas de las listas (p, ev) van sin codificar: «ev=cambiario,deuda» se lee mejor y se interpreta igual.
+  const texto = q.toString().replaceAll("%2C", ",");
   return texto ? `?${texto}` : "";
 }
 

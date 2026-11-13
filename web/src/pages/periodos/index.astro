@@ -1,7 +1,8 @@
 ---
 // Períodos (SPEC 6.1): línea de tiempo de gobiernos, ministros de Economía, planes, regímenes cambiarios, etapas de la
-// política económica y episodios, con los eventos; desde cada período, accesos al explorador ya filtrados. Página estática: se lee
-// sin JavaScript.
+// política económica y episodios, con los eventos; debajo, una tabla compacta por tipo en la que cada fila se despliega
+// (descripción, notas, mandatos o fases, fuentes con su confianza y accesos al explorador). Página estática: se lee sin
+// JavaScript; un script mínimo abre la fila a la que lleva un enlace (#id).
 import Base from "../../layouts/Base.astro";
 import { citaRegistro } from "@vaiven/cita";
 import { periodosDe, rangoLegible, type FuentePeriodo, type Periodo, type TipoPeriodo } from "@vaiven/transformaciones";
@@ -40,6 +41,10 @@ const fechaLarga = (d: string) => { const [a, m, dd] = d.split("-"); return `${N
 const cita = citaRegistro("periodos", registro.version_datos);
 const tamanos = { pj: tamano("periodos.json"), ej: tamano("eventos.json"), pc: tamano("descargas/csv/periodos.csv"), ec: tamano("descargas/csv/eventos.csv") };
 const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
+// La columna «carácter o cargo»: en los gobiernos, el carácter; en los ministros, la primera parte del cargo (el texto
+// completo va en el detalle). Los demás tipos no la llevan.
+const COLUMNA_EXTRA: Partial<Record<TipoPeriodo, string>> = { gobierno: "Carácter", ministro: "Cargo" };
+const extra = (p: Periodo) => (p.caracter ? CARACTER[p.caracter] : p.cargo ? p.cargo.split("; ")[0].replace(/[«»]/g, "") : "");
 ---
 <Base titulo="Períodos" descripcion="Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios y etapas de la política económica argentina desde 1970, con fechas, fuentes y accesos a gráficos ya filtrados." seccion="periodos">
   <article class="periodos contenedor">
@@ -58,7 +63,7 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
 
     <section aria-labelledby="titulo-linea" class="linea">
       <h2 id="titulo-linea">Línea de tiempo</h2>
-      <p class="secundario">Cada tramo lleva a su ficha más abajo. En pantallas chicas, desplazá la línea de costado.</p>
+      <p class="secundario">Cada tramo lleva a su fila en las tablas de abajo. En pantallas chicas, desplazá la línea de costado.</p>
       <div class="linea-marco" tabindex="0" role="region" aria-label="Línea de tiempo (con desplazamiento)">
         <svg viewBox={`0 0 ${MARGEN + ANCHO + 12} ${altoSvg}`} role="group" aria-labelledby="titulo-linea" aria-describedby="desc-linea">
           <desc id="desc-linea">Línea de tiempo de {INICIO} a {anioHoy} con un carril por tipo de período y uno de eventos. El detalle de cada período está en las listas de abajo.</desc>
@@ -91,69 +96,108 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
       </div>
     </section>
 
+    <p class="lectura secundario leyenda-marcas">En las tablas, cada fila se despliega con la descripción, las notas, las fuentes (con la confianza de cada fecha) y accesos al explorador. Marcas: <span class="marca">◇</span> el fin es un corte convencional de Vaivén, no un hecho fechado; <span class="marca">⚠</span> fecha a confirmar (las fuentes no coinciden).</p>
+
     {ORDEN.map((tipo) => (
       <section aria-labelledby={tipo} class="tipo">
         <h2 id={tipo}>{nombreTipo.get(tipo)} <span class="secundario cantidad">({lista(tipo).length})</span></h2>
         {tipo === "catedra" && <p class="lectura secundario">Periodización de un curso universitario de política económica argentina. Los nombres son los del curso; las fechas de corte las fijó Vaivén a partir de hechos fechados, con su fuente.</p>}
-        {tipo === "ministro" && <p class="lectura secundario">Titular de la cartera de Hacienda o Economía según la estructura de cada época (en 1971–1973, Hacienda y Finanzas; en 2017–2019, Hacienda). Puede haber días sin titular entre una renuncia y la jura del siguiente.</p>}
+        {tipo === "ministro" && <p class="lectura secundario">Titular de la cartera de Hacienda o Economía según la estructura de cada época (en 1971–1973, Hacienda y Finanzas; en 2017–2019, Hacienda), y los interinos designados por decreto durante una vacante. Puede haber días sin titular entre una renuncia y la jura del siguiente.</p>}
         {tipo === "episodio" && <p class="lectura secundario">Procesos de varios meses que la historiografía trata como una unidad (por ejemplo, una hiperinflación). Pueden superponerse con otros y tener fases. En los gráficos se marcan con «Marcar eventos», en una franja debajo del eje.</p>}
         {tipo === "regimen_cambiario" && <p class="lectura secundario">Un tramo nuevo empieza cuando se crea o se elimina un mercado de cambios o cambia la forma de fijar el tipo de cambio; una devaluación dentro del mismo esquema no abre un tramo.</p>}
-        <ol class="tarjetas">
-          {lista(tipo).map((p) => (
-            <li class="tarjeta" id={ancla(p.id)}>
-              <h3>{p.nombre}</h3>
-              <p class="fechas"><strong>{rangoLegible(p)}</strong>{p.caracter && <> · {CARACTER[p.caracter]}</>}{p.cargo && <> · {p.cargo}</>}</p>
-              {avisoConfianza(p) && <p class="a-confirmar">⚠ {avisoConfianza(p).replace(/^./, (c) => c.toUpperCase())}: las fuentes no coinciden.</p>}
-              {p.cortes.hasta === "convencional" && <p class="convencional">El fin es un corte convencional de Vaivén, no un hecho fechado.</p>}
-              {p.descripcion && <p>{p.descripcion}</p>}
-              {p.notas && <p class="secundario">{p.notas}</p>}
-              {p.mandatos && (
-                <ul class="mandatos">
-                  {p.mandatos.map((m) => <li id={ancla(m.id)}>{m.nombre}: {rangoLegible(m)}</li>)}
-                </ul>
-              )}
-              {p.fases && (
-                <ul class="mandatos">
-                  {p.fases.map((f) => <li id={ancla(f.id)}>{f.nombre}: {rangoLegible(f)}{f.descripcion && <> · <span class="secundario">{f.descripcion}</span></>}</li>)}
-                </ul>
-              )}
-              <details class="fuentes">
-                <summary>Fuentes ({p.fuentes.length})</summary>
-                {p.confianza && <p class="secundario">{textoConfianzaLargo(p.confianza)}</p>}
-                <ul>
-                  {p.fuentes.map((f) => (
-                    <li><span class="secundario">{PARA[f.para ?? "ambas"]}:</span> {f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>
-                  ))}
-                </ul>
-              </details>
-              <div class="accesos">
-                <span class="secundario">Ver en el explorador:</span>
-                <ul>{accesosDe(p, publicadas, anioHoy).map((a) => <li><a href={a.url}>{a.texto}</a></li>)}</ul>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <div class={`tabla${COLUMNA_EXTRA[tipo] ? " con-extra" : ""}`}>
+          <div class="grilla encabezados" aria-hidden="true">
+            <span>Nombre</span><span>Desde</span><span>Hasta</span>{COLUMNA_EXTRA[tipo] && <span>{COLUMNA_EXTRA[tipo]}</span>}<span>Marcas</span>
+          </div>
+          <ol class="filas">
+            {lista(tipo).map((p) => (
+              <li class="fila" id={ancla(p.id)}>
+                <details>
+                  <summary class="grilla">
+                    <span class="c-nombre"><span class="largo">{p.nombre}</span><span class="corto">{p.nombre_corto}</span></span>
+                    <span class="c-desde"><span class="visualmente-oculto">desde el </span>{fechaLarga(p.desde)}</span>
+                    <span class="c-hasta"><span class="visualmente-oculto">hasta el </span>{p.hasta ? fechaLarga(p.hasta) : "vigente"}</span>
+                    {COLUMNA_EXTRA[tipo] && <span class="c-extra">{extra(p)}</span>}
+                    <span class="c-marcas">
+                      {p.cortes.hasta === "convencional" && <span class="marca" title="El fin es un corte convencional de Vaivén">◇<span class="visualmente-oculto"> fin convencional</span></span>}
+                      {avisoConfianza(p) && <span class="marca" title={avisoConfianza(p)}>⚠<span class="visualmente-oculto"> {avisoConfianza(p)}</span></span>}
+                    </span>
+                  </summary>
+                  <div class="detalle">
+                    <p class="solo-celular"><strong>{p.nombre}</strong>{p.caracter && <> · {CARACTER[p.caracter]}</>}</p>
+                    {p.cargo && <p class="secundario">Cargo: {p.cargo}</p>}
+                    {avisoConfianza(p) && <p class="a-confirmar">⚠ {avisoConfianza(p).replace(/^./, (c) => c.toUpperCase())}: las fuentes no coinciden.</p>}
+                    {p.cortes.hasta === "convencional" && <p class="convencional">◇ El fin es un corte convencional de Vaivén, no un hecho fechado.</p>}
+                    {p.descripcion && <p>{p.descripcion}</p>}
+                    {p.notas && <p class="secundario">{p.notas}</p>}
+                    {p.mandatos && (
+                      <ul class="mandatos" aria-label="Mandatos">
+                        {p.mandatos.map((m) => <li id={ancla(m.id)}>{m.nombre}: {rangoLegible(m)}</li>)}
+                      </ul>
+                    )}
+                    {p.fases && (
+                      <ul class="mandatos" aria-label="Fases">
+                        {p.fases.map((f) => <li id={ancla(f.id)}>{f.nombre}: {rangoLegible(f)}{f.descripcion && <> · <span class="secundario">{f.descripcion}</span></>}</li>)}
+                      </ul>
+                    )}
+                    <div class="fuentes">
+                      <h3 class="etiqueta">Fuentes</h3>
+                      {p.confianza && <p class="secundario">{textoConfianzaLargo(p.confianza)}</p>}
+                      <ul>
+                        {p.fuentes.map((f) => (
+                          <li><span class="secundario">{PARA[f.para ?? "ambas"]}:</span> {f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div class="accesos">
+                      <h3 class="etiqueta">Ver en el explorador</h3>
+                      <ul>{accesosDe(p, publicadas, anioHoy).map((a) => <li><a href={a.url}>{a.texto}</a></li>)}</ul>
+                    </div>
+                  </div>
+                </details>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
     ))}
 
     <section aria-labelledby="eventos" class="tipo">
       <h2 id="eventos">Eventos <span class="secundario cantidad">({registroEventos.eventos.length})</span></h2>
       <p class="lectura secundario">Hechos económicos o institucionales con efecto económico. La fecha es la del hecho que nombran (anuncio, sanción, firma); la vigencia, si es otra, va aparte.</p>
-      <ol class="tarjetas">
-        {registroEventos.eventos.map((e) => (
-          <li class="tarjeta" id={ancla(e.id)}>
-            <h3>{e.nombre}</h3>
-            <p class="fechas"><strong>{fechaLarga(e.fecha)}</strong>{e.vigencia && <> · vigente desde el {fechaLarga(e.vigencia)}</>} · {CATEGORIA.get(e.categoria) ?? e.categoria}</p>
-            <p>{e.descripcion}</p>
-            {e.notas && <p class="secundario">{e.notas}</p>}
-            <details class="fuentes">
-              <summary>Fuentes ({e.fuentes.length})</summary>
-              <ul>{e.fuentes.map((f) => <li>{f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>)}</ul>
-            </details>
-            <div class="accesos"><ul><li><a href={accesoEvento(e.fecha, anioHoy).url}>{accesoEvento(e.fecha, anioHoy).texto}</a></li></ul></div>
-          </li>
-        ))}
-      </ol>
+      <div class="tabla con-extra">
+        <div class="grilla encabezados" aria-hidden="true">
+          <span>Nombre</span><span>Fecha</span><span>Vigente desde</span><span>Categoría</span><span></span>
+        </div>
+        <ol class="filas">
+          {registroEventos.eventos.map((e) => (
+            <li class="fila" id={ancla(e.id)}>
+              <details>
+                <summary class="grilla">
+                  <span class="c-nombre"><span class="largo">{e.nombre}</span><span class="corto">{e.nombre_corto}</span></span>
+                  <span class="c-desde">{fechaLarga(e.fecha)}</span>
+                  <span class="c-hasta">{e.vigencia ? <><span class="visualmente-oculto">vigente desde el </span>{fechaLarga(e.vigencia)}</> : ""}</span>
+                  <span class="c-extra">{CATEGORIA.get(e.categoria) ?? e.categoria}</span>
+                  <span class="c-marcas"></span>
+                </summary>
+                <div class="detalle">
+                  <p class="solo-celular"><strong>{e.nombre}</strong> · {CATEGORIA.get(e.categoria) ?? e.categoria}</p>
+                  <p>{e.descripcion}</p>
+                  {e.notas && <p class="secundario">{e.notas}</p>}
+                  <div class="fuentes">
+                    <h3 class="etiqueta">Fuentes</h3>
+                    <ul>{e.fuentes.map((f) => <li>{f.url ? <a href={f.url} rel="noopener">{fuenteTexto(f)}</a> : fuenteTexto(f)}</li>)}</ul>
+                  </div>
+                  <div class="accesos">
+                    <h3 class="etiqueta">Ver en el explorador</h3>
+                    <ul><li><a href={accesoEvento(e.fecha, anioHoy).url}>{accesoEvento(e.fecha, anioHoy).texto}</a></li></ul>
+                  </div>
+                </div>
+              </details>
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
 
     <section aria-labelledby="citar" class="tipo">
@@ -168,6 +212,20 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
       <p class="secundario">Versión de los períodos: {fechaLarga(registro.version_datos.slice(0, 10))}. Licencia CC BY 4.0. Los agentes de IA pueden consultarlos con las herramientas <code>listar_periodos</code> y <code>periodo_en_fecha</code> del <a href="/agentes/">MCP</a>.</p>
     </section>
   </article>
+  <script is:inline>
+    // Al llegar con #id (desde la línea de tiempo u otro enlace), abre la fila (o la que contiene el mandato o la fase).
+    (function () {
+      function abrir() {
+        var id = decodeURIComponent(location.hash.slice(1));
+        var el = id && document.getElementById(id);
+        if (!el) return;
+        var d = el.matches("li.fila") ? el.querySelector("details") : el.closest("details");
+        if (d && !d.open) { d.open = true; el.scrollIntoView({ block: "start" }); }
+      }
+      abrir();
+      window.addEventListener("hashchange", abrir);
+    })();
+  </script>
 </Base>
 
 <style>
@@ -190,27 +248,57 @@ const lista = (tipo: TipoPeriodo): Periodo[] => periodosDe(registro, tipo);
   .rotulo { fill: var(--texto); font-size: 11px; pointer-events: none; }
   .evento { stroke: var(--texto); stroke-width: 2; }
   a:hover .evento, a:focus .evento { stroke: var(--acento); stroke-width: 3; }
+  .tramo.franja { fill: var(--periodo-franja); }
   .tipo { display: grid; gap: 12px; min-width: 0; }
   .cantidad { font-weight: 400; font-size: 1rem; }
-  .tarjetas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); gap: 14px; }
-  .tarjeta { border: 1px solid var(--linea); border-radius: var(--radio); padding: 12px 14px; display: grid; gap: 6px; align-content: start; scroll-margin-top: 16px; min-width: 0; }
-  .tarjeta:target { border-color: var(--acento); box-shadow: 0 0 0 2px var(--acento); }
-  .tarjeta h3 { margin: 0; font-size: 1.05rem; }
-  .tarjeta p { margin: 0; }
-  .fechas { font-size: 0.92rem; }
+  .leyenda-marcas .marca { color: var(--texto); font-weight: 600; }
+  /* Tabla compacta por tipo: cada fila es un <details> cuyo <summary> lleva las columnas. En el celular, el nombre en una
+     línea y las fechas, el carácter o cargo y las marcas en la siguiente (revisión externa de la 4b, 9.4). */
+  .tabla { border-top: 1px solid var(--linea); min-width: 0; }
+  .filas { list-style: none; margin: 0; padding: 0; }
+  .fila { border-bottom: 1px solid var(--linea); scroll-margin-top: 16px; min-width: 0; }
+  .grilla { display: grid; grid-template-columns: minmax(0, 1fr); align-items: baseline; gap: 0 10px; padding: 6px 4px 6px 22px; position: relative; }
+  .encabezados { display: none; }
+  summary.grilla { cursor: pointer; min-height: 44px; list-style: none; }
+  summary.grilla::-webkit-details-marker { display: none; }
+  summary.grilla::before { content: "▸"; position: absolute; left: 4px; top: 50%; transform: translateY(-50%); color: var(--secundario); transition: transform 0.15s; }
+  details[open] > summary.grilla::before { transform: translateY(-50%) rotate(90deg); }
+  summary.grilla:hover .c-nombre { color: var(--acento); }
+  .c-nombre { font-weight: 600; overflow-wrap: anywhere; }
+  .c-desde, .c-hasta, .c-extra, .c-marcas { font-size: 0.88rem; color: var(--secundario); font-variant-numeric: tabular-nums; }
+  /* En el celular, una fila por línea: el nombre corto, las fechas y las marcas; el nombre completo y el carácter o cargo,
+     en el detalle. */
+  @media (max-width: 699px) {
+    summary.grilla { display: flex; align-items: center; gap: 8px; padding-top: 0; padding-bottom: 0; }
+    .c-nombre { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .c-nombre .largo, .c-extra { display: none; }
+    .c-desde, .c-hasta { white-space: nowrap; flex: none; }
+    .c-hasta:not(:empty)::before { content: "– "; }
+    .c-desde:has(+ .c-hasta:not(:empty)) { margin-right: -6px; }
+    .c-marcas { flex: none; }
+  }
+  @media (min-width: 700px) {
+    .encabezados { display: grid; font-size: 0.8rem; font-weight: 600; color: var(--secundario); padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--linea); }
+    .grilla { grid-template-columns: minmax(0, 1fr) 6.5rem 6.5rem 3.5rem; }
+    .con-extra .grilla { grid-template-columns: minmax(0, 1.6fr) 6.5rem 6.5rem minmax(0, 1fr) 3.5rem; }
+    summary.grilla { align-items: center; }
+    .c-extra { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .c-nombre .corto, .solo-celular { display: none; }
+  }
+  .c-marcas { color: var(--texto); font-weight: 600; letter-spacing: 0.1em; }
+  .fila:target > details > summary, .mandatos li:target { background: var(--superficie); box-shadow: inset 3px 0 0 var(--acento); }
+  .detalle { display: grid; gap: 8px; padding: 2px 4px 14px 22px; max-width: 80ch; }
+  .detalle p { margin: 0; }
   .convencional { font-size: 0.88rem; color: var(--ocre); }
   .a-confirmar { font-size: 0.88rem; font-weight: 600; margin: 0; }
   .mandatos { margin: 0; padding-left: 1.1em; font-size: 0.9rem; }
-  .fuentes summary { cursor: pointer; font-size: 0.9rem; min-height: 44px; display: flex; align-items: center; gap: 6px; color: var(--acento); }
-  .fuentes summary::before { content: "▸"; transition: transform 0.15s; }
-  .fuentes[open] summary::before { transform: rotate(90deg); }
-  @media (prefers-reduced-motion: reduce) { .fuentes summary::before { transition: none; } }
+  .mandatos li { scroll-margin-top: 16px; }
+  .fuentes, .accesos { display: grid; gap: 4px; }
   .fuentes ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 0.85rem; overflow-wrap: anywhere; }
-  /* Accesos como botones de 44 px: en el celular, enlaces en línea de 17 px se tocaban mal (revisión visual de la 4b). */
-  .accesos { display: grid; gap: 6px; font-size: 0.88rem; }
-  .accesos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .accesos a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border: 1px solid var(--borde); border-radius: 999px; text-decoration: none; color: var(--texto); }
-  .accesos a:hover { border-color: var(--acento); color: var(--acento); }
+  /* Los accesos, como lista de enlaces con 44 px de alto de toque. */
+  .accesos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 18px; font-size: 0.9rem; }
+  .accesos a { display: inline-flex; align-items: center; min-height: 44px; }
+  @media (prefers-reduced-motion: reduce) { summary.grilla::before { transition: none; } }
   .texto-cita { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--mono); font-size: 0.85rem; background: var(--superficie); padding: 12px; border-radius: var(--radio); }
   .lista-descargas { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
   .lista-descargas a { font-weight: 600; }

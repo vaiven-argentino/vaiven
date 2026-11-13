@@ -4,7 +4,7 @@
 import { apa, bibtex, citaRegistro, NOMBRE_DENOMINADOR, nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
   ErrorTransformacion, REGLA_UBICACION, atraso, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, serieDeEntidad, tienePais,
-  textoReparto, transformar,
+  transformar,
   type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
 import { csvDeVista, hojasXlsx, type VistaDescarga } from "../lib/descarga";
@@ -12,10 +12,10 @@ import { estadoDesdeUrl, MAX_PAISES, MEDIAS, opcionesDe, porDefecto, serieDeUrl,
 import { esVariacion, numerarQuiebres, rangoQuiebre, resumen, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato } from "../lib/formato";
 import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen, tema, type Cargados, type VistaGrafico } from "./comun";
-import { especificacion, type BandaEpisodio, type MarcaEvento } from "./espec";
+import { diaLegible, especificacion, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
 import {
-  ACLARACION_ETAPAS, avisoConfianza, bandasDe, columnasDe, contextoDe, episodiosEnRango, eventosEnRango, periodosEnRango,
-  textoConfianza, tipoDe, ubicacionesDe, type ColumnasPeriodo,
+  ACLARACION_ETAPAS, EPISODIO, avisoConfianza, avisoFiltroEventos, bandasDe, columnasDe, contextoDe, episodiosEnRango,
+  eventosEnRango, periodosEnRango, textoConfianza, textoLectura, tipoDe, ubicacionesDe, type ColumnasPeriodo,
 } from "../lib/periodos";
 import { conectarLector, type Lectura } from "./lector";
 
@@ -31,8 +31,13 @@ interface DatosPagina {
   series: IndiceSerie[];
   tipos: Array<{ id: string; nombre: string }>;
   etapas: Array<{ id: string; nombre: string; desde: string; hasta: string | null }>;
+  /** Categorías de eventos.json, para el filtro de eventos (parámetro `ev`). */
+  categorias: Array<{ id: string; nombre: string }>;
   version_sitio: string;
 }
+
+/** Desde este ancho, el explorador va en dos columnas: el panel de controles a la izquierda y el gráfico (SPEC 6.2). */
+const ESCRITORIO = "(min-width: 1100px)";
 
 const NOMBRE_SOMBREADO: Record<string, string> = {
   gobierno: "gobiernos", mandato: "gobiernos, por mandato", ministro: "ministros de Economía", plan: "planes de estabilización",
@@ -50,6 +55,8 @@ function iniciar(): void {
   const nombreTipo = new Map(pagina.tipos.map((t) => [t.id, t.nombre]));
   const nombreSombreado = (sh: string) => (sh === "catedra" ? (nombreTipo.get("catedra") ?? "Etapas").toLowerCase() : NOMBRE_SOMBREADO[sh]);
   const columnaPeriodo = (sh: string) => sh === "catedra" ? "Etapa" : COLUMNA_PERIODO[sh];
+  // El filtro de eventos: las categorías de eventos.json y, al final, los episodios.
+  const CATEGORIAS = [...pagina.categorias.map((k) => k.id), EPISODIO];
 
   const c = {
     serie: $<HTMLSelectElement>("x-serie"), variante: $<HTMLSelectElement>("x-variante"),
@@ -66,6 +73,8 @@ function iniciar(): void {
     etapa: document.getElementById("x-etapa") as HTMLSelectElement | null,
     campoLog: $<HTMLLabelElement>("x-campo-log"), log: $<HTMLInputElement>("x-log"),
     sombreado: $<HTMLSelectElement>("x-sombreado"), eventos: $<HTMLInputElement>("x-eventos"),
+    campoCategorias: $<HTMLFieldSetElement>("x-categorias"),
+    categorias: [...document.querySelectorAll<HTMLInputElement>("#x-categorias input[data-categoria]")],
   };
   const estadoTexto = $<HTMLParagraphElement>("x-estado");
   const contenedor = $<HTMLDivElement>("x-grafico");
@@ -79,7 +88,19 @@ function iniciar(): void {
   let avisosUrl: string[] = [];
 
   document.querySelectorAll<HTMLElement>("[data-requiere-js]").forEach((el) => (el.hidden = false));
-  if (window.matchMedia("(max-width: 700px)").matches) $<HTMLDetailsElement>("x-panel").open = false;
+  // En escritorio, «Opciones del gráfico» queda siempre abierto (su título se oculta) y las secciones se pliegan a mano.
+  // En pantallas chicas las secciones van siempre abiertas y sin título, como antes; el panel arranca cerrado en 700 px o
+  // menos, para que el gráfico quede a la vista (SPEC 6.5).
+  const escritorio = window.matchMedia(ESCRITORIO);
+  const panel = $<HTMLDetailsElement>("x-panel");
+  const secciones = [...document.querySelectorAll<HTMLDetailsElement>("#x-controles details.seccion")];
+  function acomodarPanel(): void {
+    if (escritorio.matches) panel.open = true;
+    else secciones.forEach((d) => (d.open = true));
+  }
+  if (window.matchMedia("(max-width: 700px)").matches) panel.open = false;
+  acomodarPanel();
+  escritorio.addEventListener("change", () => { acomodarPanel(); void dibujar(); });
 
   async function documento(s: string, v: string): Promise<DocumentoCompleto> {
     const clave = `${s}.${v}`;
@@ -134,7 +155,10 @@ function iniciar(): void {
     if (c.etapa) c.etapa.value = etapaElegida() ?? "";
     c.log.checked = estado.log;
     c.sombreado.value = estado.sh;
-    c.eventos.checked = estado.ev;
+    c.eventos.checked = estado.ev.length > 0;
+    // Sin eventos, las casillas quedan todas marcadas (y deshabilitadas): «Marcar eventos» vuelve a marcar todo.
+    c.campoCategorias.disabled = !estado.ev.length;
+    c.categorias.forEach((k) => (k.checked = !estado.ev.length || estado.ev.includes(k.dataset.categoria!)));
   }
 
   const nombrePais = (id: string) => (tienePais(doc) ? doc.entidades.find((e) => e.id === id)?.nombre : undefined) ?? id;
@@ -170,7 +194,8 @@ function iniciar(): void {
     estado.hasta = /^\d{4}(-\d{2})?$/.test(c.hasta.value.trim()) ? c.hasta.value.trim() : "";
     estado.log = c.log.checked;
     estado.sh = c.sombreado.value as Estado["sh"];
-    estado.ev = c.eventos.checked;
+    // «Marcar eventos» con las categorías marcadas; si no queda ninguna, se apaga.
+    estado.ev = c.eventos.checked ? c.categorias.filter((k) => k.checked).map((k) => k.dataset.categoria!) : [];
     // Lo que deja de tener sentido con la nueva elección: la librería decide qué queda disponible.
     const disp = disponibles(serieVista(doc, estado.p), { pesosActuales: estado.pa });
     if (!disp.transformaciones.includes(estado.t)) estado.t = "nivel";
@@ -188,15 +213,16 @@ function iniciar(): void {
     return periodosEnRango(registroPeriodos, estado.sh, r);
   }
 
-  async function eventosVisibles(r: Resultado): Promise<MarcaEvento[]> {
-    if (!estado.ev) return [];
+  /** Los eventos de las categorías elegidas, y cuántos hay en el rango sin filtro (para el aviso). */
+  async function eventosVisibles(r: Resultado): Promise<{ eventos: MarcaEvento[]; total: number }> {
+    if (!estado.ev.length) return { eventos: [], total: 0 };
     registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
-    return eventosEnRango(registroEventos, r);
+    return { eventos: eventosEnRango(registroEventos, r, estado.ev), total: eventosEnRango(registroEventos, r).length };
   }
 
-  /** Los episodios (hiperinflación…) se marcan junto con los eventos. */
+  /** Los episodios (hiperinflación…) se marcan junto con los eventos, si el filtro los incluye. */
   async function episodiosVisibles(r: Resultado): Promise<BandaEpisodio[]> {
-    if (!estado.ev) return [];
+    if (!estado.ev.includes(EPISODIO)) return [];
     registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
     return episodiosEnRango(registroPeriodos, r);
   }
@@ -205,7 +231,7 @@ function iniciar(): void {
   let ultimo: {
     r: Resultado; otras: Array<{ id: string; nombre: string; resultado: Resultado }>; quiebres: QuiebreNumerado[];
     periodos: Periodo[]; eventos: MarcaEvento[]; episodios: BandaEpisodio[]; transformacion: string | undefined;
-    contexto: ContextoUbicacion;
+    contexto: ContextoUbicacion; totalEventos: number;
   } | null = null;
 
   async function actualizar(): Promise<void> {
@@ -225,15 +251,17 @@ function iniciar(): void {
     const otras = tienePais(doc) ? estado.p.slice(1).flatMap((id) => {
       try { return [{ id, nombre: nombrePais(id), resultado: transformar(serieDeEntidad(doc, id), o, cargados) }]; } catch { return []; }
     }) : [];
-    let periodos: Periodo[] = [], eventos: MarcaEvento[] = [], episodios: BandaEpisodio[] = [];
+    let periodos: Periodo[] = [], eventos: MarcaEvento[] = [], episodios: BandaEpisodio[] = [], totalEventos = 0;
     try {
-      [periodos, eventos, episodios] = await Promise.all([periodosVisibles(r), eventosVisibles(r), episodiosVisibles(r)]);
+      let ev: { eventos: MarcaEvento[]; total: number };
+      [periodos, ev, episodios] = await Promise.all([periodosVisibles(r), eventosVisibles(r), episodiosVisibles(r)]);
+      ({ eventos, total: totalEventos } = ev);
     } catch (err) {
       estadoTexto.textContent = `No se pudieron leer los períodos o los eventos (${err instanceof Error ? err.message : String(err)}).`;
     }
     const quiebres = numerarQuiebres({ ...serie, advertencias: doc.advertencias });
     const transformacion = nombreTransformacion({ ...o, deflactor: o.deflactor ?? (o.medida === "real" ? serie.insumos?.real?.por_defecto : undefined) });
-    ultimo = { r, otras, quiebres, periodos, eventos, episodios, transformacion, contexto: contextoDe(serie.agregacion, o) };
+    ultimo = { r, otras, quiebres, periodos, eventos, episodios, transformacion, contexto: contextoDe(serie.agregacion, o), totalEventos };
     armarControles();
     const positivos = r.datos.every((d) => d[1] === null || d[1] > 0) && otras.every((x) => x.resultado.datos.every((d) => d[1] === null || d[1] > 0));
     c.log.disabled = !positivos;
@@ -245,7 +273,7 @@ function iniciar(): void {
     tabla();
     cita();
     $<HTMLAnchorElement>("x-ficha").href = urlFicha();
-    history.replaceState(null, "", `${location.pathname}${urlDesdeEstado(estado, doc, indice)}${location.hash}`);
+    history.replaceState(null, "", `${location.pathname}${urlDesdeEstado(estado, doc, indice, CATEGORIAS)}${location.hash}`);
     resumenOpciones();
     void dibujar();
   }
@@ -310,11 +338,10 @@ function iniciar(): void {
       if (x.fases?.length) li.append(` (${x.fases.map((f) => `${f.nombre_corto.toLowerCase()}: ${rangoLegible(f)}`).join("; ")})`);
       return li;
     }));
-    $("x-lista-eventos").replaceChildren(...eventos.map((e) => {
-      const li = document.createElement("li");
-      li.append(`${e.nombre} `, Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible({ desde: e.fecha, hasta: null }).replace("desde el ", "") }));
-      return li;
-    }));
+    listaEventos();
+    const filtro = avisoFiltro();
+    $("x-aviso-filtro").textContent = filtro;
+    $("x-aviso-filtro").hidden = !filtro;
     const lpaises = $("x-leyenda-paises");
     lpaises.hidden = !tienePais(doc);
     if (tienePais(doc)) {
@@ -328,6 +355,29 @@ function iniciar(): void {
         return s;
       }));
     }
+  }
+
+  /** El aviso de los eventos que deja afuera el filtro («Se muestran 12 de 30 eventos…»), o vacío. */
+  function avisoFiltro(): string {
+    return ultimo && estado.ev.length ? avisoFiltroEventos(ultimo.eventos.length, ultimo.totalEventos, estado.ev, pagina.categorias) : "";
+  }
+
+  /** Cómo se marcan los eventos en el gráfico de la pantalla: con letras o, si no hay lugar, con rayitas. */
+  const modoActual = (): ModoEventos => (ultimo ? modoEventosDe(ultimo.r, ultimo.eventos, contenedor.clientWidth || 600) : "letras");
+
+  /** La lista de los eventos marcados, siempre completa: con su letra o, con rayitas, con la fecha. */
+  function listaEventos(): void {
+    if (!ultimo) return;
+    const rayitas = modoActual() === "rayitas";
+    const lista = $("x-lista-eventos");
+    lista.classList.toggle("con-fechas", rayitas);
+    lista.replaceChildren(...ultimo.eventos.map((e) => {
+      const li = document.createElement("li");
+      const fecha = Object.assign(document.createElement("span"), { className: "rango", textContent: diaLegible(e.fecha) });
+      if (rayitas) li.append(fecha, ` · ${e.nombre}`);
+      else li.append(`${e.nombre} `, fecha);
+      return li;
+    }));
   }
 
   function avisos(): void {
@@ -344,6 +394,8 @@ function iniciar(): void {
     for (const e of r.excluidos) lineas.push(`${fechaCorta(e.fecha)}: dato excluido hasta confirmarlo. ${e.motivo}`);
     for (const n of r.notas) lineas.push(n);
     if (ultimo.periodos.length) lineas.push(REGLA_UBICACION);
+    const filtro = avisoFiltro();
+    if (filtro) lineas.push(filtro);
     const caja = $("x-avisos");
     caja.replaceChildren(...lineas.map((l) => Object.assign(document.createElement("p"), { textContent: l })));
     caja.hidden = !lineas.length;
@@ -403,35 +455,36 @@ function iniciar(): void {
   function urlFicha(): string {
     const s = indice.find((x) => x.id === estado.s)!;
     const ruta = estado.v === s.variante_por_defecto ? `/series/${estado.s}/` : `/series/${estado.s}/${estado.v}/`;
-    // La ficha entiende los mismos parámetros (salvo serie, variante, países y sombreado); el período, en años.
-    const q = new URLSearchParams(urlDesdeEstado(estado, doc, indice));
-    for (const k of ["s", "v", "p", "sh", "ev"]) q.delete(k);
+    // La ficha entiende los mismos parámetros, sombreado y eventos incluidos (salvo serie, variante y países); el
+    // período, en años.
+    const q = new URLSearchParams(urlDesdeEstado(estado, doc, indice, CATEGORIAS));
+    for (const k of ["s", "v", "p"]) q.delete(k);
     if (tienePais(doc) && estado.p[0] !== doc.entidades_por_defecto[0]) q.set("e", estado.p[0]);
     for (const k of ["desde", "hasta"]) { const v = q.get(k); if (v && v !== "todo") q.set(k, v.slice(0, 4)); }
-    return `${ruta}${q.size ? `?${q}` : ""}`;
+    return `${ruta}${q.size ? `?${q.toString().replaceAll("%2C", ",")}` : ""}`;
   }
 
   // ---- Gráfico ----
   let vista: VistaGrafico | null = null;
   const lector = conectarLector($("x-lector"), $("x-lectura"));
 
-  /** Lo que dice el lector del gráfico de cada dato: fecha, valor, período (con sus fechas) y reparto. */
+  /**
+   * Lo que dice el lector del gráfico de cada dato: fecha, valor, la banda del sombreado con sus fechas (y el reparto),
+   * el episodio y los eventos del dato (revisión externa de la 4b, 9.4).
+   */
   function lecturas(): Lectura[] {
     if (!ultimo) return [];
-    const { r, periodos, contexto } = ultimo;
+    const { r, periodos, contexto, episodios, eventos } = ultimo;
     const us = periodos.length && estado.sh ? ubicacionesDe(periodos, estado.sh, r, contexto) : [];
     const variacion = esVariacion(estado.t);
+    const modo = modoActual();
     return r.datos.flatMap(([f, v], k) => {
       if (v === null) return [];
-      const partes = [`${fechaLegible(f, r.frecuencias[k])}: ${numero(v, variacion)}`];
-      const u = us[k];
-      if (u) {
-        const p = u.vigentes[0];
-        partes.push(`${columnaPeriodo(estado.sh)}: ${u.mayoria ? u.etiqueta : `${u.etiqueta} (sin mayoría)`}${p && u.vigentes.length === 1 ? ` (${rangoLegible(p)})` : ""}`);
-        const reparto = textoReparto(u);
-        if (reparto) partes.push(`reparto: ${reparto}`);
-      }
-      return [{ t: fechaDeDibujo(referenciaDe(f, r.frecuencias[k], contexto)), texto: partes.join(" · ") }];
+      const texto = textoLectura({
+        fecha: f, frecuencia: r.frecuencias[k], valor: numero(v, variacion), contexto,
+        ...(us[k] ? { columna: columnaPeriodo(estado.sh), ubicacion: us[k] } : {}), episodios, eventos, modo,
+      });
+      return [{ t: fechaDeDibujo(referenciaDe(f, r.frecuencias[k], contexto)), texto }];
     });
   }
   let turno = 0;
@@ -449,6 +502,12 @@ function iniciar(): void {
     });
   }
 
+  /** En escritorio, el gráfico ocupa un 60 % del alto de la pantalla (menos el eje); si no, 260 o 360 px como antes. */
+  function altoGrafico(ancho: number): number {
+    if (!escritorio.matches) return ancho < 520 ? 260 : 360;
+    return Math.min(720, Math.max(320, Math.round(window.innerHeight * 0.6) - 40));
+  }
+
   async function dibujar(): Promise<void> {
     if (!ultimo) return;
     const mio = ++turno;
@@ -457,8 +516,10 @@ function iniciar(): void {
       await import("vega-embed");
       if (mio !== turno) return;
       vista?.finalize();
-      vista = await dibujarEn(contenedor, entrada(ancho, ancho < 520 ? 260 : 360));
+      vista = await dibujarEn(contenedor, entrada(ancho, altoGrafico(ancho)));
       contenedor.dataset.listo = "1";
+      contenedor.dataset.eventos = ultimo.eventos.length ? modoActual() : "";
+      listaEventos();
       lector.actualizar(lecturas(), vista);
     } catch (err) {
       estadoTexto.textContent = `No se pudo dibujar el gráfico (${err instanceof Error ? err.message : String(err)}). La tabla y las descargas siguen disponibles.`;
@@ -483,7 +544,11 @@ function iniciar(): void {
       pie.push(`Sombreado: ${nombreSombreado(estado.sh)}${estado.sh === "catedra" ? ` (${ACLARACION_ETAPAS})` : ""}. Cada dato, en el período vigente a mitad de su intervalo (los saldos en nivel, el último día). Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`);
     }
     if (ultimo?.episodios.length) pie.push(`Episodios: ${ultimo.episodios.map((e) => e.nombre).join("; ")}.`);
-    if (ultimo?.eventos.length) pie.push(`Eventos: ${ultimo.eventos.map((e) => `${e.letra}. ${e.nombre}`).join("; ")}.`);
+    if (ultimo?.eventos.length) {
+      // En la imagen (900 px) los eventos pueden ir con letras aunque en la pantalla vayan como rayitas.
+      const letras = modoEventosDe(ultimo.r, ultimo.eventos, 900) === "letras";
+      pie.push(`Eventos: ${ultimo.eventos.map((e) => (letras ? `${e.letra}. ${e.nombre}` : `${diaLegible(e.fecha)}, ${e.nombre}`)).join("; ")}.`);
+    }
     pie.push(`Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. ${licenciaImagen(doc.fuentes)}`, location.href);
     return pie;
   }
@@ -572,6 +637,9 @@ function iniciar(): void {
   $<HTMLFormElement>("x-controles").addEventListener("submit", (e) => e.preventDefault());
   $<HTMLFormElement>("x-controles").addEventListener("change", (e) => {
     const t = e.target as HTMLElement;
+    if (t === c.serie || t === c.variante) return; // tienen su propio manejo
+    if (t === c.eventos && c.eventos.checked && !c.categorias.some((k) => k.checked)) c.categorias.forEach((k) => (k.checked = true));
+    if (t.dataset.categoria && !c.categorias.some((k) => k.checked)) c.eventos.checked = false;
     if (t === c.etapa && c.etapa) {
       const etapa = pagina.etapas.find((x) => x.id === c.etapa!.value);
       if (etapa) { c.desde.value = etapa.desde.slice(0, 7); c.hasta.value = mesFinal(etapa.hasta); }
@@ -617,6 +685,12 @@ function iniciar(): void {
     if (Math.abs(ancho - anchoPrevio) > 40) void dibujar();
     anchoPrevio = ancho;
   }).observe(contenedor);
+  // En escritorio el alto del gráfico sigue al de la ventana.
+  let altoPrevio = window.innerHeight;
+  window.addEventListener("resize", () => {
+    if (escritorio.matches && Math.abs(window.innerHeight - altoPrevio) > 40) void dibujar();
+    altoPrevio = window.innerHeight;
+  });
 
   // ---- Arranque: la URL manda ----
   void (async () => {
@@ -629,7 +703,7 @@ function iniciar(): void {
       estadoTexto.dataset.tipo = "error";
       return;
     }
-    const { estado: e, avisos: a2 } = estadoDesdeUrl(q, serie.id, variante, doc);
+    const { estado: e, avisos: a2 } = estadoDesdeUrl(q, serie.id, variante, doc, CATEGORIAS);
     estado = e;
     avisosUrl = [...a1, ...a2];
     await actualizar();
