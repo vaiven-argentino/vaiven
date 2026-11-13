@@ -680,7 +680,7 @@ Antes, la SPEC 6.2 decía que la columna del período era «la vigente el últim
   - casos fijos nuevos del revisor visual.
 - **Eventos candidatos** (4c): Circular 1050, devaluación de enero de 2014, PASO de 2019 y swap con el Tesoro. Episodios candidatos: crisis financiera de 1980–1982, Tequila, crisis de la Convertibilidad, crisis cambiaria de 2018 y pandemia.
 - **Sin verificar:** los huecos entre ministros del 28/5 al 1/6/1971 y del 21 al 22/12/1981, y la p. 25 del original de Cagan.
-- **A decidir:** el fin de Jesús Rodríguez, 7/7 (decreto, como está) u 8/7/1989 (CDI).
+- **Decidido (13/11/2026):** el fin de Jesús Rodríguez queda en el 7/7/1989, la fecha del decreto, con el criterio de los demás ministros (y no el 8/7 del CDI).
 - **De la 4b:** la prueba manual del MCP (preguntas 14 a 18) y los 19 extremos de regímenes sin norma.
 
 
@@ -797,3 +797,4 @@ La SPEC pasa a la v1.5:
 
 - **Panel del explorador:** si molesta que se desplace por dentro, las secciones Transformación y Período podrían arrancar plegadas en ventanas de menos de 900 px de alto.
 - **Lo que sigue de la 4b y la 4c,** como en la sección anterior: eventos y episodios candidatos, la prueba manual del MCP y los extremos sin norma.
+- **`/salud`** decía `"fase":"4a"`. Pasa a `4b` (`vaiven.fase` en `worker/package.json`, que lee también `mcp/scripts/probar-endpoint.mjs`).
