@@ -1,4 +1,4 @@
-import { Repositorio, fuenteAssets, manejarMcp, precalentar } from "@vaiven/mcp";
+import { Repositorio, VERSION_SERVIDOR, fuenteAssets, manejarMcp, precalentar } from "@vaiven/mcp";
 import paquete from "../package.json";
 import { dispararActualizacion } from "./disparador";
 
@@ -16,9 +16,10 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/salud") {
-      // La fase sale de un solo lugar (`vaiven.fase` en package.json): se actualiza con cada despliegue de fase.
+      // La fase sale de un solo lugar (`vaiven.fase` en package.json): se actualiza con cada despliegue de fase. La versión
+      // es la del servidor MCP (`version` en mcp/package.json), la misma que responde en `initialize`: una sola fuente.
       return Response.json(
-        { estado: "ok", version: paquete.version, fase: paquete.vaiven.fase },
+        { estado: "ok", version: VERSION_SERVIDOR, fase: paquete.vaiven.fase },
         { headers: { "cache-control": "no-store" } },
       );
     }

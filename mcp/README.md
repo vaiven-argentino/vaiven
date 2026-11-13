@@ -6,13 +6,15 @@ Servidor MCP de Vaivén (SPEC, sección 7), en TypeScript con el SDK oficial v2 
 - **Datos:** lee el export ya publicado (no calcula empalmes) y transforma con `@vaiven/transformaciones`. La cita sale de `@vaiven/cita`, igual que en la ficha de la web.
 - **Instrucciones para conectarlo:** <https://vaiven.argentino.workers.dev/agentes/>.
 
-## Herramientas (fase 3, ampliadas en la 4a)
+## Herramientas (fase 3, ampliadas en la 4a y la 4b)
 | Herramienta | Parámetros | Devuelve |
 |---|---|---|
 | `buscar_series` | `texto?`, `bloque?`, `prioridad?`, `desde?`, `hasta?` | Series con id, código, nombre, bloque, frecuencia, cobertura, variantes (con su estado y nota) y, en las internacionales, los países. |
 | `describir_serie` | `id` | Definición, variantes (método, tramos, moneda, transformaciones, medidas y deflactores, excluidos, cita), países, quiebres, fuentes, bibliografía y licencia. |
 | `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `pesos_actuales?`, `frecuencia?`, `medida?`, `deflactor?`, `base_real?`, `transformacion?`, `base?`, `paises?` | `datos` como `[fecha, valor]` (en las series internacionales, un objeto por país), unidad resultante, tramos de frecuencia, advertencias por quiebres del rango (de la serie y de los insumos de la medida), excluidos, notas, fuentes, versión de datos y cita. |
 | `citar` | `id`, `variante?`, `formato?`, `transformacion?`, `frecuencia?`, `pesos_actuales?`, `medida?`, `deflactor?`, `base_real?`, `paises?` | Cita en texto, APA y BibTeX (o el formato pedido), con la versión de datos y la URL de la variante. |
+| `listar_periodos` | `tipo?`, `por_mandato?` | Gobiernos (con sus mandatos), ministros de Economía, planes, regímenes cambiarios, etapas del curso y episodios (con sus fases), con fechas, fuentes, confianza y cortes convencionales. |
+| `periodo_en_fecha` | `fecha` (día o mes) | Qué regía ese día o ese mes en cada tipo de período, los eventos de la fecha y, en un episodio, la fase vigente. Con un mes, `asignacion`: a qué período asigna Vaivén un dato mensual y un saldo a fin de mes, con el reparto por días. |
 
 - `id` acepta el id de la serie (`ipc`), su código (`PRE-01`) o el de una variante (`ipc.provincias`).
 - **Medidas (fase 4a):** `medida` es `real`, `en_dolares` o `pct_pib`; `pesos_actuales: true` convierte las variantes en moneda de cada época. El MCP lee los insumos (IPC, tipo de cambio, PIB, signos monetarios) del mismo export, solo cuando se piden. `deflactor` acepta `ipc.provincias` o `provincias`.
@@ -26,8 +28,8 @@ Servidor MCP de Vaivén (SPEC, sección 7), en TypeScript con el SDK oficial v2 
 src/datos.ts            FuenteDatos (assets del Worker o URL), Repositorio con caché y resolución de ids
 src/fuente-carpeta.ts   el export desde una carpeta (stdio y pruebas; usa node:fs)
 src/textos.ts           instrucciones del servidor y descripciones de herramientas y parámetros
-src/herramientas/       buscar.ts, describir.ts, obtener.ts, citar.ts (funciones puras) y comun.ts
-src/servidor.ts         crearServidor(repo): McpServer con las 4 herramientas
+src/herramientas/       buscar.ts, describir.ts, obtener.ts, citar.ts, periodos.ts (funciones puras) y comun.ts
+src/servidor.ts         crearServidor(repo): McpServer con las 6 herramientas; la versión es la de package.json
 src/http.ts             manejarMcp(request, repo): CORS, OPTIONS, 405, Host, límite y createMcpHandler
 src/stdio.ts            variante local
 scripts/probar-endpoint.mjs   prueba HTTP del Worker (local o producción)
@@ -39,6 +41,12 @@ PRUEBA_MANUAL.md        guion de la prueba con Claude (web y escritorio)
 - `POST`: el protocolo. `OPTIONS`: 204 con CORS abierto. `GET` y `DELETE`: 405 (sin estado no hay flujo SSE aparte ni sesiones).
 - Se acepta cualquier origen (los datos son públicos y no hay credenciales). Contra el DNS rebinding se valida el `Host`: solo `vaiven.argentino.workers.dev`, `localhost` y `127.0.0.1`.
 - Límite por IP: el Worker usa el binding de Rate Limiting (120 pedidos cada 60 s, aproximado). Si se pasa, responde 429 con `Retry-After`.
+
+## Clientes en Python
+Cloudflare responde **403 (error 1010)** a los pedidos con el User-Agent por defecto de `urllib` (`Python-urllib/…`). Con `requests`, `httpx`, `curl` o sin User-Agent funciona. El SDK de MCP de Python usa `httpx`, así que no tiene este problema; solo afecta a scripts que llamen a `/mcp` o a `/datos/` con `urllib.request`. Si hace falta usarlo, mandá un User-Agent propio (`urllib.request.Request(url, headers={"User-Agent": "mi-script"})`).
+
+## Versión
+Una sola: `version` en `mcp/package.json`. La responde el MCP en `initialize` y el Worker en `/salud` (junto con la fase, `vaiven.fase` en `worker/package.json`). `scripts/probar-endpoint.mjs` controla que coincidan.
 
 ## Variante local (stdio)
 ```bash
@@ -64,4 +72,4 @@ node mcp/scripts/probar-endpoint.mjs https://vaiven.argentino.workers.dev
 ```
 La prueba con Claude se hace a mano: ver [`PRUEBA_MANUAL.md`](PRUEBA_MANUAL.md).
 
-**Se llenó en:** fase 3 (`buscar_series`, `describir_serie`, `obtener_serie`, `citar`); fase 4a (medidas, pesos actuales, índice desde tasas y países como parámetros). **Fase 4 (subfase 4d):** `comparar_series`, `listar_periodos`, `periodo_en_fecha` y `especificacion_grafico`. **Fase 5:** `riesgo_pais` (SPEC, sección 11).
+**Se llenó en:** fase 3 (`buscar_series`, `describir_serie`, `obtener_serie`, `citar`); fase 4a (medidas, pesos actuales, índice desde tasas y países como parámetros); fase 4b (`listar_periodos` y `periodo_en_fecha`, con episodios, fases, confianza y asignación de un mes). **Fase 4 (subfase 4d):** `comparar_series` y `especificacion_grafico`. **Fase 5:** `riesgo_pais` (SPEC, sección 11).
