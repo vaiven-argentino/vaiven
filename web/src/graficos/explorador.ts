@@ -393,9 +393,8 @@ function iniciar(): void {
     }
     for (const e of r.excluidos) lineas.push(`${fechaCorta(e.fecha)}: dato excluido hasta confirmarlo. ${e.motivo}`);
     for (const n of r.notas) lineas.push(n);
-    if (ultimo.periodos.length) lineas.push(REGLA_UBICACION);
-    const filtro = avisoFiltro();
-    if (filtro) lineas.push(filtro);
+    // La regla de ubicación y el filtro de eventos no son advertencias: van debajo del gráfico y en la leyenda.
+    $("x-regla").hidden = !ultimo.periodos.length;
     const caja = $("x-avisos");
     caja.replaceChildren(...lineas.map((l) => Object.assign(document.createElement("p"), { textContent: l })));
     caja.hidden = !lineas.length;

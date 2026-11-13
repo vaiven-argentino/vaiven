@@ -66,6 +66,12 @@ export function textoConfianza(p: Pick<Periodo, "confianza">): string {
   return `inicio: ${c.desde}${c.hasta ? `; fin: ${c.hasta}` : ""}`;
 }
 
+/**
+ * La regla de ubicación en una línea, debajo del gráfico con sombreado (segunda revisión externa de la 4b, 2.2). El texto
+ * completo (`REGLA_UBICACION`, de la librería) va en un desplegable «Cómo se asigna».
+ */
+export const REGLA_CORTA = "Cada dato se asigna al período vigente a mitad de su intervalo; los saldos a fin de período, al último día.";
+
 /** Aclaración que acompaña a las etapas del curso fuera de /periodos/ (CSV, XLSX, pie de las imágenes). */
 export const ACLARACION_ETAPAS = "etapas según la periodización de un curso universitario";
 

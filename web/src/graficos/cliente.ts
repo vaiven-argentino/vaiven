@@ -1,7 +1,7 @@
 // Interactividad de la ficha: transformaciones, período y escala, con el estado en la URL; gráfico (Vega-Lite,
 // cargado recién cuando hace falta); tabla, resumen, avisos, descargas de la vista y cita.
 import {
-  ErrorTransformacion, REGLA_UBICACION, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, serieDeEntidad,
+  ErrorTransformacion, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, serieDeEntidad,
   tienePais, transformar, type DocumentoEventos, type DocumentoPeriodos, type Opciones, type Periodo, type Resultado,
   type SerieExportada, type Transformacion,
 } from "@vaiven/transformaciones";
@@ -267,8 +267,9 @@ function iniciar(): void {
     for (const n of r.notas) lineas.push(n);
     const pico = picoQueComprime(r);
     if (pico) lineas.push(`El máximo (${pico}) comprime el resto del gráfico. Para ver mejor los otros años, elegí un período más corto (por ejemplo, «Desde 1991»)${cLog.disabled ? "" : " o la escala logarítmica"}.`);
-    if (ultimo?.periodos.length) lineas.push(REGLA_UBICACION);
-    if (avisoFiltro()) lineas.push(avisoFiltro());
+    // La regla de ubicación y el filtro de eventos no son advertencias: van debajo del gráfico y en la leyenda.
+    const regla = $("regla");
+    if (regla) regla.hidden = !ultimo?.periodos.length;
     const caja = $("avisos")!;
     caja.replaceChildren(...lineas.map((l) => Object.assign(document.createElement("p"), { textContent: l })));
     caja.hidden = !lineas.length;

@@ -3,7 +3,9 @@
 // las etapas del curso; el navegador pide el JSON de la variante elegida, y los períodos y eventos solo si se activan.
 // Todo el estado vive en la URL.
 import Base from "../../layouts/Base.astro";
+import { REGLA_UBICACION } from "@vaiven/transformaciones";
 import { catalogo, eventos, periodos } from "../../lib/export";
+import { REGLA_CORTA } from "../../lib/periodos";
 import type { IndiceSerie } from "../../lib/estado";
 
 const series: IndiceSerie[] = catalogo().series
@@ -179,6 +181,13 @@ const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio:
         </div>
         <p id="x-lectura" class="lectura secundario" aria-live="polite"></p>
         <p class="leyenda-paises" id="x-leyenda-paises" hidden></p>
+        <div class="regla" id="x-regla" hidden>
+          <p>{REGLA_CORTA}</p>
+          <details>
+            <summary>Cómo se asigna</summary>
+            <p>{REGLA_UBICACION}</p>
+          </details>
+        </div>
         <figcaption>
           <span class="visualmente-oculto">Resumen del gráfico: </span><span id="x-resumen"></span>
         </figcaption>
@@ -317,6 +326,12 @@ const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio:
   .copiar:hover { border-color: var(--acento); }
   .copiado { font-size: 0.85rem; color: var(--secundario); margin-left: 8px; }
   .aviso-filtro { margin: 6px 0 0; font-size: 0.9rem; }
+  /* La regla de ubicación, debajo del gráfico y en tono neutro: no es una advertencia (segunda revisión externa de la 4b). */
+  .regla { display: grid; gap: 2px; font-size: 0.9rem; color: var(--secundario); max-width: 75ch; }
+  .regla p { margin: 0; }
+  .regla summary { cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; color: var(--acento); }
+  .regla details[open] p { padding-bottom: 6px; }
+
   .lista-eventos.con-fechas { list-style: none; padding-left: 0; }
 
   /* Escritorio (revisión externa de la 4b, 9.4): dos columnas. A la izquierda, un panel fijo de 300 px con todos los
