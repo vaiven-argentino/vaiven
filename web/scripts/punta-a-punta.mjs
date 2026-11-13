@@ -136,6 +136,33 @@ async function explorador(pagina, ancho) {
   console.log(`${idFiltro}: casillas → URL canónica`);
 }
 
+// La regla de ubicación va debajo del gráfico (segunda revisión externa de la 4b, 2.2): con sombreado, el gráfico empieza en
+// la misma posición que sin él, en el explorador y en la ficha (tolerancia de 10 px).
+async function graficoSinCorrerse(navegador) {
+  for (const ancho of [390, 1280]) {
+    const contexto = await navegador.newContext({ viewport: { width: ancho, height: 900 } });
+    const pagina = await contexto.newPage();
+    for (const [ruta, sel] of [["/explorador/", "#x-grafico"], ["/series/ipc/", "#grafico"]]) {
+      const arriba = async (url) => {
+        await pagina.goto(`${base}${url}`, { waitUntil: "networkidle" });
+        await pagina.waitForSelector(`${sel}[data-listo='1'] svg`, { timeout: 15000 });
+        return pagina.$eval(sel, (g) => Math.round(g.getBoundingClientRect().top + window.scrollY));
+      };
+      const sin = await arriba(ruta);
+      const con = await arriba(`${ruta}?sh=gobierno`);
+      const id = `${ruta}?sh=gobierno @ ${ancho}px`;
+      ok(Math.abs(con - sin) <= 10, `${id}: con sombreado el gráfico empieza en ${con} px y sin sombreado en ${sin} px`);
+      const regla = await pagina.evaluate(([r, g]) => {
+        const nodo = document.querySelector(r);
+        return { visible: !nodo.hidden, despues: nodo.getBoundingClientRect().top > document.querySelector(`${g} svg`).getBoundingClientRect().bottom };
+      }, [ruta === "/explorador/" ? "#x-regla" : "#regla", sel]);
+      ok(regla.visible && regla.despues, `${id}: la regla de ubicación no está debajo del gráfico`);
+      console.log(`${id}: gráfico desde ${con} px (sin sombreado, ${sin} px); regla debajo`);
+    }
+    await contexto.close();
+  }
+}
+
 // Escritorio (revisión externa de la 4b, 9.4): en 1280 × 800, el gráfico empieza en la primera mitad de la pantalla.
 async function explorador1280x800(navegador) {
   const contexto = await navegador.newContext({ viewport: { width: 1280, height: 800 } });
@@ -311,6 +338,7 @@ for (const ancho of [390, 1280]) {
   await contexto.close();
 }
 await explorador1280x800(navegador);
+await graficoSinCorrerse(navegador);
 await navegador.close();
 if (fallas.length) {
   console.error(`\n${fallas.length} fallas:\n${fallas.join("\n")}`);

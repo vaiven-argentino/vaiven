@@ -1,10 +1,10 @@
 ---
 // Ficha de serie (SPEC 6.1): todo lo que se lee está en el HTML del build. El gráfico y las transformaciones se
 // suman con JavaScript; sin JS quedan la tabla, las descargas y la cita.
-import { atraso, disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
+import { REGLA_UBICACION, atraso, disponibles, serieDeEntidad, tienePais, transformar } from "@vaiven/transformaciones";
 import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, eventos as leerEventos, insumosDe, periodos as leerPeriodos, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
-import { OPCIONES_SOMBREADO, nombreSombreado } from "../lib/periodos";
+import { OPCIONES_SOMBREADO, REGLA_CORTA, nombreSombreado } from "../lib/periodos";
 import { aniosDe, crecimientoPorDecada, desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
 import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, cobertura, diaDeVersion, fechaCorta, textoAtraso, ultimoDato } from "../lib/formato";
 
@@ -244,6 +244,13 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
           {nombresMostrados.length > 1 && <> · <span class="muestra" aria-hidden="true"></span> {nombresMostrados.slice(1).join(", ")}</>}
         </p>
       )}
+      <div class="regla" id="regla" hidden>
+        <p>{REGLA_CORTA}</p>
+        <details>
+          <summary>Cómo se asigna</summary>
+          <p>{REGLA_UBICACION}</p>
+        </details>
+      </div>
       <figcaption>
         <span class="visualmente-oculto">Resumen del gráfico: </span><span id="resumen-grafico">{resumen(r, r.unidad, variacion, numerados)}</span>
       </figcaption>
@@ -509,6 +516,11 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
   .lista-periodos :global(.rango), .lista-eventos :global(.rango) { color: var(--secundario); }
   .estado:empty { display: none; }
   .estado[data-tipo="error"] { color: var(--acento); font-weight: 600; }
+  /* La regla de ubicación, debajo del gráfico y en tono neutro: no es una advertencia (segunda revisión externa de la 4b). */
+  .regla { display: grid; gap: 2px; font-size: 0.9rem; color: var(--secundario); max-width: 75ch; }
+  .regla p { margin: 0; }
+  .regla summary { cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; gap: 6px; color: var(--acento); }
+  .regla details[open] p { padding-bottom: 6px; }
   .avisos { display: grid; gap: 6px; border: 1px solid var(--ocre); border-radius: var(--radio); padding: 12px 14px; font-size: 0.92rem; }
   .figura { margin: 0; display: grid; gap: 10px; min-width: 0; }
   .grafico { width: 100%; min-height: 260px; }

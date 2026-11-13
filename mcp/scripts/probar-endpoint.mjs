@@ -1,4 +1,4 @@
-// Prueba el Worker por HTTP: /mcp en las dos eras del protocolo, las 4 herramientas, CORS, GET y OPTIONS, y que el
+// Prueba el Worker por HTTP: /mcp en las dos eras del protocolo, las 6 herramientas, la versión, CORS, GET y OPTIONS, y que el
 // resto del sitio siga igual (/salud, /datos/, fichas, 301, 404 y, en local, el Cron).
 //
 // Uso: node mcp/scripts/probar-endpoint.mjs [base]
@@ -8,6 +8,8 @@ import { readFileSync } from "node:fs";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 
 const base = (process.argv[2] ?? "http://localhost:8787").replace(/\/$/, "");
+// La versión única (mcp/package.json): la responden /salud y el initialize del MCP.
+const VERSION = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf-8")).version;
 const local = /^http:\/\/(localhost|127\.0\.0\.1)/.test(base);
 let fallas = 0;
 
@@ -38,7 +40,9 @@ for (const [era, modo] of [["2026-07-28", { pin: "2026-07-28" }], ["2025 (initia
     const c = await cliente(modo);
     chequear(`MCP ${era}: conecta`, true, `era ${c.getProtocolEra()}, versión ${c.getNegotiatedProtocolVersion() ?? "?"}`);
     const { tools } = await c.listTools();
-    chequear(`MCP ${era}: 4 herramientas`, tools.length === 4, tools.map((t) => t.name).join(", "));
+    chequear(`MCP ${era}: 6 herramientas`, tools.length === 6, tools.map((t) => t.name).join(", "));
+    const version = c.getServerVersion()?.version;
+    chequear(`MCP ${era}: versión ${VERSION}`, version === VERSION, `${version}`);
 
     const b = texto(await c.callTool({ name: "buscar_series", arguments: { texto: "desempleo" } }));
     chequear(`MCP ${era}: buscar_series «desempleo»`, b.series[0]?.id === "desocupacion", b.series.map((s) => s.id).join(", "));
@@ -86,6 +90,8 @@ await intentar("Sitio", async () => {
   // La fase esperada es la del package.json del Worker (la misma que lee /salud).
   const { vaiven } = JSON.parse(readFileSync(new URL("../../worker/package.json", import.meta.url), "utf-8"));
   chequear(`/salud con fase ${vaiven.fase}`, salud.ok && s.fase === vaiven.fase, JSON.stringify(s));
+  // Una sola versión: la de mcp/package.json, en /salud y en el initialize del MCP.
+  chequear(`/salud con versión ${VERSION}`, s.version === VERSION, JSON.stringify(s));
   const cat = await fetch(`${base}/datos/catalogo.json`);
   chequear("/datos/catalogo.json con CORS", cat.ok && cat.headers.get("access-control-allow-origin") === "*", `${cat.status}`);
   const ficha = await fetch(`${base}/series/ipc/`);

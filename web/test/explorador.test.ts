@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { periodosDe, serieDeEntidad, transformar, ubicarFechas, type DocumentoPeriodos, type SeriePorPais } from "@vaiven/transformaciones";
-import { columnasDe, textoLectura } from "../src/lib/periodos";
+import { columnasDe, episodiosEnRango, textoLectura } from "../src/lib/periodos";
 import { describe, expect, it } from "vitest";
 import { SEPARACION_EVENTOS, especificacion, filasFranja, modoEventos, modoEventosDe, separarRotulos, type BandaPeriodo, type Tema } from "../src/graficos/espec";
 import { csvDeVista, hojasXlsx, type VistaDescarga } from "../src/lib/descarga";
@@ -105,18 +105,28 @@ describe("eventos", () => {
 describe("lector del gráfico: banda, episodio y eventos", () => {
   const gobiernos = periodosDe(periodos, "gobierno");
   const contexto = { agregacion: "promedio" as const, transformacion: "var_mensual" as const };
-  const episodio = {
-    desde: "1989-02-06", hasta: "1990-04-01", nombre: "Hiperinflación de 1989–1990", nombre_corto: "Hiperinflación",
-    fases: [{ desde: "1989-02-06", hasta: "1989-12-12", nombre: "Primer brote", nombre_corto: "Primer brote" },
-      { desde: "1989-12-12", hasta: "1990-04-01", nombre: "Segundo brote", nombre_corto: "Segundo brote" }],
-  };
-  it("julio de 1989: Menem con sus fechas, el reparto, la fase y sin eventos", () => {
+  // El episodio publicado, con sus tres fases (segunda revisión externa de la 4b: la tregua del Plan Bunge y Born se
+  // separa del primer brote).
+  const ipc = leer<never>("series/ipc/oficial.json") as never as Parameters<typeof transformar>[0];
+  const [episodio] = episodiosEnRango(periodos, transformar(ipc, { transformacion: "var_mensual", desde: "1989", hasta: "1990" } as never));
+  it("el episodio publicado tiene tres fases: primer brote, tregua y segundo brote", () => {
+    expect(episodio.fases?.map((f) => [f.nombre_corto, f.desde, f.hasta])).toEqual([
+      ["Primer brote", "1989-02-06", "1989-08-01"],
+      ["Tregua del Plan Bunge y Born", "1989-08-01", "1989-12-12"],
+      ["Segundo brote", "1989-12-12", "1990-04-01"],
+    ]);
+  });
+  it("julio de 1989: Menem con sus fechas, el reparto, el primer brote y sin eventos", () => {
     const [u] = ubicarFechas(["1989-07"], ["mensual"], contexto, gobiernos, "gobierno");
     const t = textoLectura({ fecha: "1989-07", frecuencia: "mensual", valor: "196,6 %", contexto, columna: "Gobierno", ubicacion: u, episodios: [episodio] });
     expect(t).toContain("Carlos Saúl Menem (8/7/1989–");
     expect(t).toContain("reparto:");
-    expect(t).toContain("episodio: Hiperinflación de 1989–1990, primer brote (6/2/1989–12/12/1989)");
+    expect(t).toContain("episodio: Hiperinflación de 1989–1990, primer brote (6/2/1989–1/8/1989)");
     expect(t).not.toContain("evento");
+  });
+  it("octubre de 1989: la tregua del Plan Bunge y Born, con la mayúscula del nombre propio", () => {
+    const t = textoLectura({ fecha: "1989-10", frecuencia: "mensual", valor: "5,6 %", contexto, episodios: [episodio] });
+    expect(t).toContain("episodio: Hiperinflación de 1989–1990, tregua del Plan Bunge y Born (1/8/1989–12/12/1989)");
   });
   it("un dato sin mayoría lo dice, y la banda lleva sus fechas igual", () => {
     const [u] = ubicarFechas(["1983-12"], ["mensual"], contexto, gobiernos, "gobierno");

@@ -2,7 +2,7 @@
 // etapas de la política económica, con sus fechas y fuentes (export/periodos.json y eventos.json). Solo leen.
 import { citaRegistro } from "@vaiven/cita";
 import {
-  SUPERPONIBLES, TIPOS_PERIODO, diasDe, extremosDudosos, periodosDe, rangoLegible, referenciaDe, seCruzan, ubicar, vigenteEl,
+  SUPERPONIBLES, TIPOS_PERIODO, diasDe, extremosDudosos, fasesDe, periodosDe, rangoLegible, referenciaDe, seCruzan, ubicar, vigenteEl,
   type DocumentoPeriodos, type Evento, type FuentePeriodo, type Mandato, type Periodo, type TipoPeriodo,
 } from "@vaiven/transformaciones";
 import { ErrorHerramienta, type Repositorio } from "../datos";
@@ -164,9 +164,13 @@ export async function periodoEnFecha(repo: Repositorio, args: ArgsPeriodoEnFecha
     const flujo = ubicar(referenciaDe(mes, "mensual", { agregacion: "promedio" }), lista, t);
     const saldo = ubicar(referenciaDe(mes, "mensual", { agregacion: "fin_de_periodo" }), lista, t);
     const conMayoria = (u: typeof flujo) => (u.mayoria ? u.etiqueta : `${u.etiqueta} (sin mayoría)`);
+    // En los episodios, además, la fase del punto medio y la del último día (segunda revisión externa de la 4b, 2.3).
+    const fases = t === "episodio" ? lista.flatMap((p) => fasesDe(p)) : [];
+    const faseDe = (agregacion: "promedio" | "fin_de_periodo") => ubicar(referenciaDe(mes, "mensual", { agregacion }), fases, "episodio").etiqueta;
     return [t, {
       promedio_o_suma: conMayoria(flujo),
       saldo_fin_de_mes: saldo.etiqueta,
+      ...(fases.length ? { fase_promedio_o_suma: faseDe("promedio"), fase_saldo_fin_de_mes: faseDe("fin_de_periodo") } : {}),
       ...(SUPERPONIBLES.includes(t) ? {} : {
         reparto: flujo.reparto.map((x) => ({ nombre: x.nombre, dias: x.dias, proporcion: Math.round(x.proporcion * 1000) / 1000 })),
       }),
@@ -187,7 +191,13 @@ export async function periodoEnFecha(repo: Repositorio, args: ArgsPeriodoEnFecha
     plan: resumir(porTipo.plan),
     regimen_cambiario: resumir(porTipo.regimen_cambiario),
     catedra: resumir(porTipo.catedra),
-    episodio: resumir(porTipo.episodio),
+    // Con un día, cada episodio dice qué fase regía (segunda revisión externa de la 4b, 2.3).
+    episodio: rango.alcance === "dia"
+      ? porTipo.episodio.map((p) => {
+        const fase = fasesDe(p).find((f) => vigenteEl(f, rango.desde));
+        return { ...resumen(p, nombreTipo), fase_vigente: fase ? { id: fase.id, nombre: fase.nombre } : null };
+      })
+      : resumir(porTipo.episodio),
     ...(asignacion ? {
       asignacion,
       regla_asignacion: "Un dato mensual (promedio, suma o variación) se asigna al período vigente a mitad de mes; un " +

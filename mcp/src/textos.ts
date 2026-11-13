@@ -114,8 +114,9 @@ export const PARAMETRO = {
     "actuales. Hace falta para variaciones, base 100 o cambio de frecuencia en esas series.",
   medida:
     "real: a precios constantes, deflactada con el IPC · en_dolares: dividida por el tipo de cambio oficial · " +
-    "pct_pib: en % del PIB del mismo período (el PIB lo elige `denominador`); pide frecuencia anual o trimestral " +
-    "(en los stocks, solo anual). Solo valen las que admite la variante (ver describir_serie).",
+    "pct_pib: en % del PIB del mismo período (el PIB lo elige `denominador`); la serie tiene que estar en frecuencia " +
+    "anual o trimestral (en los stocks, solo anual) o pasarse a ella con `frecuencia`. Solo valen las que admite la " +
+    "variante (ver describir_serie).",
   denominador:
     "Solo con medida pct_pib: qué PIB divide. cada-base (por defecto): el publicado en cada base, como en los " +
     "cuadros de la bibliografía; salta en 2004 por el cambio de base · retropolado: llevado hacia atrás desde la " +

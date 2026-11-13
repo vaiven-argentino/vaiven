@@ -8,7 +8,7 @@ import { buscarSeries } from "../src/herramientas/buscar";
 import { citar } from "../src/herramientas/citar";
 import { LIMITE_OBSERVACIONES } from "../src/herramientas/comun";
 import { describirSerie } from "../src/herramientas/describir";
-import { leerBase, obtenerSerie } from "../src/herramientas/obtener";
+import { NOTA_PESOS_ACTUALES, leerBase, obtenerSerie } from "../src/herramientas/obtener";
 import { transformar } from "@vaiven/transformaciones";
 import { EXPORT, repoCon, repoReal } from "./ayuda";
 
@@ -24,6 +24,20 @@ const catalogo = JSON.parse(readFileSync(join(EXPORT, "catalogo.json"), "utf-8")
 const deBloque = (b: string) => catalogo.series.filter((s) => s.bloque === b).map((s) => s.id).sort();
 
 describe("buscar_series", () => {
+  it("«mercado de trabajo» y «mercado laboral» van a trabajo, sin el dólar (segunda revisión externa de la 4b, 4.6)", async () => {
+    for (const texto of ["mercado de trabajo", "mercado laboral"]) {
+      expect(ids(await buscarSeries(repo, { texto }))).toEqual(["desocupacion", "salario-real"]);
+    }
+  });
+  it("con un solo término, lo mismo que antes de exigir todos los términos", async () => {
+    // Salida anterior al cambio (13/11/2026).
+    expect(ids(await buscarSeries(repo, { texto: "dólar" }))).toEqual(["tc-oficial", "tcr-bilateral", "tcr-multilateral", "agregados",
+      "cuenta-corriente", "deuda-externa", "exportaciones", "fuga", "importaciones", "int-pib-per-capita", "int-pib", "saldo-comercial"]);
+    expect(ids(await buscarSeries(repo, { texto: "inflación" }))).toEqual(["ipc", "inversion", "pib", "salario-real", "tasa-pasiva",
+      "tcr-bilateral", "tcr-multilateral"]);
+    expect(ids(await buscarSeries(repo, { texto: "PRE-01" }))).toEqual(["ipc"]);
+    expect(ids(await buscarSeries(repo, { texto: "Brasil" }))).toEqual(["int-pib-per-capita", "int-pib"]);
+  });
   it("sin filtros lista las series publicadas, con la versión de datos y la nota del catálogo", async () => {
     const r = await buscarSeries(repo, {});
     expect(r.total).toBe(catalogo.series.length);
@@ -142,6 +156,33 @@ describe("obtener_serie", () => {
     const r = await obtenerSerie(repo, { id: "desocupacion", frecuencia: "anual", desde: "2002", hasta: "2004" });
     expect(r.datos).toEqual([["2002", 19.65], ["2003", null], ["2004", 13.5209]]);
     expect(r.notas.join(" ")).toContain("2003");
+  });
+  it("frecuencia igual a la de la variante: se ignora con una nota (segunda revisión externa de la 4b, 4.4)", async () => {
+    const con = await obtenerSerie(repo, { id: "cuenta-corriente", variante: "larga", medida: "pct_pib", frecuencia: "anual", desde: "1980", hasta: "1980" });
+    const sin = await obtenerSerie(repo, { id: "cuenta-corriente", variante: "larga", medida: "pct_pib", desde: "1980", hasta: "1980" });
+    expect(con.datos).toEqual(sin.datos);
+    expect(con.notas).toContain("La variante ya es anual: se ignoró `frecuencia`.");
+    expect(con).not.toHaveProperty("frecuencia_pedida");
+    expect(con.cita).toEqual(sin.cita);
+  });
+  it("pesos actuales: nota fija de que no es un ajuste por inflación, con las equivalencias de los signos (segunda revisión externa de la 4b, 4.7)", async () => {
+    const signos = JSON.parse(readFileSync(join(EXPORT, "auxiliares", "signos-monetarios.json"), "utf-8")) as { signos: Array<{ id: string; unidades_por_peso_actual: number }> };
+    const unidades = Object.fromEntries(signos.signos.map((x) => [x.id, x.unidades_por_peso_actual]));
+    expect(unidades).toEqual({ "peso-moneda-nacional": 1e13, "peso-ley-18188": 1e11, "peso-argentino": 1e7, austral: 1e4, peso: 1 });
+    expect(NOTA_PESOS_ACTUALES).toContain("1 peso = 10.000 australes = 10⁷ pesos argentinos = 10¹¹ pesos ley 18.188 = 10¹³ pesos moneda nacional");
+    const variante = await obtenerSerie(repo, { id: "tc-oficial", variante: "pesos-actuales", desde: "1975-01", hasta: "1975-01" });
+    expect(variante.notas).toContain(NOTA_PESOS_ACTUALES);
+    const pedido = await obtenerSerie(repo, { id: "tc-oficial", variante: "moneda-de-epoca", pesos_actuales: true, desde: "1975-01", hasta: "1975-01" });
+    expect(pedido.notas).toContain(NOTA_PESOS_ACTUALES);
+    const epoca = await obtenerSerie(repo, { id: "tc-oficial", variante: "moneda-de-epoca", desde: "1975-01", hasta: "1975-01" });
+    expect(epoca.notas).not.toContain(NOTA_PESOS_ACTUALES);
+  });
+  it("desocupación anual de 2003 sola: [2003, null], con la nota y el quiebre de la EPH (segunda revisión externa de la 4b, 4.1)", async () => {
+    const r = await obtenerSerie(repo, { id: "desocupacion", frecuencia: "anual", desde: "2003", hasta: "2003" });
+    expect(r.datos).toEqual([["2003", null]]);
+    expect(r.notas.join(" ")).toContain("2003");
+    expect(r.notas.join(" ")).not.toContain("No hay datos en el período pedido");
+    expect(r.advertencias.map((a) => a.id)).toContain("q.desocupacion.eph-2003");
   });
   it("Bruegel: dice que se actualiza a mano y qué versión usa (segunda revisión de la 4a)", async () => {
     const r = await obtenerSerie(repo, { id: "tcr-multilateral", variante: "bruegel", desde: "2025" });

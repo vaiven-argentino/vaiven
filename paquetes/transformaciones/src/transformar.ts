@@ -130,6 +130,8 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
   }
   const notas: string[] = [];
   const extra: Advertencia[] = [];
+  // Períodos que quedan sin dato al cambiar de frecuencia (se avisan al final, solo los del rango pedido).
+  const incompletos: number[] = [];
   let puntos = puntosDe(serie);
   let unidad = serie.unidad;
 
@@ -143,7 +145,7 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
 
   // 2. Frecuencia.
   if (opciones.frecuencia) {
-    puntos = agregar(puntos, opciones.frecuencia, serie.agregacion, notas);
+    puntos = agregar(puntos, opciones.frecuencia, serie.agregacion, incompletos);
     unidad = `${unidad} (${descripcionAgregacion(serie.agregacion, opciones.frecuencia)})`;
   }
 
@@ -186,10 +188,20 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
   const conDato = (p: Punto) => p.v !== null || (fechasExcluidas.has(p.i) && excluidos.get(p.i) === p.f);
   const primero = puntos.findIndex(conDato);
   const ultimo = puntos.findLastIndex(conDato);
-  puntos = primero === -1 ? [] : puntos.slice(primero, ultimo + 1);
+  // Si el rango pedido tiene períodos pero ninguno con dato (por ejemplo, la desocupación anual de 2003, que mezcla dos
+  // encuestas), se devuelven como null, con su nota y sus advertencias, en lugar de una lista vacía (segunda revisión
+  // externa de la 4b, 4.1).
+  const soloSinDato = primero === -1 && puntos.length > 0 && (opciones.desde !== undefined || opciones.hasta !== undefined);
+  puntos = soloSinDato ? puntos : primero === -1 ? [] : puntos.slice(primero, ultimo + 1);
 
   const inicio = puntos[0]?.i;
   const fin = puntos.length ? puntos[puntos.length - 1].i + PASO[puntos[puntos.length - 1].f] - 1 : undefined;
+  // Los incompletos del rango pedido (aunque se hayan recortado de los extremos, como el año en curso).
+  const sinDato = incompletos.filter((i) => i >= desde && i <= hasta).map((i) => etiqueta(i, opciones.frecuencia!));
+  if (sinDato.length) {
+    const lista = sinDato.length > 8 ? `${sinDato.slice(0, 8).join(", ")} y ${sinDato.length - 8} más` : sinDato.join(", ");
+    notas.push(`Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): ${lista}.`);
+  }
   const todas = [...serie.advertencias, ...extra.filter((a) => !serie.advertencias.some((b) => b.id === a.id))];
   return {
     datos: puntos.map((p) => [etiqueta(p.i, p.f), p.v]),
@@ -383,7 +395,7 @@ function notaReal(opcion: OpcionInsumo, base: string): string {
 
 // ── Frecuencia, variaciones, base 100 y media móvil ────────────────────────────
 
-function agregar(puntos: Punto[], a: "trimestral" | "anual", agregacion: string, notas: string[]): Punto[] {
+function agregar(puntos: Punto[], a: "trimestral" | "anual", agregacion: string, incompletos: number[]): Punto[] {
   const largo = PASO[a];
   const grupos = new Map<number, Punto[]>();
   for (const p of puntos) {
@@ -395,7 +407,6 @@ function agregar(puntos: Punto[], a: "trimestral" | "anual", agregacion: string,
     grupos.get(inicio)!.push(p);
   }
   const salida: Punto[] = [];
-  const incompletos: string[] = [];
   for (const [inicio, grupo] of grupos) {
     const frecs = new Set(grupo.map((p) => p.f));
     const f = grupo[0].f;
@@ -411,12 +422,8 @@ function agregar(puntos: Punto[], a: "trimestral" | "anual", agregacion: string,
         v = agregacion === "suma" ? suma : suma / valores.length;
       }
     }
-    if (v === null) incompletos.push(etiqueta(inicio, a));
+    if (v === null) incompletos.push(inicio);
     salida.push({ i: inicio, f: a, v });
-  }
-  if (incompletos.length) {
-    const lista = incompletos.length > 8 ? `${incompletos.slice(0, 8).join(", ")} y ${incompletos.length - 8} más` : incompletos.join(", ");
-    notas.push(`Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): ${lista}.`);
   }
   return salida;
 }

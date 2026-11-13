@@ -120,6 +120,15 @@ describe("frecuencia mixta (desocupación: semestral hasta 2003, trimestral desp
     expect(r.notas.join(" ")).toContain("2003");
   });
 
+  it("un rango que es solo el año incompleto lo devuelve como null, con su nota (segunda revisión externa de la 4b)", () => {
+    const r = transformar(s, { frecuencia: "anual", desde: "2003", hasta: "2003" });
+    expect(r.datos).toEqual([["2003", null]]);
+    expect(r.notas.join(" ")).toContain("2003");
+    // La nota habla solo de lo que se pidió.
+    const otro = transformar(s, { frecuencia: "anual", desde: "2001", hasta: "2002" });
+    expect(otro.notas.join(" ")).not.toContain("incompletos");
+  });
+
   it("la media móvil no cruza el cambio de encuesta", () => {
     const r = Object.fromEntries(transformar(s, { mediaMovil: 2 }).datos);
     cerca(r["2001-11"], (16.4 + 18.3) / 2);

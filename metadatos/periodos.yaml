@@ -3441,8 +3441,8 @@
   desde: 1989-02-06
   hasta: 1990-04-01
   confianza: {desde: media, hasta: alta}
-  descripcion: Dos brotes de inflación mensual de tres dígitos o cerca, con una tregua en agosto–noviembre de 1989 (Plan Bunge
-    y Born). El IPC subió 196,6 % en julio de 1989 y 95,5 % en marzo de 1990.
+  descripcion: Dos brotes de inflación mensual por encima del 50 %, con un pico de 196,6 % en julio de 1989, separados por la
+    tregua del Plan Bunge y Born (agosto–diciembre de 1989). En marzo de 1990, el último mes del episodio, el IPC subió 95,5 %.
   fuentes:
   - para: desde
     tipo: secundaria
@@ -3478,13 +3478,13 @@
     url: https://www.nber.org/system/files/chapters/c7663/c7663.pdf
   fases:
   - id: p.episodio.hiperinflacion-1989
-    nombre: Primer brote (febrero–diciembre de 1989)
+    nombre: Primer brote (febrero–julio de 1989)
     nombre_corto: Primer brote
     desde: 1989-02-06
-    hasta: 1989-12-12
-    confianza: {desde: media, hasta: media}
-    descripcion: La inflación mensual pasa del 50 % en mayo, junio y julio de 1989 (78,5, 114,5 y 196,6 %); con el Plan Bunge
-      y Born baja a 37,9 % en agosto y a menos del 10 % de septiembre a noviembre.
+    hasta: 1989-08-01
+    confianza: {desde: media, hasta: alta}
+    descripcion: Inflación mensual por encima del 50 % en mayo, junio y julio de 1989 (78,5, 114,5 y 196,6 %), con el pico de
+      196,6 % en julio.
     fuentes:
     - para: desde
       tipo: secundaria
@@ -3492,6 +3492,24 @@
       publicado: 1989-08
       pagina: '1'
       url: https://ucema.edu.ar/sites/default/files/2025-12/67.pdf
+    - para: hasta
+      tipo: convencional
+      nota: 'Fin convencional: julio de 1989 es el último mes del brote por encima del 50 % (196,6 %); en agosto la inflación
+        mensual baja a 37,9 %.'
+    notas: El corte del 1/8/1989 es criterio de Vaivén, con las cifras de la serie del IPC (criterio de Cagan, en la nota del
+      episodio). El Plan Bunge y Born se lanzó el 10/7/1989, pero julio todavía es el mes más alto del episodio.
+  - id: p.episodio.hiperinflacion-1989-tregua
+    nombre: Tregua del Plan Bunge y Born (agosto–diciembre de 1989)
+    nombre_corto: Tregua del Plan Bunge y Born
+    desde: 1989-08-01
+    hasta: 1989-12-12
+    confianza: {desde: alta, hasta: media}
+    descripcion: Con el tipo de cambio fijo del Plan Bunge y Born, la inflación mensual baja a 37,9 % en agosto y a menos del
+      10 % de septiembre a noviembre de 1989 (9,4, 5,6 y 6,5 %).
+    fuentes:
+    - para: desde
+      tipo: convencional
+      nota: 'Inicio convencional: agosto de 1989 es el primer mes por debajo del 50 % (37,9 %), después del pico de julio.'
     - para: hasta
       tipo: comunicacion_bcra
       referencia: 'BCRA, Comunicación "A" 1584 (11/12/1989): mercados oficial y libre «a partir del 12.12.89»; termina el tipo
@@ -3523,4 +3541,6 @@
     año. Con ese criterio va de mayo de 1989 a marzo de 1990: el IPC subió 78,5, 114,5 y 196,6 % en mayo, junio y julio de
     1989, y 79,2, 61,6 y 95,5 % en enero, febrero y marzo de 1990. Entre los dos brotes no pasó un año por debajo del 50 %, así
     que al pie de la letra es un solo episodio (Fischer, Sahay y Végh, 2002, tabla 2: mayo de 1989 a marzo de 1990, 11 meses).
+    Vaivén lo divide en tres fases: los dos brotes y, entre ellos, la tregua del Plan Bunge y Born, desde el 1/8/1989 (el primer
+    mes por debajo del 50 % después de julio) hasta el fin del tipo fijo, el 12/12/1989.
     Las cifras son las de la serie del IPC de Vaivén y coinciden con Kiguel y Liviatan (1995), tabla 12.A.2.'

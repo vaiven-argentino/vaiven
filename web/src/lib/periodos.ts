@@ -66,6 +66,12 @@ export function textoConfianza(p: Pick<Periodo, "confianza">): string {
   return `inicio: ${c.desde}${c.hasta ? `; fin: ${c.hasta}` : ""}`;
 }
 
+/**
+ * La regla de ubicación en una línea, debajo del gráfico con sombreado (segunda revisión externa de la 4b, 2.2). El texto
+ * completo (`REGLA_UBICACION`, de la librería) va en un desplegable «Cómo se asigna».
+ */
+export const REGLA_CORTA = "Cada dato se asigna al período vigente a mitad de su intervalo; los saldos a fin de período, al último día.";
+
 /** Aclaración que acompaña a las etapas del curso fuera de /periodos/ (CSV, XLSX, pie de las imágenes). */
 export const ACLARACION_ETAPAS = "etapas según la periodización de un curso universitario";
 
@@ -164,6 +170,12 @@ export function textoSombreado(sh: OpcionSombreado, periodos: Periodo[], eventos
 
 // ---- Lector del gráfico ----
 
+/**
+ * El nombre corto de una fase dentro de una frase: solo la primera letra en minúscula («tregua del Plan Bunge y Born»;
+ * antes se pasaba todo a minúsculas y salía «tregua del plan bunge y born»).
+ */
+export const enFrase = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+
 /** El día AAAA-MM-DD en forma corta: «3/1/1990». */
 const diaCorto = (d: string) => { const [a, m, dd] = d.split("-"); return `${Number(dd)}/${Number(m)}/${a}`; };
 
@@ -189,7 +201,7 @@ export function textoLectura(d: {
   const dentro = (p: { desde: string; hasta: string | null }) => p.desde <= dia && (!p.hasta || dia < p.hasta);
   for (const ep of (d.episodios ?? []).filter(dentro)) {
     const fase = ep.fases?.find(dentro);
-    partes.push(fase ? `episodio: ${ep.nombre}, ${fase.nombre_corto.toLowerCase()} (${rangoLegible(fase)})` : `episodio: ${ep.nombre} (${rangoLegible(ep)})`);
+    partes.push(fase ? `episodio: ${ep.nombre}, ${enFrase(fase.nombre_corto)} (${rangoLegible(fase)})` : `episodio: ${ep.nombre} (${rangoLegible(ep)})`);
   }
   const { desde, hasta } = diasDe(d.fecha, d.frecuencia);
   const eventos = (d.eventos ?? []).filter((e) => e.fecha >= desde && e.fecha <= hasta);
