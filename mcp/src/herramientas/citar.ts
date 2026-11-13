@@ -2,6 +2,7 @@
 import { apa, bibtex, nombreTransformacion, textoCita, urlDeCita } from "@vaiven/cita";
 import { tienePais } from "@vaiven/transformaciones";
 import { exigirPublicada, type Repositorio } from "../datos";
+import { frecuenciaUtil } from "./comun";
 import { leerDeflactor } from "./obtener";
 
 export interface ArgsCitar {
@@ -29,7 +30,7 @@ export async function citar(repo: Repositorio, args: ArgsCitar) {
     ? [...new Set(args.paises.map((p) => p.trim().toUpperCase()))].map((p) => nombres.get(p) ?? p) : undefined;
   const tr = nombreTransformacion({
     pesosActuales: args.pesos_actuales,
-    frecuencia: args.frecuencia,
+    frecuencia: frecuenciaUtil(doc, args.frecuencia),
     medida: args.medida,
     deflactor,
     baseReal: args.base_real,

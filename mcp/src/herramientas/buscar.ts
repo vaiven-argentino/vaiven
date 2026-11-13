@@ -18,6 +18,9 @@ const SINONIMOS: Record<string, string[]> = {
   desocupados: ["desocupacion"],
   paro: ["desocupacion"],
   empleo: ["trabajo", "desocupacion"],
+  // Frases (segunda revisión externa de la 4b, 4.6): «mercado» sola encontraba el «mercado oficial» del dólar.
+  "mercado de trabajo": ["trabajo"],
+  "mercado laboral": ["trabajo"],
   inflacion: ["ipc", "precios"],
   "costo de vida": ["ipc"],
   dolar: ["tipo de cambio", "cambiario"],
@@ -142,9 +145,14 @@ export async function buscarSeries(repo: Repositorio, args: ArgsBuscar) {
       const puntaje = busqueda.reduce((suma, alternativas) =>
         suma + (alternativas.some((t) => principal.includes(t)) ? 3 : alternativas.some((t) => resto.includes(t)) ? 1 : 0) +
         (alternativas.includes(s.id) ? 1 : 0), 0);
-      return { s, puntaje };
+      // ¿Coincide con todos los términos (cada uno con sus sinónimos)?
+      const todos = busqueda.every((alternativas) => alternativas.some((t) => principal.includes(t) || resto.includes(t)));
+      return { s, puntaje, todos };
     });
-    const encontradas = puntajes.filter((p) => p.puntaje > 0).sort((a, b) => b.puntaje - a.puntaje).map((p) => p.s);
+    // Si alguna serie coincide con todos los términos, solo esas; si ninguna, todas las que coinciden con alguno.
+    const conTodos = puntajes.filter((p) => p.todos && p.puntaje > 0);
+    const encontradas = (conTodos.length ? conTodos : puntajes.filter((p) => p.puntaje > 0))
+      .sort((a, b) => b.puntaje - a.puntaje).map((p) => p.s);
     if (encontradas.length) {
       series = encontradas;
     } else {

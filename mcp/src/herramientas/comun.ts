@@ -16,6 +16,14 @@ export const LIMITE_OBSERVACIONES = 10_000;
 
 export const PERIODO = /^\d{4}(-(0[1-9]|1[0-2]))?$/;
 
+/**
+ * La frecuencia pedida, o undefined si ya es la de la variante (todos sus tramos están en esa frecuencia): pedir
+ * `frecuencia: "anual"` a una serie anual no es un error, se ignora con una nota (segunda revisión externa de la 4b, 4.4).
+ */
+export function frecuenciaUtil(doc: { tramos: Array<{ frecuencia: string }> }, f?: "trimestral" | "anual"): "trimestral" | "anual" | undefined {
+  return f && doc.tramos.length > 0 && doc.tramos.every((t) => t.frecuencia === f) ? undefined : f;
+}
+
 /** Sin tildes ni mayúsculas. */
 export function normalizar(s: string): string {
   return s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();

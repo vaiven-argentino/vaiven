@@ -7,7 +7,7 @@ import {
 } from "@vaiven/transformaciones";
 import { ErrorHerramienta, exigirPublicada, type Repositorio } from "../datos";
 import type { DocumentoSerie } from "../tipos";
-import { LIMITE_OBSERVACIONES, redondear } from "./comun";
+import { LIMITE_OBSERVACIONES, frecuenciaUtil, redondear } from "./comun";
 import { transformacionesDe } from "./describir";
 
 export type MedidaPedida = "real" | "en_dolares" | "pct_pib";
@@ -78,6 +78,15 @@ function leerPaises(doc: DocumentoSerie, pedidos?: string[]): string[] {
   return ids;
 }
 
+/**
+ * Nota fija cuando el resultado está en pesos actuales (la variante en pesos actuales o `pesos_actuales: true`, sin otra
+ * medida): la conversión no es un ajuste por inflación (segunda revisión externa de la 4b, 4.7). Las equivalencias son las
+ * de `metadatos/signos_monetarios.yaml` (lo controla una prueba).
+ */
+export const NOTA_PESOS_ACTUALES = "Pesos actuales es una equivalencia entre signos monetarios (1 peso = 10.000 australes = " +
+  "10⁷ pesos argentinos = 10¹¹ pesos ley 18.188 = 10¹³ pesos moneda nacional), no un ajuste por inflación. Para precios " +
+  "constantes, pedí `medida: real`.";
+
 const unicasPorId = (xs: Advertencia[]) => xs.filter((a, k) => xs.findIndex((b) => b.id === a.id) === k);
 
 export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
@@ -98,10 +107,12 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     throw new ErrorHerramienta(`El período está invertido: desde ${args.desde} es posterior a hasta ${args.hasta}.`);
   }
   const paises = leerPaises(doc, args.paises);
+  // Una frecuencia igual a la de la variante se ignora (con una nota) en lugar de dar error.
+  const frecuencia = frecuenciaUtil(doc, args.frecuencia);
   const deflactor = args.deflactor ? leerDeflactor(doc, args.deflactor) : undefined;
   const opciones = {
     pesosActuales: args.pesos_actuales || undefined,
-    frecuencia: args.frecuencia,
+    frecuencia,
     medida: args.medida,
     deflactor,
     baseReal: args.base_real,
@@ -137,7 +148,7 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     throw new ErrorHerramienta(`El pedido da ${total} observaciones y el límite es ${LIMITE_OBSERVACIONES}. Acotá desde y hasta${pista} o pasá a una frecuencia más baja.`);
   }
 
-  const transformada = transformacion !== "nivel" || args.frecuencia !== undefined || args.medida !== undefined || !!args.pesos_actuales;
+  const transformada = transformacion !== "nivel" || frecuencia !== undefined || args.medida !== undefined || !!args.pesos_actuales;
   const listas = resultados.map((r) => r.datos.map(([fecha, v]) => [fecha, transformada ? redondear(v) : v] as [string, number | null]));
   const conDatos = listas.findIndex((l) => l.length);
   const frecuencias = conDatos === -1 ? [] : tramosDeFrecuencia(listas[conDatos], resultados[conDatos].frecuencias);
@@ -146,6 +157,8 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   const excluidos: Excluido[] = resultados.flatMap((r) => r.excluidos);
   const notas = [...new Set(resultados.flatMap((r) => r.notas))];
   if (!fechas.length) notas.push("No hay datos en el período pedido.");
+  if ((args.pesos_actuales || doc.moneda === "pesos_actuales") && !args.medida) notas.push(NOTA_PESOS_ACTUALES);
+  if (args.frecuencia && !frecuencia) notas.push(`La variante ya es ${args.frecuencia}: se ignoró \`frecuencia\`.`);
   if (excluidos.length) {
     notas.push("Los datos excluidos van como null en `datos`, con su motivo en `excluidos`: Vaivén no los interpola ni los corrige.");
   }
@@ -178,7 +191,7 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   const nombres = tienePais(doc) ? new Map(doc.entidades.map((e) => [e.id, e.nombre])) : new Map<string, string>();
   const cita = nombreTransformacion({
     pesosActuales: args.pesos_actuales,
-    frecuencia: args.frecuencia,
+    frecuencia,
     medida: args.medida,
     deflactor: args.medida === "real" ? (deflactor ?? doc.insumos?.real?.por_defecto) : undefined,
     baseReal: args.base_real,
@@ -195,7 +208,7 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     unidad: resultados[0].unidad,
     transformacion,
     ...(args.pesos_actuales ? { pesos_actuales: true } : {}),
-    ...(args.frecuencia ? { frecuencia_pedida: args.frecuencia } : {}),
+    ...(frecuencia ? { frecuencia_pedida: frecuencia } : {}),
     ...(args.medida ? { medida: args.medida } : {}),
     ...(args.medida === "real" ? { deflactor: deflactor ?? doc.insumos?.real?.por_defecto } : {}),
     ...(denominadorUsado ? { denominador: denominadorUsado } : {}),

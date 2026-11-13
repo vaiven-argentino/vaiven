@@ -165,6 +165,18 @@ describe("con los períodos publicados", () => {
     expect(gob.saldo_fin_de_mes).toBe("Carlos Saúl Menem");
     expect(gob.reparto.map((x) => [x.nombre, x.dias])).toEqual([["Raúl Ricardo Alfonsín", 7], ["Carlos Saúl Menem", 24]]);
   });
+  it("la fase del episodio: con un día, fase_vigente; con un mes, la del punto medio y la del último día (segunda revisión externa de la 4b, 2.3)", async () => {
+    const octubre = await periodoEnFecha(real, { fecha: "1989-10-15" }, HOY);
+    const [hiper] = octubre.episodio as unknown as Array<{ id: string; fase_vigente: { id: string; nombre: string } | null }>;
+    expect(hiper.fase_vigente).toEqual({ id: "p.episodio.hiperinflacion-1989-tregua", nombre: "Tregua del Plan Bunge y Born (agosto–diciembre de 1989)" });
+    const julio = await periodoEnFecha(real, { fecha: "1989-07" }, HOY);
+    const ep = julio.asignacion!.episodio as { fase_promedio_o_suma: string; fase_saldo_fin_de_mes: string };
+    expect(ep.fase_promedio_o_suma).toBe("Primer brote (febrero–julio de 1989)");
+    expect(ep.fase_saldo_fin_de_mes).toBe("Primer brote (febrero–julio de 1989)");
+    // Diciembre de 1989: a mitad de mes ya es el segundo brote (desde el 12/12).
+    const diciembre = await periodoEnFecha(real, { fecha: "1989-12" }, HOY);
+    expect((diciembre.asignacion!.episodio as { fase_promedio_o_suma: string }).fase_promedio_o_suma).toBe("Segundo brote (diciembre de 1989–marzo de 1990)");
+  });
   it("diciembre de 2016: avisa los días sin ministro", async () => {
     const r = await periodoEnFecha(real, { fecha: "2016-12" }, HOY);
     expect(r.advertencias.join(" ")).toMatch(/sin ministro de Economía titular ni interino/);
