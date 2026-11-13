@@ -855,6 +855,22 @@ La SPEC pasa a la v1.5:
   - ficha del IPC: 1401 px en 390 y 1234 px en 1280.
 - **Revisor visual:** 78 vistas (4 páginas en 2 anchos y 2 modos, más 16 casos fijos), sin problemas. La regla queda debajo del gráfico, y julio de 1989 muestra las tres fases con sus topes y «tregua del Plan Bunge y Born» en la lista.
 
+### En producción (13/11/2026, después del merge de vaiven-argentino/vaiven#25)
+
+- **`/salud`:** `{"estado":"ok","version":"0.1.0","fase":"4b"}`.
+- **`probar-endpoint.mjs`** contra `https://vaiven.argentino.workers.dev`: todo bien, en las dos eras del protocolo, con las 6 herramientas y la versión 0.1.0 en `initialize`.
+- **Preguntas del manual, por JSON-RPC** (cliente del SDK de MCP, sin pasar por Claude):
+
+| # | Pedido | Resultado | ¿Como espera el manual? |
+|---|---|---|---|
+| 1 | `buscar_series` «mercado de trabajo» | `desocupacion` (total urbano y GBA publicadas; empalmada pendiente) y `salario-real`. Nota: 22 de las 39 series publicadas. | Sí. Ya no trae el dólar. |
+| 7 | `obtener_serie` desocupación anual, 2003 | `[["2003", null]]`, con la nota de períodos incompletos y los quiebres `eph-2003`, `aglomerados` y `planes-2002`. Sin `frecuencia`: 15,6 % (mayo), 16,1 % y 14,4 % (trimestres 3 y 4). | Sí. |
+| 10 | `obtener_serie` tipo de cambio oficial | Abril de 2026: 1.381,1; último dato, agosto de 2026. Enero de 1975: 9,98 × 10⁻¹¹ pesos actuales, con la nota fija de pesos actuales y la advertencia de mercados desdoblados; 9,98 en moneda de época. | Sí. |
+| 11 | `obtener_serie` cuenta corriente 1980, `pct_pib` | −2,3 % con el PIB de cada base y −6,2 % con el del Banco Mundial (advertencia `q.pib-dolares.banco-mundial`). Con `frecuencia: anual` da el mismo valor, con la nota «se ignoró `frecuencia`». | Sí. |
+| 17 | `listar_periodos` (episodio) y `periodo_en_fecha` 1989-07 | Episodio del 6/2/1989 al 1/4/1990, en tres fases, con la nota de Cagan y la confianza `{desde: media, hasta: alta}`. Julio de 1989: Menem, con 77 % del mes (Alfonsín, 23 %), y el saldo también para Menem; fase del primer brote en el punto medio y el último día. El 15/10/1989, la fase vigente es la tregua. | Sí. |
+
+- **Para la prueba ciega:** la confianza media del inicio va en el campo `confianza` del episodio, no en `advertencias`. `periodo_en_fecha` solo avisa las fechas de confianza baja (SPEC 2.4). Si Claude no la menciona en la pregunta 17, es la herramienta la que tiene que destacarla, no el manual.
+
 ### Diferencias con la SPEC
 
 La SPEC pasa a la v1.6:
@@ -864,7 +880,6 @@ La SPEC pasa a la v1.6:
 
 ### Pendientes
 
-- **Después del despliegue:** `probar-endpoint.mjs` contra producción y las preguntas 1, 7, 10, 11 y 17 del manual por JSON-RPC (se anotan abajo).
 - **La prueba ciega del MCP,** a cargo de Camilo: una conversación nueva en claude.ai, solo con el conector Vaivén y sin pegar el manual, con las 18 preguntas de a una. Si sale bien, la 4b queda cerrada.
 - **4c:**
   - eventos y episodios candidatos;
