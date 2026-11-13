@@ -204,7 +204,7 @@
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Tipo de cambio real bilateral con EE.UU., variante «oficial». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tcr-bilateral/",
   "version_datos": "2026-11-07T20:41:28Z",
-  "desactualizada_desde": null,
+  "desactualizada_desde": "2026-11-07",
   "datos": [
     ["1970-01", 50.28406887],
     ["1970-02", 49.87447953],

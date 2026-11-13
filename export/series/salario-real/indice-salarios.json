@@ -61,7 +61,7 @@
   ],
   "cobertura": {
     "desde": "2001-10",
-    "hasta": "2026-07"
+    "hasta": "2026-08"
   },
   "advertencias": [
     {
@@ -100,8 +100,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Salario real, variante «indice-salarios». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/salario-real/indice-salarios/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Salario real, variante «indice-salarios». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/salario-real/indice-salarios/",
+  "version_datos": "2026-11-13T21:23:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["2001-10", 4.374567927],
@@ -399,8 +399,9 @@
     ["2026-02", 8755.26],
     ["2026-03", 8935.48],
     ["2026-04", 9292.93],
-    ["2026-05", 9478.8],
-    ["2026-06", 9662.3],
-    ["2026-07", 9879.87]
+    ["2026-05", 9478.84],
+    ["2026-06", 9662.32],
+    ["2026-07", 9879.87],
+    ["2026-08", 10159.65]
   ]
 }

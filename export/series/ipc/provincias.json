@@ -141,7 +141,7 @@
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Inflación minorista (IPC), variante «provincias». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/ipc/provincias/",
   "version_datos": "2026-11-07T07:45:19Z",
-  "desactualizada_desde": null,
+  "desactualizada_desde": "2026-11-07",
   "datos": [
     ["1970-01", 2.22808898e-11],
     ["1970-02", 2.258273701e-11],

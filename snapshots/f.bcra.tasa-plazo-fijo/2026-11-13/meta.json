@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.tasa-plazo-fijo",
+  "descargado": "2026-11-13T21:27:42Z",
+  "sha256": "ad693a4a647610e1e32ddc3c9bbf95b1d4064372e26400ab35389bce66aa8aa1",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_T_INTERD_0_0_41&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 20940,
+      "sha256": "8e4baa97210d94c943ccccabb42bc8404ffb0b094dce3b45612ed3eeac52e8c8"
+    }
+  ]
+}

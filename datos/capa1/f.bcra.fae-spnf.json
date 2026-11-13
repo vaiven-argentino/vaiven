@@ -2,9 +2,9 @@
   "fuente": "f.bcra.fae-spnf",
   "unidad": "millones de US$ (negativo = compra neta de activos externos)",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.bcra.fae-spnf/2026-10-27",
-  "descargado": "2026-10-27T19:41:34Z",
-  "sha256": "543baefb1ae1c2a805b0a95372afeba5e0fa6acd2b7887fc28dbfcffb49574eb",
+  "snapshot": "snapshots/f.bcra.fae-spnf/2026-11-13",
+  "descargado": "2026-11-13T21:25:43Z",
+  "sha256": "77da4104106ed6a0ebb5440ef45f45980d311269ddbd84a16537da12999ec2d5",
   "observaciones": 284,
   "desde": "2003-01-01",
   "hasta": "2026-08-01"

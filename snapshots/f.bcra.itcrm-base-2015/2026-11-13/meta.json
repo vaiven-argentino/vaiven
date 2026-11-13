@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.itcrm-base-2015",
+  "descargado": "2026-11-13T21:27:47Z",
+  "sha256": "ca1a7ecc81600b8053e105530089c1a3d72540dc46348741d07f3205e27b4aee",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=116.3_TCRMA_0_M_36&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 15360,
+      "sha256": "ef33a38375055c16c7a6dafc433057ad46d543f869b1c36cd1ed3cc043842a3a"
+    }
+  ]
+}

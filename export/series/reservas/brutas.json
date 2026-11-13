@@ -81,7 +81,7 @@
   ],
   "cobertura": {
     "desde": "1970-01",
-    "hasta": "2026-08"
+    "hasta": "2026-09"
   },
   "advertencias": [
     {
@@ -140,8 +140,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-11-11. https://vaiven.argentino.workers.dev/series/reservas/",
-  "version_datos": "2026-11-11T21:14:54Z",
+  "cita": "Vaivén (2026). Reservas internacionales, variante «brutas». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/reservas/",
+  "version_datos": "2026-11-13T21:23:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 589.5],
@@ -822,6 +822,7 @@
     ["2026-05", 48193.0],
     ["2026-06", 44870.0],
     ["2026-07", 47599.0],
-    ["2026-08", 48259.0]
+    ["2026-08", 48259.0],
+    ["2026-09", 46092.0]
   ]
 }

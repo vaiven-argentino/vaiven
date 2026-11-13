@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.pib-base-1993",
+  "descargado": "2026-11-13T21:27:30Z",
+  "sha256": "1460979160e11fcdd846a857837f05bb469325df3c8b3a05c68dc87d8ccda055",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=2.2_OGP_1993_T_17&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6430,
+      "sha256": "3f7470f26119687ab865872dd444e01df8438a642f71e606b02d91396310aa72"
+    }
+  ]
+}

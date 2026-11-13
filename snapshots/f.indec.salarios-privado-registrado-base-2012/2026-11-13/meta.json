@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.salarios-privado-registrado-base-2012",
+  "descargado": "2026-11-13T21:27:39Z",
+  "sha256": "cbd16ee9cefff9b4502c075c982e51bc9d372ee0a50fc49c9f2ce50d0630de34",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=56.2_SPRMD_2012_M_29&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 9373,
+      "sha256": "d85e9263e029751955d67cbe25c94e1ad442a745ccc3da90de9b1bbb74b4e1f0"
+    }
+  ]
+}

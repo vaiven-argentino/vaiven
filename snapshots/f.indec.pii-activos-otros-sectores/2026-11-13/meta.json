@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.pii-activos-otros-sectores",
+  "descargado": "2026-11-13T21:25:45Z",
+  "sha256": "c64bdc98624e4b79480f8b21fb3e754c4b257c6137b11d5ab0c24643a61bfbef",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=144.3_ACVOSOTLES_0_A_30&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4152,
+      "sha256": "c2f2140911dff8c9189d815fb8c2a1888306dc7eeac5707a60d40bb56c81e5a4"
+    }
+  ]
+}

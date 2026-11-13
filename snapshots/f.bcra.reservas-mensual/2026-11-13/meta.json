@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.reservas-mensual",
+  "descargado": "2026-11-13T21:27:32Z",
+  "sha256": "169ac4dbc776fd45d1c223938bf3f742f099a0ec17a46ca3fe20638f205c3eef",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=174.1_RRVAS_IDOS_0_0_36&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 29202,
+      "sha256": "85fd0284b5127f9141cf248a80b48c84cb49f1d1494007ae41175e2c03783170"
+    }
+  ]
+}

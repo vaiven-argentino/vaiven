@@ -1,5 +1,18 @@
 [
   {
+    "version_datos": "2026-11-13T21:23:46Z",
+    "variante": "saldo-comercial.mensual",
+    "umbral_pct": 1,
+    "cambios": [
+      {
+        "fecha": "2026-08",
+        "anterior": 2186.590855,
+        "nuevo": 2159.291849,
+        "variacion_pct": -1.248473
+      }
+    ]
+  },
+  {
     "version_datos": "2026-11-12T21:23:45Z",
     "variante": "deuda-externa.total",
     "umbral_pct": 1,

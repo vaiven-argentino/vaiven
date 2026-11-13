@@ -112,7 +112,7 @@
   ],
   "cobertura": {
     "desde": "1993-01",
-    "hasta": "2026-08"
+    "hasta": "2026-09"
   },
   "advertencias": [
     {
@@ -173,8 +173,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Resultado primario y financiero, variante «financiero». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/resultado-fiscal/financiero/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Resultado primario y financiero, variante «financiero». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/resultado-fiscal/financiero/",
+  "version_datos": "2026-11-13T21:23:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 0.0],
@@ -580,6 +580,7 @@
     ["2026-05", 478613.2],
     ["2026-06", -1024891.4],
     ["2026-07", 244897.1],
-    ["2026-08", 635528.6]
+    ["2026-08", 635528.6],
+    ["2026-09", 977173.4]
   ]
 }

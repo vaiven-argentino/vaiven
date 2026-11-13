@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ipc-historico-1943-2008",
+  "descargado": "2026-11-13T21:27:23Z",
+  "sha256": "817ef7ea783475a9cd67dfcff696287be4f0027928db5cc6dc527cb0e91705c2",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=178.1_NL_GENERAL_0_0_13&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 24810,
+      "sha256": "7d2cad794624b5ac0fc81337a6c5ff0583d188472cae6f981b29f0c54287b983"
+    }
+  ]
+}

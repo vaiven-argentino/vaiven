@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ipc-nacional-base-2016",
+  "descargado": "2026-11-13T21:27:27Z",
+  "sha256": "7150ec9d434a599fd98b06403ab284ce962f7469af4b438b34b0eaefb25f1f27",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=148.3_INIVELNAL_DICI_M_26&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6603,
+      "sha256": "2f401f0424c9ac1d8d534e65803eadc6964f0bc29dddb87546b11cc0c49019b5"
+    }
+  ]
+}

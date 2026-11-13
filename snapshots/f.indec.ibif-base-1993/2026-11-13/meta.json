@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ibif-base-1993",
+  "descargado": "2026-11-13T21:27:14Z",
+  "sha256": "8f500f1d5a9d93fbb637978d0d379de89ca2e3dd00349b76c3602d8ba0e6e8cb",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=2.2_DGI_1993_T_19&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6420,
+      "sha256": "fb1184cea344e529a1536d9c3e64dae4138866aeb63d7774200c70f82c4da278"
+    }
+  ]
+}

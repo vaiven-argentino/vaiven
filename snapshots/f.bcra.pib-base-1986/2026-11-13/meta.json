@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.pib-base-1986",
+  "descargado": "2026-11-13T21:27:29Z",
+  "sha256": "2286e2f0f0d341be03c3c7e92af3ad69c3704fb47f7e5981ec748c22204f0852",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=255.1_PTOTAL_PM_1986_0_12&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 5021,
+      "sha256": "e01209e4f4d267a79ad76764ad0f7145a5de500590138bcb68b09fbaf997b82c"
+    }
+  ]
+}

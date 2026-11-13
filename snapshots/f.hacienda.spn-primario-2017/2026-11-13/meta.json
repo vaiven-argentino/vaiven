@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spn-primario-2017",
+  "descargado": "2026-11-13T21:27:35Z",
+  "sha256": "408ea8915fe1627161d53519ba3dd161de4c4c2c076a78c861894d721196cca5",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=379.9_SUPERAVIT_017__23_94&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 8403,
+      "sha256": "e28001f1f4015ef64443e08a205748bc38ad06b930775f637e70bc133a7d47fa"
+    }
+  ]
+}

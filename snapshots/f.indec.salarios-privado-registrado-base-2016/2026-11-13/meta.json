@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.salarios-privado-registrado-base-2016",
+  "descargado": "2026-11-13T21:27:40Z",
+  "sha256": "4ceaca4ea3620cd9aa13756a081fe88d218fc37fee8548f8328ed1e2f83058c4",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=149.1_SOR_PRIADO_OCTU_0_25&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6666,
+      "sha256": "2b7112c86a8bd0575cafa73201388223ae4f6f3bdb02468c8ed0c97564e32f83"
+    }
+  ]
+}

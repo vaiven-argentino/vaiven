@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ica-importaciones-mensual",
+  "descargado": "2026-11-13T21:25:49Z",
+  "sha256": "89c67b049d2a95dd94f33ede0c06b435d2650ea0a0885f3d7719a7e0d5fea336",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=74.3_IIT_0_M_25&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 15237,
+      "sha256": "7a76da9dabaa0ab28d19030ca78e6feadf572b05600e2ae0bcd8aec468419676"
+    }
+  ]
+}

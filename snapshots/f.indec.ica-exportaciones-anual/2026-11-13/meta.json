@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ica-exportaciones-anual",
+  "descargado": "2026-11-13T21:25:42Z",
+  "sha256": "561cb57ed97a8f599a4e19bd0e6da59e0e08385af013753a99af8764aa35541e",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=74.1_IET_0_A_16&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6750,
+      "sha256": "841b8381871ef26814dc8735722ae6e9d2004feba941efd4adc1f70ea64cfbc1"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.bp-mbp6-cuenta-corriente",
+  "descargado": "2026-11-13T21:24:00Z",
+  "sha256": "e01b50983bcae39514c8e628736027676eced52aa70c0e83d567801d601d83bb",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=160.2_TL_CUENNTE_0_T_22&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6236,
+      "sha256": "187f648b4a5fb1c9883d1a2afca79b0d4293ac40fa903b004e3d6fe92a69f98f"
+    }
+  ]
+}

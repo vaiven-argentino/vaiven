@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ibif-base-2004",
+  "descargado": "2026-11-13T21:27:16Z",
+  "sha256": "c32d4454a46978c20d4eb651351c65482562feb85734d0dfa54d21c99a54609a",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=4.2_DGIT_2004_T_25&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6736,
+      "sha256": "a51c4b797b451c4a5d12832ceb1b5246fc806f290707444b8eecb6af8c024d78"
+    }
+  ]
+}
