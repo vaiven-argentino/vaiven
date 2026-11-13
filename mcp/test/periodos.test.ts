@@ -155,7 +155,7 @@ describe("con los períodos publicados", () => {
     expect(r.periodos.map((p) => p.id)).toEqual(["p.episodio.hiperinflacion-1989-1990"]);
     const hiper = r.periodos[0] as { confianza: unknown; fases: Array<{ id: string }> };
     expect(hiper.confianza).toEqual({ desde: "media", hasta: "alta" });
-    expect(hiper.fases.map((x) => x.id)).toEqual(["p.episodio.hiperinflacion-1989", "p.episodio.hiperinflacion-1990"]);
+    expect(hiper.fases.map((x) => x.id)).toEqual(["p.episodio.hiperinflacion-1989", "p.episodio.hiperinflacion-1989-tregua", "p.episodio.hiperinflacion-1990"]);
   });
   it("julio de 1989: el dato mensual va a Menem (77 %) y la hiperinflación está vigente", async () => {
     const r = await periodoEnFecha(real, { fecha: "1989-07" }, HOY);

@@ -93,7 +93,7 @@ describe("casos fijos de la revisión externa", () => {
 
   it("el episodio de la hiperinflación con sus fases", () => {
     const [hiper] = de("episodio");
-    expect(hiper.fases?.map((f) => f.id)).toEqual(["p.episodio.hiperinflacion-1989", "p.episodio.hiperinflacion-1990"]);
+    expect(hiper.fases?.map((f) => f.id)).toEqual(["p.episodio.hiperinflacion-1989", "p.episodio.hiperinflacion-1989-tregua", "p.episodio.hiperinflacion-1990"]);
     const u = ubicarFechas(["1989-01", "1989-07", "1990-04"], ["mensual", "mensual", "mensual"], promedio, de("episodio"), "episodio");
     expect(u.map((x) => x.etiqueta)).toEqual(["sin episodio", "Hiperinflación de 1989–1990", "sin episodio"]);
   });

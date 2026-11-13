@@ -14,7 +14,7 @@ import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion
 import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen, tema, type Cargados, type VistaGrafico } from "./comun";
 import { diaLegible, especificacion, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
 import {
-  ACLARACION_ETAPAS, EPISODIO, avisoConfianza, avisoFiltroEventos, bandasDe, columnasDe, contextoDe, episodiosEnRango,
+  ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, bandasDe, columnasDe, contextoDe, episodiosEnRango,
   eventosEnRango, periodosEnRango, textoConfianza, textoLectura, tipoDe, ubicacionesDe, type ColumnasPeriodo,
 } from "../lib/periodos";
 import { conectarLector, type Lectura } from "./lector";
@@ -335,7 +335,7 @@ function iniciar(): void {
     lep.replaceChildren(...episodios.map((x) => {
       const li = document.createElement("li");
       li.append(`${x.nombre} `, Object.assign(document.createElement("span"), { className: "rango", textContent: rangoLegible(x) }));
-      if (x.fases?.length) li.append(` (${x.fases.map((f) => `${f.nombre_corto.toLowerCase()}: ${rangoLegible(f)}`).join("; ")})`);
+      if (x.fases?.length) li.append(` (${x.fases.map((f) => `${enFrase(f.nombre_corto)}: ${rangoLegible(f)}`).join("; ")})`);
       return li;
     }));
     listaEventos();

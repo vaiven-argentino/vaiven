@@ -1,6 +1,6 @@
 {
   "esquema": "eventos-1.0",
-  "version_datos": "2026-11-12T22:14:59Z",
+  "version_datos": "2026-11-13T04:49:02Z",
   "descripcion": "Hitos económicos e institucionales con efecto económico, 1970–hoy. `fecha` es la del hecho que nombra (anuncio, sanción, firma); `vigencia`, si es otra, la de su entrada en vigor.",
   "fuente": "metadatos/eventos.yaml",
   "licencia": "CC-BY-4.0",
