@@ -798,3 +798,77 @@ La SPEC pasa a la v1.5:
 - **Panel del explorador:** si molesta que se desplace por dentro, las secciones Transformación y Período podrían arrancar plegadas en ventanas de menos de 900 px de alto.
 - **Lo que sigue de la 4b y la 4c,** como en la sección anterior: eventos y episodios candidatos, la prueba manual del MCP y los extremos sin norma.
 - **`/salud`** decía `"fase":"4a"`. Pasa a `4b` (`vaiven.fase` en `worker/package.json`, que lee también `mcp/scripts/probar-endpoint.mjs`).
+
+
+## 4b · Cierre
+
+*13/11/2026 · Correcciones chicas de la segunda revisión externa (REVISION_FASE4b_v2.md, secciones 2, 3 y 4), antes de la prueba ciega del MCP. Un solo PR. La SPEC pasa a la v1.6.*
+
+### Decisiones tomadas con Camilo (13/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Hiperinflación | Tres fases. El primer brote termina el 1/8/1989 (corte convencional: julio es el último mes por encima del 50 %, 196,6 %; agosto baja a 37,9 %), con confianza **alta**. Le sigue la tregua del Plan Bunge y Born hasta el 12/12/1989 (A 1584), y el segundo brote queda sin cambios. Se descartó cortar el 10/7/1989, el lanzamiento del plan: dejaría el pico de julio fuera del brote. |
+| Versión | Una sola, la de `mcp/package.json` (0.1.0). La responden el `initialize` del MCP y `/salud`. Se descartó ponerla en `worker/package.json`, porque el MCP no depende del Worker; es al revés. |
+| Aviso del filtro de eventos | Solo en la leyenda, no en la caja ámbar. |
+| Extras | `probar-endpoint.mjs` esperaba 4 herramientas (hay 6), el README del MCP estaba desactualizado y la web pasaba a minúsculas el nombre corto de la fase entero. Se corrigieron los tres. |
+
+### Qué se hizo
+
+- **Hiperinflación** (`metadatos/periodos.yaml`):
+  - las tres fases son `p.episodio.hiperinflacion-1989`, la nueva `p.episodio.hiperinflacion-1989-tregua` y `p.episodio.hiperinflacion-1990`;
+  - las descripciones dicen «por encima del 50 %, con un pico de 196,6 % en julio de 1989», en lugar de «de tres dígitos o cerca», y la nota de Cagan explica las tres fases;
+  - se actualizó la tabla de planificación;
+  - export regenerado sin red;
+  - el lector dice «primer brote» en julio y «tregua del Plan Bunge y Born» en octubre de 1989.
+- **Regla de ubicación:**
+  - va siempre debajo del gráfico, en el explorador y en la ficha;
+  - es una línea neutra («Cada dato se asigna al período vigente a mitad de su intervalo; los saldos a fin de período, al último día.»), con el texto completo en un desplegable «Cómo se asigna»;
+  - la caja ámbar queda para las advertencias;
+  - con `sh=gobierno`, el gráfico empieza exactamente en el mismo lugar que sin sombreado.
+- **MCP:**
+  - **4.1:** con `desocupacion` anual y `desde = hasta = 2003`, `obtener_serie` devuelve `[["2003", null]]` con la nota y el quiebre de la EPH, en lugar de `datos: []`. El cambio está en la librería (`transformar`), y la nota de los períodos incompletos habla solo del rango pedido.
+  - **4.4:** una `frecuencia` igual a la de la variante se ignora con una nota, en lugar de dar error. La descripción de `medida` lo aclara.
+  - **4.6:** `buscar_series` entiende «mercado de trabajo» y «mercado laboral», y si alguna serie coincide con todos los términos devuelve solo esas. Con un solo término devuelve lo mismo que antes («dólar», «inflación», «PRE-01» y «Brasil», comparados con la salida anterior).
+  - **4.7:** en pesos actuales, una nota fija dice que es una equivalencia entre signos monetarios, no un ajuste por inflación. Las equivalencias (10⁴, 10⁷, 10¹¹ y 10¹³) se controlan contra `signos-monetarios.json`, que sale de `signos_monetarios.yaml`.
+  - **2.3:** `periodo_en_fecha` da `fase_vigente` de cada episodio con un día, y `fase_promedio_o_suma` y `fase_saldo_fin_de_mes` con un mes.
+- **Manual y README:**
+  - el manual tiene las versiones en el encabezado, el aviso de usar siempre el de `main`, las advertencias obligatorias de las preguntas 16 y 17, la 17 con las tres fases, y anota si la prueba fue sin pegar el manual;
+  - el README del MCP tiene las 6 herramientas, la versión y el 403 (error 1010) de Cloudflare con `urllib` de Python.
+
+### Contrastes del revisor de datos (13/11/2026, sin ver cómo se armó)
+
+- **IPC de julio a noviembre de 1989** (196,63, 37,86, 9,36, 5,60 y 6,52 %): coincide al centésimo con la serie histórica del INDEC en datos.gob.ar (178.1_NL_GENERAL_0_0_13). No es independiente, porque es la misma fuente de origen. El contraste con Kiguel y Liviatan (1995), tabla 12.A.2, es el de la revisión anterior.
+- **Julio como último mes por encima del 50 %:** coincide. Agosto a diciembre de 1989 quedan por debajo; enero de 1990 vuelve a superar el 50 %.
+- **Comunicación «A» 1584** (www.bcra.gob.ar): coincide la fecha (11/12/1989) y que los mercados oficial y libre rigen desde el 12/12/1989. El texto no dice que sea el fin del tipo fijo del Plan Bunge y Born: esa lectura es de Vaivén, como desde el PR «datos y método», y se apoya también en la A 1583 del registro del plan.
+
+### Verificación
+
+- **Pruebas:**
+  - pytest: 302, más 7 omitidas;
+  - Vitest: cita 7, transformaciones 141, MCP 75 y web 131;
+  - `npm run verificar`: 0 errores.
+- **Enlaces:** 1671 enlaces internos, ninguno roto.
+- **`probar-endpoint.mjs` contra `wrangler dev`:** todo bien. Están las 6 herramientas y la versión 0.1.0 en `initialize` y en `/salud`.
+- **Punta a punta completa:** las 22 series en 390 y 1280 px, el explorador, la ficha, `/periodos/` y la posición del gráfico con y sin sombreado:
+  - explorador: 912 px en 390 y 289 px en 1280;
+  - ficha del IPC: 1401 px en 390 y 1234 px en 1280.
+- **Revisor visual:** 78 vistas (4 páginas en 2 anchos y 2 modos, más 16 casos fijos), sin problemas. La regla queda debajo del gráfico, y julio de 1989 muestra las tres fases con sus topes y «tregua del Plan Bunge y Born» en la lista.
+
+### Diferencias con la SPEC
+
+La SPEC pasa a la v1.6:
+- 2.4: el ejemplo con las tres fases;
+- 6.2: la regla debajo del gráfico;
+- 7.2: búsqueda, `obtener_serie` y `periodo_en_fecha`.
+
+### Pendientes
+
+- **Después del despliegue:** `probar-endpoint.mjs` contra producción y las preguntas 1, 7, 10, 11 y 17 del manual por JSON-RPC (se anotan abajo).
+- **La prueba ciega del MCP,** a cargo de Camilo: una conversación nueva en claude.ai, solo con el conector Vaivén y sin pegar el manual, con las 18 preguntas de a una. Si sale bien, la 4b queda cerrada.
+- **4c:**
+  - eventos y episodios candidatos;
+  - los 19 extremos de regímenes sin norma;
+  - los huecos entre ministros de 1971 y 1981;
+  - la p. 25 de Cagan;
+  - la opción `detalle: false` del MCP.
