@@ -5,3 +5,4 @@ export * from "./ficha";
 export * from "./periodos";
 export * from "./estado";
 export * from "./espec";
+export * from "./vista";

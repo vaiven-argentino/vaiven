@@ -63,7 +63,7 @@ export interface EntradaGrafico {
   descripcion: string;
   /** Series con dimensión pais: el nombre de la entidad resaltada y las demás de la selección, en tono secundario. */
   nombre?: string;
-  otras?: Array<{ nombre: string; resultado: Resultado }>;
+  otras?: Array<{ nombre: string; resultado: Resultado; ubicacion?: ContextoUbicacion; tramos?: Tramo[]; empalme?: EntradaGrafico["empalme"] }>;
   /** Explorador: cada país con su color (`tema.paleta`) y su nombre al final de la línea, en lugar del tono secundario. */
   colores?: boolean;
   /**
@@ -83,6 +83,33 @@ export interface EntradaGrafico {
   eventos?: MarcaEvento[];
   /** Solo para exportar la imagen: título, subtítulo y pie impresos dentro del gráfico. */
   impreso?: { titulo: string; subtitulo: string; pie: string[] };
+
+  // ── Comparación de series (4c/4d). Sin estos campos, el gráfico es el de una serie, como en la 4b. ──
+  /** Dominio del eje X en meses, común a todas las series (y a todos los paneles). */
+  dominio?: { ini: number; fin: number };
+  /** Dominio del eje Y fijo (los ceros alineados del doble eje), sin redondear. */
+  dominioY?: [number, number];
+  /** Sin eje X (los paneles de arriba: el eje de fechas va solo en el último). */
+  sinEjeX?: boolean;
+  /** El eje Y a la derecha y sin grilla (el segundo eje del doble eje). */
+  ejeDerecho?: boolean;
+  /** Título del eje Y, en el color de su primera serie: la unidad con una muestra del trazo (doble eje). */
+  tituloEjeY?: { texto: string; color: string };
+  /** Cómo se llama en el tooltip lo que nombra cada línea: «País» (por defecto) o «Serie». */
+  rotuloNombre?: string;
+  /** Sin las letras de los eventos debajo del eje (los paneles de arriba conservan las reglas). */
+  sinLetrasEventos?: boolean;
+  /** Sin los rótulos de las bandas del sombreado (se escriben solo en el primer panel). */
+  sinRotulosSombreado?: boolean;
+  /** Sin tooltip propio en las líneas: lo da la guía común de la comparación (`capasExtra`). */
+  sinTooltip?: boolean;
+  /**
+   * Series distintas en el mismo panel (comparación): ninguna línea va resaltada, y cada una lleva sus puntos (si es
+   * rala) en su propio color. Sin esto, la primera línea se resalta, como el país elegido de las internacionales.
+   */
+  sinResaltado?: boolean;
+  /** Capas que se agregan al final (la guía vertical común). */
+  capasExtra?: Record<string, unknown>[];
 }
 
 export interface Fila {
@@ -209,10 +236,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const frecUltima = e.resultado.frecuencias[e.resultado.frecuencias.length - 1];
   // El eje va del primer día de la primera observación al día siguiente del último de la última (`dominioMeses`).
   // `meses` es la cantidad de meses que cubre (para las marcas del eje).
-  const { ini, fin } = dominioMeses(e.resultado);
+  const { ini, fin } = e.dominio ?? dominioMeses(e.resultado);
   const meses = fin - ini;
   const dominioX = [iso(ini), iso(fin)];
-  const x = (campo: string) => ({ field: campo, type: "temporal", scale: { type: "utc", domain: dominioX }, title: null });
+  const x = (campo: string) => ({ field: campo, type: "temporal", scale: { type: "utc", domain: dominioX }, title: null, ...(e.sinEjeX ? { axis: null } : {}) });
 
   // Los quiebres de la entidad resaltada y de las demás que se ven (un quiebre de un solo país, solo si ese país está).
   const ids = new Set([e.resultado, ...(e.otras ?? []).map((o) => o.resultado)].flatMap((r) => r.advertencias.map((a) => a.id)));
@@ -242,7 +269,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     texto: `Dato excluido (${fechaCorta(x.fecha)}): ${x.motivo}`,
   }));
 
-  const filasOtras = (e.otras ?? []).flatMap((o) => filas({ ...e, resultado: o.resultado }).map((f) => ({ ...f, pais: o.nombre })));
+  const filasOtras = (e.otras ?? []).flatMap((o) => filas({ ...e, resultado: o.resultado, ubicacion: o.ubicacion ?? e.ubicacion, tramos: o.tramos ?? e.tramos, empalme: o.empalme ?? e.empalme }).map((f) => ({ ...f, pais: o.nombre })));
   const todas = [...filasLinea, ...filasOtras];
   const tramosDistintos = new Set(filasLinea.map((f) => f.tramo)).size > 1 && e.empalme === "yuxtaponer";
   const ralo = filasLinea.length <= 160 || e.resultado.frecuencias.some((f) => f === "semestral" || f === "anual");
@@ -255,16 +282,21 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const negativos = !log && todas.some((f) => f.v < 0);
   const minY = Math.min(...todas.map((f) => f.v));
   const piso = negativos ? minY - (Math.max(...todas.map((f) => f.v), 0) - minY) * 0.08 : undefined;
+  const ejeY = log && minimo < 0.01 ? { labelExpr: ROTULO_POTENCIA, values: potenciasDeDiez(minimo, Math.max(...filasLinea.map((f) => f.v))) }
+    : { format: ",~r", tickCount: 6 };
   const y = {
-    field: "v", type: "quantitative", title: null,
-    scale: {
-      ...(log ? { type: "log" } : { zero: cero }), ...(tope === undefined ? {} : { domainMax: tope }),
-      ...(piso === undefined ? {} : { domainMin: piso, nice: false }),
-    },
-    axis: log && minimo < 0.01 ? { labelExpr: ROTULO_POTENCIA, values: potenciasDeDiez(minimo, Math.max(...filasLinea.map((f) => f.v))) }
-      : { format: ",~r", tickCount: 6 },
+    field: "v", type: "quantitative", title: e.tituloEjeY?.texto ?? null,
+    scale: e.dominioY && !log
+      ? { domain: e.dominioY, nice: false, zero: false }
+      : {
+        ...(log ? { type: "log" } : { zero: cero }), ...(tope === undefined ? {} : { domainMax: tope }),
+        ...(piso === undefined ? {} : { domainMin: piso, nice: false }),
+      },
+    axis: e.ejeDerecho || e.tituloEjeY
+      ? { ...ejeY, ...(e.ejeDerecho ? { orient: "right", grid: false } : {}), ...(e.tituloEjeY ? { titleColor: e.tituloEjeY.color, titleFontWeight: 600, titleFontSize: 12 } : {}) }
+      : ejeY,
   };
-  const tooltip = [...(e.nombre ? [{ field: "pais", title: "País" }] : []), { field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" },
+  const tooltip = e.sinTooltip ? undefined : [...(e.nombre ? [{ field: "pais", title: e.rotuloNombre ?? "País" }] : []), { field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" },
     ...(e.asignacion ? [{ field: "periodo", title: "Período" }, { field: "reparto", title: "Reparto" }] : [])];
   if (e.nombre) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
 
@@ -275,6 +307,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     .sort((a, b) => a.fecha.localeCompare(b.fecha)).map((ev) => ({ ...ev, dia: diaLegible(ev.fecha) }));
   const modo = modoEventos(eventos.map((ev) => ev.fecha), ini, fin, e.ancho);
   const letras = eventos.length > 0 && modo === "letras";
+  const conLetras = letras && !e.sinLetrasEventos;
   const franjaEpisodios = episodios(e, ini, fin, px);
   // Debajo del eje van, en orden: la franja de los episodios y las letras de los eventos; después, los años.
   const debajo = franjaEpisodios.alto;
@@ -327,25 +360,38 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     capas.push({
       data: { values: conColor },
       mark: e.colores
-        ? { type: "line", strokeWidth: 1.6, opacity: 0.9, interpolate: "linear" }
+        ? { type: "line", strokeWidth: e.sinResaltado ? 2 : 1.6, opacity: e.sinResaltado ? 1 : 0.9, interpolate: "linear" }
         : { type: "line", color: tema.secundario, strokeWidth: 1.2, opacity: 0.75, interpolate: "linear" },
       encoding: {
         x: x("t"), y, detail: [{ field: "pais", type: "nominal" }, { field: "segmento", type: "nominal" }],
         ...(e.colores ? { color: { field: "color", type: "nominal", scale: null, legend: null } } : {}),
       },
     });
-    capas.push({ data: { values: filasOtras }, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
+    if (tooltip) capas.push({ data: { values: filasOtras }, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
   }
   capas.push({
-    data: { values: filasLinea }, mark: { type: "line", color: e.colores ? colorDe(0) : tema.serie, strokeWidth: filasOtras.length ? 2.6 : 2, interpolate: "linear" },
+    data: { values: filasLinea }, mark: { type: "line", color: e.colores ? colorDe(0) : tema.serie, strokeWidth: filasOtras.length && !e.sinResaltado ? 2.6 : 2, interpolate: "linear" },
     encoding: { x: x("t"), y, detail: { field: "segmento", type: "nominal" } },
   });
-  if (tramosDistintos || ralo) {
+  if (e.sinResaltado) {
+    // Cada línea rala (anual, semestral o con pocos datos) lleva sus puntos, en su color.
+    const lineas = [{ filas: filasLinea, color: colorDe(0), r: e.resultado }, ...(e.otras ?? []).map((o, k) => ({
+      filas: filasOtras.filter((f) => f.pais === o.nombre), color: colorDe(k + 1), r: o.resultado,
+    }))];
+    const puntos = lineas.filter((l) => l.filas.length <= 160 || l.r.frecuencias.some((f) => f === "semestral" || f === "anual"))
+      .flatMap((l) => l.filas.map((f) => ({ t: f.t, v: f.v, color: l.color })));
+    if (puntos.length) {
+      capas.push({
+        data: { values: puntos }, mark: { type: "point", filled: true, size: e.ancho < 520 ? 12 : 22, opacity: 1 },
+        encoding: { x: x("t"), y, color: { field: "color", type: "nominal", scale: null, legend: null } },
+      });
+    }
+  } else if (tramosDistintos || ralo) {
     capas.push({
       data: { values: filasLinea },
       mark: { type: "point", filled: true, color: tema.serie, size: e.ancho < 520 ? 12 : tramosDistintos ? 30 : 22, opacity: 1 },
       encoding: {
-        x: x("t"), y, tooltip,
+        x: x("t"), y, ...(tooltip ? { tooltip } : {}),
         ...(tramosDistintos ? {
           shape: {
             field: "tramo", type: "nominal", title: "Tramo",
@@ -357,7 +403,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   // Puntos invisibles para el tooltip cuando la línea no lleva puntos.
-  if (!tramosDistintos && !ralo) {
+  if (!tramosDistintos && !ralo && tooltip) {
     capas.push({ data: { values: filasLinea }, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
   }
   if (marcadores.length) {
@@ -386,7 +432,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       encoding: { x: x("t"), y: { ...y, field: "vy" }, text: { field: "pais" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
     });
   }
-  if (letras) {
+  if (conLetras) {
     // Cada letra va sobre un cuadrado con el color del fondo, debajo del eje X (entre la línea del eje y los años), para
     // que no tape la serie (revisión visual de la 4b); las muy pegadas al borde izquierdo se corren un poco.
     const conY = eventos.map((ev) => ({ ...ev, y: e.alto + debajo + 11, dx: px(indiceDia(ev.fecha)) < 8 ? 6 : 0 }));
@@ -399,7 +445,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       data: { values: conY }, mark: { type: "text", color: tema.texto, fontSize: 9.5, fontWeight: 700, baseline: "middle" },
       encoding: { x: x("fecha"), xOffset: { field: "dx", type: "quantitative", scale: null }, y: { field: "y", type: "quantitative", scale: null }, text: { field: "letra" }, tooltip: tooltipEvento },
     });
-  } else if (eventos.length) {
+  } else if (eventos.length && !letras) {
     // Rayitas: una marca corta sobre el eje, en el color del texto, y una franja invisible más ancha para el tooltip.
     const tooltipEvento = [{ field: "nombre", title: "Evento" }, { field: "dia", title: "Fecha" }];
     capas.push({
@@ -412,6 +458,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   capas.push(...franjaEpisodios.capas(x));
+  if (e.capasExtra) capas.push(...e.capasExtra);
   if (excluidos.length) {
     capas.push({
       data: { values: excluidos }, mark: { type: "text", text: "×", color: tema.texto, fontSize: 18, fontWeight: 700, baseline: "bottom" },
@@ -438,7 +485,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
         labelColor: tema.secundario, titleColor: tema.secundario, gridColor: tema.linea, domainColor: tema.borde,
         tickColor: tema.borde, labelFontSize: 12, labelFont: tema.fuente, labelOverlap: true, labelFlush: true,
       },
-      axisX: { grid: false, labelPadding: 6 + debajo + (letras ? 15 : 0), ...marcasX(meses, e.ancho < 520 ? 5 : 10) },
+      axisX: { grid: false, labelPadding: 6 + debajo + (conLetras ? 15 : 0), ...marcasX(meses, e.ancho < 520 ? 5 : 10) },
       legend: { labelColor: tema.texto, titleColor: tema.secundario, labelFontSize: 12, titleFontSize: 12, labelFont: tema.fuente, labelLimit: 320 },
       title: { color: tema.texto, subtitleColor: tema.secundario, anchor: "start", fontSize: 17, subtitleFontSize: 12, font: tema.fuente, subtitleFont: tema.fuente },
       text: { font: tema.fuente },
@@ -573,7 +620,7 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
     color: b.facto ? (t.periodoFacto ?? t.banda) : k % 2 ? (t.periodoB ?? t.banda) : (t.periodoA ?? t.fondo),
     rotulo: px(b.z) - px(b.a) >= anchoTexto(b.nombre_corto) ? b.nombre_corto : "",
   }));
-  const conRotulo = datos.filter((d) => d.rotulo);
+  const conRotulo = e.sinRotulosSombreado ? [] : datos.filter((d) => d.rotulo);
   return {
     activo: true, arriba: conRotulo.length ? 16 : 0,
     capas: (x: (c: string) => Record<string, unknown>) => [
