@@ -1,5 +1,5 @@
 {
-  "version_datos": "2026-11-14T21:23:46Z",
+  "version_datos": "2026-11-14T23:46:09Z",
   "series": [
     {
       "id": "agregados",
@@ -1570,7 +1570,7 @@
     "eventos": {
       "archivo": "eventos.json",
       "esquema": "eventos-1.0",
-      "cantidad": 30
+      "cantidad": 31
     }
   }
 }

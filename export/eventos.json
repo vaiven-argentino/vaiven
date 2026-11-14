@@ -1,6 +1,6 @@
 {
   "esquema": "eventos-1.0",
-  "version_datos": "2026-11-14T21:23:46Z",
+  "version_datos": "2026-11-14T23:46:09Z",
   "descripcion": "Hitos económicos e institucionales con efecto económico, 1970–hoy. `fecha` es la del hecho que nombra (anuncio, sanción, firma); `vigencia`, si es otra, la de su entrada en vigor.",
   "fuente": "metadatos/eventos.yaml",
   "licencia": "CC-BY-4.0",
@@ -568,6 +568,28 @@
           "publicado": "2019-08-29",
           "pagina": "3",
           "url": "https://www.argentina.gob.ar/normativa/nacional/norma-327357"
+        }
+      ]
+    },
+    {
+      "id": "e.2019-09-01.vuelta-cepo",
+      "fecha": "2019-09-01",
+      "nombre": "Vuelta del control de cambios (DNU 609/2019)",
+      "nombre_corto": "Vuelta del cepo",
+      "categoria": "cambiario",
+      "descripcion": "El gobierno obligó por decreto a liquidar en el mercado de cambios las divisas de las exportaciones y facultó al BCRA a exigir autorización previa para comprar moneda extranjera y para las transferencias al exterior; el BCRA lo reglamentó el mismo día.",
+      "fuentes": [
+        {
+          "tipo": "norma",
+          "referencia": "Decreto 609/2019 (DNU), sanción 2019-09-01, BO, edición especial",
+          "publicado": "2019-09-01",
+          "url": "https://www.argentina.gob.ar/normativa/nacional/norma-327566"
+        },
+        {
+          "tipo": "comunicacion_bcra",
+          "referencia": "BCRA, Comunicación «A» 6770",
+          "publicado": "2019-09-01",
+          "url": "https://www.bcra.gob.ar/archivos/Pdfs/comytexord/A6770.pdf"
         }
       ]
     },
