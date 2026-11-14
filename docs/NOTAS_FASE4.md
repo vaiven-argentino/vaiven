@@ -1425,3 +1425,68 @@ Claude Desktop en macOS, con la sonda 1 en la URL de versión. Claude web no se 
 1. **Prueba en Claude web**, con la sonda 2. Decide la regla del Paso 0: el dominio propio y el intérprete.
 2. **En Desktop:** comprobar que, con el aviso y el texto nuevo, Claude no rearma el gráfico (fila i del manual).
 3. **La consola de desarrollo** en los dos clientes: los avisos de CSP.
+
+### Tercera ronda: la consola de Desktop y los hallazgos M9 a M11 y B4 (14/11/2026)
+
+Camilo sumó al informe lo que vio en la consola de Claude Desktop. No hay errores de CSP ni de carga, y el iframe se arma con `resource-src=https://prueba-4e-vaiven.argentino.workers.dev+https://assets.claude.ai`: Desktop aplica `resourceDomains`. También sumó cuatro hallazgos: M9, M10, M11 y B4.
+
+**Revisión, con mediciones:**
+1. **M11 (tope por tamaño) es más grave de lo que decía el informe.** El informe calculaba un margen del 17 % sobre el pedido de 996 observaciones; en realidad, hay pedidos dentro del límite de 1.000 observaciones que pasan los 150.000 caracteres:
+
+   | Pedido | Obs. | Resultado (caracteres) |
+   |---|---|---|
+   | IPC y reservas (anuales), PIB e `int-pib` con 8 países, 1970–hoy, ministros y eventos | 781 | **231.711** |
+   | 4 mensuales 2000–2020-09, ministros y eventos | 996 | 127.386 |
+   | 4 mensuales 2000–2020-09, gobiernos y eventos (el pedido 2 del informe) | 996 | 124.053 |
+   | IPC y reservas (anuales), PIB e `int-pib` con 8 países, 1970–hoy, gobiernos y eventos | 559 | 123.489 |
+   | 4 mensuales 2000–2020-09, sin sombreado ni eventos | 996 | 97.322 |
+
+   En el primer caso, el dataset `guia` (el lector del gráfico: una fila por fecha con los valores formateados) pesa 94 KB, el 45 % de la especificación. El sombreado, en cambio, se repite en cada panel: unos 8,7 KB por panel.
+2. **M10, «Conflicting scale property»:** se reproduce al compilar con Vega-Lite en Node la especificación del MCP, también la de una sola serie. Como es igual a la del explorador, pasa también en el explorador.
+3. **«Infinite extent for field "data"»:** se reproduce en Node al correr la vista de Vega, aun con una sola serie, pero **no se confirma la causa que proponía el informe**: no hay capas con `values` vacío ni `"field":"data"` en la especificación compilada. La causa sigue sin saberse.
+4. **M9 (la app pide 6.059 px y el host admite 5.000):** correcto. La sonda es larga a propósito; la interfaz definitiva tiene que entrar en el alto que da el host.
+5. **B4 (`Referer` en iOS):** hoy no aplica. El Worker no filtra por `Referer`, no hay WAF configurado y los assets llevan `access-control-allow-origin: *`.
+
+6. **Series solas con toda su historia:** también pasan los 150.000 caracteres. Con una sola serie, la especificación lleva los datos dos veces (en la capa de la línea y en la de los puntos, unos 130 caracteres por fila), y una serie mensual completa da entre 185.000 y 199.000:
+
+   | Pedido (sin `desde`) | Obs. | Resultado (caracteres) |
+   |---|---|---|
+   | IPC interanual | 668 | 199.090 |
+   | Tipo de cambio oficial | 681 | 186.589 |
+   | Reservas | 681 | 185.003 |
+   | PIB | 226 | 78.334 |
+   | Desocupación | 149 | 50.980 |
+
+**Decisiones de Camilo (14/11/2026):**
+
+| Tema | Decisión |
+|---|---|
+| M11 | Primero se probó un tope de 140.000 caracteres. Rechazaba «una serie, toda la historia» en la prueba de igualdad (185.003 caracteres) y habría rechazado pedidos comunes como «graficá el IPC». Se decidió **no poner el tope todavía**, **medir en Claude** con un pedido de unos 185.000 caracteres (pedido 4 del manual) y, en el Paso 1, **achicar primero la especificación** (una sola copia de los datos, filas compactas y la `guia`) y decidir el tope con lo medido. |
+| M10 e «Infinite extent» | Pendiente general del armado compartido, fuera de la 4e (no cambian el dibujo). |
+
+**Qué se hizo:**
+- **`PRUEBA_MANUAL.md`, sección 4:**
+  - el pedido 4 («Graficá las reservas internacionales», sin período, unos 185.000 caracteres), para ver si la app recibe los datos por encima del umbral;
+  - los pasos completos de la consola (abrirla antes de recargar y guardar el registro);
+  - los avisos que se pueden ignorar.
+- **El tope que se probó y se sacó:** costaba 0,9 ms más en el peor caso dentro del límite (de 16,7 a 17,5 ms de mediana en caliente). El caso rechazado costaba 34,5 ms, porque el gráfico se arma entero antes de medirlo. No quedó en el código; la salida del MCP sigue siendo la de la sonda 2.
+
+### Diferencias con la SPEC (para la próxima versión)
+
+- 7.4: la interfaz avisa al modelo con `updateModelContext` que el gráfico ya se mostró, y el texto de la respuesta es condicional (A1).
+
+### Pendientes
+
+- **Generales, del armado compartido con el explorador:**
+  - M2: la legibilidad del doble eje;
+  - M4: una variante que tapa a la otra;
+  - M5: escalas muy distintas en un mismo panel (decisión de Camilo);
+  - M6: los rótulos de los gobiernos;
+  - M10: el dominio de fechas definido en varias capas;
+  - el aviso «Infinite extent».
+- **Del Paso 1:**
+  - **achicar la especificación primero:** una sola copia de los datos en la vista de una serie, filas compactas, la `guia`, y el sombreado y los eventos repetidos por panel. Con la igualdad con el explorador y la regresión de la 4b como control. Después, decidir el tope por tamaño (M11) con lo que se mida en Claude;
+  - M9: que la interfaz entre en el alto del host (un solo gráfico, las listas plegadas y el modo `fullscreen` para verlo grande);
+  - B4: que los assets no dependan del `Referer`;
+  - además, lo de la segunda ronda: A2, A3, M1, M3, M7, M8, B1 y B2.
+- **De la prueba:** Claude web con la sonda 2, con el pedido 4 (unos 185.000 caracteres); en Desktop, A1 y el pedido 4.

@@ -74,6 +74,7 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 1. «Haceme un gráfico de la inflación interanual y las reservas internacionales entre 2000 y 2010».
 2. «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos». Es el caso de 996 observaciones y unos 124.000 caracteres, el más grande que admite la herramienta.
 3. **Modo oscuro:** con la sonda del pedido 1 a la vista, pasá Claude a modo oscuro y mirá si cambia la fila «Tema del host». No repitas el pedido: Claude puede no volver a llamar a la herramienta.
+4. **Una serie larga, por encima del umbral de Claude:** «Graficá las reservas internacionales», sin período. Con toda la historia, el resultado tiene unos 185.000 caracteres, más que los ~150.000 a partir de los cuales Claude puede guardar el resultado en un archivo en lugar de pasárselo a la app. Anotá si la app recibe la especificación (fila g, en verde, con unos 185.000 caracteres) o si dice que no llegó, y si Claude menciona que guardó el resultado en un archivo. Con esto se decide el tope por tamaño (NOTAS_FASE4, M11).
 
 **Qué anotar:** la sonda lo muestra en una tabla, en verde o en naranja. Al terminar cada pedido, tocá **«Copiar resultados»** y pegá el JSON en tus notas. Si el cliente no da permiso de portapapeles, el JSON aparece abajo, seleccionado: copialo con Cmd+C.
 
@@ -85,11 +86,25 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 | d | Vega con intérprete / sin intérprete / «SVG con y sin intérprete (sin los id internos)» | Cuál de los dos gráficos se dibujó y si dan el mismo SVG (en el host de prueba local, «iguales»). |
 | e | Tema del host | `light` o `dark`, y si cambia en el pedido 3. |
 | f | Capacidades del host, `downloadFile`, `openLinks`, `serverTools` y `updateModelContext` | Qué ofrece el cliente. |
-| g | Resultado recibido y `structuredContent` (pedido 2) | Si la app recibe la especificación entera. |
+| g | Resultado recibido y `structuredContent` (pedidos 2 y 4) | Si la app recibe la especificación entera: unos 124.000 caracteres en el pedido 2 y unos 185.000 en el 4. |
 | h | Botones | **«Ver desde …»** corre el inicio diez años para atrás y lo dice en el botón. En el pedido 1 se tiene que dibujar el período nuevo («Otro período: resultado», en verde). En el pedido 2 se espera **un error por el límite de 1.000 observaciones**: la app lo muestra en «Otro período: structuredContent» y el gráfico no cambia. **«Descargar SVG»**, **«Descargar PNG»** y **«Abrir en el explorador»** piden confirmación. |
 | i | «Aviso al modelo (updateModelContext)» y **la respuesta de Claude** | Si el aviso dice «enviado» y si Claude, además de la app, **dibujó su propio gráfico o volvió a pedir los datos** con `comparar_series` u `obtener_serie`. Si lo hizo, la respuesta está **mal** (hallazgo A1). |
 | j | Lista «Eventos» debajo del gráfico (pedido 2) | Si se ve la lista con letra, fecha y nombre (17 eventos). |
 
-Si podés, abrí la consola de desarrollo (en Desktop: **Help → Troubleshooting → Enable Developer Mode**; en el navegador, las herramientas de desarrollo) y copiá los errores o avisos de CSP, aunque todo haya cargado.
+**Consola de desarrollo:** abrila **antes** de recargar la conversación, así registra la carga de la app:
+- **Claude Desktop:** **Help → Troubleshooting → Enable Developer Mode**, y después `Cmd + Option + I`;
+- **Claude web:** las herramientas de desarrollo del navegador (`Cmd + Option + I` en Chrome).
+
+Recargá la conversación con la consola abierta y guardá el registro con clic derecho en la consola → **Save as…**. Lo que importa son los «Refused to load» o «Refused to execute» (CSP) y cualquier error de la app.
+
+Se pueden ignorar:
+- **Avisos del host:**
+  - `Unrecognized Content-Security-Policy directive 'webrtc'`;
+  - los de `Permissions-Policy`;
+  - `MaxListenersExceededWarning`;
+  - `[MCP Apps] … handler replaced`;
+  - `[BrowserSSETransport] Dropping …`;
+  - el 404 del ícono de `argentino.workers.dev` que Claude pide a `gstatic.com`.
+- **Avisos de Vega ya conocidos:** `Conflicting scale property "domain"` y `Infinite extent for field "data"`. Salen del armado que comparten el explorador y el MCP, no impiden el dibujo y están anotados como pendientes generales.
 
 **Si la app no aparece:** comprobá que `/salud` responde bien. Un error 1102 en el recurso sería la CPU del plan gratuito, no la CSP.
