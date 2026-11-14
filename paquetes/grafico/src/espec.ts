@@ -63,7 +63,12 @@ export interface EntradaGrafico {
   descripcion: string;
   /** Series con dimensión pais: el nombre de la entidad resaltada y las demás de la selección, en tono secundario. */
   nombre?: string;
-  otras?: Array<{ nombre: string; resultado: Resultado; ubicacion?: ContextoUbicacion; tramos?: Tramo[]; empalme?: EntradaGrafico["empalme"] }>;
+  otras?: Array<{ nombre: string; resultado: Resultado; ubicacion?: ContextoUbicacion; tramos?: Tramo[]; empalme?: EntradaGrafico["empalme"]; discontinua?: boolean }>;
+  /**
+   * Comparación: la línea principal es otra variante de una serie que ya está en la vista, y va con trazo discontinuo,
+   * así donde las dos coinciden se ven las dos (M4, 4e). En `otras`, lo mismo para cada una.
+   */
+  discontinua?: boolean;
   /** Explorador: cada país con su color (`tema.paleta`) y su nombre al final de la línea, en lugar del tono secundario. */
   colores?: boolean;
   /**
@@ -93,8 +98,21 @@ export interface EntradaGrafico {
   sinEjeX?: boolean;
   /** El eje Y a la derecha y sin grilla (el segundo eje del doble eje). */
   ejeDerecho?: boolean;
-  /** Título del eje Y, en el color de su primera serie: la unidad con una muestra del trazo (doble eje). */
+  /**
+   * Título del eje Y con varias series: solo la unidad, horizontal y arriba del eje (a la izquierda o, en el eje derecho,
+   * a la derecha), en el color de su serie si es una sola (N8, 4e).
+   */
   tituloEjeY?: { texto: string; color: string };
+  /** Con varias series: el nombre al final de la línea también cuando la línea va sola en su eje o panel (N8). */
+  rotularSiempre?: boolean;
+  /** Doble eje: los nombres van dentro del gráfico, sobre el final de cada línea, para no pisar el eje derecho (N8). */
+  rotulosDentro?: boolean;
+  /** Con la leyenda única: sin nombres al final de las líneas (N8). */
+  sinRotulos?: boolean;
+  /** La leyenda única (N8), arriba del gráfico: una entrada por serie, con su color y su trazo. */
+  leyenda?: EntradaLeyenda[];
+  /** Cuánto arriba del área del gráfico empieza la leyenda (en los paneles, por encima del título del panel). */
+  leyendaEncima?: number;
   /** Cómo se llama en el tooltip lo que nombra cada línea: «País» (por defecto) o «Serie». */
   rotuloNombre?: string;
   /** Sin las letras de los eventos debajo del eje (los paneles de arriba conservan las reglas). */
@@ -116,6 +134,37 @@ export interface EntradaGrafico {
   /** Capas que se agregan al final (la guía vertical común). */
   capasExtra?: Record<string, unknown>[];
 }
+
+export interface EntradaLeyenda {
+  texto: string;
+  color: string;
+  discontinua?: boolean;
+}
+
+/** Alto de un renglón de la leyenda única y aire entre la leyenda y el título de los ejes. */
+const RENGLON_LEYENDA = 16;
+
+/** Las entradas de la leyenda en renglones, sin pasar del ancho: posición en píxeles de cada una. */
+export function ubicarLeyenda(entradas: EntradaLeyenda[], ancho: number): Array<EntradaLeyenda & { x: number; renglon: number }> {
+  let x = 0, renglon = 0;
+  return entradas.map((en) => {
+    const largo = 22 + en.texto.length * 5.8 + 16;
+    if (x > 0 && x + largo > ancho) { x = 0; renglon += 1; }
+    const salida = { ...en, x, renglon };
+    x += largo;
+    return salida;
+  });
+}
+
+/** Lo que ocupa la leyenda arriba del gráfico (para el margen superior). */
+export const altoLeyenda = (entradas: EntradaLeyenda[] | undefined, ancho: number) =>
+  entradas?.length ? (Math.max(...ubicarLeyenda(entradas, ancho).map((u) => u.renglon)) + 1) * RENGLON_LEYENDA + 6 : 0;
+
+/** Lo que se descuenta del ancho para la leyenda: el eje Y (y, en el doble eje, el derecho), más o menos. */
+const ANCHO_EJE_LEYENDA = 110;
+
+/** Lo que ocupa arriba el título horizontal de los ejes (N8). */
+export const ALTO_TITULO_EJE = 18;
 
 export interface Fila {
   t: string;
@@ -317,7 +366,14 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
         ...(piso === undefined ? {} : { domainMin: piso, nice: false }),
       },
     axis: e.ejeDerecho || e.tituloEjeY
-      ? { ...ejeY, ...(e.ejeDerecho ? { orient: "right", grid: false } : {}), ...(e.tituloEjeY ? { titleColor: e.tituloEjeY.color, titleFontWeight: 600, titleFontSize: 12 } : {}) }
+      ? {
+        ...ejeY, ...(e.ejeDerecho ? { orient: "right", grid: false } : {}),
+        // El título, horizontal y arriba del eje: no compite con los nombres al final de las líneas (N8).
+        ...(e.tituloEjeY ? {
+          titleColor: e.tituloEjeY.color, titleFontWeight: 600, titleFontSize: 12, titleAngle: 0, titleAnchor: "end",
+          titleAlign: e.ejeDerecho ? "right" : "left", titleBaseline: "bottom", titleX: 0, titleY: -6,
+        } : {}),
+      }
       : ejeY,
   };
   const tooltip = e.sinTooltip ? undefined : [...(e.nombre ? [{ field: "pais", title: e.rotuloNombre ?? "País" }] : []), { field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" },
@@ -385,7 +441,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       const valores = filasOtras.filter((f) => f.pais === o.nombre).map((f) => ({ t: f.t, v: f.v, segmento: f.segmento }));
       if (valores.length) {
         capas.push({
-          data: compartir(`otra${k + 1}`, valores), mark: { type: "line", color: colorDe(k + 1), strokeWidth: 2, interpolate: "linear" },
+          data: compartir(`otra${k + 1}`, valores), mark: { type: "line", color: colorDe(k + 1), strokeWidth: 2, interpolate: "linear", ...(o.discontinua ? { strokeDash: TRAZO_VARIANTE } : {}) },
           encoding: { x: x("t"), y, detail: { field: "segmento", type: "nominal" } },
         });
       }
@@ -406,7 +462,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     if (tooltip) capas.push({ data: datosOtras, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
   }
   capas.push({
-    data: datosLinea, mark: { type: "line", color: e.colores ? colorDe(0) : tema.serie, strokeWidth: filasOtras.length && !e.sinResaltado ? 2.6 : 2, interpolate: "linear" },
+    data: datosLinea, mark: { type: "line", color: e.colores ? colorDe(0) : tema.serie, strokeWidth: filasOtras.length && !e.sinResaltado ? 2.6 : 2, interpolate: "linear", ...(e.discontinua ? { strokeDash: TRAZO_VARIANTE } : {}) },
     encoding: { x: x("t"), y, detail: { field: "segmento", type: "nominal" } },
   });
   if (e.sinResaltado) {
@@ -452,7 +508,9 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   // Explorador con varios países: el nombre al final de cada línea, en su color (si hay lugar a la derecha).
-  const rotulos = e.colores && filasOtras.length && e.ancho >= 520 ? rotulosFinales(e, filasLinea, filasOtras, colorDe) : [];
+  // Con varias series, todas llevan su nombre, también la que va sola en su eje o panel (N8); con la leyenda, ninguna.
+  const rotulos = !e.sinRotulos && e.colores && (filasOtras.length || e.rotularSiempre) && e.ancho >= 520 ? rotulosFinales(e, filasLinea, filasOtras, colorDe) : [];
+  const fuera = !e.rotulosDentro;
   if (rotulos.length) {
     // La separación mínima, en unidades del eje: 15 px sobre el dominio que se dibuja (con el 0 si el eje lo incluye).
     // Con 13 px, la caja de un rótulo de 11 px (unos 14 px de alto) se pisaba con la de al lado cuando el eje redondea
@@ -460,11 +518,28 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     const alto = tope ?? Math.max(...todas.map((f) => f.v));
     const bajo = piso ?? (cero ? Math.min(0, ...todas.map((f) => f.v)) : Math.min(...todas.map((f) => f.v)));
     const vy = separarRotulos(rotulos.map((r) => r.v), ((alto - bajo) || 1) * 15 / e.alto);
-    capas.push({
-      data: { values: rotulos.map((r, k) => ({ ...r, vy: log ? r.v : vy[k] })) },
-      mark: { type: "text", align: "left", baseline: "middle", dx: 5, fontSize: 11, fontWeight: 600 },
-      encoding: { x: x("t"), y: { ...y, field: "vy" }, text: { field: "pais" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
-    });
+    // Dentro del gráfico (doble eje), un nombre cuya línea termina en el quinto de arriba va debajo del final, para no
+    // chocar con los marcadores de los quiebres.
+    const umbral = bajo + (alto - bajo) * 0.8;
+    const valores = rotulos.map((r, k) => ({ ...r, vy: log ? r.v : vy[k], ...(!fuera && !log && r.v > umbral ? { abajo: true } : {}) }));
+    const encoding = { x: x("t"), y: { ...y, field: "vy" }, text: { field: "pais" } };
+    if (fuera) {
+      capas.push({
+        data: { values: valores },
+        mark: { type: "text", align: "left", baseline: "middle", dx: 5, fontSize: 11, fontWeight: 600 },
+        encoding: { ...encoding, color: { field: "color", type: "nominal", scale: null, legend: null } },
+      });
+    } else {
+      // En el doble eje, el margen derecho es del segundo eje: el nombre va dentro, sobre el final de la línea, con un
+      // borde del color del fondo para que se lea sobre la grilla y las otras líneas.
+      for (const abajo of [false, true]) {
+        const grupo = valores.filter((v) => !!(v as { abajo?: boolean }).abajo === abajo);
+        if (!grupo.length) continue;
+        const marca = { type: "text", align: "right", baseline: abajo ? "top" : "bottom", dx: -2, dy: abajo ? 7 : -6, fontSize: 11, fontWeight: 600 };
+        capas.push({ data: { values: grupo }, mark: { ...marca, stroke: tema.fondo, strokeWidth: 3, strokeJoin: "round" }, encoding });
+        capas.push({ data: { values: grupo }, mark: marca, encoding: { ...encoding, color: { field: "color", type: "nominal", scale: null, legend: null } } });
+      }
+    }
   }
   if (conLetras) {
     // Cada letra va sobre un cuadrado con el color del fondo, debajo del eje X (entre la línea del eje y los años), para
@@ -492,6 +567,8 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   capas.push(...franjaEpisodios.capas(x));
+  // La leyenda arma sus renglones con el ancho del área del gráfico (sin el eje Y).
+  if (e.leyenda?.length) capas.push(...capasLeyenda(e.leyenda, e.ancho - ANCHO_EJE_LEYENDA, e.leyendaEncima ?? (e.tituloEjeY ? ALTO_TITULO_EJE : 0) + 4));
   if (e.capasExtra) capas.push(...e.capasExtra);
   if (excluidos.length) {
     capas.push({
@@ -506,9 +583,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     width: e.impreso ? 900 : "container",
     height: e.alto,
     autosize: { type: "fit-x", contains: "padding" },
+    // Vega ya cuenta en el tamaño el título horizontal de los ejes y la leyenda: el margen de arriba no cambia.
     padding: e.impreso
-      ? { top: 20, left: 20, bottom: 20, right: 20 + margenRotulos(rotulos) }
-      : { top: 4, right: 6 + margenRotulos(rotulos), bottom: 4, left: 4 },
+      ? { top: 20, left: 20, bottom: 20, right: 20 + (fuera ? margenRotulos(rotulos) : 0) }
+      : { top: 4, right: 6 + (fuera ? margenRotulos(rotulos) : 0), bottom: 4, left: 4 },
     background: e.impreso ? tema.fondo : null,
     ...(e.impreso ? { title: { text: e.impreso.titulo, subtitle: [e.impreso.subtitulo, "", ...e.impreso.pie], subtitlePadding: 6, offset: 14 } } : {}),
     layer: capas,
@@ -590,6 +668,33 @@ export function ubicarMarcadores(marcas: Array<{ n: number; i: number }>, ini: n
   });
 }
 
+/**
+ * Las capas de la leyenda única (N8): una muestra del trazo y el nombre de cada serie, en renglones arriba del área del
+ * gráfico (en píxeles, `encima` por arriba del borde superior).
+ */
+export function capasLeyenda(entradas: EntradaLeyenda[], ancho: number, encima: number): Record<string, unknown>[] {
+  const ubicadas = ubicarLeyenda(entradas, ancho);
+  const renglones = Math.max(...ubicadas.map((u) => u.renglon)) + 1;
+  const valores = ubicadas.map((u) => ({
+    ...u, x2: u.x + 16, xt: u.x + 22, y: -encima - (renglones - u.renglon) * RENGLON_LEYENDA + RENGLON_LEYENDA / 2,
+  }));
+  const px = (campo: string) => ({ field: campo, type: "quantitative", scale: null });
+  return [
+    ...[false, true].flatMap((discontinua) => {
+      const filas = valores.filter((v) => !!v.discontinua === discontinua);
+      return filas.length ? [{
+        data: { values: filas },
+        mark: { type: "rule", strokeWidth: 2.5, ...(discontinua ? { strokeDash: TRAZO_VARIANTE } : {}) },
+        encoding: { x: px("x"), x2: { field: "x2" }, y: px("y"), color: { field: "color", type: "nominal", scale: null, legend: null } },
+      }] : [];
+    }),
+    {
+      data: { values: valores }, mark: { type: "text", align: "left", baseline: "middle", fontSize: 11.5, fontWeight: 600 },
+      encoding: { x: px("xt"), y: px("y"), text: { field: "texto" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
+    },
+  ];
+}
+
 /** El último dato de cada país (para el rótulo al final de la línea). */
 function rotulosFinales(e: EntradaGrafico, linea: Fila[], otras: Fila[], colorDe: (k: number) => string) {
   const ultimo = (fs: Fila[]) => fs.reduce<Fila | null>((a, f) => (!a || f.t >= a.t ? f : a), null);
@@ -611,6 +716,23 @@ function isoDia(i: number): string {
   const dia = Math.min(28, 1 + Math.round((i - mes) * 31));
   return `${iso(mes).slice(0, 8)}${String(dia).padStart(2, "0")}`;
 }
+
+/**
+ * El rótulo de una banda que entra en `ancho` píxeles: el nombre corto o, si no entra, sus iniciales («A. Fernández» →
+ * «AF»; un nombre de una sola palabra, sus tres primeras letras con punto). Si tampoco entran, ninguno (M6, 4e).
+ */
+export function rotuloQueEntra(corto: string, ancho: number): string {
+  if (ancho >= anchoTexto(corto)) return corto;
+  const palabras = corto.split(/[\s.]+/).filter((p) => /^\p{Lu}/u.test(p));
+  const iniciales = palabras.length > 1 ? palabras.map((p) => p[0]).join("") : `${corto.slice(0, 3)}.`;
+  return ancho >= anchoTexto(iniciales) ? iniciales : "";
+}
+
+/** El trazo de la segunda variante de una misma serie (M4): guiones largos, distintos de las marcas punteadas. */
+const TRAZO_VARIANTE = [7, 4];
+
+/** Una banda de menos de este ancho (los interinos de diciembre de 2001 en un eje de décadas) lleva una franja fina. */
+const ANCHO_MINIMO_BANDA = 2;
 
 /**
  * Capas del sombreado por períodos. Devuelve también cuántos píxeles ocupa arriba (rótulos o franja de planes), para
@@ -653,14 +775,19 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
   const datos = bandas.map((b, k) => ({
     desde: b.xa, hasta: b.xz, nombre: b.nombre, rango: rango(b), medio: isoDia((b.a + b.z) / 2),
     color: b.facto ? (t.periodoFacto ?? t.banda) : k % 2 ? (t.periodoB ?? t.banda) : (t.periodoA ?? t.fondo),
-    rotulo: px(b.z) - px(b.a) >= anchoTexto(b.nombre_corto) ? b.nombre_corto : "",
+    rotulo: rotuloQueEntra(b.nombre_corto, px(b.z) - px(b.a)),
   }));
   const conRotulo = e.sinRotulosSombreado ? [] : datos.filter((d) => d.rotulo);
+  // Los períodos que no llegan a verse (de menos de 2 px) van además como una franja fina en su inicio, con el mismo
+  // tooltip; los datos de las bandas no cambian (M6, 4e).
+  const finos = datos.filter((_, k) => px(bandas[k].z) - px(bandas[k].a) < ANCHO_MINIMO_BANDA);
   return {
     activo: true, arriba: conRotulo.length ? 16 : 0,
     capas: (x: (c: string) => Record<string, unknown>) => [
       { data: { values: datos }, mark: { type: "rect", clip: true, opacity: 1 },
         encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, color: { field: "color", type: "nominal", scale: null, legend: null }, tooltip } },
+      ...(finos.length ? [{ data: { values: finos }, mark: { type: "rule", color: t.secundario, strokeWidth: ANCHO_MINIMO_BANDA, opacity: 0.55, clip: true },
+        encoding: { x: x("medio"), tooltip } }] : []),
       ...(conRotulo.length ? [{ data: { values: conRotulo }, mark: { type: "text", color: t.secundario, fontSize: 10, baseline: "top", dy: 0 },
         encoding: { x: x("medio"), y: { value: 3 }, text: { field: "rotulo" } } }] : []),
     ],

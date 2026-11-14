@@ -103,6 +103,14 @@ export function diaDeVersion(version: string): string {
 // Los nombres de las transformaciones viven con la cita, porque la cita los usa (web y MCP).
 export { NOMBRE_MEDIDA, NOMBRE_TRANSFORMACION } from "@vaiven/cita";
 
+/**
+ * La unidad tal como se muestra: «pesos actuales» es una equivalencia entre signos monetarios, no un ajuste por
+ * inflación, y se lee fácil como «a precios de hoy» (N4 de la 4e). La aclaración va donde se muestra la unidad.
+ */
+export function unidadVisible(unidad: string): string {
+  return /pesos actuales/i.test(unidad) && !/sin ajuste por inflación/i.test(unidad) ? `${unidad} (sin ajuste por inflación)` : unidad;
+}
+
 export const NOMBRE_TIPO_QUIEBRE: Record<string, string> = {
   cambio_de_base: "Cambio de base",
   cobertura: "Cobertura",

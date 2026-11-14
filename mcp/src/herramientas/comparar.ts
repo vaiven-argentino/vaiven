@@ -29,6 +29,8 @@ export interface ArgsEspecificacion {
   sombreado?: Exclude<Sombreado, "">;
   eventos?: boolean | string[];
   ejes?: "auto" | "paneles";
+  /** Con varias series, la leyenda única arriba en lugar de los nombres al final de las líneas (N8, 4e). */
+  leyenda?: boolean;
 }
 
 /** Tamaño del gráfico del MCP (el explorador usa el de la pantalla; lo demás es igual, SPEC 10). */
@@ -172,7 +174,7 @@ function estadoDe(args: ArgsEspecificacion, preparadas: SeriePreparada[], catego
       log: logInicial(serieVista(doc, paises), t, m), p: paises, sh: args.sombreado ?? "", ev,
     };
   });
-  return { series, ejes: args.ejes === "paneles" ? "paneles" : "" };
+  return { series, ejes: args.ejes === "paneles" ? "paneles" : "", ...(args.leyenda && series.length > 1 ? { leyenda: true as const } : {}) };
 }
 
 export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecificacion) {

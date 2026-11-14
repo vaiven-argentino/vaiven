@@ -7,10 +7,10 @@ import {
   type AdvertenciaCombinacion, type Alineada, type Comparacion, type ContextoUbicacion, type DocumentoEventos,
   type DocumentoPeriodos, type InsumosCargados, type Panel, type Periodo, type Resultado, type TipoPeriodo, type Ubicacion,
 } from "@vaiven/transformaciones";
-import { dominioMeses, especificacion, modoEventosDe, type BandaEpisodio, type EntradaGrafico, type MarcaEvento, type ModoEventos, type Tema } from "./espec";
+import { dominioMeses, especificacion, modoEventosDe, type BandaEpisodio, type EntradaGrafico, type EntradaLeyenda, type MarcaEvento, type ModoEventos, type Tema } from "./espec";
 import { opcionesDe, serieVista, type Documento, type Estado, type EstadoVista } from "./estado";
 import { esVariacion, numerarQuiebres, resumen, type QuiebreNumerado } from "./ficha";
-import { fechaLegible, numero } from "./formato";
+import { fechaLegible, numero, unidadVisible } from "./formato";
 import {
   EPISODIO, bandasDe, columnaPeriodo, contextoDe, episodiosEnRango, eventosEnRango, nombreSombreadoEnFrase, periodosEnRango, textoLectura, tipoDe,
   type OpcionSombreado,
@@ -197,6 +197,21 @@ export function armarVista(v: EntradaVista): Vista {
     ? `${nombreDoc(docs[k])} · ${estado.series[k].v}` : nombreDoc(docs[k]));
   const d = c.disposicion;
   const dom = dominio ? dominioMeses(dominio) : undefined;
+  // Cómo se identifican las series (N8 de la 4e): por defecto, el nombre al final de cada línea; con `ley=1`, una
+  // leyenda única arriba. El título de cada eje queda solo con la unidad, en el color de su serie si es una sola.
+  const leyendaUnica = !!estado.leyenda;
+  const otraVariante = (k: number) => estado.series.slice(0, k).some((e) => e.s === estado.series[k].s);
+  const mayuscula = (t: string) => `${t[0].toUpperCase()}${t.slice(1)}`;
+  const tituloUnidad = (p: Panel) => ({
+    texto: mayuscula(unidadVisible(p.unidad)), color: p.series.length === 1 && !p.internacional ? colorSerie(p.series[0]) : tema.secundario,
+  });
+  const entradasLeyenda = (der?: Panel): EntradaLeyenda[] => estado.series.map((_, k) => {
+    const internacional = d.paneles.some((p) => p.internacional && p.series.includes(k));
+    return {
+      texto: `${k + 1}. ${nombreSerie(k)}${der ? (der.series.includes(k) ? " (eje der.)" : " (eje izq.)") : ""}${internacional ? " (países: en las líneas)" : ""}`,
+      color: internacional ? tema.secundario : colorSerie(k), ...(otraVariante(k) && !internacional ? { discontinua: true } : {}),
+    };
+  });
   const descripcionesPaneles = d.paneles.map((p) => descripcionPanel(p, c, quiebres, estado));
   const descripcion = `${descripcionesPaneles.join(" ")}${textoSombra}`;
   const nombresGuia = d.tipo === "paneles" ? d.paneles.map((_, k) => `guia${k + 1}`) : ["guia"];
@@ -209,6 +224,8 @@ export function armarVista(v: EntradaVista): Vista {
     if (!principal) return null;
     const ordenadas = [principal, ...lineas.filter((l) => l !== principal)];
     const nombreLinea = (l: { k: number; id: string }) => (panel.internacional ? nombreEntidad(docs[l.k], l.id) : nombreSerie(l.k));
+    // Otra variante de una serie que ya apareció antes en la vista: trazo discontinuo (M4).
+    const discontinua = (k: number) => !panel.internacional && otraVariante(k);
     const positivos = ordenadas.every((l) => l.r.datos.every((x) => x[1] === null || x[1] > 0));
     const serieP = serieVista(docs[principal.k], estado.series[principal.k].p);
     return {
@@ -217,10 +234,13 @@ export function armarVista(v: EntradaVista): Vista {
       // En el panel de la internacional, la paleta de 8 de sus países; si no, el color de cada serie.
       tema: { ...tema, paleta: panel.internacional ? paleta : ordenadas.map((l) => colorSerie(l.k)) },
       esVariacion: esVariacion(estado.series[principal.k].t), log: panel.log && positivos, alto: v.alto, ancho: v.ancho, descripcion: "",
-      nombre: nombreLinea(principal), rotuloNombre: panel.internacional ? "País" : "Serie",
+      nombre: nombreLinea(principal), rotuloNombre: panel.internacional ? "País" : "Serie", discontinua: discontinua(principal.k),
+      // Con la leyenda única, sin nombres al final (salvo los países de la internacional, que la leyenda no nombra).
+      rotularSiempre: !leyendaUnica, sinRotulos: leyendaUnica && !panel.internacional,
       otras: ordenadas.slice(1).map((l) => ({
         nombre: nombreLinea(l), resultado: l.r, ubicacion: contextos[l.k],
         tramos: serieVista(docs[l.k], estado.series[l.k].p).tramos, empalme: (docs[l.k] as ConEmpalme).empalme,
+        discontinua: discontinua(l.k),
       })),
       // Sin `asignacion`: con varias series, el tooltip es el de la guía común (el período de cada punto no se calcula).
       colores: true, sinResaltado: !panel.internacional, ubicacion: contextos[principal.k], ...(dom ? { dominio: dom } : {}),
@@ -236,12 +256,12 @@ export function armarVista(v: EntradaVista): Vista {
   if (d.tipo === "unico" || d.tipo === "doble_eje") {
     const [izq, der] = d.paneles;
     const rangos = d.tipo === "doble_eje" ? rangosAlineados(c, izq, der) : null;
-    const titulo = (p: Panel) => ({ texto: `━ ${p.series.map(nombreSerie).join(" · ")} (${p.unidad})`, color: colorSerie(p.series[0]) });
     const eIzq = entradaPanel(izq, {
       prefijoDatos: "i_", alto: v.alto, sombreado, eventos, episodios, capasExtra: guia.capas(v.alto, "guia"), impreso: v.impreso,
-      ...(der ? { tituloEjeY: titulo(izq) } : {}), ...(rangos ? { dominioY: rangos.izq } : {}),
+      tituloEjeY: tituloUnidad(izq), ...(rangos ? { dominioY: rangos.izq } : {}),
+      ...(der ? { rotulosDentro: true } : {}), ...(leyendaUnica ? { leyenda: entradasLeyenda(der) } : {}),
     });
-    const eDer = der ? entradaPanel(der, { prefijoDatos: "d_", alto: v.alto, ejeDerecho: true, tituloEjeY: titulo(der), ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
+    const eDer = der ? entradaPanel(der, { prefijoDatos: "d_", alto: v.alto, ejeDerecho: true, tituloEjeY: tituloUnidad(der), rotulosDentro: true, ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
     if (!eIzq && !eDer) return vacio();
     // Si el eje izquierdo no tiene datos, el derecho va solo (con su eje a la derecha y su título).
     const sIzq = especificacion({ ...(eIzq ?? eDer!), descripcion });
@@ -282,6 +302,8 @@ export function armarVista(v: EntradaVista): Vista {
       prefijoDatos: `p${k + 1}_`, alto, sombreado: sombreado && (!sombreado.franja || k === 0) ? sombreado : undefined, sinRotulosSombreado: k > 0,
       eventos: ultimo || letras ? eventos : [], sinLetrasEventos: !ultimo, episodios: ultimo ? episodios : [], sinEjeX: !ultimo,
       capasExtra: guia.capas(alto, nombresGuia[k]),
+      // La leyenda única va arriba del primer panel, entre su título y el área del gráfico (Vega sube el título).
+      ...(leyendaUnica && k === 0 ? { leyenda: entradasLeyenda(), leyendaEncima: 6 } : {}),
     });
     return e ? { p, k, s: especificacion({ ...e, descripcion: descripcionesPaneles[k] }) } : null;
   }).filter((x): x is NonNullable<typeof x> => x !== null);
@@ -302,7 +324,7 @@ export function armarVista(v: EntradaVista): Vista {
       vconcat: specs.map(({ p, k, s }) => ({
         width: Math.max(160, (v.impreso ? 900 : v.ancho) - EJE_Y - derecha), height: alto, description: descripcionesPaneles[k], layer: s.layer,
         title: {
-          text: `${p.unidad[0].toUpperCase()}${p.unidad.slice(1)}`,
+          text: mayuscula(unidadVisible(p.unidad)),
           subtitle: p.internacional ? nombreSerie(p.series[0]) : p.series.map((x) => `${x + 1}. ${nombreSerie(x)}`).join(" · "),
           anchor: "start", fontSize: 12.5, subtitleFontSize: 11.5, offset: 4,
         },

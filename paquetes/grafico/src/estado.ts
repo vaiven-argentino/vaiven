@@ -247,6 +247,11 @@ export interface EstadoVista {
   /** Una por serie, en orden. El período, el sombreado y los eventos son los mismos en todas (los de la serie 1). */
   series: Estado[];
   ejes: EjesVista;
+  /**
+   * Con varias series, una leyenda única arriba del gráfico en lugar de los nombres al final de las líneas (URL `ley=1`,
+   * N8 de la 4e). Solo está cuando vale `true`, así el estado de siempre no cambia.
+   */
+  leyenda?: true;
 }
 
 /** Una serie pedida en la URL: el número que traía (para los avisos) y sus parámetros sin sufijo (los comunes, solo en la 1). */
@@ -325,12 +330,18 @@ export function vistaDesdeUrl(q: URLSearchParams, pedidas: SeriePedida[], docs: 
   let e: EjesVista = "";
   if ((EJES as readonly string[]).includes(ejes)) e = ejes as EjesVista;
   else avisos.push(`La URL pedía una disposición que no existe («${ejes}»; usá \`ejes=paneles\` o \`ejes=doble\`): se ignoró.`);
-  return { estado: { series, ejes: e }, avisos, docs: quedan };
+  const ley = q.get("ley");
+  let leyenda = false;
+  if (ley === "1" && series.length > 1) leyenda = true;
+  else if (ley === "1") avisos.push("La leyenda (`ley=1`) es para varias series: con una sola, se ignoró.");
+  else if (ley !== null) avisos.push(`La URL pedía una leyenda que no existe («${ley}»; usá \`ley=1\`): se ignoró.`);
+  return { estado: { series, ejes: e, ...(leyenda ? { leyenda: true as const } : {}) }, avisos, docs: quedan };
 }
 
 /**
  * La URL canónica de una vista: la de la serie 1 tal como en la 4b; después, los parámetros de las series 2 a 4, con su
- * sufijo y en el mismo orden (`s` siempre, lo demás solo si difiere de la vista inicial de esa serie); al final, `ejes`.
+ * sufijo y en el mismo orden (`s` siempre, lo demás solo si difiere de la vista inicial de esa serie); al final, `ejes` y
+ * `ley`.
  */
 export function urlDesdeVista(v: EstadoVista, docs: Documento[], indice: IndiceSerie[], categorias: readonly string[]): string {
   const [primera, ...resto] = v.series;
@@ -347,6 +358,7 @@ export function urlDesdeVista(v: EstadoVista, docs: Documento[], indice: IndiceS
     }
   });
   if (v.ejes) extra.set("ejes", v.ejes);
+  if (v.leyenda && v.series.length > 1) extra.set("ley", "1");
   const mas = extra.toString().replaceAll("%2C", ",");
   texto = [texto, mas].filter(Boolean).join("&");
   return texto ? `?${texto}` : "";
