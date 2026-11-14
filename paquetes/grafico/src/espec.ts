@@ -330,7 +330,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   if (bandas.length) {
     capas.push({
       data: { values: bandas }, mark: { type: "rect", color: tema.banda, opacity: 1, clip: true },
-      encoding: { x: x("desde"), x2: { field: "hasta" } },
+      encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" } },
     });
     capas.push({
       data: { values: bandas.flatMap((b) => [{ t: b.desde }, { t: b.hasta }]) },
@@ -342,7 +342,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     // Línea punteada con topes en los extremos: se lee como anotación y no se confunde con la serie.
     capas.push({
       data: { values: barras }, mark: { type: "rule", color: tema.secundario, strokeWidth: 1.5, strokeDash: [2, 3], clip: true },
-      encoding: { x: x("desde"), x2: { field: "hasta" }, y: { value: 24 + sombra.arriba } },
+      encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { value: 24 + sombra.arriba } },
     });
     capas.push({
       data: { values: barras.flatMap((b) => [{ t: b.desde }, { t: b.hasta }]) },
@@ -627,7 +627,7 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
       capas: (x: (c: string) => Record<string, unknown>) => [
         // Un borde del color del fondo separa los planes contiguos de una misma fila (Austral y Primavera).
         { data: { values: datos }, mark: { type: "rect", color: t.periodoFranja ?? t.periodoFacto ?? t.banda, stroke: t.fondo, strokeWidth: 1, clip: true },
-          encoding: { x: x("desde"), x2: { field: "hasta" }, y: { field: "y", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip } },
+          encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { field: "y", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip } },
         { data: { values: datos.filter((d) => d.rotulo) }, mark: { type: "text", color: t.texto, fontSize: 9.5, align: "left", baseline: "middle", dx: 3 },
           encoding: { x: x("desde"), y: { field: "yc", type: "quantitative", scale: null }, text: { field: "rotulo" } } },
       ],
@@ -643,7 +643,7 @@ function sombreado(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
     activo: true, arriba: conRotulo.length ? 16 : 0,
     capas: (x: (c: string) => Record<string, unknown>) => [
       { data: { values: datos }, mark: { type: "rect", clip: true, opacity: 1 },
-        encoding: { x: x("desde"), x2: { field: "hasta" }, color: { field: "color", type: "nominal", scale: null, legend: null }, tooltip } },
+        encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, color: { field: "color", type: "nominal", scale: null, legend: null }, tooltip } },
       ...(conRotulo.length ? [{ data: { values: conRotulo }, mark: { type: "text", color: t.secundario, fontSize: 10, baseline: "top", dy: 0 },
         encoding: { x: x("medio"), y: { value: 3 }, text: { field: "rotulo" } } }] : []),
     ],
@@ -688,10 +688,10 @@ function episodios(e: EntradaGrafico, ini: number, fin: number, px: (i: number) 
     alto: (Math.max(...filas) + 1) * ALTO_FILA + 4,
     capas: (x: (c: string) => Record<string, unknown>) => [
       { data: { values: tramos }, mark: { type: "rule", color: t.secundario, strokeWidth: 1.5, strokeDash: [2, 3] },
-        encoding: { x: x("desde"), x2: { field: "hasta" }, y: { field: "y", type: "quantitative", scale: null }, tooltip } },
+        encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { field: "y", type: "quantitative", scale: null }, tooltip } },
       // Una franja invisible más ancha para que el tooltip aparezca sin apuntar a la línea fina.
       { data: { values: tramos }, mark: { type: "rect", opacity: 0, color: t.fondo },
-        encoding: { x: x("desde"), x2: { field: "hasta" }, y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip } },
+        encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip } },
       { data: { values: topes }, mark: { type: "rule", color: t.secundario, strokeWidth: 1.5 },
         encoding: { x: x("t"), y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" } } },
       ...(rotulos.length ? [{ data: { values: rotulos }, mark: { type: "text", color: t.secundario, fontSize: 10, align: "left", baseline: "middle", dx: 2 },
