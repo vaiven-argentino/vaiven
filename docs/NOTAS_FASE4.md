@@ -1079,7 +1079,7 @@ Después del despliegue:
 
 ## 4c/4d · Explorador con varias series (PR B)
 
-*14/11/2026 · El PR B se hace en dos sesiones. La primera pasa el explorador a la vista de varias series (`vistaDesdeUrl`, `armarVista` y `urlDesdeVista`) y suma el período a la guía común, la regresión de la 4b y la igualdad con el MCP en el navegador. La segunda hace el panel con un bloque por serie, la tabla con las columnas del período, las descargas y la revisión visual.*
+*14/11/2026 · El PR B se planeó en dos sesiones y se hizo en una, en dos partes. La primera pasa el explorador a la vista de varias series (`vistaDesdeUrl`, `armarVista` y `urlDesdeVista`) y suma el período a la guía común, la regresión de la 4b y la igualdad con el MCP en el navegador. La segunda hace el panel con un bloque por serie, la tabla con las columnas del período, las descargas y la revisión visual.*
 
 ### Decisiones tomadas con Camilo (14/11/2026)
 
@@ -1094,15 +1094,15 @@ Después del despliegue:
 | Serie repetida | No se admite la misma serie con la misma variante y la misma transformación: la combinación se deshabilita con un aviso. |
 | Cambiar la serie 1 con otras en la vista | Con una serie, como en la 4b (el período vuelve a la vista inicial de la serie nueva); con varias, el período se conserva, porque es común. |
 | Nombres de archivo con varias series | `vaiven_<s1>_y_<s2>[_y_…]_<desde>_<hasta>[_sombreado_x]`, con `<s>-<variante>` solo si la variante no es la de por defecto o si la serie se repite. |
-| Modelo | Opus con esfuerzo alto en las dos sesiones. |
+| Modelo | Opus con esfuerzo alto. Camilo pidió después seguir en esta misma sesión, en lugar de abrir otra. |
 
-### Qué se hizo (primera sesión)
+### Qué se hizo (primera parte)
 
 - **El explorador lee y escribe la vista entera.**
   - La URL se lee con `seriesDeUrl` y `vistaDesdeUrl`, y se escribe con `urlDesdeVista`.
   - El gráfico de la pantalla y el de la imagen exportada salen de `armarVista`, también con una sola serie, en lugar de llamar a `especificacion()` directamente.
   - La comparación se hace una vez por cambio (`compararVista`) y se reusa al dibujar en otro tamaño.
-  - Los controles siguen editando la serie 1. Hasta la segunda sesión, las series 2 a 4 llegan solo desde la URL.
+  - En esta parte, los controles editaban todavía la serie 1 (el panel va en la segunda).
 - **Con varias series:**
   - el último dato, los avisos (los de la combinación y los de cada serie, con «Serie k:») y la cita van uno por serie;
   - la tabla va a la frecuencia común con `alinearVista`;
@@ -1147,11 +1147,40 @@ Después del despliegue:
   - el lector dice «feb. 1995: 1. Inflación minorista (IPC), 5,0; 2. Reservas internacionales, 14.521,7 · Gobierno: Carlos Saúl Menem (8/7/1989–10/12/1999)»;
   - cambiar la transformación de la serie 1 conserva la serie 2.
 
-### Pendientes (segunda sesión)
+### Qué se hizo (segunda parte, en la misma sesión)
 
-- El panel con un bloque por serie: agregar y quitar, el foco, el selector de serie activa, el color que sigue a la serie, la serie internacional deshabilitada en los otros bloques y la serie repetida.
-- La tabla de varias series con el botón de las columnas del período.
-- El CSV largo, las hojas del XLSX, el pie del PNG y el SVG con todas las series, y los nombres de archivo.
-- El texto alternativo por panel en la página.
-- Las pruebas de Vitest de lo nuevo, los casos con varias series en `revision-visual.mjs` y `punta-a-punta.mjs`, y el `revisor-visual`.
-- Repetir la regresión de la 4b y la igualdad al final.
+Camilo pidió seguir en la misma sesión en lugar de abrir otra.
+
+- **Panel con un bloque por serie** (`web/src/pages/explorador/index.astro` y `explorador.ts`):
+  - En la sección «Serie», la lista «Serie que editás» lleva un bloque por serie, con su color, su número, su nombre, su transformación y «Quitar».
+  - Los controles (serie, variante, países y transformación) editan la serie activa, también en el escritorio. Lo común (período, sombreado y eventos) se copia a todas (`igualarComunes`).
+  - Con una sola serie, la lista no se muestra y el panel es el de la 4b, con los mismos id.
+  - **Agregar:** «Agregar serie» abre un bloque vacío, «Elegí una serie…». No se dibuja ni va a la URL hasta que se elige, y el foco va al selector de la serie. Con 4 series, el botón se deshabilita y la nota dice por qué.
+  - **Quitar:** las series siguientes suben y conservan su color. El foco va a la serie que ocupa ese lugar o a «Agregar serie», y una región `aria-live` lo anuncia.
+  - **Color:** una serie agregada toma el primer color libre de la paleta.
+  - **Serie internacional:** si otra serie ya lo es, la opción va deshabilitada, con «(ya hay una serie internacional)».
+  - **Serie repetida:** no se admite. La transformación que la repetiría va deshabilitada, con «(igual a la serie k)». Un cambio que la repetiría no se aplica y se avisa.
+- **Tabla de varias series:**
+  - va a la frecuencia común, con una nota sobre la alineación;
+  - con sombreado, el botón «Mostrar las columnas del período» suma el período de cada fila: su intervalo, ubicado con la regla de la serie 1.
+- **Descargas** (`web/src/lib/descarga.ts`):
+  - el CSV largo (`csvLargo`), también con una serie;
+  - el XLSX (`hojasVista`): «Datos (largo)», «Datos (frecuencia común)» (con una fila de unidades y, con sombreado, las columnas del período), «Metadatos» (con la regla de alineación, las notas de cada columna, los avisos de la comparación y un bloque por serie), «Cita» (una por serie) y «Períodos»;
+  - la imagen con todas las series: título «Comparación: …», una línea por serie en el pie y 200 px por panel;
+  - los nombres de archivo de `nombreArchivoVista`;
+  - el CSV de la ficha (`csvDeVista`) no cambia;
+  - `hojasXlsx`, que era solo del explorador, se reemplazó.
+- **Texto alternativo:** el pie del gráfico lleva el resumen de cada panel en su renglón (SPEC 6.5).
+- **Eje de fechas con varias series (corrección del PR A):** el gráfico de varias series no tenía eje de fechas, ni en el explorador ni en `especificacion_grafico`. El `axis: null` de las capas de la guía común le ganaba al eje de las líneas al combinar las capas.
+  - Lo encontró `punta-a-punta.mjs` («la vista sin etiquetas en el eje X»), y la compilación de Vega-Lite lo confirmó: sin el cambio, ninguna disposición tenía un eje `x`.
+  - La guía ya no declara eje, y una prueba compila cada disposición y cuenta un solo eje de fechas.
+  - La pregunta 21 de `mcp/PRUEBA_MANUAL.md` pide verlo.
+- **Pruebas:**
+  - `web/test/vista-varias.test.ts`: agregar y quitar series con su color, lo común, la serie repetida, los nombres de archivo, el CSV largo y las hojas;
+  - `punta-a-punta.mjs`: tres vistas de varias series, más agregar con el teclado, el botón de los ejes, quitar la serie 1 y las descargas de dos vistas;
+  - `revision-visual.mjs`: siete casos de varias series.
+
+### Pendientes
+
+- La prueba ciega del MCP: el gráfico de varias series cambió (eje de fechas, período en la guía, colores en minúscula), y el MCP en producción no lo tiene hasta el próximo despliegue.
+- Una URL que ya trae dos series iguales se dibuja tal cual: la regla de la serie repetida vale para lo que se edita en el panel.
