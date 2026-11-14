@@ -1,6 +1,6 @@
 {
   "name": "@vaiven/mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Servidor MCP de Vaivén (SPEC, sección 7): el mismo código corre remoto en el Worker (/mcp) y local por stdio.",
   "license": "MIT",
