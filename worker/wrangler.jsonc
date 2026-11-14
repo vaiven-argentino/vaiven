@@ -7,7 +7,9 @@
   "build": { "command": "node ../mcp/scripts/armar-app.mjs" },
   "compatibility_date": "2026-10-24",
   "workers_dev": true,
-  "preview_urls": false,
+  // TEMPORAL (prueba de la 4e en Claude): las URL de versión sirven la sonda en prueba-4e-vaiven.argentino.workers.dev
+  // sin pasarla a producción. Este commit se descarta antes del merge; en main queda en false.
+  "preview_urls": true,
   // Disparo diario del pipeline (SPEC 5.1): 21:23 UTC = 18:23 en Argentina, después de las publicaciones del INDEC.
   // El token va como secreto: `npx wrangler secret put GITHUB_TOKEN_DISPARO`.
   "triggers": { "crons": ["23 21 * * *"] },
