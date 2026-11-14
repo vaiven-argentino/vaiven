@@ -887,3 +887,77 @@ La SPEC pasa a la v1.6:
   - los huecos entre ministros de 1971 y 1981;
   - la p. 25 de Cagan;
   - la opción `detalle: false` del MCP.
+
+
+## 4c/4d · Comparación de series (PR 0 y PR A)
+
+*14/11/2026 · Las subfases 4c y 4d van juntas (SPEC v1.7). El PR 0 (vaiven-argentino/vaiven#28) integra la SPEC, pasa los subagentes a Sonnet y suma el `probador-mcp` y el MCP local por stdio. El PR A suma `alinear.ts`, el armado compartido de la vista y las dos herramientas del MCP. El explorador con varias series va en el PR B.*
+
+### Decisiones tomadas con Camilo (13 y 14/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Número de la SPEC | v1.7 para los cambios aprobados (la v1.6 ya era la del cierre de la 4b); v1.8 para lo que resultó de medir la CPU. El archivo de cambios entró en un commit y se borró en el siguiente. |
+| Pendientes de la «4c» vieja | Eventos y episodios candidatos, extremos de regímenes sin norma, huecos entre ministros, la p. 25 de Cagan y `detalle: false` quedan fuera de esta fase. |
+| Dónde vive el armado de la vista | Un paquete nuevo, `paquetes/grafico` (`@vaiven/grafico`), con el estado en la URL, períodos y eventos, formato, la especificación y `armarVista`. No depende del navegador ni de Vega. |
+| Doble eje pedido en el celular | Un valor más de la URL: `ejes=doble` (además de `ejes=paneles`). Sin `ejes`, la disposición automática. |
+| Transformación sin equivalente a la frecuencia común | La columna queda en null, con un aviso (`c.sin-equivalente`) que sugiere `alinear: "ninguna"`. Igual en la web y en el MCP. |
+| EPH mixta (semestral hasta 2003, trimestral después) | La frecuencia común depende de los datos dentro del rango: 2004–2010 con el PIB da trimestral; 1995–2005, anual. |
+| Límite de `especificacion_grafico` | 1.000 observaciones (las demás herramientas, 10.000), aceptando excesos esporádicos sobre los 10 ms; se mide en producción y se baja si aparecen errores 1102. |
+| Texto de `especificacion_grafico` | Todo menos la especificación de Vega-Lite, que va solo en `structuredContent`. |
+
+Respuestas por defecto del plan (preguntas sin contestar en contra): tamaño del gráfico del MCP 800 × 400 px; tema claro fijo en el MCP (el oscuro, con la 4e); colores de la internacional junto con otras series: la paleta de 8 en su panel, aunque repita los de las series de otros paneles; sin `desde`, el MCP muestra toda la historia (`desde=todo`) y el explorador, la vista inicial de la serie 1; cada serie agregada arranca con su vista inicial; con dos series mensuales, el lector sigue a la de índice más bajo.
+
+### Qué se hizo
+
+- **SPEC v1.7 y v1.8** (`docs/SPEC_v1.md`).
+- **Subagentes** (PR 0): `explorador` y `tester` pasan a Sonnet; `probador-mcp` es nuevo, con `tools: mcp__vaiven-local__*`. `.mcp.json` declara `vaiven-local`, que arranca `mcp/scripts/stdio-local.mjs` (empaqueta con la API de esbuild y deja stdout limpio: `npm run local` escribía su encabezado en stdout). El entorno de la nube «Vaivén» corre `npm ci` al armarse.
+- **Regresión de la 4b**, guardada antes de tocar el parser: 672 URL (26 fijas, los 558 accesos de `/periodos/` y los 92 enlaces de las fichas). `web/test/regresion-4b.test.ts` compara serie, estado, avisos, URL canónica y opciones (también con el parser de varias series), y `web/scripts/regresion-urls.mjs` compara en el navegador el SVG, la tabla, los avisos y la URL final en 1280 y 390 px.
+- **`paquetes/grafico`**: los módulos puros de la web se mudaron sin cambios; la web los reexporta. La regresión en el navegador dio sin diferencias (322 vistas).
+- **`alinear.ts`** (`paquetes/transformaciones`): `comparar`, `alinear`, `frecuenciaComun`, `disposicion` y `cerosAlineados`, con las 23 pruebas de la sección 10.
+- **URL indexada**: `seriesDeUrl`, `vistaDesdeUrl` y `urlDesdeVista`, encima de las funciones de la 4b. La URL de la serie 1 se escribe como en la 4b; después van las series 2 a 4 con sufijo y al final `ejes`.
+- **`armarVista`** (`paquetes/grafico/src/vista.ts`): con una serie, la entrada del explorador de la 4b (probado contra ese camino en 239 URL y dos tamaños); con varias, un gráfico, doble eje (escalas independientes, eje derecho, ceros alineados, aviso fijo) o paneles (`vconcat`, eje de fechas en el último, sombreado en todos, planes arriba, episodios y letras abajo), con la guía común y el texto alternativo por panel.
+- **MCP:** `comparar_series` y `especificacion_grafico`, con `outputSchema` y `structuredContent`; contrato en `tests/contrato/` (publicado en `/esquemas/`); prueba de igualdad con el explorador en 8 vistas; `obtener.ts` separado en piezas que usan las tres herramientas.
+
+### CPU de `especificacion_grafico` (SPEC 7.3)
+
+Medida con `mcp/scripts/medir-cpu.mjs`: el código del Worker, empaquetado con esbuild, y `process.cpuUsage()` alrededor de `manejarMcp` (Node 22.23.4, en este entorno). En la fase 3, producción dio de 2 a 4 veces lo de Node.
+
+| Pedido | Respuesta | En caliente (mediana · p90) | Proceso nuevo (mediana) |
+|---|---|---|---|
+| Peor caso de la SPEC (4 mensuales 1970–hoy, gobiernos y eventos), antes de optimizar | 1.550 KB | 164 · 251 ms | 340 ms |
+| El mismo, después de optimizar | 554 KB | 34 · 52 ms | 165 ms |
+| Peor caso dentro del límite (4 mensuales 2000–2020-09, 996 obs., gobiernos y eventos) | 109 KB | 16,5 · 24,9 ms | 112 ms |
+| 2 series (doble eje), 1995–2010 | 44 KB | 7,1 · 12,0 ms | 99 ms |
+| Fuera del límite (el error) | 1 KB | 4,8 · 7,4 ms | 75 ms |
+| `comparar_series`, 4 mensuales 1970–hoy | 86 KB | 7,6 · 11,0 ms | 92 ms |
+| `obtener_serie`, IPC completo (referencia) | 18 KB | 1,3 · 2,3 ms | 59 ms |
+
+Lo que se optimizó (sin cambiar la vista de una serie):
+- `puntosDe` recuerda los puntos de cada serie (por su arreglo `datos`): `disponibles()` y `transformar()` los rearmaban muchas veces por vista. Dos series de dos años pasaron de 10,9 a 2,0 ms, y `obtener_serie` también bajó.
+- Con varias series, las líneas van con filas compactas (fecha corta, 6 cifras, sin el período punto por punto) y una capa por línea; la guía común se arma en una pasada.
+- El texto de la respuesta no repite la especificación.
+
+El primer pedido de un proceso sigue rondando los 100 ms (`obtener_serie`, unos 60 ms): `precalentar()` suma una vista de dos series, pero lo que queda es el arranque del SDK. En producción se mide después del despliegue.
+
+### Contrastes del revisor de datos (14/11/2026, con un script propio y sin leer `alinear.ts`)
+
+Los cuatro casos coinciden, sin una sola diferencia (6 cifras significativas):
+- IPC mensual con PIB trimestral, 2004–2008: trimestral; 20 de 20 filas en cada serie.
+- Desocupación con PIB, 1995–2008: anual; 14 de 14. 2003 en null (mezcla la onda de mayo con dos trimestres), con la nota.
+- IPC interanual alineado a anual con exportaciones, 2003–2012: 10 de 10, con la variación del promedio anual (2003 usa 2002 como base, fuera del rango).
+- Desocupación con PIB interanual, 2004–2010: trimestral, 28 de 28, sin avisos de la combinación.
+
+### Diferencias con la SPEC (para la próxima versión)
+
+- 5.4: falta `paquetes/grafico/` en la estructura del repositorio.
+- 6.2: `ejes` admite también `doble` (el doble eje elegido en el celular).
+- 10: el contrato de las dos herramientas se valida con las respuestas reales; el `outputSchema` declarado es más laxo en los campos grandes (los datos y la especificación), porque el SDK lo valida en cada pedido.
+
+### Pendientes
+
+- **Del revisor de datos** (ninguno cambió un resultado): el promedio de las dos ondas de la EPH puntual es una convención y la nota podría decirlo; un año base fuera del rango se usa sin aviso; falta un caso de prueba con un año de una sola onda.
+- **PR B:** el explorador con varias series, la tabla a la frecuencia común, las exportaciones y la revisión visual.
+- **`probador-mcp`:** se corre en una sesión nueva sobre la rama (esta sesión no carga `.mcp.json`).
+- **Prueba manual:** las preguntas 19 a 24 de `mcp/PRUEBA_MANUAL.md`, junto con la prueba ciega de la 4b, que sigue a cargo de Camilo.
+- **Producción:** medir la CPU de `especificacion_grafico` después del despliegue y bajar el límite si aparecen errores 1102.
