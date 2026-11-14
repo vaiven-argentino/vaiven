@@ -24,6 +24,9 @@ it.each([["legacy"], [{ pin: "2026-07-28" }]] as const)("responde por stdio con 
   await cliente.connect(new StdioClientTransport({ command: process.execPath, args: [salida, "--export", EXPORT], stderr: "ignore" }));
   const { tools } = await cliente.listTools();
   expect(tools).toHaveLength(8);
+  // El mismo recurso del gráfico que el remoto (SPEC 7.4, variante local).
+  const { contents } = await cliente.readResource({ uri: "ui://vaiven/grafico" });
+  expect(contents[0]).toMatchObject({ mimeType: "text/html;profile=mcp-app" });
   const r = await cliente.callTool({ name: "obtener_serie", arguments: { id: "desocupacion", desde: "2002-05", hasta: "2002-05" } });
   expect(JSON.parse((r.content as Array<{ text: string }>)[0].text).datos).toEqual([["2002-05", 21.5]]);
   await cliente.close();

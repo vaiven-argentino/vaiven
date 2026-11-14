@@ -10,3 +10,9 @@
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Scripts del recurso ui://vaiven/grafico del MCP (SPEC 7.4), que se piden desde el iframe del host (otro origen).
+/mcp-app/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff

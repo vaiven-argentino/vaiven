@@ -18,6 +18,9 @@ if (!existsSync(join(raiz, "node_modules", "esbuild"))) {
 
 const { build } = await import("esbuild");
 try {
+  // El HTML del recurso del gráfico (SPEC 7.4) se arma antes que el servidor, que lo lleva adentro.
+  const { armarApp } = await import("./armar-app.mjs");
+  await armarApp({ silencioso: true });
   await build({
     entryPoints: [join(mcp, "src", "stdio.ts")], bundle: true, platform: "node", format: "esm",
     target: "node22", outfile: salida, logLevel: "warning",

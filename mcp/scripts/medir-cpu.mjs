@@ -9,6 +9,9 @@
 // Node no es workerd ni la máquina de Cloudflare: el criterio es la mitad del límite (p90 en caliente ≤ 5 ms). La CPU
 // real se contrasta en los registros del Worker después del despliegue.
 //
+// En la 4e suma la lectura del recurso del gráfico (resources/read de ui://vaiven/grafico, SPEC 7.4), que lleva todo
+// en línea (el SDK de la app y Vega).
+//
 // Uso: node mcp/scripts/medir-cpu.mjs [--muestras 50] [--procesos 10]
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
@@ -41,6 +44,7 @@ export const CASOS = {
     desde: "1970",
   }],
   "obtener_serie · IPC completo, interanual (referencia de la 4a)": ["obtener_serie", { id: "ipc", transformacion: "var_interanual" }],
+  "resources/read · ui://vaiven/grafico (4e, todo en línea)": ["@recurso", { uri: "ui://vaiven/grafico" }],
 };
 
 // Otros casos, para medir la CPU según el tamaño: VAIVEN_CPU_CASOS='{"título": ["herramienta", {argumentos}]}'.
@@ -48,6 +52,8 @@ if (process.env.VAIVEN_CPU_CASOS) {
   for (const k of Object.keys(CASOS)) delete CASOS[k];
   Object.assign(CASOS, JSON.parse(process.env.VAIVEN_CPU_CASOS));
 }
+
+if (!process.env.VAIVEN_CPU_HIJO) await (await import("./armar-app.mjs")).armarApp();
 
 const dir = mkdtempSync(join(tmpdir(), "vaiven-cpu-"));
 const entrada = join(dir, "entrada.ts");
@@ -82,8 +88,13 @@ async function medirEnProceso(m, nombre, args, { muestras, cacheFria, error = fa
   const salida = [];
   for (let i = 0; i < muestras; i++) {
     if (cacheFria) repo = new m.Repositorio(m.fuenteCarpeta(EXPORT));
-    const r = await cliente.callTool({ name: nombre, arguments: args });
-    if (!!r.isError !== error) throw new Error(`${nombre}: ${r.content[0].text.slice(0, 300)}`);
+    if (nombre === "@recurso") {
+      const r = await cliente.readResource(args);
+      if (!r.contents[0]?.text) throw new Error(`${args.uri}: sin contenido`);
+    } else {
+      const r = await cliente.callTool({ name: nombre, arguments: args });
+      if (!!r.isError !== error) throw new Error(`${nombre}: ${r.content[0].text.slice(0, 300)}`);
+    }
     salida.push(cpu);
   }
   await cliente.close();

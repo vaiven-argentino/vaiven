@@ -22,12 +22,15 @@ Servidor MCP de Vaivén (SPEC, sección 7), en TypeScript con el SDK oficial v2 
 - `transformacion` suma `indice_desde_tasas` (con `base` = el año que vale 100).
 - Las respuestas van como JSON en un bloque de texto (sin `structuredContent`, para no duplicarlas). Los errores (variante pendiente, transformación que no corresponde, más de 10.000 observaciones) salen con `isError` y un mensaje en español que dice cómo seguir.
 - Las descripciones que lee el modelo están en `src/textos.ts`.
+- **Gráfico interactivo (fase 4e, SPEC 7.4):** `especificacion_grafico` declara el recurso `ui://vaiven/grafico` (MCP Apps) en `_meta.ui.resourceUri`. Por ahora es una sonda (`app/`) que dice qué permite cada cliente. El HTML se arma con `npm run armar-app -w @vaiven/mcp` en `src/app/html.generado.ts`, que no se versiona y regeneran las pruebas, los tipos, el lanzador local y el armado del Worker. Un cliente sin la extensión recibe el resultado completo en el texto.
 
 ## Estructura
 ```
 src/datos.ts            FuenteDatos (assets del Worker o URL), Repositorio con caché y resolución de ids
 src/fuente-carpeta.ts   el export desde una carpeta (stdio y pruebas; usa node:fs)
 src/textos.ts           instrucciones del servidor y descripciones de herramientas y parámetros
+src/app/recurso.ts      el recurso ui://vaiven/grafico (MCP Apps, fase 4e)
+app/                    la vista del recurso (HTML y TypeScript del navegador), que arma scripts/armar-app.mjs
 src/herramientas/       buscar.ts, describir.ts, obtener.ts, citar.ts, periodos.ts (funciones puras) y comun.ts
 src/servidor.ts         crearServidor(repo): McpServer con las 6 herramientas; la versión es la de package.json
 src/http.ts             manejarMcp(request, repo): CORS, OPTIONS, 405, Host, límite y createMcpHandler

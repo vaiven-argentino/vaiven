@@ -2,6 +2,9 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "vaiven",
   "main": "src/index.ts",
+  // Antes de empaquetar (deploy, versions upload y dev): el HTML del recurso ui://vaiven/grafico del MCP (SPEC 7.4),
+  // que se arma desde mcp/app/ y no se versiona.
+  "build": { "command": "node ../mcp/scripts/armar-app.mjs" },
   "compatibility_date": "2026-10-24",
   "workers_dev": true,
   "preview_urls": false,

@@ -3,11 +3,16 @@
 // de quien lo monta: CORS, la respuesta a GET y OPTIONS, la validación del Host y el límite de pedidos.
 import { createMcpHandler, localhostAllowedHostnames, validateHostHeader, type McpHttpHandler } from "@modelcontextprotocol/server";
 import type { Repositorio } from "./datos";
-import { crearServidor } from "./servidor";
+import { crearServidor, type OpcionesServidor } from "./servidor";
 
 export const HOST_PUBLICO = "vaiven.argentino.workers.dev";
+/**
+ * La URL de versión de la prueba de la 4e en Claude (`wrangler versions upload --preview-alias prueba-4e`): sube una
+ * versión sin pasarla a producción. Es un alias del mismo Worker, en el subdominio propio; se quita al cerrar la 4e.
+ */
+export const HOST_PRUEBA = "prueba-4e-vaiven.argentino.workers.dev";
 
-export interface OpcionesHttp {
+export interface OpcionesHttp extends OpcionesServidor {
   /** Hosts aceptados. Un Host ajeno da 403: es la defensa contra el DNS rebinding. */
   hosts?: string[];
   /** Devuelve `false` si el pedido supera el límite (en el Worker, el binding de Rate Limiting por IP). */
@@ -52,11 +57,12 @@ function conEncabezados(respuesta: Response): Response {
 
 const manejadores = new WeakMap<Repositorio, McpHttpHandler>();
 
-function manejador(repo: Repositorio): McpHttpHandler {
+function manejador(repo: Repositorio, opciones: OpcionesServidor): McpHttpHandler {
   let h = manejadores.get(repo);
   if (!h) {
-    // Una instancia nueva del servidor por pedido (la fábrica): no queda nada guardado entre pedidos.
-    h = createMcpHandler(() => crearServidor(repo), { onerror: (e) => console.error(`MCP: ${e.message}`) });
+    // Una instancia nueva del servidor por pedido (la fábrica): no queda nada guardado entre pedidos. El dominio del
+    // recurso del gráfico es el del primer pedido: en el Worker, un isolate atiende un solo host.
+    h = createMcpHandler(() => crearServidor(repo, opciones), { onerror: (e) => console.error(`MCP: ${e.message}`) });
     manejadores.set(repo, h);
   }
   return h;
@@ -66,7 +72,7 @@ export async function manejarMcp(request: Request, repo: Repositorio, opciones: 
   if (request.method === "OPTIONS") return conEncabezados(new Response(null, { status: 204 }));
 
   // En Workers el pedido trae el encabezado Host; un Request armado en Node, no: ahí vale el host de la URL.
-  const host = validateHostHeader(request.headers.get("host") ?? new URL(request.url).host, opciones.hosts ?? [HOST_PUBLICO, ...localhostAllowedHostnames()]);
+  const host = validateHostHeader(request.headers.get("host") ?? new URL(request.url).host, opciones.hosts ?? [HOST_PUBLICO, HOST_PRUEBA, ...localhostAllowedHostnames()]);
   if (!host.ok) {
     return conEncabezados(Response.json({ jsonrpc: "2.0", id: null, error: { code: -32000, message: `Host no permitido: ${host.message}` } }, { status: 403 }));
   }
@@ -87,7 +93,7 @@ export async function manejarMcp(request: Request, repo: Repositorio, opciones: 
   }
 
   const resumen = opciones.registrar ? await resumir(request) : undefined;
-  const respuesta = conEncabezados(await manejador(repo).fetch(request));
+  const respuesta = conEncabezados(await manejador(repo, { origenApp: opciones.origenApp }).fetch(request));
   if (resumen) opciones.registrar!({ mcp: { ...resumen, estado: respuesta.status } });
   return respuesta;
 }

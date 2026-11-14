@@ -27,6 +27,8 @@ export default {
     if (url.pathname === "/mcp") {
       repositorio ??= new Repositorio(fuenteAssets(env.ASSETS, url.origin));
       return manejarMcp(request, repositorio, {
+        // El recurso del gráfico pide su script a este mismo dominio (SPEC 7.4): producción o una URL de versión.
+        origenApp: url.origin,
         limitador: async (r) => {
           const ip = r.headers.get("cf-connecting-ip") ?? "sin-ip";
           return (await env.LIMITE_MCP.limit({ key: `mcp:${ip}` })).success;

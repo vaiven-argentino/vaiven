@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaivén · gráfico</title>
+<!-- Sonda de la 4e (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»): prueba qué permite el host antes de armar el
+     gráfico. `armar-app.mjs` reemplaza los marcadores: __ORIGEN__ por el dominio de Vaivén (al leer el recurso) y el
+     comentario del final por el script empaquetado. -->
+<style>
+  :root { color-scheme: light; --fondo: #faf7f0; --texto: #22201b; --secundario: #575045; --linea: #ddd5c4; --bien: #00785a; --mal: #b84a00; }
+  :root[data-theme="dark"] { color-scheme: dark; --fondo: #17140f; --texto: #efe9de; --secundario: #bdb3a3; --linea: #3a332a; --bien: #4cc9a0; --mal: #e69f00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 12px; background: var(--fondo); color: var(--texto); font: 14px/1.5 system-ui, sans-serif; }
+  h1 { font-size: 17px; margin: 0 0 8px; }
+  h2 { font-size: 14px; margin: 14px 0 4px; color: var(--secundario); }
+  table { border-collapse: collapse; width: 100%; }
+  td { border-top: 1px solid var(--linea); padding: 3px 6px 3px 0; vertical-align: top; overflow-wrap: anywhere; }
+  td:first-child { width: 38%; color: var(--secundario); }
+  .bien { color: var(--bien); font-weight: 600; }
+  .mal { color: var(--mal); font-weight: 600; }
+  .grafico { width: 100%; overflow-x: auto; border: 1px solid var(--linea); min-height: 40px; background: #faf7f0; }
+  .grafico svg { max-width: 100%; height: auto; }
+  button { font: inherit; padding: 6px 10px; margin: 4px 6px 0 0; border: 1px solid var(--secundario); border-radius: 6px; background: transparent; color: var(--texto); cursor: pointer; }
+  pre { white-space: pre-wrap; font-size: 12px; color: var(--secundario); }
+</style>
+</head>
+<body>
+<h1>Hola: la sonda de Vaivén se cargó</h1>
+<table id="resultados"><tbody></tbody></table>
+<h2>Gráfico con el intérprete de Vega (<code>ast: true</code>)</h2>
+<div class="grafico" id="con-interprete"></div>
+<h2>Gráfico sin el intérprete (necesita <code>unsafe-eval</code>)</h2>
+<div class="grafico" id="sin-interprete"></div>
+<h2>Acciones</h2>
+<div>
+  <button id="otro-periodo" type="button">Otro período (llama otra vez a la herramienta)</button>
+  <button id="bajar-svg" type="button">Descargar SVG</button>
+  <button id="bajar-png" type="button">Descargar PNG</button>
+  <button id="abrir" type="button">Abrir en el explorador</button>
+</div>
+<pre id="registro"></pre>
+<script>window.__vaivenOrigen = "__ORIGEN__";</script>
+<script src="__ORIGEN__/mcp-app/sonda.js"></script>
+<script type="module">/*__VAIVEN_APP__*/</script>
+</body>
+</html>

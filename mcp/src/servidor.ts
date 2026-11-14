@@ -5,6 +5,7 @@
 import { McpServer, type CallToolResult, type StandardSchemaWithJSON } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import paquete from "../package.json";
+import { EXTENSION_UI, META_HERRAMIENTA_GRAFICO, ORIGEN_PUBLICO, registrarRecursoGrafico } from "./app/recurso";
 import { ErrorHerramienta, type Repositorio } from "./datos";
 import { buscarSeries } from "./herramientas/buscar";
 import { citar } from "./herramientas/citar";
@@ -187,10 +188,16 @@ export function sinEspecificacion(r: Record<string, unknown>): Record<string, un
 
 export const VERSION_SERVIDOR = paquete.version;
 
-export function crearServidor(repo: Repositorio): McpServer {
+export interface OpcionesServidor {
+  /** El dominio de Vaivén que declara el recurso del gráfico (SPEC 7.4); por defecto, el de producción. */
+  origenApp?: string;
+}
+
+export function crearServidor(repo: Repositorio, opciones: OpcionesServidor = {}): McpServer {
   const servidor = new McpServer(
     { name: "vaiven", title: "Vaivén: series económicas argentinas", version: VERSION_SERVIDOR, websiteUrl: "https://vaiven.argentino.workers.dev/agentes/" },
-    { instructions: INSTRUCCIONES },
+    // La extensión MCP Apps (SPEC 7.4) se declara: algunos hosts no muestran la interfaz sin ella (ext-apps #671).
+    { instructions: INSTRUCCIONES, capabilities: { extensions: { [EXTENSION_UI]: {} } } },
   );
   const config = (nombre: keyof typeof ESQUEMAS) => ({
     title: TITULO[nombre], description: DESCRIPCION[nombre], annotations: { title: TITULO[nombre], ...ANOTACIONES },
@@ -209,7 +216,9 @@ export function crearServidor(repo: Repositorio): McpServer {
     (a) => responder(() => periodoEnFecha(repo, a)));
   servidor.registerTool("comparar_series", { ...config("comparar_series"), inputSchema: ESQUEMAS.comparar_series, outputSchema: SALIDAS.comparar_series },
     (a) => responder(() => compararSeries(repo, a), true));
-  servidor.registerTool("especificacion_grafico", { ...config("especificacion_grafico"), inputSchema: ESQUEMAS.especificacion_grafico, outputSchema: SALIDAS.especificacion_grafico },
+  // La única herramienta con interfaz (SPEC 7.4): obtener_serie y comparar_series siguen devolviendo solo datos.
+  servidor.registerTool("especificacion_grafico", { ...config("especificacion_grafico"), inputSchema: ESQUEMAS.especificacion_grafico, outputSchema: SALIDAS.especificacion_grafico, _meta: META_HERRAMIENTA_GRAFICO },
     (a) => responder(() => especificacionGrafico(repo, a), true, sinEspecificacion));
+  registrarRecursoGrafico(servidor, opciones.origenApp ?? ORIGEN_PUBLICO);
   return servidor;
 }

@@ -36,3 +36,5 @@ web/.astro/
 
 # MCP: la variante local empaquetada (npm run empaquetar -w @vaiven/mcp)
 mcp/dist/
+# MCP: el HTML del recurso ui://vaiven/grafico, armado desde mcp/app/ (npm run armar-app -w @vaiven/mcp)
+mcp/src/app/html.generado.ts

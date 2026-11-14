@@ -1,6 +1,6 @@
 {
   "name": "@vaiven/mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Servidor MCP de Vaivén (SPEC, sección 7): el mismo código corre remoto en el Worker (/mcp) y local por stdio.",
   "license": "MIT",
@@ -12,13 +12,18 @@
     "vaiven-mcp": "./dist/vaiven-mcp.mjs"
   },
   "scripts": {
+    "armar-app": "node scripts/armar-app.mjs",
+    "pretest": "node scripts/armar-app.mjs",
     "test": "vitest run",
-    "verificar": "tsc --noEmit",
+    "preverificar": "node scripts/armar-app.mjs",
+    "verificar": "tsc --noEmit && tsc --noEmit -p app",
+    "preempaquetar": "node scripts/armar-app.mjs",
     "empaquetar": "esbuild src/stdio.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/vaiven-mcp.mjs \"--banner:js=#!/usr/bin/env node\" --log-level=warning",
     "local": "npm run empaquetar && node dist/vaiven-mcp.mjs --export ../export",
     "probar-endpoint": "node scripts/probar-endpoint.mjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/ext-apps": "2.0.4",
     "@modelcontextprotocol/server": "2.4.0",
     "@vaiven/cita": "0.1.0",
     "@vaiven/grafico": "0.1.0",
