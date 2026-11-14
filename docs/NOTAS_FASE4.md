@@ -958,7 +958,7 @@ Los cuatro casos coinciden, sin una sola diferencia (6 cifras significativas):
 
 - **Del revisor de datos** (ninguno cambió un resultado): el promedio de las dos ondas de la EPH puntual es una convención y la nota podría decirlo; un año base fuera del rango se usa sin aviso; falta un caso de prueba con un año de una sola onda.
 - **PR B:** el explorador con varias series, la tabla a la frecuencia común, las exportaciones y la revisión visual.
-- **`probador-mcp`:** se corre en una sesión nueva sobre la rama (esta sesión no carga `.mcp.json`).
+- **`probador-mcp`:** se corrió tres veces, en sesiones nuevas sobre la rama; los resultados están en «Ajustes tras la prueba del MCP».
 - **Prueba manual:** las preguntas 19 a 24 de `mcp/PRUEBA_MANUAL.md`, junto con la prueba ciega de la 4b, que sigue a cargo de Camilo.
 - **Producción:** medir la CPU de `especificacion_grafico` después del despliegue y bajar el límite si aparecen errores 1102.
 
