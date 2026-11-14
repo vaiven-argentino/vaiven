@@ -11,7 +11,7 @@ import {
 } from "@vaiven/transformaciones";
 import { ErrorHerramienta, type Repositorio } from "../datos";
 import { redondear } from "./comun";
-import { errorDeTransformacion, esTransformada, prepararSerie, respuestaSerie, type ArgsObtener, type SeriePreparada } from "./obtener";
+import { errorDeTransformacion, esTransformada, prepararSerie, respuestaSerie, unidadNominal, type ArgsObtener, type SeriePreparada } from "./obtener";
 
 export type ArgsSerie = Omit<ArgsObtener, "desde" | "hasta">;
 
@@ -123,7 +123,8 @@ export async function compararSeries(repo: Repositorio, args: ArgsComparar) {
     alinear: modo,
     frecuencia: a.frecuencia,
     columnas: a.columnas.map((col) => ({
-      serie: col.serie, id: preparadas[col.serie - 1].doc.id, ...(col.pais ? { pais: col.pais } : {}), unidad: col.unidad,
+      serie: col.serie, id: preparadas[col.serie - 1].doc.id, ...(col.pais ? { pais: col.pais } : {}),
+      unidad: unidadNominal(preparadas[col.serie - 1].doc, preparadas[col.serie - 1].args.medida, col.unidad),
       ...(col.notas.length ? { notas: col.notas } : {}),
     })),
     datos: a.filas.map(([fecha, ...vs]) => [fecha, ...vs.map((v, j) => (redondeo[j] ? redondear(v) : v))]),

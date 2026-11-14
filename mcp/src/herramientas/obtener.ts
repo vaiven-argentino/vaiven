@@ -2,7 +2,7 @@
 // @vaiven/transformaciones. Toda respuesta lleva advertencias, version_datos, fuentes y cita.
 import { nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
-  ErrorFecha, ErrorTransformacion, atraso, serieDeEntidad, tienePais, transformar,
+  ErrorFecha, ErrorTransformacion, atraso, indiceMes, serieDeEntidad, tienePais, transformar,
   type Advertencia, type Base, type Excluido, type Frecuencia, type InsumosCargados, type Opciones, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
 import { ErrorHerramienta, exigirPublicada, type Repositorio } from "../datos";
@@ -84,14 +84,56 @@ function leerPaises(doc: DocumentoSerie, pedidos?: string[]): string[] {
  * de `metadatos/signos_monetarios.yaml` (lo controla una prueba).
  */
 export const NOTA_PESOS_ACTUALES = "Pesos actuales es una equivalencia entre signos monetarios (1 peso = 10.000 australes = " +
-  "10⁷ pesos argentinos = 10¹¹ pesos ley 18.188 = 10¹³ pesos moneda nacional), no un ajuste por inflación. Para precios " +
-  "constantes, pedí `medida: real`.";
+  "10⁷ pesos argentinos = 10¹¹ pesos ley 18.188 = 10¹³ pesos moneda nacional), no un ajuste por inflación.";
+/** La última frase de la nota, solo si la variante admite la medida real (ajustes de la 4b, A2). */
+export const NOTA_PESOS_ACTUALES_REAL = "Para precios constantes, pedí `medida: real`.";
+
+/**
+ * El sustantivo de una serie cuyo nombre termina en «real» (ajustes de la 4b, A1): «Salario real» → «salario». Sale del
+ * nombre, no de una lista escrita a mano (decidido con Camilo el 14/11/2026). Sin «real» al final, null.
+ */
+export function sustantivoNominal(nombre: string): string | null {
+  const m = /^(.+?)\s+real$/i.exec(nombre.trim());
+  return m ? `${m[1].charAt(0).toLowerCase()}${m[1].slice(1)}` : null;
+}
+
+/**
+ * La unidad de una serie cuya ficha arranca en `medida: real`, cuando se pide sin medida: dice que es nominal
+ * («pesos corrientes (salario nominal)»; con base 100, «índice del salario nominal, 2017-12 = 100»). Si no, la de siempre.
+ * La usan la respuesta de cada serie y las columnas de comparar_series.
+ */
+export function unidadNominal(doc: Pick<DocumentoSerie, "nombre" | "vista_inicial">, medidaPedida: string | undefined, unidad: string): string {
+  if (doc.vista_inicial?.medida !== "real" || medidaPedida) return unidad;
+  const s = sustantivoNominal(doc.nombre);
+  const nominal = s ? `${s} nominal` : "nominal";
+  return unidad.startsWith("índice, ") ? `índice del ${nominal}, ${unidad.slice("índice, ".length)}` : `${unidad} (${nominal})`;
+}
+
+const NOMBRE_MEDIDA_NOTA: Record<string, string> = { real: "a precios constantes", en_dolares: "en dólares", pct_pib: "en % del PIB" };
+
+/**
+ * Si la ficha arranca con una medida y el pedido no trae ninguna, una nota primera que dice en qué está la respuesta y
+ * cómo pedir lo que muestra la ficha (ajustes de la 4b, A1): un modelo podía leer el salario nominal como real.
+ */
+export function notaMedidaInicial(doc: Pick<DocumentoSerie, "nombre" | "unidad" | "vista_inicial">, medidaPedida: string | undefined): string | null {
+  const m = doc.vista_inicial?.medida;
+  if (!m || medidaPedida) return null;
+  const f = (doc.vista_inicial as { frecuencia?: string } | undefined)?.frecuencia;
+  const pedir = `\`medida: ${m}\`${f ? ` (con \`frecuencia: ${f}\`)` : ""}`;
+  const s = m === "real" ? sustantivoNominal(doc.nombre) : null;
+  if (s) return `Esta respuesta es el ${s} nominal (${doc.unidad}). El ${s} real, como lo muestra la ficha, se pide con ${pedir}.`;
+  return `Esta respuesta está en ${doc.unidad}, sin la medida con que arranca la ficha. ${NOMBRE_MEDIDA_NOTA[m] ? `${NOMBRE_MEDIDA_NOTA[m][0].toUpperCase()}${NOMBRE_MEDIDA_NOTA[m].slice(1)}` : `Con la medida ${m}`}, como lo muestra la ficha, se pide con ${pedir}.`;
+}
 
 const unicasPorId = (xs: Advertencia[]) => xs.filter((a, k) => xs.findIndex((b) => b.id === a.id) === k);
 
 /** Una serie pedida, ya validada, con sus opciones de la librería y sus insumos (la comparten las herramientas con datos). */
 export interface SeriePreparada {
   args: ArgsObtener;
+  /** Las variantes publicadas de la serie (la por defecto, primero) y si se pidió una (ajustes, B6). */
+  variantes: { porDefecto: { id: string; nombre: string }; otras: string[]; pedida: boolean };
+  /** El día del último cambio de signo monetario, si la respuesta puede estar en pesos actuales (A2). */
+  cambioDeSigno?: string;
   doc: DocumentoSerie;
   transformacion: Transformacion;
   paises: string[];
@@ -136,7 +178,15 @@ export async function prepararSerie(repo: Repositorio, args: ArgsObtener): Promi
     hasta: args.hasta,
   };
   const insumos = await repo.insumos(doc, opciones);
-  return { args, doc, transformacion, paises, frecuencia, deflactor, opciones, insumos };
+  const publicadas = serie.variantes.filter((v) => v.estado === "publicada" && v.archivo);
+  const porDefecto = publicadas.find((v) => v.id === serie.variante_por_defecto) ?? publicadas[0];
+  const variantes = {
+    porDefecto: { id: porDefecto.id, nombre: porDefecto.nombre },
+    otras: publicadas.filter((v) => v.id !== porDefecto.id).map((v) => v.id),
+    pedida: !!args.variante,
+  };
+  const cambioDeSigno = args.pesos_actuales || doc.moneda === "pesos_actuales" ? await repo.ultimoCambioDeSigno() : undefined;
+  return { args, doc, variantes, cambioDeSigno, transformacion, paises, frecuencia, deflactor, opciones, insumos };
 }
 
 /** Un error de la librería, con lo que la variante sí admite (para que el agente pueda corregir el pedido). */
@@ -195,7 +245,18 @@ export function respuestaSerie(p: SeriePreparada, resultados: Resultado[], opcio
   const excluidos: Excluido[] = resultados.flatMap((r) => r.excluidos);
   const notas = [...new Set(resultados.flatMap((r) => r.notas))];
   if (!fechas.length) notas.push("No hay datos en el período pedido.");
-  if ((args.pesos_actuales || doc.moneda === "pesos_actuales") && !args.medida) notas.push(NOTA_PESOS_ACTUALES);
+  // Pesos actuales: la nota, solo si algún dato es anterior al último cambio de signo (antes, la conversión no cambia
+  // nada), y la sugerencia de la medida real, solo si la variante la admite (ajustes de la 4b, A2).
+  if ((args.pesos_actuales || doc.moneda === "pesos_actuales") && !args.medida && p.cambioDeSigno &&
+    fechas.some((f) => indiceMes(f) < indiceMes(p.cambioDeSigno!.slice(0, 7)))) {
+    notas.push(doc.insumos?.real ? `${NOTA_PESOS_ACTUALES} ${NOTA_PESOS_ACTUALES_REAL}` : NOTA_PESOS_ACTUALES);
+  }
+  // Sin `variante`, cuál se usó y cuáles hay (ajustes, B6): «resultado fiscal» a secas no tiene por qué ser el primario.
+  if (!p.variantes.pedida && p.variantes.otras.length) {
+    notas.push(`Sin \`variante\`, se usa «${p.variantes.porDefecto.id}» (${p.variantes.porDefecto.nombre}); otras publicadas: ${p.variantes.otras.join(", ")}. Elegí la que corresponda a la pregunta con \`variante\`.`);
+  }
+  const medidaInicial = notaMedidaInicial(doc, args.medida);
+  if (medidaInicial) notas.unshift(medidaInicial);
   if (args.frecuencia && !frecuencia) notas.push(`La variante ya es ${args.frecuencia}: se ignoró \`frecuencia\`.`);
   if (excluidos.length) {
     notas.push("Los datos excluidos van como null en `datos`, con su motivo en `excluidos`: Vaivén no los interpola ni los corrige.");
@@ -243,7 +304,7 @@ export function respuestaSerie(p: SeriePreparada, resultados: Resultado[], opcio
     variante: doc.variante,
     nombre: doc.nombre,
     nombre_variante: doc.nombre_variante,
-    unidad: resultados[0].unidad,
+    unidad: unidadNominal(doc, args.medida, resultados[0].unidad),
     transformacion,
     ...(args.pesos_actuales ? { pesos_actuales: true } : {}),
     ...(frecuencia ? { frecuencia_pedida: frecuencia } : {}),
