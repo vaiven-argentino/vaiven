@@ -84,7 +84,9 @@ export const DESCRIPCION = {
     "gráfico o un enlace a la web, especificacion_grafico. `desde` y `hasta` valen para todas. Por defecto (`alinear: " +
     "frecuencia_comun`) lleva todas las series a la frecuencia más baja del conjunto (mensual < trimestral < anual; una " +
     "serie semestral, como la desocupación de la EPH puntual, lleva a anual), con la agregación de cada serie y solo con " +
-    "períodos completos, y devuelve `datos` como filas [fecha, v1, v2…] en el orden de `columnas` (una por serie y por " +
+    "períodos completos: un período incompleto queda en null (por ejemplo, 2003 en la desocupación, que mezcla una onda " +
+    "de la EPH puntual con trimestres de la continua; con `alinear: ninguna` se ven los datos originales). Devuelve " +
+    "`datos` como filas [fecha, v1, v2…] en el orden de `columnas` (una por serie y por " +
     "país). Así, una variación interanual alineada a anual es la variación del promedio anual, no el promedio de las " +
     "variaciones mensuales (la respuesta lo avisa). Con `alinear: ninguna`, los datos de cada serie en su frecuencia, " +
     "dentro de `series`. Siempre trae, por serie, la unidad resultante, el último dato, las advertencias y la cita, y los " +
@@ -98,7 +100,9 @@ export const DESCRIPCION = {
     "(salvo `base_real`); `desde` y `hasta` valen para todas. Cada serie va en su frecuencia. Con dos unidades " +
     "distintas, el gráfico va en doble eje (o en paneles, con `ejes: paneles`); con tres o cuatro unidades, o con una " +
     "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios. " +
-    "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico.",
+    "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico. " +
+    "Límite: 1.000 observaciones por gráfico, sumando las series y los países (por la CPU del servidor); para series " +
+    "largas, pedí `frecuencia: anual` (por ejemplo, el IPC y las reservas desde 1970) o los datos con comparar_series.",
 } as const;
 
 export const TITULO = {
@@ -123,7 +127,9 @@ export const PARAMETRO = {
   desde: "Inicio del período, inclusive (AAAA o AAAA-MM).",
   hasta: "Fin del período, inclusive (AAAA o AAAA-MM).",
   frecuencia:
-    "Pasa a trimestral o anual con la agregación de la serie (promedio, suma o fin de período). Solo agrega períodos completos.",
+    "Pasa a trimestral o anual con la agregación que fija la serie, que no se elige: por ejemplo, el IPC y el tipo de " +
+    "cambio, en promedio; las exportaciones, en suma; las reservas y la base monetaria de fin de mes, a fin de período. Solo agrega " +
+    "períodos completos. Para otra agregación (por ejemplo, el promedio anual de las reservas), pedí la serie mensual.",
   transformacion:
     "nivel (valor tal cual, por defecto) · var_mensual: variación % contra el mes anterior · var_interanual: contra el " +
     "mismo período del año anterior · var_dic_dic: variación diciembre contra diciembre (una por año) · " +
@@ -147,7 +153,9 @@ export const PARAMETRO = {
     "base 2004, sin saltos (antes de 2004 da un PIB unos 8 % mayor) · banco-mundial: el PIB en dólares del Banco " +
     "Mundial, solo en las series en dólares (en 1971–1981 y 2012–2015 no usa el tipo de cambio oficial).",
   deflactor: "Solo con medida real: la variante del IPC («ipc.oficial», por defecto, o «ipc.provincias»).",
-  baseReal: "Solo con medida real: precios de qué período (AAAA-MM o AAAA). Por defecto, el último con dato en la serie y en el IPC.",
+  baseReal:
+    "Solo con medida real: precios de qué período (AAAA-MM o AAAA). Por defecto, el último con dato en la serie y en el " +
+    "IPC, que cambia con cada actualización de datos: para citar una cifra, conviene fijarlo.",
   paises:
     "Solo en las series internacionales: códigos ISO3 o de agregados del Banco Mundial (por ejemplo, [\"ARG\", " +
     "\"BRA\", \"WLD\"]). Si se omite, la selección inicial de la serie.",
