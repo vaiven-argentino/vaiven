@@ -961,3 +961,56 @@ Los cuatro casos coinciden, sin una sola diferencia (6 cifras significativas):
 - **`probador-mcp`:** se corre en una sesión nueva sobre la rama (esta sesión no carga `.mcp.json`).
 - **Prueba manual:** las preguntas 19 a 24 de `mcp/PRUEBA_MANUAL.md`, junto con la prueba ciega de la 4b, que sigue a cargo de Camilo.
 - **Producción:** medir la CPU de `especificacion_grafico` después del despliegue y bajar el límite si aparecen errores 1102.
+
+
+## 4c/4d · Ajustes tras la prueba del MCP (incluye los ajustes de la 4b)
+
+*14/11/2026 · El probador-mcp corrió 14 preguntas sobre el MCP local de la rama del PR A (en una sesión aparte, session_018y7WtXMKjSKV4DuXsx9RZB). Por decisión de Camilo, los ajustes de la 4b que estaban previstos para un PR desde `main` van en esta rama, en commits separados, con un solo PR y un solo despliegue (servidor 0.2.0).*
+
+### Decisiones tomadas con Camilo (14/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Alcance | Todo junto en la rama del PR A: ajustes de la 4b (A) y lo que encontró el probador (B). |
+| A1, sustantivo de la unidad nominal | Sale del nombre de la serie sin «real» («Salario real» → «salario»); si no termina en «real», «(nominal)». |
+| B6, variante por defecto | Una nota general en toda serie con varias variantes publicadas, sin casos escritos a mano ni metadatos nuevos. El enlace al explorador no cambia: sin `v` abre la variante por defecto. |
+| B7, tipo de cambio oficial | Una nota en las variantes de `metadatos/series/tc-oficial.yaml`. |
+
+### Probador, antes de los ajustes (14 preguntas)
+
+| # | Primera herramienta | Resultado | ¿Confusión? |
+|---|---|---|---|
+| 1 | obtener_serie | bien | no |
+| 2 | comparar_series | bien, con reparos | sí (qué variante del dólar) |
+| 3 | comparar_series | a medias | sí (2003 en null, sin aviso en la descripción) |
+| 4, 5, 6, 7, 10, 12, 14 | las esperadas | bien | no |
+| 8 | especificacion_grafico | a medias | sí (resultado fiscal: el primario sin aviso) |
+| 9 | comparar_series | mal y después bien | sí (salario nominal; dos bases distintas en la misma respuesta) |
+| 11 | obtener_serie | mal, resuelto a mano | sí (la agregación anual de las reservas es fin de año) |
+| 13 | especificacion_grafico | mal y después bien | sí (límite de 1.000 sin mencionar; agregaciones mezcladas sin aviso) |
+
+### Qué se hizo
+
+- **A1** (`respuestaSerie`): si la ficha arranca con una medida y el pedido no trae ninguna, la primera nota dice en qué está la respuesta y cómo pedir lo de la ficha; con `medida: real` en la ficha, la unidad dice «nominal» (también en las columnas de `comparar_series`).
+- **A2:** la nota de pesos actuales, solo si algún dato es anterior al último cambio de signo (de `signos-monetarios.json`), y la sugerencia de la medida real, solo si la variante la admite.
+- **A3:** pregunta 12 del manual.
+- **A4:** relevancia del buscador. **Está en la rama sin commitear, esperando que Camilo la vea:** solo cambia «inflación» (de 7 series a solo el IPC); «dólar», «salario», «PRE-01», «Brasil», «mercado de trabajo», «resultado fiscal», «precios» y «reservas del BCRA» dan lo mismo que antes.
+- **B1, B2, B3 y B5:** descripciones (límite del gráfico, agregación fija con ejemplos comprobados en el export, null de los períodos incompletos, `base_real` que cambia con cada actualización).
+- **B2 y B4** (`alinear.ts`): aviso `c.agregaciones-distintas`; la serie con medida real queda a la frecuencia común con la misma base que en su frecuencia (`Resultado.baseReal`). Contrato 1.1 de las dos herramientas (versión menor; las 1.0 siguen publicadas).
+- **B6:** nota de la variante por defecto en las respuestas con datos.
+- **B7:** notas de las variantes del tipo de cambio oficial; `describir_serie` y la ficha muestran la nota también en las variantes publicadas.
+- **Versión:** MCP 0.2.0 y fase «4c/4d» en `/salud`, desde el próximo despliegue.
+
+### B8 · Decimales largos de la desocupación (sin cambios en los datos)
+
+El probador marcó como sospechosos 2020-10 (10,95793221) y 2022-10 (6,281803916). Son 32 de las 149 observaciones de `desocupacion.total-urbano` (casi todos los trimestres de 2003 a 2009, más 2020-10, 2021-04, 2022-10, 2023-01, 2023-07, 2024-04 y 2025-04) y vienen así de la fuente: datos.gob.ar `42.3_EPH_PUNTUATAL_0_M_30` devuelve, por ejemplo, 0.109579322139272 para 2020-10. Vaivén solo los multiplica por 100. Redondeados, coinciden con lo que publicó el INDEC (contraste de la otra sesión, de memoria: queda por cotejar con los informes).
+
+### Hallazgo al regenerar el export (para revisar)
+
+Para B7 se probó regenerar el export sin red (`uv run python -m pipeline actualizar --sin-red`), como pide CLAUDE.md antes de mergear un PR que toque el export. La corrida publicaba el IPC (las dos variantes) y el TCR bilateral hasta 2026-10 y les borraba la marca de desactualizada, cuando la corrida diaria del 13/11 los había **retenido**: «f.indec.ipc-gba-base-2016 · historia: La fuente perdió 72 fechas que ya tenía (de 2020-09 a 2026-08)». Se descartó esa regeneración: el PR A no toca `export/` ni `datos/`, y el catálogo con las notas de B7 lo genera la corrida diaria cuando el cambio llegue a `main`. Hay que entender por qué la corrida local sin red no reproduce la retención antes de volver a usar ese procedimiento.
+
+### Pendientes
+
+- Aprobar o descartar A4.
+- Repetir el probador (las 14 preguntas y, como regresión, las preguntas 12 y 14 a 18 del manual) en una sesión nueva sobre la rama subida: el servidor local de esta sesión arrancó antes de los cambios.
+- Después del despliegue: verificar en producción, por JSON-RPC, los casos de A1 y A2.
