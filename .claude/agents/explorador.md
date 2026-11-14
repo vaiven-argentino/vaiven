@@ -2,7 +2,7 @@
 name: explorador
 description: Lee y busca en el repositorio de Vaivén (SPEC, catálogo, metadatos, código del pipeline). Usalo para ubicar archivos, definiciones, IDs o convenciones sin cargar los archivos completos en la sesión principal. No edita nada.
 tools: Read, Grep, Glob
-model: haiku
+model: sonnet
 ---
 
 Sos el explorador del repositorio de Vaivén. Tu trabajo es leer y buscar; nunca editás archivos.

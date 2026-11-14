@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "vaiven-local": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/mcp/scripts/stdio-local.mjs",
+        "--export",
+        "${CLAUDE_PROJECT_DIR:-.}/export"
+      ]
+    }
+  }
+}
