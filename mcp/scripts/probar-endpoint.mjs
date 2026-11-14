@@ -1,4 +1,4 @@
-// Prueba el Worker por HTTP: /mcp en las dos eras del protocolo, las 6 herramientas, la versión, CORS, GET y OPTIONS, y que el
+// Prueba el Worker por HTTP: /mcp en las dos eras del protocolo, las 8 herramientas, la versión, CORS, GET y OPTIONS, y que el
 // resto del sitio siga igual (/salud, /datos/, fichas, 301, 404 y, en local, el Cron).
 //
 // Uso: node mcp/scripts/probar-endpoint.mjs [base]
@@ -40,7 +40,7 @@ for (const [era, modo] of [["2026-07-28", { pin: "2026-07-28" }], ["2025 (initia
     const c = await cliente(modo);
     chequear(`MCP ${era}: conecta`, true, `era ${c.getProtocolEra()}, versión ${c.getNegotiatedProtocolVersion() ?? "?"}`);
     const { tools } = await c.listTools();
-    chequear(`MCP ${era}: 6 herramientas`, tools.length === 6, tools.map((t) => t.name).join(", "));
+    chequear(`MCP ${era}: 8 herramientas`, tools.length === 8, tools.map((t) => t.name).join(", "));
     const version = c.getServerVersion()?.version;
     chequear(`MCP ${era}: versión ${VERSION}`, version === VERSION, `${version}`);
 

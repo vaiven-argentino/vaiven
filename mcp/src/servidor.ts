@@ -1,4 +1,5 @@
-// El servidor MCP: las cuatro herramientas de la fase 3 y las dos de períodos de la 4b sobre un Repositorio. Lo usan el Worker (/mcp) y la
+// El servidor MCP: las cuatro herramientas de la fase 3, las dos de períodos de la 4b y las dos de comparación de la
+// 4c/4d sobre un Repositorio. Lo usan el Worker (/mcp) y la
 // variante local por stdio. Los esquemas de los parámetros se arman una sola vez, al cargar el módulo, para no
 // gastar CPU en cada pedido (el plan gratuito de Workers da 10 ms por pedido).
 import { McpServer, type CallToolResult, type StandardSchemaWithJSON } from "@modelcontextprotocol/server";
@@ -7,6 +8,7 @@ import paquete from "../package.json";
 import { ErrorHerramienta, type Repositorio } from "./datos";
 import { buscarSeries } from "./herramientas/buscar";
 import { citar } from "./herramientas/citar";
+import { compararSeries, especificacionGrafico } from "./herramientas/comparar";
 import { PERIODO } from "./herramientas/comun";
 import { describirSerie } from "./herramientas/describir";
 import { obtenerSerie } from "./herramientas/obtener";
@@ -39,6 +41,22 @@ const TRANSFORMACIONES = ["nivel", "var_mensual", "var_interanual", "var_dic_dic
 const medida = z.enum(["real", "en_dolares", "pct_pib"]);
 const denominador = z.enum(["cada-base", "retropolado", "banco-mundial"]);
 const paises = z.array(z.string().regex(/^[A-Za-z0-9]{3}$/, "Usá códigos de tres letras (ISO3 o agregado del Banco Mundial).")).max(30);
+
+/** Los parámetros de una serie dentro de comparar_series y especificacion_grafico: los de obtener_serie sin el período. */
+const serieComparada = z.strictObject({
+  id,
+  variante: z.string().optional().describe(PARAMETRO.variante),
+  pesos_actuales: z.boolean().optional().describe(PARAMETRO.pesosActuales),
+  frecuencia: frecuencia.optional().describe(PARAMETRO.frecuencia),
+  medida: medida.optional().describe(PARAMETRO.medida),
+  deflactor: z.string().optional().describe(PARAMETRO.deflactor),
+  base_real: periodo(PARAMETRO.baseReal).optional(),
+  denominador: denominador.optional().describe(PARAMETRO.denominador),
+  transformacion: z.enum(TRANSFORMACIONES).optional().describe(PARAMETRO.transformacion),
+  base: z.string().optional().describe(PARAMETRO.base),
+  paises: paises.optional().describe(PARAMETRO.paises),
+});
+const aviso = z.object({ id: z.string(), descripcion: z.string(), series: z.array(z.number()).optional() });
 
 // Esquemas estrictos (segunda revisión de la 4a): un parámetro mal escrito (por ejemplo, `entidades` en lugar de
 // `paises`) da un error que el agente ve, en lugar de ignorarse sin aviso.
@@ -86,6 +104,51 @@ export const ESQUEMAS = {
   periodo_en_fecha: conJsonFijo(z.strictObject({
     fecha: z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, "Usá AAAA-MM-DD (un día) o AAAA-MM (un mes).").describe(PARAMETRO.fechaPeriodo),
   })),
+  comparar_series: conJsonFijo(z.strictObject({
+    series: z.array(serieComparada).min(1).max(4).describe(PARAMETRO.series),
+    desde: periodo(PARAMETRO.desdeComun).optional(),
+    hasta: periodo(PARAMETRO.hastaComun).optional(),
+    alinear: z.enum(["frecuencia_comun", "ninguna"]).optional().describe(PARAMETRO.alinear),
+  })),
+  especificacion_grafico: conJsonFijo(z.strictObject({
+    series: z.array(serieComparada).min(1).max(4).describe(PARAMETRO.seriesGrafico),
+    desde: periodo(PARAMETRO.desdeComun).optional(),
+    hasta: periodo(PARAMETRO.hastaComun).optional(),
+    sombreado: z.enum(["catedra", "gobierno", "mandato", "ministro", "plan", "regimen_cambiario"]).optional().describe(PARAMETRO.sombreado),
+    eventos: z.union([z.boolean(), z.array(z.string()).min(1)]).optional().describe(PARAMETRO.eventos),
+    ejes: z.enum(["auto", "paneles"]).optional().describe(PARAMETRO.ejes),
+  })),
+};
+
+/**
+ * Lo que devuelven las dos herramientas de comparación (SPEC 7.2), también en `structuredContent` (para el gráfico
+ * interactivo de la 4e, 7.4). Los campos grandes (los datos y la especificación) van como `unknown`: el SDK valida la
+ * salida en cada pedido y, en el plan gratuito, cada milisegundo de CPU cuenta. El contrato completo está en
+ * tests/contrato/ (comparar_series-1.0 y especificacion_grafico-1.0), que las pruebas validan con las respuestas reales.
+ */
+export const SALIDAS = {
+  comparar_series: conJsonFijo(z.object({
+    alinear: z.enum(["frecuencia_comun", "ninguna"]),
+    frecuencia: z.enum(["mensual", "trimestral", "anual"]).optional(),
+    columnas: z.array(z.object({ serie: z.number(), id: z.string(), pais: z.string().optional(), unidad: z.string(), notas: z.array(z.string()).optional() })).optional(),
+    datos: z.unknown().optional(),
+    series: z.array(z.object({ numero: z.number(), id: z.string(), unidad: z.string(), cita: z.string() }).passthrough()),
+    advertencias_combinacion: z.array(aviso),
+    n_observaciones: z.number(),
+    version_datos: z.string(),
+    notas: z.array(z.string()).optional(),
+  })),
+  especificacion_grafico: conJsonFijo(z.object({
+    especificacion: z.record(z.string(), z.unknown()),
+    url_explorador: z.string(),
+    disposicion: z.object({ tipo: z.enum(["unico", "doble_eje", "paneles"]), paneles: z.array(z.object({ unidad: z.string(), series: z.array(z.number()) })) }),
+    series: z.array(z.object({ numero: z.number(), id: z.string(), unidad: z.string(), cita: z.string() }).passthrough()),
+    advertencias_combinacion: z.array(aviso),
+    sombreado: z.object({ tipo: z.string(), periodos: z.number() }).optional(),
+    eventos: z.array(z.object({ letra: z.string(), fecha: z.string(), nombre: z.string() })).optional(),
+    n_observaciones: z.number(),
+    version_datos: z.string(),
+  })),
 };
 
 // Solo leen datos públicos: no cambian nada y dan lo mismo si se repiten.
@@ -96,15 +159,30 @@ const ANOTACIONES = { readOnlyHint: true, destructiveHint: false, idempotentHint
  * duplicaba la respuesta (hasta 34 KB en el IPC completo) y su serialización, y en el plan gratuito de Workers cada
  * milisegundo de CPU cuenta. Las herramientas no declaran `outputSchema`, así que el protocolo no lo exige.
  */
-async function responder(f: () => Promise<Record<string, unknown>>): Promise<CallToolResult> {
+async function responder(f: () => Promise<Record<string, unknown>>, estructurado = false, enTexto?: (r: Record<string, unknown>) => Record<string, unknown>): Promise<CallToolResult> {
   try {
     const r = await f();
-    return { content: [{ type: "text", text: JSON.stringify(r) }] };
+    // Las herramientas con `outputSchema` (comparar_series y especificacion_grafico) devuelven también
+    // `structuredContent` (SPEC 7.2). El texto lleva el mismo JSON, salvo lo que `enTexto` deja afuera (la especificación
+    // del gráfico, que solo va en structuredContent: SPEC 7.2 y 7.4).
+    return { content: [{ type: "text", text: JSON.stringify(enTexto ? enTexto(r) : r) }], ...(estructurado ? { structuredContent: r } : {}) };
   } catch (e) {
     if (e instanceof ErrorHerramienta) return { isError: true, content: [{ type: "text", text: e.message }] };
     console.error(e);
     return { isError: true, content: [{ type: "text", text: "Error interno de Vaivén al leer los datos. Probá de nuevo en un rato." }] };
   }
+}
+
+/**
+ * El texto de especificacion_grafico, sin la especificación de Vega-Lite (decidido con Camilo el 14/11/2026): con 4 series
+ * desde 1970 pesaría unos 550 KB en la conversación. La especificación completa va en structuredContent.
+ */
+export function sinEspecificacion(r: Record<string, unknown>): Record<string, unknown> {
+  const { especificacion: _e, ...resto } = r;
+  return {
+    ...resto,
+    especificacion: "La especificación de Vega-Lite completa (con los datos) va en structuredContent.especificacion. Para mostrar el gráfico sin ella, compartí url_explorador.",
+  };
 }
 
 export const VERSION_SERVIDOR = paquete.version;
@@ -129,5 +207,9 @@ export function crearServidor(repo: Repositorio): McpServer {
     (a) => responder(() => listarPeriodos(repo, a)));
   servidor.registerTool("periodo_en_fecha", { ...config("periodo_en_fecha"), inputSchema: ESQUEMAS.periodo_en_fecha },
     (a) => responder(() => periodoEnFecha(repo, a)));
+  servidor.registerTool("comparar_series", { ...config("comparar_series"), inputSchema: ESQUEMAS.comparar_series, outputSchema: SALIDAS.comparar_series },
+    (a) => responder(() => compararSeries(repo, a), true));
+  servidor.registerTool("especificacion_grafico", { ...config("especificacion_grafico"), inputSchema: ESQUEMAS.especificacion_grafico, outputSchema: SALIDAS.especificacion_grafico },
+    (a) => responder(() => especificacionGrafico(repo, a), true, sinEspecificacion));
   return servidor;
 }

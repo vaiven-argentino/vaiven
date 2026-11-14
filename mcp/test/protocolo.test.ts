@@ -28,10 +28,12 @@ describe.each([
   ["2026-07-28", { pin: "2026-07-28" }],
   ["2025 (initialize)", "legacy"],
 ] as const)("era %s", (_, modo) => {
-  it("lista las 6 herramientas, con descripciones en español y de solo lectura", async () => {
+  it("lista las 8 herramientas, con descripciones en español y de solo lectura", async () => {
     const c = await conectar(modo);
     const { tools } = await c.listTools();
-    expect(tools.map((t) => t.name).sort()).toEqual(["buscar_series", "citar", "describir_serie", "listar_periodos", "obtener_serie", "periodo_en_fecha"]);
+    expect(tools.map((t) => t.name).sort()).toEqual(["buscar_series", "citar", "comparar_series", "describir_serie", "especificacion_grafico", "listar_periodos", "obtener_serie", "periodo_en_fecha"]);
+    // Las dos de comparación declaran su salida (structuredContent, SPEC 7.2); las demás, no.
+    expect(tools.filter((t) => t.outputSchema).map((t) => t.name).sort()).toEqual(["comparar_series", "especificacion_grafico"]);
     for (const t of tools) {
       expect(t.description).toMatch(/Vaivén/);
       expect(t.annotations?.readOnlyHint).toBe(true);
@@ -45,6 +47,25 @@ describe.each([
     const datos = json(r as never);
     expect(datos.datos).toEqual([["1979-02", 6282.9], ["1979-03", null], ["1979-04", 7270.3]]);
     expect(r.structuredContent).toBeUndefined();
+  });
+  it("comparar_series y especificacion_grafico devuelven también structuredContent", async () => {
+    const c = await conectar(modo);
+    for (const [name, args] of [
+      ["comparar_series", { series: [{ id: "ipc" }, { id: "pib" }], desde: "2005", hasta: "2005" }],
+      ["especificacion_grafico", { series: [{ id: "ipc" }, { id: "reservas" }], desde: "2005", hasta: "2006" }],
+    ] as const) {
+      const r = await c.callTool({ name, arguments: args });
+      expect(r.isError).toBeFalsy();
+      const texto = json(r as never) as Record<string, unknown>;
+      if (name === "comparar_series") expect(r.structuredContent).toEqual(texto);
+      else {
+        // El gráfico: la especificación va solo en structuredContent; el texto lleva lo demás (SPEC 7.2 y 7.4).
+        const { especificacion, ...resto } = r.structuredContent as Record<string, unknown>;
+        expect(especificacion).toHaveProperty("$schema");
+        expect(texto.especificacion).toMatch(/structuredContent\.especificacion/);
+        expect({ ...texto, especificacion: undefined }).toEqual({ ...resto, especificacion: undefined });
+      }
+    }
   });
   it("los errores salen como isError, en español", async () => {
     const c = await conectar(modo);

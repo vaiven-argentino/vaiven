@@ -16,8 +16,9 @@ const destinoEsquemas = join(PUBLICO, "esquemas");
 rmSync(destinoEsquemas, { recursive: true, force: true });
 mkdirSync(destinoEsquemas, { recursive: true });
 for (const nombre of readdirSync(join(RAIZ, "tests", "contrato"))) {
-  // serie-<versión>, periodos-<versión> y eventos-<versión>.
-  const base = /^((?:serie|periodos|eventos)-.+)\.schema\.json$/.exec(nombre)?.[1];
+  // serie-<versión>, periodos-<versión> y eventos-<versión>, y las respuestas del MCP que declaran su salida
+  // (comparar_series-<versión> y especificacion_grafico-<versión>, fase 4c/4d).
+  const base = /^((?:serie|periodos|eventos|comparar_series|especificacion_grafico)-.+)\.schema\.json$/.exec(nombre)?.[1];
   if (base) cpSync(join(RAIZ, "tests", "contrato", nombre), join(destinoEsquemas, `${base}.json`));
 }
 

@@ -77,6 +77,28 @@ export const DESCRIPCION = {
     "mes, `asignacion` dice a qué período asigna Vaivén un dato mensual (el vigente a mitad de mes; un saldo a fin de " +
     "mes, como las reservas, va al vigente el último día) y `reparto`, los días de cada uno. Desde 1970. Usala para " +
     "poner en contexto un dato de una serie.",
+  comparar_series:
+    "Compara de 1 a 4 series de Vaivén en una sola respuesta, cada una con sus propios parámetros (los de obtener_serie: " +
+    "variante, transformación, frecuencia, medida, países…). Usala cuando la pregunta relaciona o compara series (por " +
+    "ejemplo, la inflación y el tipo de cambio, o la desocupación y el PIB); para una sola serie, obtener_serie; para un " +
+    "gráfico o un enlace a la web, especificacion_grafico. `desde` y `hasta` valen para todas. Por defecto (`alinear: " +
+    "frecuencia_comun`) lleva todas las series a la frecuencia más baja del conjunto (mensual < trimestral < anual; una " +
+    "serie semestral, como la desocupación de la EPH puntual, lleva a anual), con la agregación de cada serie y solo con " +
+    "períodos completos, y devuelve `datos` como filas [fecha, v1, v2…] en el orden de `columnas` (una por serie y por " +
+    "país). Así, una variación interanual alineada a anual es la variación del promedio anual, no el promedio de las " +
+    "variaciones mensuales (la respuesta lo avisa). Con `alinear: ninguna`, los datos de cada serie en su frecuencia, " +
+    "dentro de `series`. Siempre trae, por serie, la unidad resultante, el último dato, las advertencias y la cita, y los " +
+    "avisos de la combinación (`advertencias_combinacion`): mencionalos al usar los datos. Una serie internacional como " +
+    "máximo, con hasta 8 países. Límite: 10.000 observaciones, sumando las series y los países.",
+  especificacion_grafico:
+    "Devuelve un gráfico de 1 a 4 series listo para dibujar (una especificación de Vega-Lite con los datos incluidos), " +
+    "el mismo que muestra el explorador de Vaivén, y `url_explorador`, el enlace a esa vista en la web. Usala cuando el " +
+    "usuario pida un gráfico, una figura o un enlace para ver o compartir series; para leer o analizar cifras, " +
+    "obtener_serie (una serie) o comparar_series (varias). Cada serie lleva sus parámetros como en obtener_serie " +
+    "(salvo `base_real`); `desde` y `hasta` valen para todas. Cada serie va en su frecuencia. Con dos unidades " +
+    "distintas, el gráfico va en doble eje (o en paneles, con `ejes: paneles`); con tres o cuatro unidades, o con una " +
+    "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios. " +
+    "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico.",
 } as const;
 
 export const TITULO = {
@@ -86,6 +108,8 @@ export const TITULO = {
   citar: "Citar una serie",
   listar_periodos: "Listar períodos (gobiernos, ministros, planes, regímenes)",
   periodo_en_fecha: "Qué regía en una fecha",
+  comparar_series: "Comparar series (a la frecuencia común)",
+  especificacion_grafico: "Gráfico de una o varias series (Vega-Lite y enlace al explorador)",
 } as const;
 
 export const PARAMETRO = {
@@ -137,4 +161,24 @@ export const PARAMETRO = {
     "hiperinflación de 1989–1990, con sus fases). Si se omite, todos.",
   porMandato: "true separa los gobiernos de dos mandatos (Menem 1989 y 1995, Fernández de Kirchner 2007 y 2011). Solo para gobiernos.",
   fechaPeriodo: "AAAA-MM-DD para un día (por ejemplo, «1989-07-08») o AAAA-MM para un mes («2001-12»). Desde 1970.",
+  series:
+    "De 1 a 4 series, cada una un objeto con `id` y, si hacen falta, los parámetros de obtener_serie (variante, " +
+    "transformacion, frecuencia, medida, deflactor, denominador, pesos_actuales, base, paises), sin `desde` ni `hasta`. " +
+    "Ejemplo: [{\"id\": \"ipc\", \"transformacion\": \"var_interanual\"}, {\"id\": \"pib\"}]. Una serie internacional como máximo.",
+  seriesGrafico:
+    "De 1 a 4 series, como en comparar_series: cada una con `id` y sus parámetros de obtener_serie (salvo `base_real`), " +
+    "sin `desde` ni `hasta`. Una serie internacional como máximo.",
+  desdeComun: "Inicio del período, inclusive (AAAA o AAAA-MM), para todas las series. Si se omite, desde el primer dato.",
+  hastaComun: "Fin del período, inclusive (AAAA o AAAA-MM), para todas las series. Si se omite, hasta el último dato.",
+  alinear:
+    "frecuencia_comun (por defecto): todas las series a la frecuencia más baja del conjunto, en una tabla · ninguna: " +
+    "cada serie en su frecuencia.",
+  sombreado:
+    "Sombrea los períodos de un tipo: gobierno, mandato (los gobiernos de dos mandatos, separados), ministro (de Economía), " +
+    "plan (de estabilización), regimen_cambiario o catedra (etapas según la periodización de un curso universitario).",
+  eventos:
+    "true marca todos los eventos y los episodios (como la hiperinflación de 1989–1990); una lista marca solo esas " +
+    "categorías (por ejemplo, [\"cambiario\", \"deuda\"]; \"episodio\" para los episodios).",
+  ejes:
+    "auto (por defecto): con dos unidades, doble eje · paneles: un panel por unidad, también con dos unidades.",
 } as const;

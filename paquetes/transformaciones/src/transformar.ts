@@ -221,8 +221,26 @@ function unicas(advertencias: Advertencia[]): Advertencia[] {
   return advertencias.filter((a) => (vistos.has(a.id) ? false : (vistos.add(a.id), true)));
 }
 
+/**
+ * Los puntos de cada serie, recordados por su arreglo `datos` (el mismo aunque la serie se copie con otros campos, como
+ * hacen la ficha y el explorador): `disponibles` y `transformar` los piden muchas veces por vista, y armarlos recorre
+ * toda la serie (SPEC 7.3: la CPU del MCP). Vale solo si los excluidos, los tramos y la frecuencia son los mismos.
+ * Nadie modifica los puntos: cada paso de la cadena arma los suyos.
+ */
+const PUNTOS = new WeakMap<object, { excluidos: unknown; tramos: unknown; frecuencia: string; puntos: Punto[] }>();
+
 /** Datos de la variante más los excluidos (como null), en orden y con la frecuencia de cada observación. */
 function puntosDe(serie: SerieExportada): Punto[] {
+  const guardado = Array.isArray(serie.datos) ? PUNTOS.get(serie.datos) : undefined;
+  if (guardado && guardado.excluidos === serie.excluidos && guardado.tramos === serie.tramos && guardado.frecuencia === serie.frecuencia) {
+    return guardado.puntos;
+  }
+  const puntos = armarPuntos(serie);
+  PUNTOS.set(serie.datos, { excluidos: serie.excluidos, tramos: serie.tramos, frecuencia: serie.frecuencia, puntos });
+  return puntos;
+}
+
+function armarPuntos(serie: SerieExportada): Punto[] {
   if (!Array.isArray(serie.datos)) {
     throw new ErrorTransformacion(`La serie ${serie.id} tiene dimensión pais: elegí una entidad con serieDeEntidad().`);
   }

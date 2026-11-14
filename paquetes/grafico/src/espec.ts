@@ -193,7 +193,10 @@ export function nombreTramo(t: Tramo): string {
  * Filas de la línea. El segmento cambia (la línea se corta) en un dato nulo o excluido, en un hueco más largo que
  * la frecuencia y, si los tramos están yuxtapuestos sin empalmar, en el cambio de tramo.
  */
-export function filas(e: Pick<EntradaGrafico, "resultado" | "tramos" | "empalme" | "esVariacion" | "ubicacion" | "asignacion">): Fila[] {
+export function filas(e: Pick<EntradaGrafico, "resultado" | "tramos" | "empalme" | "esVariacion" | "ubicacion" | "asignacion" | "sinTooltip">): Fila[] {
+  // Sin tooltip propio (la comparación, con la guía común), cada fila lleva solo lo que dibuja la línea: la fecha de
+  // dibujo, el valor y el segmento. Ahorra CPU y peso (SPEC 7.3).
+  const compacto = e.sinTooltip === true;
   const contexto = e.ubicacion ?? { agregacion: "promedio" as const };
   const salida: Fila[] = [];
   let segmento = 0;
@@ -213,6 +216,12 @@ export function filas(e: Pick<EntradaGrafico, "resultado" | "tramos" | "empalme"
       segmento += 1;
     }
     const ref = referenciaDe(fecha, f, contexto);
+    if (compacto) {
+      // La fecha en ISO corto (sigue en UTC) y el valor con 6 cifras significativas: alcanza para dibujar y pesa menos.
+      salida.push({ t: fechaDeDibujo(ref).replace(":00.000Z", "Z"), v: Number(v.toPrecision(6)), segmento } as Fila);
+      anterior = { i, paso, tramo };
+      return;
+    }
     const fila: Fila = {
       t: fechaDeDibujo(ref), v, segmento, tramo: tramo >= 0 ? nombreTramo(e.tramos[tramo]) : "",
       fecha: fechaLegible(fecha, f), valor: numero(v, e.esVariacion),
@@ -271,7 +280,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
 
   const filasOtras = (e.otras ?? []).flatMap((o) => filas({ ...e, resultado: o.resultado, ubicacion: o.ubicacion ?? e.ubicacion, tramos: o.tramos ?? e.tramos, empalme: o.empalme ?? e.empalme }).map((f) => ({ ...f, pais: o.nombre })));
   const todas = [...filasLinea, ...filasOtras];
-  const tramosDistintos = new Set(filasLinea.map((f) => f.tramo)).size > 1 && e.empalme === "yuxtaponer";
+  const tramosDistintos = !e.sinTooltip && new Set(filasLinea.map((f) => f.tramo)).size > 1 && e.empalme === "yuxtaponer";
   const ralo = filasLinea.length <= 160 || e.resultado.frecuencias.some((f) => f === "semestral" || f === "anual");
   const positivos = todas.every((f) => f.v > 0);
   const log = e.log && positivos;
@@ -298,7 +307,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   };
   const tooltip = e.sinTooltip ? undefined : [...(e.nombre ? [{ field: "pais", title: e.rotuloNombre ?? "País" }] : []), { field: "fecha", title: "Fecha" }, { field: "valor", title: "Valor" },
     ...(e.asignacion ? [{ field: "periodo", title: "Período" }, { field: "reparto", title: "Reparto" }] : [])];
-  if (e.nombre) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
+  if (e.nombre && !e.sinTooltip) filasLinea.forEach((f) => Object.assign(f, { pais: e.nombre }));
 
   const capas: Record<string, unknown>[] = [...sombra.capas(x)];
   // Eventos (SPEC 6.2): con una letra cada uno si hay lugar; si dos marcas quedarían a menos de 18 px, todas pasan a
@@ -355,7 +364,18 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   }
   const paleta = e.colores ? (tema.paleta ?? []) : [];
   const colorDe = (k: number) => paleta[k] ?? tema.secundario;
-  if (filasOtras.length) {
+  if (filasOtras.length && e.sinResaltado) {
+    // Series distintas (comparación): una capa por línea, con su color en la marca.
+    (e.otras ?? []).forEach((o, k) => {
+      const valores = filasOtras.filter((f) => f.pais === o.nombre).map((f) => ({ t: f.t, v: f.v, segmento: f.segmento }));
+      if (valores.length) {
+        capas.push({
+          data: { values: valores }, mark: { type: "line", color: colorDe(k + 1), strokeWidth: 2, interpolate: "linear" },
+          encoding: { x: x("t"), y, detail: { field: "segmento", type: "nominal" } },
+        });
+      }
+    });
+  } else if (filasOtras.length) {
     const conColor = filasOtras.map((f) => ({ ...f, color: colorDe((e.otras ?? []).findIndex((o) => o.nombre === f.pais) + 1) }));
     capas.push({
       data: { values: conColor },
@@ -378,12 +398,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     const lineas = [{ filas: filasLinea, color: colorDe(0), r: e.resultado }, ...(e.otras ?? []).map((o, k) => ({
       filas: filasOtras.filter((f) => f.pais === o.nombre), color: colorDe(k + 1), r: o.resultado,
     }))];
-    const puntos = lineas.filter((l) => l.filas.length <= 160 || l.r.frecuencias.some((f) => f === "semestral" || f === "anual"))
-      .flatMap((l) => l.filas.map((f) => ({ t: f.t, v: f.v, color: l.color })));
-    if (puntos.length) {
+    for (const l of lineas.filter((x) => x.filas.length && (x.filas.length <= 160 || x.r.frecuencias.some((f) => f === "semestral" || f === "anual")))) {
       capas.push({
-        data: { values: puntos }, mark: { type: "point", filled: true, size: e.ancho < 520 ? 12 : 22, opacity: 1 },
-        encoding: { x: x("t"), y, color: { field: "color", type: "nominal", scale: null, legend: null } },
+        data: { values: l.filas.map((f) => ({ t: f.t, v: f.v })) }, mark: { type: "point", filled: true, color: l.color, size: e.ancho < 520 ? 12 : 22, opacity: 1 },
+        encoding: { x: x("t"), y },
       });
     }
   } else if (tramosDistintos || ralo) {

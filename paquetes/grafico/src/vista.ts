@@ -40,6 +40,8 @@ export interface EntradaVista {
   /** El color de cada serie (índice de la paleta, desde 0). Por defecto, su posición. */
   colores?: number[];
   impreso?: EntradaGrafico["impreso"];
+  /** La comparación ya hecha con `compararVista` (por ejemplo, para controlar un límite antes de armar el gráfico). */
+  comparacion?: Comparacion;
 }
 
 export interface Vista {
@@ -119,7 +121,7 @@ function dominioDe(c: Comparacion): Resultado | null {
  * gráfico de la 4b; con varias, un gráfico, doble eje o paneles según la disposición de `alinear.ts`.
  */
 export function armarVista(v: EntradaVista): Vista {
-  const c = compararVista(v);
+  const c = v.comparacion ?? compararVista(v);
   const { estado, docs, tema } = v;
   const [primera] = estado.series;
   const dominio = dominioDe(c);
@@ -195,7 +197,8 @@ export function armarVista(v: EntradaVista): Vista {
         nombre: nombreLinea(l), resultado: l.r, ubicacion: contextos[l.k],
         tramos: serieVista(docs[l.k], estado.series[l.k].p).tramos, empalme: (docs[l.k] as ConEmpalme).empalme,
       })),
-      colores: true, sinResaltado: !panel.internacional, ubicacion: contextos[principal.k], asignacion, ...(dom ? { dominio: dom } : {}),
+      // Sin `asignacion`: con varias series, el tooltip es el de la guía común (el período de cada punto no se calcula).
+      colores: true, sinResaltado: !panel.internacional, ubicacion: contextos[principal.k], ...(dom ? { dominio: dom } : {}),
       sinTooltip: true, ...extra,
     };
   };
@@ -357,13 +360,16 @@ export function filasGuia(c: Comparacion, docs: Documento[], estado: EstadoVista
     const variacion = esVariacion(estado.series[s.indice].t);
     return r.datos.map(([f, val], k) => ({ ...diasDe(f, r.frecuencias[k]), f, frec: r.frecuencias[k], val, variacion }));
   });
+  // Las fechas de la guía y las observaciones de cada línea están en orden: se recorren juntas, en una sola pasada.
+  const cursores = observaciones.map(() => 0);
   const filas = r0.datos.map(([f], k): FilaGuia => {
     const frec = r0.frecuencias[k];
     const t = fechaDeDibujo(referenciaDe(f, frec, contextos[guia.indice]));
     const dia = t.slice(0, 10);
     const fila: FilaGuia = { t, fecha: fechaLegible(f, frec) };
     observaciones.forEach((obs, j) => {
-      const o = obs.find((x) => x.desde <= dia && dia <= x.hasta);
+      while (cursores[j] < obs.length && obs[cursores[j]].hasta < dia) cursores[j] += 1;
+      const o = cursores[j] < obs.length && obs[cursores[j]].desde <= dia ? obs[cursores[j]] : undefined;
       fila[campos[j].campo] = !o || o.val === null ? "—"
         : o.f === f && o.frec === frec ? numero(o.val, o.variacion) : `${fechaLegible(o.f, o.frec)} (${o.frec}): ${numero(o.val, o.variacion)}`;
     });

@@ -3,7 +3,7 @@
 import { nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
   ErrorFecha, ErrorTransformacion, atraso, serieDeEntidad, tienePais, transformar,
-  type Advertencia, type Base, type Excluido, type Frecuencia, type Resultado, type Transformacion,
+  type Advertencia, type Base, type Excluido, type Frecuencia, type InsumosCargados, type Opciones, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
 import { ErrorHerramienta, exigirPublicada, type Repositorio } from "../datos";
 import type { DocumentoSerie } from "../tipos";
@@ -89,7 +89,20 @@ export const NOTA_PESOS_ACTUALES = "Pesos actuales es una equivalencia entre sig
 
 const unicasPorId = (xs: Advertencia[]) => xs.filter((a, k) => xs.findIndex((b) => b.id === a.id) === k);
 
-export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
+/** Una serie pedida, ya validada, con sus opciones de la librería y sus insumos (la comparten las herramientas con datos). */
+export interface SeriePreparada {
+  args: ArgsObtener;
+  doc: DocumentoSerie;
+  transformacion: Transformacion;
+  paises: string[];
+  frecuencia: "trimestral" | "anual" | undefined;
+  deflactor: string | undefined;
+  opciones: Opciones;
+  insumos: InsumosCargados;
+}
+
+/** Valida una serie pedida (con las reglas de obtener_serie) y carga sus insumos. */
+export async function prepararSerie(repo: Repositorio, args: ArgsObtener): Promise<SeriePreparada> {
   const { serie, variante } = await repo.resolver(args.id, args.variante);
   exigirPublicada(serie, variante);
   const doc = await repo.documento(variante);
@@ -110,7 +123,7 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   // Una frecuencia igual a la de la variante se ignora (con una nota) en lugar de dar error.
   const frecuencia = frecuenciaUtil(doc, args.frecuencia);
   const deflactor = args.deflactor ? leerDeflactor(doc, args.deflactor) : undefined;
-  const opciones = {
+  const opciones: Opciones = {
     pesosActuales: args.pesos_actuales || undefined,
     frecuencia,
     medida: args.medida,
@@ -123,32 +136,57 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     hasta: args.hasta,
   };
   const insumos = await repo.insumos(doc, opciones);
+  return { args, doc, transformacion, paises, frecuencia, deflactor, opciones, insumos };
+}
 
-  // Una entrada por país (o una sola, sin clave, en las series sin dimensión país).
-  const claves = paises.length ? paises : [""];
-  let resultados: Resultado[];
-  try {
-    resultados = claves.map((p) => transformar(serieDeEntidad(doc, p || undefined), opciones, insumos));
-  } catch (e) {
-    if (e instanceof ErrorTransformacion || e instanceof ErrorFecha) {
-      const d = transformacionesDe(doc);
-      throw new ErrorHerramienta(`${e.message} Esta variante admite: transformaciones ${d.transformaciones.join(", ")}` +
-        `${d.frecuencias.length ? `; frecuencias ${d.frecuencias.join(", ")}` : "; no se puede cambiar de frecuencia"}` +
-        `${d.medidas.length ? `; medidas ${d.medidas.join(", ")}` : "; ninguna medida"}` +
-        `${d.deflactores ? ` (deflactores: ${d.deflactores.join(", ")})` : ""}` +
-        `${d.denominadores ? ` (PIB para % del PIB: ${d.denominadores.join(", ")})` : ""}` +
-        `${d.con_pesos_actuales ? `; con pesos_actuales: transformaciones ${d.con_pesos_actuales.transformaciones.join(", ")}` : ""}.`);
-    }
-    throw e;
+/** Un error de la librería, con lo que la variante sí admite (para que el agente pueda corregir el pedido). */
+export function errorDeTransformacion(e: unknown, doc: DocumentoSerie): unknown {
+  if (e instanceof ErrorTransformacion || e instanceof ErrorFecha) {
+    const d = transformacionesDe(doc);
+    return new ErrorHerramienta(`${e.message} Esta variante admite: transformaciones ${d.transformaciones.join(", ")}` +
+      `${d.frecuencias.length ? `; frecuencias ${d.frecuencias.join(", ")}` : "; no se puede cambiar de frecuencia"}` +
+      `${d.medidas.length ? `; medidas ${d.medidas.join(", ")}` : "; ninguna medida"}` +
+      `${d.deflactores ? ` (deflactores: ${d.deflactores.join(", ")})` : ""}` +
+      `${d.denominadores ? ` (PIB para % del PIB: ${d.denominadores.join(", ")})` : ""}` +
+      `${d.con_pesos_actuales ? `; con pesos_actuales: transformaciones ${d.con_pesos_actuales.transformaciones.join(", ")}` : ""}.`);
   }
+  return e;
+}
 
+/** La cadena de la serie, por país (o una sola, sin clave, en las series sin dimensión país). */
+export function transformarPreparada(p: SeriePreparada): Resultado[] {
+  const claves = p.paises.length ? p.paises : [""];
+  try {
+    return claves.map((pais) => transformar(serieDeEntidad(p.doc, pais || undefined), p.opciones, p.insumos));
+  } catch (e) {
+    throw errorDeTransformacion(e, p.doc);
+  }
+}
+
+/** ¿Vaivén calculó algo (y los valores van redondeados)? */
+export const esTransformada = (p: SeriePreparada) =>
+  p.transformacion !== "nivel" || p.frecuencia !== undefined || p.args.medida !== undefined || !!p.args.pesos_actuales;
+
+export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
+  const p = await prepararSerie(repo, args);
+  const resultados = transformarPreparada(p);
   const total = resultados.reduce((n, r) => n + r.datos.length, 0);
   if (total > LIMITE_OBSERVACIONES) {
-    const pista = paises.length > 1 ? ", pedí menos países" : "";
+    const pista = p.paises.length > 1 ? ", pedí menos países" : "";
     throw new ErrorHerramienta(`El pedido da ${total} observaciones y el límite es ${LIMITE_OBSERVACIONES}. Acotá desde y hasta${pista} o pasá a una frecuencia más baja.`);
   }
+  return respuestaSerie(p, resultados);
+}
 
-  const transformada = transformacion !== "nivel" || frecuencia !== undefined || args.medida !== undefined || !!args.pesos_actuales;
+/**
+ * La respuesta de una serie: datos, unidad, advertencias, notas, último dato y su atraso, fuentes,
+ * licencia, versión de datos y cita. La usan obtener_serie y, por serie, comparar_series y especificacion_grafico.
+ */
+export function respuestaSerie(p: SeriePreparada, resultados: Resultado[], opciones: { sinDatos?: boolean } = {}) {
+  // Con `sinDatos` (comparar_series a la frecuencia común), las notas no hablan de `datos` ni de `frecuencias` de la serie.
+  const { args, doc, transformacion, paises, frecuencia, deflactor } = p;
+  const total = resultados.reduce((n, r) => n + r.datos.length, 0);
+  const transformada = esTransformada(p);
   const listas = resultados.map((r) => r.datos.map(([fecha, v]) => [fecha, transformada ? redondear(v) : v] as [string, number | null]));
   const conDatos = listas.findIndex((l) => l.length);
   const frecuencias = conDatos === -1 ? [] : tramosDeFrecuencia(listas[conDatos], resultados[conDatos].frecuencias);
@@ -162,13 +200,13 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
   if (excluidos.length) {
     notas.push("Los datos excluidos van como null en `datos`, con su motivo en `excluidos`: Vaivén no los interpola ni los corrige.");
   }
-  if (frecuencias.length > 1) {
+  if (frecuencias.length > 1 && !opciones.sinDatos) {
     notas.push("Frecuencia mixta: cada tramo de `frecuencias` dice la frecuencia de sus observaciones. Las variaciones comparan solo observaciones de la misma frecuencia.");
   }
   if (resultados.some((r) => r.frecuencias.includes("semestral"))) {
     notas.push("Las fechas semestrales son las de cada onda o semestre, tal como las fecha la fuente (ver advertencias).");
   }
-  if (paises.length) notas.push("`datos` va por país (ISO3 o código del agregado del Banco Mundial), cada uno con sus observaciones.");
+  if (paises.length && !opciones.sinDatos) notas.push("`datos` va por país (ISO3 o código del agregado del Banco Mundial), cada uno con sus observaciones.");
   if (transformada) notas.push("Los valores transformados se redondean a 6 cifras significativas.");
   // Fuentes de descarga manual (Bruegel): qué versión usa Vaivén; avisar si tiene más de 3 meses.
   const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version);
@@ -220,7 +258,7 @@ export async function obtenerSerie(repo: Repositorio, args: ArgsObtener) {
     ultimo_dato: doc.cobertura.hasta,
     // Contra el calendario de la fuente y la fecha de hoy (segunda revisión de la 4a, 3.5); null si está al día.
     atraso: atraso(doc, new Date().toISOString()),
-    datos: paises.length ? Object.fromEntries(paises.map((p, k) => [p, listas[k]])) : listas[0],
+    datos: paises.length ? Object.fromEntries(paises.map((x, k) => [x, listas[k]])) : listas[0],
     frecuencias,
     advertencias,
     excluidos,
