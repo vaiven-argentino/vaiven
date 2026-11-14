@@ -26,7 +26,9 @@ export const DESCRIPCION = {
     "En las series internacionales, también los países que incluyen. Todos los filtros son opcionales; sin filtros, " +
     "lista todas las series publicadas. `texto` no distingue tildes ni mayúsculas (por ejemplo, «inflación», «dólar», " +
     "«desempleo», «déficit», «PRE-01» o «Brasil»). `desde` y `hasta` (AAAA o AAAA-MM) dejan solo las series con " +
-    "datos en ese período. Para los metadatos completos, usá describir_serie; para los datos, " +
+    "datos en ese período. `variante_por_defecto` es la que usan las demás herramientas si no se pide `variante`: " +
+    "fijate si es la que corresponde a la pregunta (por ejemplo, en exportaciones e importaciones es la anual; la " +
+    "mensual se pide con `variante: mensual`). Para los metadatos completos, usá describir_serie; para los datos, " +
     "obtener_serie.",
   describir_serie:
     "Devuelve los metadatos completos de una serie de Vaivén, sin los datos: definición, unidad, frecuencia, variantes " +
@@ -91,8 +93,11 @@ export const DESCRIPCION = {
     "variaciones mensuales (la respuesta lo avisa). Con `alinear: ninguna`, los datos de cada serie en su frecuencia, " +
     "dentro de `series`. Siempre trae, por serie, la unidad resultante, el último dato, las advertencias y la cita, y los " +
     "avisos de la combinación (`advertencias_combinacion`): mencionalos al usar los datos. Una serie internacional como " +
-    "máximo, con hasta 8 países. Límite: 10.000 observaciones, sumando las series y los países.",
+    "máximo; sus países (hasta 8) cuentan como una sola serie. Límite: 10.000 observaciones, sumando las series y los países.",
   especificacion_grafico:
+    "Hasta 1.000 observaciones por gráfico, sumando las series y los países (por la CPU del servidor): para series " +
+    "largas, pedí `frecuencia: anual` desde el primer intento (por ejemplo, el IPC y las reservas desde 1970), o los " +
+    "datos con comparar_series. " +
     "Devuelve un gráfico de 1 a 4 series listo para dibujar (una especificación de Vega-Lite con los datos incluidos), " +
     "el mismo que muestra el explorador de Vaivén, y `url_explorador`, el enlace a esa vista en la web. Usala cuando el " +
     "usuario pida un gráfico, una figura o un enlace para ver o compartir series; para leer o analizar cifras, " +
@@ -100,9 +105,7 @@ export const DESCRIPCION = {
     "(salvo `base_real`); `desde` y `hasta` valen para todas. Cada serie va en su frecuencia. Con dos unidades " +
     "distintas, el gráfico va en doble eje (o en paneles, con `ejes: paneles`); con tres o cuatro unidades, o con una " +
     "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios. " +
-    "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico. " +
-    "Límite: 1.000 observaciones por gráfico, sumando las series y los países (por la CPU del servidor); para series " +
-    "largas, pedí `frecuencia: anual` (por ejemplo, el IPC y las reservas desde 1970) o los datos con comparar_series.",
+    "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico.",
 } as const;
 
 export const TITULO = {
@@ -129,7 +132,8 @@ export const PARAMETRO = {
   frecuencia:
     "Pasa a trimestral o anual con la agregación que fija la serie, que no se elige: por ejemplo, el IPC y el tipo de " +
     "cambio, en promedio; las exportaciones, en suma; las reservas y la base monetaria de fin de mes, a fin de período. Solo agrega " +
-    "períodos completos. Para otra agregación (por ejemplo, el promedio anual de las reservas), pedí la serie mensual.",
+    "períodos completos. En una serie de saldo, `frecuencia: anual` da el valor de fin de año, no el promedio: para el " +
+    "promedio anual de las reservas, pedí la serie mensual y aclará que el promedio lo calculaste vos.",
   transformacion:
     "nivel (valor tal cual, por defecto) · var_mensual: variación % contra el mes anterior · var_interanual: contra el " +
     "mismo período del año anterior · var_dic_dic: variación diciembre contra diciembre (una por año) · " +
@@ -141,7 +145,9 @@ export const PARAMETRO = {
     "promedio del período vale 100). Con indice_desde_tasas: el año (AAAA) que vale 100.",
   pesosActuales:
     "true pasa una serie en moneda de cada época (m$n, pesos ley 18.188, pesos argentinos, australes) a pesos " +
-    "actuales. Hace falta para variaciones, base 100 o cambio de frecuencia en esas series.",
+    "actuales. Solo se usa en las variantes en moneda de cada época (por ejemplo, la `moneda-de-epoca` del tipo de " +
+    "cambio), y ahí hace falta para variaciones, base 100 o cambio de frecuencia. La variante por defecto del tipo de " +
+    "cambio ya está en pesos actuales: no lo necesita.",
   medida:
     "real: a precios constantes, deflactada con el IPC · en_dolares: dividida por el tipo de cambio oficial · " +
     "pct_pib: en % del PIB del mismo período (el PIB lo elige `denominador`); la serie tiene que estar en frecuencia " +
