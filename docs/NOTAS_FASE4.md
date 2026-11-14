@@ -1047,6 +1047,19 @@ Las sugerencias del probador que no entraron fueron:
 
 Si la prueba ciega muestra que hacen falta, se suman.
 
+### En producción (14/11/2026, después del merge de vaiven-argentino/vaiven#29)
+
+- **`/salud`:** `{"estado":"ok","version":"0.2.0","fase":"4c/4d"}`.
+- **`probar-endpoint.mjs`** contra `https://vaiven.argentino.workers.dev`: todo bien en las dos eras del protocolo, con 8 herramientas y la versión 0.2.0 en `initialize`.
+- **A1, por JSON-RPC:** da lo mismo que las pruebas.
+  - El salario, sin `medida`, dice «pesos corrientes (salario nominal)» y lleva la nota primero. En base 100, «índice del salario nominal, 2017-12 = 100».
+  - Con `medida: real`, no lleva la nota. En base 100 da 74,1835 en 2024-12; en pesos de 2017, de 23.791,6 a 17.649,5 (−25,82 %).
+  - El resultado fiscal lleva la nota del % del PIB y el IPC no lleva nota nueva.
+  - En `comparar_series`, la columna dice «(salario nominal)».
+- **A2:** el tipo de cambio de 1975 lleva la nota de pesos actuales, sin sugerir la medida real; el de 2026-04 y el salario 2017–2024 no la llevan; M1 de 1985 la lleva con la sugerencia.
+- **Carga de `especificacion_grafico`:** se pidió 20 veces seguidas el peor caso dentro del límite (4 mensuales 2000–2020-09, 996 observaciones, gobiernos y eventos), sin ningún error. El tiempo por pedido, con la red incluida, dio 63 ms de mediana y 279 ms de máximo. Pasado el límite (IPC y reservas desde 1970, 1.361 observaciones), devuelve el error con el límite.
+  - Esto no mide la CPU: el tiempo de CPU de cada pedido se ve en las métricas del Worker en el panel de Cloudflare, que esta sesión no alcanza. Que no aparezca un error 1102 en 20 pedidos solo dice que no se pasa siempre del límite.
+
 ### Pendientes
 
 Para decidir con Camilo (no son de descripciones):
@@ -1060,5 +1073,5 @@ Para decidir con Camilo (no son de descripciones):
 - **Prueba ciega:** vigilar las preguntas 14 y 17 (omisiones del modelo con datos correctos) y la frase falsa sobre Alfonsín.
 
 Después del despliegue:
-- verificar en producción, por JSON-RPC, los casos de A1 y A2, y la CPU de `especificacion_grafico`;
+- mirar la CPU de `especificacion_grafico` en el panel de Cloudflare y bajar el límite si aparecen errores 1102 (A1 y A2 ya se verificaron en producción);
 - entender por qué la corrida local sin red no reproduce la retención de la corrida diaria (ver el hallazgo).
