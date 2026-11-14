@@ -444,9 +444,10 @@ function guiaComun(c: Comparacion, docs: Documento[], estado: EstadoVista, conte
   dom?: { ini: number; fin: number }, asignacion?: AsignacionGuia) {
   const datos = filasGuia(c, docs, estado, contextos, asignacion);
   const { filas, campos } = datos;
-  // Sin eje propio: el de fechas lo dibujan las capas de la serie (y solo en el último panel).
+  // Sin eje propio: el de fechas lo dibujan las capas de la serie (y solo en el último panel). Un `axis: null`
+  // acá le ganaba al eje de las líneas al combinar las capas, y el gráfico quedaba sin fechas (encontrado en el PR B).
   const iso = (i: number) => `${Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}-01`;
-  const x = { field: "t", type: "temporal", scale: { type: "utc", ...(dom ? { domain: [iso(dom.ini), iso(dom.fin)] } : {}) }, title: null, axis: null };
+  const x = { field: "t", type: "temporal", scale: { type: "utc", ...(dom ? { domain: [iso(dom.ini), iso(dom.fin)] } : {}) }, title: null };
   const enCualquiera = { or: nombres.map((param) => ({ param, empty: false })) };
   const periodo = asignacion ? [{ field: "periodo", title: "Período" }, { field: "reparto", title: "Reparto" }] : [];
   return {

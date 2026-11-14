@@ -130,7 +130,9 @@ describe("con varias series", () => {
     const v = armar("?t=var_interanual&desde=2000&hasta=2005&s2=reservas&ejes=paneles");
     const spec = v.especificacion as { vconcat: Array<{ layer: Array<{ encoding?: { x?: { axis?: unknown } } }>; height: number }> };
     expect(spec.vconcat).toHaveLength(2);
-    expect(spec.vconcat[0].layer.filter((c) => c.encoding?.x).every((c) => c.encoding!.x!.axis === null)).toBe(true);
+    // Las capas de la guía común no declaran eje: lo dibujan (o no) las de la serie.
+    const deSerie = (c: { data?: { name?: string } }) => c.data?.name !== "guia";
+    expect(spec.vconcat[0].layer.filter((c) => c.encoding?.x && deSerie(c as never)).every((c) => c.encoding!.x!.axis === null)).toBe(true);
     expect(spec.vconcat[1].layer.some((c) => c.encoding?.x && c.encoding.x.axis === undefined)).toBe(true);
     expect(spec.vconcat.every((p) => p.height >= 180)).toBe(true);
     valido(v.especificacion);
@@ -196,6 +198,24 @@ describe("con varias series", () => {
     const v = armar("?s=reservas&desde=2004&hasta=2004&s2=ipc");
     expect(v.guia!.origen.map((o) => o.f)).toEqual(v.comparacion.series[0].resultados[""].datos.map((d) => d[0]));
     expect(v.guia!.contexto).toEqual(v.contextos[0]);
+  });
+
+  it("cada disposición dibuja un solo eje de fechas (la guía común no lo apaga)", () => {
+    const ejesX = (spec: Record<string, unknown>) => {
+      const escalas: string[] = [];
+      const recorrer = (n: unknown): void => {
+        if (!n || typeof n !== "object") return;
+        const o = n as Record<string, unknown>;
+        if (Array.isArray(o.axes)) escalas.push(...o.axes.map((x) => (x as { scale: string }).scale));
+        Object.values(o).forEach(recorrer);
+      };
+      recorrer(compile(spec as never).spec);
+      return escalas.filter((x) => x === "x").length;
+    };
+    for (const url of ["?t=var_mensual&desde=1988&hasta=1991&s2=tc-oficial&t2=var_mensual", "?t=var_interanual&desde=1995&s2=reservas",
+      "?t=var_interanual&desde=1995&s2=reservas&ejes=paneles", "?s=pib&s2=int-pib&p2=ARG,BRA", "?s=reservas&s2=ipc&s3=desocupacion&s4=pib"]) {
+      expect(ejesX(armar(url).especificacion), url).toBe(1);
+    }
   });
 
   it("el texto alternativo tiene uno por panel", () => {
