@@ -994,7 +994,7 @@ Los cuatro casos coinciden, sin una sola diferencia (6 cifras significativas):
 - **A1** (`respuestaSerie`): si la ficha arranca con una medida y el pedido no trae ninguna, la primera nota dice en qué está la respuesta y cómo pedir lo de la ficha; con `medida: real` en la ficha, la unidad dice «nominal» (también en las columnas de `comparar_series`).
 - **A2:** la nota de pesos actuales, solo si algún dato es anterior al último cambio de signo (de `signos-monetarios.json`), y la sugerencia de la medida real, solo si la variante la admite.
 - **A3:** pregunta 12 del manual.
-- **A4:** relevancia del buscador. **Está en la rama sin commitear, esperando que Camilo la vea:** solo cambia «inflación» (de 7 series a solo el IPC); «dólar», «salario», «PRE-01», «Brasil», «mercado de trabajo», «resultado fiscal», «precios» y «reservas del BCRA» dan lo mismo que antes.
+- **A4:** relevancia del buscador (aprobado por Camilo). Un término coincide de verdad en lo principal (id, código, nombre, bloque) o con su forma literal en la definición; si alguna serie coincide de verdad con todos, quedan solo esas. Solo cambia «inflación» (de 7 series a solo el IPC: las otras entraban por el sinónimo «precios» en «a precios constantes»); «dólar», «salario», «PRE-01», «Brasil», «mercado de trabajo», «resultado fiscal», «precios» y «reservas del BCRA» dan lo mismo que antes.
 - **B1, B2, B3 y B5:** descripciones (límite del gráfico, agregación fija con ejemplos comprobados en el export, null de los períodos incompletos, `base_real` que cambia con cada actualización).
 - **B2 y B4** (`alinear.ts`): aviso `c.agregaciones-distintas`; la serie con medida real queda a la frecuencia común con la misma base que en su frecuencia (`Resultado.baseReal`). Contrato 1.1 de las dos herramientas (versión menor; las 1.0 siguen publicadas).
 - **B6:** nota de la variante por defecto en las respuestas con datos.
@@ -1011,6 +1011,5 @@ Para B7 se probó regenerar el export sin red (`uv run python -m pipeline actual
 
 ### Pendientes
 
-- Aprobar o descartar A4.
 - Repetir el probador (las 14 preguntas y, como regresión, las preguntas 12 y 14 a 18 del manual) en una sesión nueva sobre la rama subida: el servidor local de esta sesión arrancó antes de los cambios.
 - Después del despliegue: verificar en producción, por JSON-RPC, los casos de A1 y A2.

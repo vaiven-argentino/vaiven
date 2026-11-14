@@ -81,22 +81,30 @@ function pajar(s: SerieCatalogo): { principal: string; resto: string } {
   };
 }
 
-/** Términos de la búsqueda: las frases con sinónimo van enteras; el resto, por palabra. */
-function terminos(texto: string): string[][] {
+/**
+ * Términos de la búsqueda: las frases con sinónimo van enteras; el resto, por palabra. Cada término es la lista de sus
+ * alternativas: primero la forma literal (y su plural o singular), después los sinónimos. `literales` dice cuántas de
+ * las primeras son literales (para la relevancia: ajustes tras la prueba del MCP, A4).
+ */
+function terminos(texto: string): Array<string[] & { literales: number }> {
+  return terminosConSinonimos(texto) as Array<string[] & { literales: number }>;
+}
+
+function terminosConSinonimos(texto: string): string[][] {
   let resto = ` ${normalizar(texto).replace(/[^\p{L}\p{N}-]+/gu, " ")} `;
   const salida: string[][] = [];
   for (const frase of Object.keys(SINONIMOS).filter((k) => k.includes(" "))) {
     if (resto.includes(` ${frase} `)) {
-      salida.push([frase, ...SINONIMOS[frase]]);
+      salida.push(Object.assign([frase, ...SINONIMOS[frase]], { literales: 1 }));
       resto = resto.replace(` ${frase} `, " ");
     }
   }
   for (const palabra of resto.split(" ").filter((p) => p && !VACIAS.has(p))) {
-    const variantes = [palabra, ...(SINONIMOS[palabra] ?? [])];
     // Plural o singular: «exportacion» encuentra «exportaciones» y «reserva», «reservas».
-    if (palabra.length > 5 && palabra.endsWith("es")) variantes.push(palabra.slice(0, -2));
-    else if (palabra.length > 4 && palabra.endsWith("s")) variantes.push(palabra.slice(0, -1));
-    salida.push(variantes);
+    const literales = [palabra];
+    if (palabra.length > 5 && palabra.endsWith("es")) literales.push(palabra.slice(0, -2));
+    else if (palabra.length > 4 && palabra.endsWith("s")) literales.push(palabra.slice(0, -1));
+    salida.push(Object.assign([...literales, ...(SINONIMOS[palabra] ?? [])], { literales: literales.length }));
   }
   return salida;
 }
@@ -147,10 +155,16 @@ export async function buscarSeries(repo: Repositorio, args: ArgsBuscar) {
         (alternativas.includes(s.id) ? 1 : 0), 0);
       // ¿Coincide con todos los términos (cada uno con sus sinónimos)?
       const todos = busqueda.every((alternativas) => alternativas.some((t) => principal.includes(t) || resto.includes(t)));
-      return { s, puntaje, todos };
+      // ¿Y de verdad? Un término coincide de verdad en lo principal, o con su forma literal en el resto; no cuenta un
+      // sinónimo en la definición («inflación» → «precios» traía las series «a precios constantes»: ajustes, A4).
+      const deVerdad = busqueda.every((alternativas) => alternativas.some((t) => principal.includes(t)) ||
+        alternativas.slice(0, alternativas.literales).some((t) => resto.includes(t)));
+      return { s, puntaje, todos, deVerdad };
     });
-    // Si alguna serie coincide con todos los términos, solo esas; si ninguna, todas las que coinciden con alguno.
-    const conTodos = puntajes.filter((p) => p.todos && p.puntaje > 0);
+    // Si alguna serie coincide de verdad con todos los términos, solo esas; si no, las que coinciden con todos (con
+    // sinónimos); si ninguna, todas las que coinciden con alguno.
+    const deVerdad = puntajes.filter((p) => p.todos && p.deVerdad && p.puntaje > 0);
+    const conTodos = deVerdad.length ? deVerdad : puntajes.filter((p) => p.todos && p.puntaje > 0);
     const encontradas = (conTodos.length ? conTodos : puntajes.filter((p) => p.puntaje > 0))
       .sort((a, b) => b.puntaje - a.puntaje).map((p) => p.s);
     if (encontradas.length) {

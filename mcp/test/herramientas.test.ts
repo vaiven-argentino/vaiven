@@ -33,8 +33,9 @@ describe("buscar_series", () => {
     // Salida anterior al cambio (13/11/2026).
     expect(ids(await buscarSeries(repo, { texto: "dólar" }))).toEqual(["tc-oficial", "tcr-bilateral", "tcr-multilateral", "agregados",
       "cuenta-corriente", "deuda-externa", "exportaciones", "fuga", "importaciones", "int-pib-per-capita", "int-pib", "saldo-comercial"]);
-    expect(ids(await buscarSeries(repo, { texto: "inflación" }))).toEqual(["ipc", "inversion", "pib", "salario-real", "tasa-pasiva",
-      "tcr-bilateral", "tcr-multilateral"]);
+    // Desde los ajustes tras la prueba del MCP (A4), «inflación» trae solo el IPC: las otras seis entraban por el
+    // sinónimo «precios» en su definición («a precios constantes»).
+    expect(ids(await buscarSeries(repo, { texto: "inflación" }))).toEqual(["ipc"]);
     expect(ids(await buscarSeries(repo, { texto: "PRE-01" }))).toEqual(["ipc"]);
     expect(ids(await buscarSeries(repo, { texto: "Brasil" }))).toEqual(["int-pib-per-capita", "int-pib"]);
   });
