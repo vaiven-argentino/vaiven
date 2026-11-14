@@ -7,7 +7,7 @@ import {
   REGLA_UBICACION, atraso, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, tienePais, ubicar,
   type Comparacion, type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
-import { alinearVista, armarVista, compararVista, lecturasGuia, nombreSombreadoEnFrase, type Vista } from "@vaiven/grafico";
+import { alinearVista, armarVista, compararVista, lecturasGuia, nombreSombreadoEnFrase, partirEnRenglones, type Vista } from "@vaiven/grafico";
 import { REGLA_ALINEACION, csvLargo, hojasVista, type FilaLarga, type HojaAncha, type VistaDescargaVarias } from "../lib/descarga";
 import { agregarSerie, colorLibre, igualarComunes, nombreArchivoVista, puedeAgregar, quitarSerie, repetida } from "../lib/vista";
 import {
@@ -699,8 +699,10 @@ function iniciar(): void {
     const fuentes = docs.flatMap((d) => d.fuentes);
     pie.push(varias()
       ? `Elaboración: Vaivén, versión de datos ${diaDeVersion(version)}. ${licenciaImagen(fuentes)}`
-      : `Elaboración: Vaivén, variante «${docs[0].variante}», versión de datos ${diaDeVersion(docs[0].version_datos)}. ${licenciaImagen(docs[0].fuentes)}`, location.href);
-    return pie;
+      : `Elaboración: Vaivén, variante «${docs[0].variante}», versión de datos ${diaDeVersion(docs[0].version_datos)}. ${licenciaImagen(docs[0].fuentes)}`);
+    // La imagen mide 900 px: cada línea larga se parte en renglones de unos 130 caracteres para que no se corte
+    // (revisión visual del PR B). La URL va entera, al final.
+    return [...pie.flatMap((l) => partirEnRenglones(l, 130)), location.href];
   }
 
   async function imagen(formato: "png" | "svg"): Promise<void> {

@@ -10,7 +10,7 @@ import {
 } from "@vaiven/transformaciones";
 import {
   AVISO_DOBLE_EJE, armarVista, bandasDe, categoriasEv, episodiosEnRango, especificacion, esVariacion, eventosEnRango,
-  lecturasGuia, nombreSombreadoEnFrase, numerarQuiebres, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
+  lecturasGuia, nombreSombreadoEnFrase, numerarQuiebres, partirEnRenglones, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
   vistaDesdeUrl, EPISODIO, type Documento, type IndiceSerie, type Tema,
 } from "../src/index";
 
@@ -216,6 +216,21 @@ describe("con varias series", () => {
       "?t=var_interanual&desde=1995&s2=reservas&ejes=paneles", "?s=pib&s2=int-pib&p2=ARG,BRA", "?s=reservas&s2=ipc&s3=desocupacion&s4=pib"]) {
       expect(ejesX(armar(url).especificacion), url).toBe(1);
     }
+  });
+
+  it("en un gráfico angosto, el aviso del doble eje va en renglones que entran en el ancho", () => {
+    const base = { ...vistaDe("?desde=1995&hasta=2010&s2=reservas&ejes=doble"), periodos: PERIODOS, eventos: EVENTOS, tema: TEMA, alto: 300, angosto: true };
+    const titulo = (ancho: number) => (armarVista({ ...base, ancho }).especificacion as { title: { text: string[] } }).title.text;
+    expect(titulo(800)).toHaveLength(2);
+    const angosto = titulo(358);
+    expect(angosto.length).toBeGreaterThan(2);
+    expect(angosto.every((l) => l.length * 6.4 <= 358 - 16)).toBe(true);
+    expect(angosto.join(" ")).toBe(AVISO_DOBLE_EJE);
+  });
+
+  it("partirEnRenglones corta por palabras sin pasarse del largo", () => {
+    expect(partirEnRenglones("uno dos tres cuatro", 8)).toEqual(["uno dos", "tres", "cuatro"]);
+    expect(partirEnRenglones("corto", 80)).toEqual(["corto"]);
   });
 
   it("el texto alternativo tiene uno por panel", () => {

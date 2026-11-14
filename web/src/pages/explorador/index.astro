@@ -294,6 +294,7 @@ const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio:
   .bloque-serie { display: flex; align-items: center; gap: 8px; border: 1px solid var(--linea); border-radius: var(--radio); padding: 0 6px 0 10px; }
   .bloque-serie.activa { border-color: var(--acento); background: var(--superficie); }
   .bloque-elegir { flex: 1 1 auto; min-width: 0; cursor: pointer; }
+  .bloque-elegir input { flex: none; }
   .bloque-texto { min-width: 0; overflow-wrap: anywhere; font-size: 0.9rem; }
   .bloque-detalle { font-size: 0.82rem; }
   .bloque-serie .muestra { display: inline-block; width: 18px; border-top: 3px solid currentColor; flex: none; }
@@ -365,6 +366,8 @@ const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio:
   .lista-periodos :global(.rango), .lista-eventos :global(.rango) { color: var(--secundario); }
   .tabla-datos summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; gap: 10px; }
   .tabla-datos summary span { font-weight: 400; font-size: 0.9rem; }
+  /* Elemento de la grilla: sin min-width 0 crece hasta el ancho de la tabla y estira la página (revisión visual del PR B). */
+  .tabla-datos { min-width: 0; }
   .tabla-marco { overflow-x: auto; max-height: 28rem; overflow-y: auto; border: 1px solid var(--linea); border-radius: var(--radio); margin-top: 8px; }
   table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
   .tabla-marco :global(th), .tabla-marco :global(td) { text-align: left; padding: 6px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }

@@ -1180,6 +1180,33 @@ Camilo pidió seguir en la misma sesión en lugar de abrir otra.
   - `punta-a-punta.mjs`: tres vistas de varias series, más agregar con el teclado, el botón de los ejes, quitar la serie 1 y las descargas de dos vistas;
   - `revision-visual.mjs`: siete casos de varias series.
 
+### Revisión visual (14/11/2026)
+
+El `revisor-visual` revisó 90 vistas: una página y 23 casos fijos, en 390 y 1280 px, en claro y oscuro, más las imágenes exportadas.
+- **Bien:**
+  - el doble eje: los dos títulos con su muestra, el aviso, el eje de fechas y el botón;
+  - los paneles: la unidad y las series arriba de cada uno, las fechas solo en el último, y el sombreado y los eventos cruzando todos;
+  - la franja de los planes arriba;
+  - el celular, con paneles por defecto;
+  - la lista de series y «Agregar serie».
+- **Corregido después de la revisión:**
+  - **La tabla con las columnas del período estiraba la página en 390 px** (de 390 a 611 px). Era el `<details>` de la tabla, un elemento de la grilla sin `min-width: 0`.
+  - **El pie del PNG de varias series se cortaba por la derecha.** Ahora se parte en renglones de unos 130 caracteres. Con una serie, la línea del sombreado también se cortaba, desde la 4b.
+  - **El aviso del doble eje en 390 px salía del área del gráfico.** Debajo de 600 px se parte según el ancho (`partirEnRenglones`).
+  - **Los radios de la lista de series quedaban comprimidos por el flex** (13 a 15 × 20 px). Ahora miden 20 × 20, y todo el bloque responde al toque.
+- **Sin cambios:**
+  - **Un PIB real plano junto al IPC desde 1970, en el mismo panel.** Comparten la unidad («variación % interanual»), y la regla de la 4.1 los pone juntos. La hiperinflación lleva el eje a 25.000.
+  - **El panel lateral se ve cortado en las capturas de página completa.** Es un artefacto de `position: sticky`: el panel tiene alto máximo y desplazamiento propio, como en la 4b.
+- **Verificación después de las correcciones:**
+  - la regresión de la 4b dio «Sin diferencias: 322 vistas (161 URL × 2 anchos)»;
+  - la igualdad con el MCP dio 8 de 8;
+  - `punta-a-punta.mjs --solo explorador` dio todo bien;
+  - `npm test`, `npm run verificar`, `uv run pytest -q` y los enlaces dieron bien.
+
+### Para decidir con Camilo
+
+- **Dos series de la misma unidad con escalas muy distintas** (el IPC interanual desde 1970 con el PIB real interanual): la 4.1 las pone en el mismo panel, y la de menor amplitud queda plana. Una opción es dejarlo así: se puede pedir otra transformación o acortar el período. Otra es sumar una regla, por ejemplo, separar en paneles si una serie ocupa menos de un 5 % del rango. Sería un cambio de la SPEC.
+
 ### Pendientes
 
 - La prueba ciega del MCP: el gráfico de varias series cambió (eje de fechas, período en la guía, colores en minúscula), y el MCP en producción no lo tiene hasta el próximo despliegue.

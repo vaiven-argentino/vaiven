@@ -20,6 +20,21 @@ import {
 export const AVISO_DOBLE_EJE = "Las escalas de los dos ejes son independientes: que las líneas se crucen o se acerquen no indica una relación entre las series.";
 /** El aviso en dos líneas, para que entre en el ancho del gráfico. */
 const AVISO_DOBLE_EJE_LINEAS = ["Las escalas de los dos ejes son independientes: que las líneas se crucen o se acerquen", "no indica una relación entre las series."];
+
+/** Parte un texto en renglones de hasta `largo` caracteres, por palabras. */
+export function partirEnRenglones(texto: string, largo: number): string[] {
+  const renglones: string[] = [];
+  let actual = "";
+  for (const palabra of texto.split(" ")) {
+    if (actual && actual.length + 1 + palabra.length > largo) { renglones.push(actual); actual = palabra; }
+    else actual = actual ? `${actual} ${palabra}` : palabra;
+  }
+  if (actual) renglones.push(actual);
+  return renglones;
+}
+
+/** El aviso del doble eje en renglones que entran en el ancho (a 12 px, unos 6,4 px por carácter). */
+const avisoEnRenglones = (ancho: number) => (ancho >= 600 ? AVISO_DOBLE_EJE_LINEAS : partirEnRenglones(AVISO_DOBLE_EJE, Math.max(30, Math.floor((ancho - 16) / 6.4))));
 /** Alto mínimo de cada panel (SPEC 6.2). */
 export const ALTO_MINIMO_PANEL = 180;
 const SEPARACION_PANELES = 16;
@@ -243,7 +258,7 @@ export function armarVista(v: EntradaVista): Vista {
         // El aviso fijo va en el gráfico (también en la imagen exportada).
         title: impreso
           ? { ...impreso, subtitle: [...impreso.subtitle.slice(0, 1), AVISO_DOBLE_EJE, ...impreso.subtitle.slice(1)] }
-          : { text: AVISO_DOBLE_EJE_LINEAS, fontSize: 12, fontWeight: "normal", color: tema.secundario, anchor: "start", offset: 10 },
+          : { text: avisoEnRenglones(v.ancho), fontSize: 12, fontWeight: "normal", color: tema.secundario, anchor: "start", offset: 10 },
         // Con `fit-x`, Vega ya deja lugar para los nombres al final de las líneas: el margen de la 4b los contaría dos veces.
         padding: v.impreso ? pad(sIzq) : { ...pad(sIzq), right: 6 },
         datasets: guia.datasets,
