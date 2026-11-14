@@ -152,7 +152,8 @@ export function comparar(p: PedidoComparacion): Comparacion {
   }
   const { disposicion: d, advertencias: avisos } = disposicion(series.map((s) => s.unidad), internacionales[0] ?? null,
     series.map((s) => s.log), p.ejes ?? "auto", p.angosto ?? false);
-  return { series, disposicion: d, advertencias: [...advertencias, ...avisos], observaciones };
+  const agregadas = avisoAgregaciones(p.series.map((s, k) => (s.opciones?.frecuencia ? k : -1)).filter((k) => k >= 0), p);
+  return { series, disposicion: d, advertencias: [...advertencias, ...avisos, ...(agregadas ? [agregadas] : [])], observaciones };
 }
 
 /** La frecuencia más baja (la de períodos más largos) de los datos de una serie. */
@@ -210,6 +211,22 @@ export function disposicion(unidades: string[], internacional: number | null, lo
   return { disposicion: { tipo, paneles }, advertencias };
 }
 
+const NOMBRE_AGREGACION: Record<string, string> = { promedio: "promedio", suma: "suma", fin_de_periodo: "valor de fin de período" };
+
+/**
+ * Si se agregan a una frecuencia más baja series con agregaciones distintas (por ejemplo, el IPC en promedio y las
+ * reservas a fin de período), un aviso: la agregación la fija cada serie y no se elige (ajustes tras la prueba, B2).
+ */
+function avisoAgregaciones(indices: number[], p: PedidoComparacion): AdvertenciaCombinacion | null {
+  const agregacion = (k: number) => p.series[k].documento.agregacion;
+  if (new Set(indices.map(agregacion)).size < 2) return null;
+  const lista = indices.map((k) => `serie ${k + 1}, ${NOMBRE_AGREGACION[agregacion(k)] ?? agregacion(k)}`).join("; ");
+  return {
+    id: "c.agregaciones-distintas", series: indices.map((k) => k + 1),
+    descripcion: `Las series agregadas a una frecuencia más baja usan agregaciones distintas (${lista}): cada serie usa la suya, que no se elige. Por ejemplo, un IPC anual es el promedio del año y unas reservas anuales, el saldo de fin de año.`,
+  };
+}
+
 // ── Frecuencia común ───────────────────────────────────────────────────────────
 
 /**
@@ -253,6 +270,9 @@ export function alinear(p: PedidoComparacion, c: Comparacion = comparar(p)): Ali
       let r: Resultado | null = s.resultados[e];
       if (!igual && !motivo) {
         const o: Opciones = { ...opciones, frecuencia: comun === "mensual" ? undefined : comun };
+        // Con la medida real y sin base pedida, los mismos precios que la serie en su frecuencia («julio de 2026»), y no
+        // los del último período completo de la frecuencia común («2.º trimestre de 2026»): ajustes, B4.
+        if (o.medida === "real" && !o.baseReal && s.resultados[e]?.baseReal) o.baseReal = s.resultados[e].baseReal;
         if (o.frecuencia === undefined) delete o.frecuencia;
         if (p.desde !== undefined) o.desde = p.desde; else delete o.desde;
         if (p.hasta !== undefined) o.hasta = p.hasta; else delete o.hasta;
@@ -294,6 +314,10 @@ export function alinear(p: PedidoComparacion, c: Comparacion = comparar(p)): Ali
       descripcion: `Con frecuencia común ${comun}, la variación de ${conVariacion.length > 1 ? "las series" : "la serie"} ${conVariacion.join(" y ")} se calcula sobre los valores ya agregados (por ejemplo, la interanual es la del promedio ${comun === "anual" ? "anual" : "trimestral"}), no es el promedio de las variaciones ${frecuenciasDeOrigen(conVariacion, c)}.`,
     });
   }
+
+  // Las agregadas: por su propia `frecuencia` o por la frecuencia común.
+  const agregadas = avisoAgregaciones(p.series.map((s, k) => (s.opciones?.frecuencia || convertidas.includes(k + 1) ? k : -1)).filter((k) => k >= 0), p);
+  if (agregadas) advertencias.push(agregadas);
 
   const indices = valores.flatMap((m) => [...m.keys()]);
   const filas: Alineada["filas"] = [];

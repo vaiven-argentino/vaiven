@@ -136,5 +136,11 @@ export interface Resultado {
   advertencias: Advertencia[];
   /** Observaciones excluidas por el pipeline que caen dentro del rango. */
   excluidos: Excluido[];
+  /**
+   * Con la medida real: los precios de qué período, como lo admite `Opciones.baseReal` (AAAA-MM o AAAA), si se puede
+   * escribir así (no, si la base por defecto es un trimestre). La usa alinear.ts para que la serie a la frecuencia común
+   * quede a precios del mismo período que en su frecuencia (ajustes tras la prueba del MCP, B4).
+   */
+  baseReal?: string;
   notas: string[];
 }

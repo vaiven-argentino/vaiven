@@ -197,3 +197,29 @@ describe("serie internacional y límites", () => {
     expect(() => comparar(pedido(ocho))).toThrow(/observaciones/);
   });
 });
+
+describe("ajustes tras la prueba del MCP", () => {
+  it("B4: con la medida real, la serie a la frecuencia común queda a precios del mismo mes que en su frecuencia", () => {
+    const salario = doc<SerieExportada>("salario-real/ripte.json");
+    const insumos = { series: { "ipc.oficial": IPC } };
+    const p: PedidoComparacion = { series: [{ documento: salario, opciones: { medida: "real" }, insumos }, { documento: PIB }], desde: "2017", hasta: "2023" };
+    const c = comparar(p);
+    const propia = c.series[0].resultados[""];
+    expect(propia.baseReal).toMatch(/^\d{4}-\d{2}$/);
+    const a = alinear(p, c);
+    expect(a.frecuencia).toBe("trimestral");
+    // La misma base: la unidad de la columna nombra el mismo mes que la de la serie.
+    const mes = /pesos de (.+)$/.exec(propia.unidad)![1];
+    expect(a.columnas[0].unidad).toContain(mes);
+    expect(a.columnas[0].notas.join(" ")).toContain(`a precios de ${mes}`);
+  });
+  it("B2: series anuales con agregaciones distintas (promedio y fin de período): un aviso", () => {
+    const p: PedidoComparacion = { series: [{ documento: IPC, opciones: { frecuencia: "anual" } }, { documento: RESERVAS, opciones: { frecuencia: "anual" } }], desde: "2000", hasta: "2005" };
+    const c = comparar(p);
+    expect(c.advertencias).toEqual([expect.objectContaining({ id: "c.agregaciones-distintas", series: [1, 2] })]);
+    expect(c.advertencias[0].descripcion).toContain("serie 1, promedio; serie 2, valor de fin de período");
+    // A la frecuencia común (mensual con anual), la reserva convertida y el IPC convertido también avisan.
+    const a = alinear({ series: [{ documento: IPC }, { documento: RESERVAS }, { documento: EXPO }], desde: "2004", hasta: "2005" });
+    expect(a.advertencias.map((x) => x.id)).toEqual(["c.frecuencia-comun", "c.agregaciones-distintas"]);
+  });
+});

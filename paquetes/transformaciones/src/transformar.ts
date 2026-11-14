@@ -134,6 +134,7 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
   const incompletos: number[] = [];
   let puntos = puntosDe(serie);
   let unidad = serie.unidad;
+  let baseReal: string | undefined;
 
   // 1. Pesos actuales (antes que la frecuencia, para no promediar signos monetarios distintos).
   if (opciones.pesosActuales) {
@@ -151,7 +152,7 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
 
   // 3. Medida: real, en dólares o % del PIB.
   if (opciones.medida) {
-    [puntos, unidad] = aplicarMedida(serie, puntos, opciones, insumos, notas, extra);
+    [puntos, unidad, baseReal] = aplicarMedida(serie, puntos, opciones, insumos, notas, extra);
   }
 
   // 4. Base 100, variación o índice desde tasas (son excluyentes).
@@ -213,6 +214,7 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
       return i >= inicio && i <= fin;
     }),
     notas,
+    ...(baseReal ? { baseReal } : {}),
   };
 }
 
@@ -319,7 +321,7 @@ function enPeriodos(ins: SerieExportada, puntos: Punto[]): Map<number, Valor> {
 }
 
 function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opciones, insumos: InsumosCargados,
-  notas: string[], extra: Advertencia[]): [Punto[], string] {
+  notas: string[], extra: Advertencia[]): [Punto[], string, string?] {
   const medida = opciones.medida!;
   const declarado = serie.insumos![medida]!;
   const frecs = new Set(puntos.map((p) => p.f));
@@ -335,6 +337,7 @@ function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opcione
     const valores = enPeriodos(ipc, puntos);
     let ipcBase: Valor;
     let nombre: string;
+    let base: string | undefined = opciones.baseReal;
     if (opciones.baseReal) {
       // «AAAA»: el IPC promedio de ese año; «AAAA-MM»: el de ese mes.
       const anual = /^\d{4}$/.test(opciones.baseReal);
@@ -343,14 +346,15 @@ function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opcione
       nombre = nombrePeriodo(ib, anual ? "anual" : "mensual");
       if (ipcBase === null) throw new ErrorTransformacion(`No hay IPC (completo) en ${opciones.baseReal} para usar como base.`);
     } else {
-      const base = [...puntos].reverse().find((p) => p.v !== null && valores.get(p.i) != null);
-      if (!base) throw new ErrorTransformacion("No hay un período con dato de la serie y del IPC para usar como base.");
-      ipcBase = valores.get(base.i)!;
-      nombre = nombrePeriodo(base.i, base.f);
+      const ultimo = [...puntos].reverse().find((p) => p.v !== null && valores.get(p.i) != null);
+      if (!ultimo) throw new ErrorTransformacion("No hay un período con dato de la serie y del IPC para usar como base.");
+      ipcBase = valores.get(ultimo.i)!;
+      nombre = nombrePeriodo(ultimo.i, ultimo.f);
+      base = ultimo.f === "mensual" || ultimo.f === "anual" ? etiqueta(ultimo.i, ultimo.f) : undefined;
     }
     notas.push(notaReal(opcion, nombre));
     extra.push(...ipc.advertencias);
-    return [deflactar(puntos, valores, ipcBase), declarado.unidad.replace("{base}", nombre)];
+    return [deflactar(puntos, valores, ipcBase), declarado.unidad.replace("{base}", nombre), base];
   }
 
   if (medida === "en_dolares") {
