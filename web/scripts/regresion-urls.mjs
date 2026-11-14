@@ -7,6 +7,15 @@
 //   node web/scripts/regresion-urls.mjs --base http://localhost:8787 --guardar [--svg <carpeta>]
 //   node web/scripts/regresion-urls.mjs --base http://localhost:8787 --comparar [--svg <carpeta>]
 // --svg guarda los SVG completos en esa carpeta (fuera del repo), para mirar una diferencia.
+//
+// Las vistas dependen de los datos (el último dato, la tabla, el gráfico), que cambian con cada actualización diaria. Por
+// eso se comparan siempre con el export con que se guardaron: el de la 4b (EXPORT_4B). Con otro export, el script se
+// niega y dice cómo armar el sitio con el de la 4b:
+//   git checkout 71b1306 -- export && npm run build -w @vaiven/web   (y wrangler dev, como siempre)
+//   node web/scripts/regresion-urls.mjs --comparar
+//   git checkout HEAD -- export && npm run build -w @vaiven/web
+// La parte que no depende de los datos (serie, estado, avisos, URL canónica y opciones) la prueba
+// web/test/regresion-4b.test.ts con cualquier export.
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -27,6 +36,19 @@ const ARCHIVO_URLS = join(RAIZ, "web", "test", "regresion", "urls-4b.json");
 const ARCHIVO_VISTAS = join(RAIZ, "web", "test", "regresion", "vistas-4b.json");
 const ANCHOS = [1280, 390];
 const hash = (t) => createHash("sha256").update(t).digest("hex").slice(0, 16);
+/** El commit cuyo export se usó para guardar las vistas (main al cerrar la 4b). */
+const EXPORT_4B = "71b1306";
+if (!guardar) {
+  const { execFileSync } = await import("node:child_process");
+  try {
+    execFileSync("git", ["diff", "--quiet", EXPORT_4B, "--", "export/series", "export/catalogo.json", "export/periodos.json", "export/eventos.json"], { cwd: RAIZ });
+  } catch {
+    console.error(`El export no es el de la 4b (${EXPORT_4B}): las vistas cambian con los datos. Armá el sitio con ese export:\n` +
+      `  git checkout ${EXPORT_4B} -- export && npm run build -w @vaiven/web\n` +
+      "y, después de comparar, volvé al export actual: git checkout HEAD -- export && npm run build -w @vaiven/web");
+    process.exit(2);
+  }
+}
 
 /** Las URL fijas: las canónicas de estado.test.ts, las del explorador en CASOS_FIJOS y en punta-a-punta, y dos de lectura. */
 const FIJAS = [
