@@ -45,7 +45,7 @@ describe.each([
     const { contents } = await c.readResource({ uri: URI_GRAFICO });
     expect(contents).toHaveLength(1);
     const [html] = contents as Array<{ uri: string; mimeType: string; text: string; _meta: unknown }>;
-    expect(html).toMatchObject({ uri: URI_GRAFICO, mimeType: MIME_APP, _meta: { ui: { csp: { resourceDomains: [ORIGEN_PUBLICO] }, prefersBorder: true } } });
+    expect(html).toMatchObject({ uri: URI_GRAFICO, mimeType: MIME_APP, _meta: { ui: { csp: { resourceDomains: [ORIGEN_PUBLICO] }, permissions: { clipboardWrite: {} }, prefersBorder: true } } });
     expect(html.text).toMatch(/^<!doctype html>/);
     expect(html.text).toContain(`<script src="${ORIGEN_PUBLICO}/mcp-app/sonda.js">`);
     expect(html.text).not.toContain("__ORIGEN__");
@@ -69,6 +69,8 @@ describe.each([
       expect(s).toHaveProperty("advertencias");
     }
     expect(texto).toHaveProperty("advertencias_combinacion");
+    // Que el modelo no rearme el gráfico si el cliente ya lo mostró, y que dé el enlace si no (hallazgo A1).
+    expect(texto.especificacion).toMatch(/^Si tu cliente muestra la interfaz de Vaivén .* no lo vuelvas a dibujar .* compartí url_explorador\.$/);
   });
 });
 
@@ -83,7 +85,7 @@ it("el recurso pide el script al dominio que atiende el pedido (producción o un
   const c = await conectar("legacy", repoReal(), { origenApp: origen });
   const { contents } = await c.readResource({ uri: URI_GRAFICO });
   const [html] = contents as Array<{ text: string; _meta: unknown }>;
-  expect(html._meta).toEqual({ ui: { csp: { resourceDomains: [origen] }, prefersBorder: true } });
+  expect(html._meta).toEqual({ ui: { csp: { resourceDomains: [origen] }, permissions: { clipboardWrite: {} }, prefersBorder: true } });
   expect(html.text).toContain(`<script src="${origen}/mcp-app/sonda.js">`);
   expect(html.text).toContain(`window.__vaivenOrigen = "${origen}"`);
 });

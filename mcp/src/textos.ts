@@ -105,7 +105,9 @@ export const DESCRIPCION = {
     "(salvo `base_real`); `desde` y `hasta` valen para todas. Cada serie va en su frecuencia. Con dos unidades " +
     "distintas, el gráfico va en doble eje (o en paneles, con `ejes: paneles`); con tres o cuatro unidades, o con una " +
     "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios. " +
-    "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico.",
+    "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico. " +
+    "En los clientes que muestran interfaces de MCP Apps (como Claude), el gráfico aparece solo, interactivo, en la " +
+    "conversación: no lo vuelvas a dibujar ni pidas los datos para graficarlo.",
 } as const;
 
 export const TITULO = {

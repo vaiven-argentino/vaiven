@@ -18,9 +18,12 @@ export function htmlGrafico(origen: string): string {
   return PARTES_HTML_GRAFICO.join(origen);
 }
 
-/** `_meta.ui` del contenido: la CSP declara solo el dominio de Vaivén (sin fetch, iframes ni base). */
+/**
+ * `_meta.ui` del contenido: la CSP declara solo el dominio de Vaivén (sin fetch, iframes ni base). El portapapeles es
+ * para «Copiar resultados» de la sonda; si el host no lo da, la sonda deja el JSON para copiar a mano.
+ */
 export function metaRecurso(origen: string) {
-  return { ui: { csp: { resourceDomains: [origen] }, prefersBorder: true } };
+  return { ui: { csp: { resourceDomains: [origen] }, permissions: { clipboardWrite: {} }, prefersBorder: true } };
 }
 
 export function registrarRecursoGrafico(servidor: McpServer, origen: string): void {

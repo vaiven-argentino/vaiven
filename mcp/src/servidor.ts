@@ -182,7 +182,9 @@ export function sinEspecificacion(r: Record<string, unknown>): Record<string, un
   const { especificacion: _e, ...resto } = r;
   return {
     ...resto,
-    especificacion: "La especificación de Vega-Lite completa (con los datos) va en structuredContent.especificacion. Para mostrar el gráfico sin ella, compartí url_explorador.",
+    // El servidor no tiene estado y no sabe si el cliente muestra la interfaz (SPEC 7.4): el texto es condicional, y la
+    // interfaz avisa al modelo cuando dibujó (updateModelContext). Hallazgo A1 de la prueba en Claude Desktop.
+    especificacion: "Si tu cliente muestra la interfaz de Vaivén (MCP Apps, como Claude), el gráfico ya está a la vista del usuario con esta especificación de Vega-Lite (va completa, con los datos, en structuredContent.especificacion): no lo vuelvas a dibujar ni pidas los datos para graficarlo; comentá la disposición, las advertencias y las citas. Si no la muestra, compartí url_explorador.",
   };
 }
 
