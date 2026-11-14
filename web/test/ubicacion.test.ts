@@ -8,6 +8,7 @@ import {
   type Resultado, type SerieExportada,
 } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
+import { conDatos } from "./datos-compartidos";
 import { especificacion, type Tema } from "../src/graficos/espec";
 import { numerarQuiebres } from "../src/lib/ficha";
 import { OPCIONES_SOMBREADO, bandasDe, columnasDe, contextoDe, episodiosEnRango, periodosEnRango, tipoDe } from "../src/lib/periodos";
@@ -53,7 +54,7 @@ describe("la banda de cada punto es el período de la tabla", () => {
       for (const sh of OPCIONES_SOMBREADO) {
         const periodos = periodosEnRango(registro, sh, r);
         if (!periodos.length) continue;
-        const spec = especificacion({ ...base, sombreado: { bandas: bandasDe(periodos), franja: sh === "plan" }, asignacion: { periodos, tipo: tipoDe(sh) } }) as { layer: Capa[] };
+        const spec = conDatos(especificacion({ ...base, sombreado: { bandas: bandasDe(periodos), franja: sh === "plan" }, asignacion: { periodos, tipo: tipoDe(sh) } })) as { layer: Capa[] };
         const linea = spec.layer.find((c) => c.mark.type === "line" && c.mark.color === tema.serie)!.data.values;
         const bandas = spec.layer.find((c) => c.mark.type === "rect" && c.data.values[0]?.rango)!.data.values;
         const us = ubicarFechas(r.datos.map((d) => d[0]), r.frecuencias, contexto, periodos, tipoDe(sh));
@@ -71,7 +72,7 @@ describe("la banda de cada punto es el período de la tabla", () => {
       // Episodios: la franja de debajo del eje.
       const episodios = episodiosEnRango(registro, r);
       if (episodios.length) {
-        const spec = especificacion({ ...base, episodios }) as { layer: Capa[] };
+        const spec = conDatos(especificacion({ ...base, episodios })) as { layer: Capa[] };
         const linea = spec.layer.find((c) => c.mark.type === "line" && c.mark.color === tema.serie)!.data.values;
         const franja = spec.layer.find((c) => c.mark.type === "rule" && c.data.values[0]?.episodio)!.data.values;
         const lista = periodosDe(registro, "episodio");

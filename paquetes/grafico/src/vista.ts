@@ -38,6 +38,9 @@ const avisoEnRenglones = (ancho: number) => (ancho >= 600 ? AVISO_DOBLE_EJE_LINE
 /** Alto mínimo de cada panel (SPEC 6.2). */
 export const ALTO_MINIMO_PANEL = 180;
 const SEPARACION_PANELES = 16;
+/** Los datos compartidos (`datasets`) de una especificación armada por `especificacion`. */
+const datosDe = (s: Record<string, unknown>) => (s.datasets ?? {}) as Record<string, unknown[]>;
+
 /** Lo que ocupa, más o menos, el eje Y de un panel (rótulos y marcas). */
 const EJE_Y = 56;
 
@@ -235,16 +238,16 @@ export function armarVista(v: EntradaVista): Vista {
     const rangos = d.tipo === "doble_eje" ? rangosAlineados(c, izq, der) : null;
     const titulo = (p: Panel) => ({ texto: `━ ${p.series.map(nombreSerie).join(" · ")} (${p.unidad})`, color: colorSerie(p.series[0]) });
     const eIzq = entradaPanel(izq, {
-      alto: v.alto, sombreado, eventos, episodios, capasExtra: guia.capas(v.alto, "guia"), impreso: v.impreso,
+      prefijoDatos: "i_", alto: v.alto, sombreado, eventos, episodios, capasExtra: guia.capas(v.alto, "guia"), impreso: v.impreso,
       ...(der ? { tituloEjeY: titulo(izq) } : {}), ...(rangos ? { dominioY: rangos.izq } : {}),
     });
-    const eDer = der ? entradaPanel(der, { alto: v.alto, ejeDerecho: true, tituloEjeY: titulo(der), ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
+    const eDer = der ? entradaPanel(der, { prefijoDatos: "d_", alto: v.alto, ejeDerecho: true, tituloEjeY: titulo(der), ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
     if (!eIzq && !eDer) return vacio();
     // Si el eje izquierdo no tiene datos, el derecho va solo (con su eje a la derecha y su título).
     const sIzq = especificacion({ ...(eIzq ?? eDer!), descripcion });
     if (!eIzq || !eDer) {
       const pIzq = sIzq.padding as Record<string, number>;
-      return { ...comun, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: { ...sIzq, ...(v.impreso ? {} : { padding: { ...pIzq, right: 6 } }), datasets: guia.datasets } };
+      return { ...comun, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: { ...sIzq, ...(v.impreso ? {} : { padding: { ...pIzq, right: 6 } }), datasets: { ...datosDe(sIzq), ...guia.datasets } } };
     }
     const sDer = especificacion({ ...eDer, descripcion });
     const impreso = sIzq.title as { text: string; subtitle: string[] } | undefined;
@@ -261,7 +264,7 @@ export function armarVista(v: EntradaVista): Vista {
           : { text: avisoEnRenglones(v.ancho), fontSize: 12, fontWeight: "normal", color: tema.secundario, anchor: "start", offset: 10 },
         // Con `fit-x`, Vega ya deja lugar para los nombres al final de las líneas: el margen de la 4b los contaría dos veces.
         padding: v.impreso ? pad(sIzq) : { ...pad(sIzq), right: 6 },
-        datasets: guia.datasets,
+        datasets: { ...datosDe(sIzq), ...datosDe(sDer), ...guia.datasets },
       },
     };
   }
@@ -276,7 +279,7 @@ export function armarVista(v: EntradaVista): Vista {
     // arriba del primero y la de los episodios, debajo del último. Las reglas de los eventos cruzan todos los paneles;
     // las letras o las rayitas van en el último, debajo de su eje.
     const e = entradaPanel(p, {
-      alto, sombreado: sombreado && (!sombreado.franja || k === 0) ? sombreado : undefined, sinRotulosSombreado: k > 0,
+      prefijoDatos: `p${k + 1}_`, alto, sombreado: sombreado && (!sombreado.franja || k === 0) ? sombreado : undefined, sinRotulosSombreado: k > 0,
       eventos: ultimo || letras ? eventos : [], sinLetrasEventos: !ultimo, episodios: ultimo ? episodios : [], sinEjeX: !ultimo,
       capasExtra: guia.capas(alto, nombresGuia[k]),
     });
@@ -305,7 +308,7 @@ export function armarVista(v: EntradaVista): Vista {
         },
       })),
       resolve: { scale: { x: "shared" } },
-      datasets: guia.datasets,
+      datasets: Object.assign({}, ...specs.map(({ s }) => datosDe(s)), guia.datasets),
       // La configuración es la del último panel: lleva el eje de fechas (y el espacio para las letras de los eventos).
       config: ultimaEsp.config,
     },

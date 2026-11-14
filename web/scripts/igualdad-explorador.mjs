@@ -57,7 +57,8 @@ function sinTamano(spec) {
     if (!nodo || typeof nodo !== "object") return;
     if (Array.isArray(nodo)) { nodo.forEach(recorrer); return; }
     const marca = typeof nodo.mark === "string" ? nodo.mark : nodo.mark?.type;
-    if (marca === "line") lineas.push({ datos: nodo.data?.values ?? nodo.data?.name, color: nodo.mark?.color ?? nodo.encoding?.color });
+    // Los datos de la línea, también si van con nombre en `datasets` (M11, 4e): se comparan los datos, no el nombre.
+    if (marca === "line") lineas.push({ datos: nodo.data?.values ?? spec.datasets?.[nodo.data?.name] ?? nodo.data?.name, color: nodo.mark?.color ?? nodo.encoding?.color });
     for (const k of ["layer", "vconcat"]) if (nodo[k]) recorrer(nodo[k]);
   };
   recorrer(spec);

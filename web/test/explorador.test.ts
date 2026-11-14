@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { periodosDe, serieDeEntidad, transformar, ubicarFechas, type DocumentoPeriodos, type SeriePorPais } from "@vaiven/transformaciones";
 import { columnasDe, episodiosEnRango, textoLectura } from "../src/lib/periodos";
 import { describe, expect, it } from "vitest";
+import { conDatos } from "./datos-compartidos";
 import { SEPARACION_EVENTOS, especificacion, filasFranja, modoEventos, modoEventosDe, separarRotulos, type BandaPeriodo, type Tema } from "../src/graficos/espec";
 import { csvDeVista, type VistaDescarga } from "../src/lib/descarga";
 import { numerarQuiebres } from "../src/lib/ficha";
@@ -148,11 +149,11 @@ describe("países con color", () => {
   const ids = ["ARG", "BRA", "CHL", "URY", "USA", "WLD", "LCN", "EUU"];
   const resultado = (id: string) => transformar(serieDeEntidad(doc, id), { desde: "2001", hasta: "2011" });
   it("cada país lleva su color de la paleta y su nombre al final de la línea", () => {
-    const layer = (especificacion({
+    const layer = (conDatos(especificacion({
       resultado: resultado("ARG"), tramos: serieDeEntidad(doc, "ARG").tramos, empalme: "yuxtaponer", quiebres: [], tema, esVariacion: true,
       log: false, alto: 300, ancho: 900, descripcion: "", nombre: "Argentina", colores: true,
       otras: ids.slice(1).map((id) => ({ nombre: id, resultado: resultado(id) })),
-    }) as { layer: Capa[] }).layer;
+    })) as { layer: Capa[] }).layer;
     const lineas = layer.find((c) => c.mark.type === "line" && c.data.values.some((v) => v.pais === "BRA"))!;
     expect(new Set(lineas.data.values.map((v) => v.color))).toEqual(new Set(tema.paleta!.slice(1)));
     const rotulos = layer.find((c) => c.mark.type === "text" && c.data.values.some((v) => v.pais === "Argentina"))!.data.values;

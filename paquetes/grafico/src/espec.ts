@@ -104,6 +104,11 @@ export interface EntradaGrafico {
   /** Sin tooltip propio en las líneas: lo da la guía común de la comparación (`capasExtra`). */
   sinTooltip?: boolean;
   /**
+   * Prefijo de los nombres de los datos compartidos (`datasets`). Con varias especificaciones en un mismo gráfico (doble
+   * eje, paneles), cada una lleva el suyo para que los nombres no choquen.
+   */
+  prefijoDatos?: string;
+  /**
    * Series distintas en el mismo panel (comparación): ninguna línea va resaltada, y cada una lleva sus puntos (si es
    * rala) en su propio color. Sin esto, la primera línea se resalta, como el país elegido de las internacionales.
    */
@@ -278,6 +283,16 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     texto: `Dato excluido (${fechaCorta(x.fecha)}): ${x.motivo}`,
   }));
 
+  // Los datos que usan varias capas (la línea y sus puntos, o los puntos invisibles del tooltip) van una sola vez, en
+  // `datasets`, con nombre: antes iban repetidos en cada capa y una serie mensual completa pesaba el doble (M11, 4e).
+  const conjuntos: Record<string, unknown[]> = {};
+  const compartir = (nombre: string, valores: unknown[]) => {
+    const clave = `${e.prefijoDatos ?? ""}${nombre}`;
+    conjuntos[clave] = valores;
+    return { name: clave };
+  };
+  const datosLinea = compartir("linea", filasLinea);
+
   const filasOtras = (e.otras ?? []).flatMap((o) => filas({ ...e, resultado: o.resultado, ubicacion: o.ubicacion ?? e.ubicacion, tramos: o.tramos ?? e.tramos, empalme: o.empalme ?? e.empalme }).map((f) => ({ ...f, pais: o.nombre })));
   const todas = [...filasLinea, ...filasOtras];
   const tramosDistintos = !e.sinTooltip && new Set(filasLinea.map((f) => f.tramo)).size > 1 && e.empalme === "yuxtaponer";
@@ -370,15 +385,16 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       const valores = filasOtras.filter((f) => f.pais === o.nombre).map((f) => ({ t: f.t, v: f.v, segmento: f.segmento }));
       if (valores.length) {
         capas.push({
-          data: { values: valores }, mark: { type: "line", color: colorDe(k + 1), strokeWidth: 2, interpolate: "linear" },
+          data: compartir(`otra${k + 1}`, valores), mark: { type: "line", color: colorDe(k + 1), strokeWidth: 2, interpolate: "linear" },
           encoding: { x: x("t"), y, detail: { field: "segmento", type: "nominal" } },
         });
       }
     });
   } else if (filasOtras.length) {
     const conColor = filasOtras.map((f) => ({ ...f, color: colorDe((e.otras ?? []).findIndex((o) => o.nombre === f.pais) + 1) }));
+    const datosOtras = compartir("otras", conColor);
     capas.push({
-      data: { values: conColor },
+      data: datosOtras,
       mark: e.colores
         ? { type: "line", strokeWidth: e.sinResaltado ? 2 : 1.6, opacity: e.sinResaltado ? 1 : 0.9, interpolate: "linear" }
         : { type: "line", color: tema.secundario, strokeWidth: 1.2, opacity: 0.75, interpolate: "linear" },
@@ -387,26 +403,26 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
         ...(e.colores ? { color: { field: "color", type: "nominal", scale: null, legend: null } } : {}),
       },
     });
-    if (tooltip) capas.push({ data: { values: filasOtras }, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
+    if (tooltip) capas.push({ data: datosOtras, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
   }
   capas.push({
-    data: { values: filasLinea }, mark: { type: "line", color: e.colores ? colorDe(0) : tema.serie, strokeWidth: filasOtras.length && !e.sinResaltado ? 2.6 : 2, interpolate: "linear" },
+    data: datosLinea, mark: { type: "line", color: e.colores ? colorDe(0) : tema.serie, strokeWidth: filasOtras.length && !e.sinResaltado ? 2.6 : 2, interpolate: "linear" },
     encoding: { x: x("t"), y, detail: { field: "segmento", type: "nominal" } },
   });
   if (e.sinResaltado) {
     // Cada línea rala (anual, semestral o con pocos datos) lleva sus puntos, en su color.
-    const lineas = [{ filas: filasLinea, color: colorDe(0), r: e.resultado }, ...(e.otras ?? []).map((o, k) => ({
-      filas: filasOtras.filter((f) => f.pais === o.nombre), color: colorDe(k + 1), r: o.resultado,
+    const lineas = [{ filas: filasLinea, color: colorDe(0), r: e.resultado, datos: datosLinea }, ...(e.otras ?? []).map((o, k) => ({
+      filas: filasOtras.filter((f) => f.pais === o.nombre), color: colorDe(k + 1), r: o.resultado, datos: { name: `${e.prefijoDatos ?? ""}otra${k + 1}` },
     }))];
     for (const l of lineas.filter((x) => x.filas.length && (x.filas.length <= 160 || x.r.frecuencias.some((f) => f === "semestral" || f === "anual")))) {
       capas.push({
-        data: { values: l.filas.map((f) => ({ t: f.t, v: f.v })) }, mark: { type: "point", filled: true, color: l.color, size: e.ancho < 520 ? 12 : 22, opacity: 1 },
+        data: l.datos, mark: { type: "point", filled: true, color: l.color, size: e.ancho < 520 ? 12 : 22, opacity: 1 },
         encoding: { x: x("t"), y },
       });
     }
   } else if (tramosDistintos || ralo) {
     capas.push({
-      data: { values: filasLinea },
+      data: datosLinea,
       mark: { type: "point", filled: true, color: tema.serie, size: e.ancho < 520 ? 12 : tramosDistintos ? 30 : 22, opacity: 1 },
       encoding: {
         x: x("t"), y, ...(tooltip ? { tooltip } : {}),
@@ -422,7 +438,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   }
   // Puntos invisibles para el tooltip cuando la línea no lleva puntos.
   if (!tramosDistintos && !ralo && tooltip) {
-    capas.push({ data: { values: filasLinea }, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
+    capas.push({ data: datosLinea, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
   }
   if (marcadores.length) {
     capas.push({
@@ -496,6 +512,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     background: e.impreso ? tema.fondo : null,
     ...(e.impreso ? { title: { text: e.impreso.titulo, subtitle: [e.impreso.subtitulo, "", ...e.impreso.pie], subtitlePadding: 6, offset: 14 } } : {}),
     layer: capas,
+    datasets: conjuntos,
     config: {
       font: tema.fuente,
       view: { stroke: null },
