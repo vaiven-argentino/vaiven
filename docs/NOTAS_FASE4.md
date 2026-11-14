@@ -1075,3 +1075,83 @@ Para decidir con Camilo (no son de descripciones):
 Después del despliegue:
 - mirar la CPU de `especificacion_grafico` en el panel de Cloudflare y bajar el límite si aparecen errores 1102 (A1 y A2 ya se verificaron en producción);
 - entender por qué la corrida local sin red no reproduce la retención de la corrida diaria (ver el hallazgo).
+
+
+## 4c/4d · Explorador con varias series (PR B)
+
+*14/11/2026 · El PR B se hace en dos sesiones. La primera pasa el explorador a la vista de varias series (`vistaDesdeUrl`, `armarVista` y `urlDesdeVista`) y suma el período a la guía común, la regresión de la 4b y la igualdad con el MCP en el navegador. La segunda hace el panel con un bloque por serie, la tabla con las columnas del período, las descargas y la revisión visual.*
+
+### Decisiones tomadas con Camilo (14/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Selector de serie activa | También en el escritorio, no solo por debajo de 1100 px. |
+| Serie agregada | El bloque arranca vacío («Elegí una serie…»): no se dibuja ni va a la URL hasta que se elige. |
+| Período en el tooltip y el lector con varias series | Se suma a la guía común de `armarVista` (también para el MCP): el período vigente y el reparto en cada fecha de la guía, ubicados con la regla de la serie que marca las fechas. |
+| Columnas del período en la tabla de varias series | Ocultas por defecto, con un botón a la vista que las muestra. |
+| CSV largo | `fecha,serie,variante,pais,transformacion,unidad,valor,periodo,periodo_proporcion,otros_periodos`. `pais` va después de `variante`; las tres columnas del período van siempre (vacías sin sombreado); `transformacion` va como texto legible. |
+| CSV largo con una sola serie | Confirmado: cambian las columnas del CSV de la 4b, pero no la vista (gráfico, tabla y URL). |
+| Serie repetida | No se admite la misma serie con la misma variante y la misma transformación: la combinación se deshabilita con un aviso. |
+| Cambiar la serie 1 con otras en la vista | Con una serie, como en la 4b (el período vuelve a la vista inicial de la serie nueva); con varias, el período se conserva, porque es común. |
+| Nombres de archivo con varias series | `vaiven_<s1>_y_<s2>[_y_…]_<desde>_<hasta>[_sombreado_x]`, con `<s>-<variante>` solo si la variante no es la de por defecto o si la serie se repite. |
+| Modelo | Opus con esfuerzo alto en las dos sesiones. |
+
+### Qué se hizo (primera sesión)
+
+- **El explorador lee y escribe la vista entera.**
+  - La URL se lee con `seriesDeUrl` y `vistaDesdeUrl`, y se escribe con `urlDesdeVista`.
+  - El gráfico de la pantalla y el de la imagen exportada salen de `armarVista`, también con una sola serie, en lugar de llamar a `especificacion()` directamente.
+  - La comparación se hace una vez por cambio (`compararVista`) y se reusa al dibujar en otro tamaño.
+  - Los controles siguen editando la serie 1. Hasta la segunda sesión, las series 2 a 4 llegan solo desde la URL.
+- **Con varias series:**
+  - el último dato, los avisos (los de la combinación y los de cada serie, con «Serie k:») y la cita van uno por serie;
+  - la tabla va a la frecuencia común con `alinearVista`;
+  - el lector de teclado usa la guía común (`lecturasGuia`).
+  - Con una serie, todo queda como en la 4b.
+- **Disposición:**
+  - el botón «Ver en paneles» o «Ver en doble eje» va junto al título del gráfico, solo con dos unidades y sin serie internacional;
+  - por debajo de 600 px, «Ver en doble eje» escribe `ejes=doble`; en pantallas más anchas borra `ejes`, porque ahí el doble eje es lo automático;
+  - el cambio de ancho a través de los 600 px vuelve a comparar.
+- **Guía común** (`paquetes/grafico/src/vista.ts`):
+  - con sombreado, cada fecha lleva `periodo` y `reparto`, y el tooltip suma «Período» y «Reparto», como con una serie;
+  - `filasGuia` devuelve además la observación de origen de cada fecha y su ubicación;
+  - `lecturasGuia` arma las lecturas con `textoLectura`, la misma función del lector de una serie;
+  - la vista expone `guia` y `dominio`.
+- **Texto del sombreado:** `armarVista` decía «Sombreado por Gobiernos» y el explorador de la 4b, «Sombreado por gobiernos». Ahora los dos usan `nombreSombreadoEnFrase` (`paquetes/grafico/src/periodos.ts`), y el explorador ya no tiene su propia tabla de nombres.
+  - La prueba de `armarVista` contra la 4b no lo detectaba, porque reconstruía el explorador con la misma función que `armarVista`.
+  - En el MCP, la descripción del gráfico pasa a minúscula.
+- **`TEMA_CLARO` en minúscula:** el armado del sitio minifica el CSS y el navegador recibe «#b84a00» donde `global.css` dice «#B84A00».
+  - La especificación del explorador llevaba los colores en minúscula, y la del MCP, en mayúscula.
+  - La prueba de igualdad sin navegador no lo veía, porque usaba `TEMA_CLARO` de los dos lados.
+  - `TEMA_CLARO` va ahora en minúscula y `web/test/tema.test.ts` compara sin distinguir mayúsculas. El explorador no cambia.
+- **Igualdad con el explorador real** (`web/scripts/igualdad-explorador.mjs`):
+  - pide `especificacion_grafico` al MCP local por stdio, que lee el export que sirve el sitio (`--url <base>/datos/`);
+  - abre `url_explorador` y lee lo que dibujó el explorador (la propiedad `especificacion` de `#x-grafico`);
+  - con el gráfico en 800 × 400 px, compara las dos especificaciones completas. Como la columna del gráfico no pasa de 792 px, un estilo propio de la prueba fija el contenedor en 800 px;
+  - en 1280 y 390 px compara los datos de cada línea y la guía común;
+  - las vistas están en `mcp/test/vistas-igualdad.json`, que también lee `mcp/test/igualdad.test.ts`.
+
+### Verificación (14/11/2026)
+
+- **Regresión de la 4b en el navegador**, con el export de `71b1306`, antes y después del cambio: «Sin diferencias: 322 vistas (161 URL × 2 anchos)». Después se volvió al export de `HEAD`.
+- **Igualdad con el explorador real:** «en 8 de 8 vistas, la especificación del explorador es la de especificacion_grafico con el mismo tamaño, y en 1280 y 390 px dibujan los mismos datos».
+- **Pruebas:**
+  - `npm test`: 7, 221, 166, 121 y 1.493 pruebas;
+  - `npm run verificar`: 0 errores y 0 avisos;
+  - `uv run pytest -q`: 302 pasan y 7 quedan omitidas;
+  - el sitio se armó bien y la revisión de enlaces dio sin enlaces rotos (1.625 enlaces internos).
+- **`punta-a-punta.mjs --solo explorador`:** todo bien. La corrida completa se corta al bajar el ZIP de una ficha, porque este entorno no tiene `export/descargas/vaiven_<versión>.zip`: el armado avisa que falta y que se genera con `uv run python -m pipeline descargas`. No tiene relación con este cambio.
+- **A mano en el navegador** (IPC interanual con reservas, 1995–2010, con gobiernos):
+  - en 1280 px, el doble eje con «Ver en paneles»;
+  - en 390 px, los paneles con «Ver en doble eje», que escribe `ejes=doble`;
+  - el lector dice «feb. 1995: 1. Inflación minorista (IPC), 5,0; 2. Reservas internacionales, 14.521,7 · Gobierno: Carlos Saúl Menem (8/7/1989–10/12/1999)»;
+  - cambiar la transformación de la serie 1 conserva la serie 2.
+
+### Pendientes (segunda sesión)
+
+- El panel con un bloque por serie: agregar y quitar, el foco, el selector de serie activa, el color que sigue a la serie, la serie internacional deshabilitada en los otros bloques y la serie repetida.
+- La tabla de varias series con el botón de las columnas del período.
+- El CSV largo, las hojas del XLSX, el pie del PNG y el SVG con todas las series, y los nombres de archivo.
+- El texto alternativo por panel en la página.
+- Las pruebas de Vitest de lo nuevo, los casos con varias series en `revision-visual.mjs` y `punta-a-punta.mjs`, y el `revisor-visual`.
+- Repetir la regresión de la 4b y la igualdad al final.
