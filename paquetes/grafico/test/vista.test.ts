@@ -10,7 +10,7 @@ import {
 } from "@vaiven/transformaciones";
 import {
   AVISO_DOBLE_EJE, armarVista, bandasDe, categoriasEv, episodiosEnRango, especificacion, esVariacion, eventosEnRango,
-  nombreSombreado, numerarQuiebres, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
+  lecturasGuia, nombreSombreadoEnFrase, numerarQuiebres, partirEnRenglones, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
   vistaDesdeUrl, EPISODIO, type Documento, type IndiceSerie, type Tema,
 } from "../src/index";
 
@@ -68,7 +68,8 @@ function especificacion4b(url: string, ancho: number, alto: number) {
   const positivos = r.datos.every((d) => d[1] === null || d[1] > 0) && otras.every((x) => x.resultado.datos.every((d) => d[1] === null || d[1] > 0));
   let t = resumen(r, r.unidad, esVariacion(estado.t), quiebres);
   if (periodos.length) {
-    t += ` Sombreado por ${nombreSombreado(estado.sh as never)}: ${periodos.length === 1 ? "un período" : `${periodos.length} períodos`}, de ${periodos[0].nombre} a ${periodos[periodos.length - 1].nombre}.`;
+    // El explorador de la 4b decía el tipo en minúscula («Sombreado por ministros de Economía»).
+    t += ` Sombreado por ${nombreSombreadoEnFrase(estado.sh as never, PERIODOS.tipos)}: ${periodos.length === 1 ? "un período" : `${periodos.length} períodos`}, de ${periodos[0].nombre} a ${periodos[periodos.length - 1].nombre}.`;
     t += " Cada dato se asigna al período vigente a mitad de su intervalo (los saldos en nivel, el último día).";
   }
   if (episodios.length) t += ` ${episodios.length === 1 ? "Un episodio marcado" : `${episodios.length} episodios marcados`}: ${episodios.map((x) => x.nombre).join("; ")}.`;
@@ -129,7 +130,9 @@ describe("con varias series", () => {
     const v = armar("?t=var_interanual&desde=2000&hasta=2005&s2=reservas&ejes=paneles");
     const spec = v.especificacion as { vconcat: Array<{ layer: Array<{ encoding?: { x?: { axis?: unknown } } }>; height: number }> };
     expect(spec.vconcat).toHaveLength(2);
-    expect(spec.vconcat[0].layer.filter((c) => c.encoding?.x).every((c) => c.encoding!.x!.axis === null)).toBe(true);
+    // Las capas de la guía común no declaran eje: lo dibujan (o no) las de la serie.
+    const deSerie = (c: { data?: { name?: string } }) => c.data?.name !== "guia";
+    expect(spec.vconcat[0].layer.filter((c) => c.encoding?.x && deSerie(c as never)).every((c) => c.encoding!.x!.axis === null)).toBe(true);
     expect(spec.vconcat[1].layer.some((c) => c.encoding?.x && c.encoding.x.axis === undefined)).toBe(true);
     expect(spec.vconcat.every((p) => p.height >= 180)).toBe(true);
     valido(v.especificacion);
@@ -170,6 +173,64 @@ describe("con varias series", () => {
     expect(filas).toHaveLength(12);
     expect(filas[0].s2).toMatch(/^2004, 1\.er trimestre \(trimestral\): /);
     expect(filas[0].s1).not.toContain("(");
+  });
+
+  it("con sombreado, la guía dice el período y el reparto de cada fecha, y el lector los lee", () => {
+    const v = armar("?desde=1989-01&hasta=1989-12&sh=gobierno&ev=1&s2=pib");
+    const filas = (v.especificacion as { datasets: { guia: Array<Record<string, string>> } }).datasets.guia;
+    // Julio de 1989: el mes del cambio de gobierno (Alfonsín → Menem, el 8/7), con su reparto.
+    const julio = filas[6];
+    expect(julio.periodo).toMatch(/Menem/);
+    expect(julio.reparto).toMatch(/Menem \d+ % · Alfonsín \d+ %/);
+    // La capa de la guía es la de los puntos invisibles con la selección («guia»).
+    const tooltip = ((v.especificacion as { layer: Array<{ params?: unknown[]; encoding?: { tooltip?: Array<{ title: string }> } }> }).layer
+      .find((c) => c.params && c.encoding?.tooltip)!.encoding!.tooltip!).map((t) => t.title);
+    expect(tooltip.slice(-2)).toEqual(["Período", "Reparto"]);
+    const lecturas = lecturasGuia(v.guia!, { sh: "gobierno", episodios: v.episodios, eventos: v.eventos });
+    expect(lecturas).toHaveLength(12);
+    expect(lecturas[6].texto).toMatch(/^jul\. 1989: 1\. .+; 2\. .+ · Gobierno: .*Menem.* · reparto: Menem/);
+    // Sin sombreado, ni el tooltip ni la guía llevan el período.
+    const sin = armar("?desde=1989-01&hasta=1989-12&s2=pib");
+    expect(Object.keys((sin.especificacion as { datasets: { guia: Array<Record<string, string>> } }).datasets.guia[0])).toEqual(["t", "fecha", "s1", "s2"]);
+  });
+
+  it("con dos series de la misma frecuencia, la guía y el lector siguen a la de índice más bajo", () => {
+    const v = armar("?s=reservas&desde=2004&hasta=2004&s2=ipc");
+    expect(v.guia!.origen.map((o) => o.f)).toEqual(v.comparacion.series[0].resultados[""].datos.map((d) => d[0]));
+    expect(v.guia!.contexto).toEqual(v.contextos[0]);
+  });
+
+  it("cada disposición dibuja un solo eje de fechas (la guía común no lo apaga)", () => {
+    const ejesX = (spec: Record<string, unknown>) => {
+      const escalas: string[] = [];
+      const recorrer = (n: unknown): void => {
+        if (!n || typeof n !== "object") return;
+        const o = n as Record<string, unknown>;
+        if (Array.isArray(o.axes)) escalas.push(...o.axes.map((x) => (x as { scale: string }).scale));
+        Object.values(o).forEach(recorrer);
+      };
+      recorrer(compile(spec as never).spec);
+      return escalas.filter((x) => x === "x").length;
+    };
+    for (const url of ["?t=var_mensual&desde=1988&hasta=1991&s2=tc-oficial&t2=var_mensual", "?t=var_interanual&desde=1995&s2=reservas",
+      "?t=var_interanual&desde=1995&s2=reservas&ejes=paneles", "?s=pib&s2=int-pib&p2=ARG,BRA", "?s=reservas&s2=ipc&s3=desocupacion&s4=pib"]) {
+      expect(ejesX(armar(url).especificacion), url).toBe(1);
+    }
+  });
+
+  it("en un gráfico angosto, el aviso del doble eje va en renglones que entran en el ancho", () => {
+    const base = { ...vistaDe("?desde=1995&hasta=2010&s2=reservas&ejes=doble"), periodos: PERIODOS, eventos: EVENTOS, tema: TEMA, alto: 300, angosto: true };
+    const titulo = (ancho: number) => (armarVista({ ...base, ancho }).especificacion as { title: { text: string[] } }).title.text;
+    expect(titulo(800)).toHaveLength(2);
+    const angosto = titulo(358);
+    expect(angosto.length).toBeGreaterThan(2);
+    expect(angosto.every((l) => l.length * 6.4 <= 358 - 16)).toBe(true);
+    expect(angosto.join(" ")).toBe(AVISO_DOBLE_EJE);
+  });
+
+  it("partirEnRenglones corta por palabras sin pasarse del largo", () => {
+    expect(partirEnRenglones("uno dos tres cuatro", 8)).toEqual(["uno dos", "tres", "cuatro"]);
+    expect(partirEnRenglones("corto", 80)).toEqual(["corto"]);
   });
 
   it("el texto alternativo tiene uno por panel", () => {

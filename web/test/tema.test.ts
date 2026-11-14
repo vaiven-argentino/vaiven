@@ -8,7 +8,8 @@ import { TEMA_CLARO } from "@vaiven/grafico";
 it("TEMA_CLARO coincide con las variables del modo claro de global.css", () => {
   const css = readFileSync(join(import.meta.dirname, "..", "src", "estilos", "global.css"), "utf-8");
   const raiz = css.slice(css.indexOf(":root {"), css.indexOf("}", css.indexOf(":root {")));
-  const v = (n: string) => new RegExp(`--${n}:\\s*([^;]+);`).exec(raiz)![1].trim();
+  // En minúscula: el armado del sitio minifica el CSS y el navegador recibe «#b84a00» (ver paquetes/grafico/src/tema.ts).
+  const v = (n: string) => new RegExp(`--${n}:\\s*([^;]+);`).exec(raiz)![1].trim().toLowerCase();
   expect(TEMA_CLARO).toEqual({
     fondo: v("fondo"), texto: v("texto"), secundario: v("secundario"), linea: v("linea"), banda: v("banda"), borde: v("borde"),
     serie: v("graf-1"), fuente: "Inter Variable, system-ui, sans-serif",

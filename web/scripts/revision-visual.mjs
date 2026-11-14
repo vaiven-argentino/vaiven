@@ -60,6 +60,15 @@ const CASOS_FIJOS = [
   { ruta: "/explorador/", anchos: [1280], alto: 800, pantalla: true }, // el gráfico, sin desplazar
   { ruta: "/periodos/", anchos: [390] },
   { ruta: "/explorador/?desde=1970&ev=1" }, // 1970–hoy con todos los eventos: rayitas
+  // Varias series (4c/4d, PR B): doble eje (paneles en 390 px), el mismo par en paneles y con el doble eje pedido en el
+  // celular, cuatro series con sombreado y eventos, una internacional en su panel y la franja de los planes en paneles.
+  { ruta: "/explorador/?desde=1995&hasta=2010&sh=gobierno&s2=reservas" },
+  { ruta: "/explorador/?desde=1995&hasta=2010&s2=reservas&ejes=paneles" },
+  { ruta: "/explorador/?desde=1995&hasta=2010&s2=reservas&ejes=doble", anchos: [390] },
+  { ruta: "/explorador/?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1&s2=reservas&s3=tc-oficial&t3=var_mensual&s4=pib" },
+  { ruta: "/explorador/?s=pib&desde=2000&hasta=2015&s2=int-pib&p2=ARG,BRA,USA" },
+  { ruta: "/explorador/?desde=1985&hasta=1992&sh=plan&s2=desocupacion" },
+  { ruta: "/explorador/?desde=1995&hasta=2010&s2=reservas", anchos: [1280], alto: 800, pantalla: true }, // doble eje sin desplazar
 ];
 const vistas = [
   ...(args.paginas ? args.paginas.split(/,(?=\/)/) : paginasPorDefecto()).map((ruta) => ({ ruta })),

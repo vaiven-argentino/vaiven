@@ -3,20 +3,38 @@
 // exportada) y `especificacion_grafico` del MCP, así que, para las mismas vistas, las dos especificaciones son iguales
 // salvo el tamaño (SPEC 10). Con una sola serie arma exactamente el gráfico de la 4b.
 import {
-  alinear, cerosAlineados, comparar, diasDe, fechaDeDibujo, indiceMes, referenciaDe, tienePais,
+  alinear, cerosAlineados, comparar, diasDe, fechaDeDibujo, indiceMes, referenciaDe, textoPeriodo, textoReparto, tienePais, ubicar,
   type AdvertenciaCombinacion, type Alineada, type Comparacion, type ContextoUbicacion, type DocumentoEventos,
-  type DocumentoPeriodos, type InsumosCargados, type Panel, type Periodo, type Resultado,
+  type DocumentoPeriodos, type InsumosCargados, type Panel, type Periodo, type Resultado, type TipoPeriodo, type Ubicacion,
 } from "@vaiven/transformaciones";
-import { dominioMeses, especificacion, modoEventosDe, type BandaEpisodio, type EntradaGrafico, type MarcaEvento, type Tema } from "./espec";
+import { dominioMeses, especificacion, modoEventosDe, type BandaEpisodio, type EntradaGrafico, type MarcaEvento, type ModoEventos, type Tema } from "./espec";
 import { opcionesDe, serieVista, type Documento, type Estado, type EstadoVista } from "./estado";
 import { esVariacion, numerarQuiebres, resumen, type QuiebreNumerado } from "./ficha";
 import { fechaLegible, numero } from "./formato";
-import { EPISODIO, bandasDe, contextoDe, episodiosEnRango, eventosEnRango, nombreSombreado, periodosEnRango, tipoDe, type OpcionSombreado } from "./periodos";
+import {
+  EPISODIO, bandasDe, columnaPeriodo, contextoDe, episodiosEnRango, eventosEnRango, nombreSombreadoEnFrase, periodosEnRango, textoLectura, tipoDe,
+  type OpcionSombreado,
+} from "./periodos";
 
 /** Aviso fijo del doble eje (SPEC 4.1). */
 export const AVISO_DOBLE_EJE = "Las escalas de los dos ejes son independientes: que las líneas se crucen o se acerquen no indica una relación entre las series.";
 /** El aviso en dos líneas, para que entre en el ancho del gráfico. */
 const AVISO_DOBLE_EJE_LINEAS = ["Las escalas de los dos ejes son independientes: que las líneas se crucen o se acerquen", "no indica una relación entre las series."];
+
+/** Parte un texto en renglones de hasta `largo` caracteres, por palabras. */
+export function partirEnRenglones(texto: string, largo: number): string[] {
+  const renglones: string[] = [];
+  let actual = "";
+  for (const palabra of texto.split(" ")) {
+    if (actual && actual.length + 1 + palabra.length > largo) { renglones.push(actual); actual = palabra; }
+    else actual = actual ? `${actual} ${palabra}` : palabra;
+  }
+  if (actual) renglones.push(actual);
+  return renglones;
+}
+
+/** El aviso del doble eje en renglones que entran en el ancho (a 12 px, unos 6,4 px por carácter). */
+const avisoEnRenglones = (ancho: number) => (ancho >= 600 ? AVISO_DOBLE_EJE_LINEAS : partirEnRenglones(AVISO_DOBLE_EJE, Math.max(30, Math.floor((ancho - 16) / 6.4))));
 /** Alto mínimo de cada panel (SPEC 6.2). */
 export const ALTO_MINIMO_PANEL = 180;
 const SEPARACION_PANELES = 16;
@@ -56,10 +74,14 @@ export interface Vista {
   totalEventos: number;
   episodios: BandaEpisodio[];
   contextos: ContextoUbicacion[];
+  /** El primer y el último dato de todas las series (lo que se ve): con él se eligen los períodos, los eventos y su modo. */
+  dominio: Resultado | null;
   /** El texto alternativo del gráfico. */
   descripcion: string;
   /** Uno por panel (o uno solo, con un gráfico o doble eje). */
   descripcionesPaneles: string[];
+  /** Con varias series, la guía común (tooltip y lector de teclado); con una, el lector usa los datos de la serie. */
+  guia?: Guia;
   especificacion: Record<string, unknown>;
 }
 
@@ -141,8 +163,8 @@ export function armarVista(v: EntradaVista): Vista {
   const bandas = bandasDe(periodos);
   const sombreado = bandas.length ? { bandas, franja: sh === "plan" } : undefined;
   const asignacion = bandas.length && sh ? { periodos, tipo: tipoDe(sh) } : undefined;
-  const textoSombra = textoSombreadoVista(sh, periodos, eventos, episodios);
-  const comun = { periodos, eventos, totalEventos, episodios, contextos, quiebres, comparacion: c, avisos: c.advertencias };
+  const textoSombra = textoSombreadoVista(sh, periodos, eventos, episodios, v.periodos?.tipos);
+  const comun = { periodos, eventos, totalEventos, episodios, contextos, quiebres, comparacion: c, avisos: c.advertencias, dominio };
 
   // ── Una sola serie: la entrada del explorador de la 4b, sin cambios. ──
   if (estado.series.length === 1) {
@@ -175,7 +197,7 @@ export function armarVista(v: EntradaVista): Vista {
   const descripcionesPaneles = d.paneles.map((p) => descripcionPanel(p, c, quiebres, estado));
   const descripcion = `${descripcionesPaneles.join(" ")}${textoSombra}`;
   const nombresGuia = d.tipo === "paneles" ? d.paneles.map((_, k) => `guia${k + 1}`) : ["guia"];
-  const guia = guiaComun(c, docs, estado, contextos, tema, nombresGuia, dom);
+  const guia = guiaComun(c, docs, estado, contextos, tema, nombresGuia, dom, asignacion);
 
   /** La entrada de `especificacion` de un panel (o de un eje): la primera línea con datos va como línea principal. */
   const entradaPanel = (panel: Panel, extra: Partial<EntradaGrafico>): EntradaGrafico | null => {
@@ -203,7 +225,7 @@ export function armarVista(v: EntradaVista): Vista {
     };
   };
   /** Sin ningún dato: el gráfico vacío de siempre. */
-  const vacio = () => ({ ...comun, descripcion, descripcionesPaneles, especificacion: especificacion({
+  const vacio = () => ({ ...comun, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: especificacion({
     resultado: c.series[0].resultados[c.series[0].entidades[0]], tramos: [], empalme: "derivar", quiebres: [], tema, esVariacion: false,
     log: false, alto: v.alto, ancho: v.ancho, descripcion,
   }) });
@@ -222,13 +244,13 @@ export function armarVista(v: EntradaVista): Vista {
     const sIzq = especificacion({ ...(eIzq ?? eDer!), descripcion });
     if (!eIzq || !eDer) {
       const pIzq = sIzq.padding as Record<string, number>;
-      return { ...comun, descripcion, descripcionesPaneles, especificacion: { ...sIzq, ...(v.impreso ? {} : { padding: { ...pIzq, right: 6 } }), datasets: guia.datasets } };
+      return { ...comun, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: { ...sIzq, ...(v.impreso ? {} : { padding: { ...pIzq, right: 6 } }), datasets: guia.datasets } };
     }
     const sDer = especificacion({ ...eDer, descripcion });
     const impreso = sIzq.title as { text: string; subtitle: string[] } | undefined;
     const pad = (s: Record<string, unknown>) => s.padding as { top: number; right: number; bottom: number; left: number };
     return {
-      ...comun, descripcion, descripcionesPaneles,
+      ...comun, descripcion, descripcionesPaneles, guia: guia.datos,
       especificacion: {
         ...sIzq,
         layer: [{ layer: sIzq.layer }, { layer: sDer.layer }],
@@ -236,7 +258,7 @@ export function armarVista(v: EntradaVista): Vista {
         // El aviso fijo va en el gráfico (también en la imagen exportada).
         title: impreso
           ? { ...impreso, subtitle: [...impreso.subtitle.slice(0, 1), AVISO_DOBLE_EJE, ...impreso.subtitle.slice(1)] }
-          : { text: AVISO_DOBLE_EJE_LINEAS, fontSize: 12, fontWeight: "normal", color: tema.secundario, anchor: "start", offset: 10 },
+          : { text: avisoEnRenglones(v.ancho), fontSize: 12, fontWeight: "normal", color: tema.secundario, anchor: "start", offset: 10 },
         // Con `fit-x`, Vega ya deja lugar para los nombres al final de las líneas: el margen de la 4b los contaría dos veces.
         padding: v.impreso ? pad(sIzq) : { ...pad(sIzq), right: 6 },
         datasets: guia.datasets,
@@ -265,7 +287,7 @@ export function armarVista(v: EntradaVista): Vista {
   const ultimaEsp = specs[specs.length - 1].s;
   const impreso = v.impreso ? especificacion({ ...entradaPanel(specs[0].p, { alto })!, descripcion, impreso: v.impreso }).title : undefined;
   return {
-    ...comun, descripcion, descripcionesPaneles,
+    ...comun, descripcion, descripcionesPaneles, guia: guia.datos,
     especificacion: {
       $schema: "https://vega.github.io/schema/vega-lite/v6.json",
       description: descripcion,
@@ -318,10 +340,11 @@ function descripcionPanel(p: Panel, c: Comparacion, quiebres: QuiebreNumerado[][
 }
 
 /** Las frases del sombreado, los episodios y los eventos para el texto alternativo (como en la 4b). */
-function textoSombreadoVista(sh: OpcionSombreado | "", periodos: Periodo[], eventos: MarcaEvento[], episodios: BandaEpisodio[]): string {
+function textoSombreadoVista(sh: OpcionSombreado | "", periodos: Periodo[], eventos: MarcaEvento[], episodios: BandaEpisodio[],
+  tipos?: Array<{ id: string; nombre: string }>): string {
   let t = "";
   if (periodos.length && sh) {
-    t += ` Sombreado por ${nombreSombreado(sh)}: ${periodos.length === 1 ? "un período" : `${periodos.length} períodos`}, de ${periodos[0].nombre} a ${periodos[periodos.length - 1].nombre}.`;
+    t += ` Sombreado por ${nombreSombreadoEnFrase(sh, tipos)}: ${periodos.length === 1 ? "un período" : `${periodos.length} períodos`}, de ${periodos[0].nombre} a ${periodos[periodos.length - 1].nombre}.`;
     t += " Cada dato se asigna al período vigente a mitad de su intervalo (los saldos en nivel, el último día).";
   }
   if (episodios.length) t += ` ${episodios.length === 1 ? "Un episodio marcado" : `${episodios.length} episodios marcados`}: ${episodios.map((x) => x.nombre).join("; ")}.`;
@@ -339,17 +362,36 @@ export interface FilaGuia {
   [campo: string]: string;
 }
 
+/** Con sombreado, el período de cada fecha de la guía (como el tooltip de una serie: `periodo` y `reparto`). */
+export interface AsignacionGuia {
+  periodos: Periodo[];
+  tipo: TipoPeriodo;
+}
+
+/** La guía común de una vista con varias series: las filas del tooltip y lo que necesita el lector de teclado. */
+export interface Guia {
+  filas: FilaGuia[];
+  campos: Array<{ campo: string; titulo: string }>;
+  /** La observación de la serie que marca las fechas, una por fila (para el lector). */
+  origen: Array<{ f: string; frec: string }>;
+  /** Con sombreado, dónde cae cada fecha de la guía. */
+  ubicaciones: Ubicacion[];
+  /** El contexto de ubicación de la serie que marca las fechas. */
+  contexto: ContextoUbicacion;
+}
+
 /**
  * Las fechas de la guía son las de la serie de frecuencia más alta (con empate, la de índice más bajo). En cada una, el
- * valor de cada serie es el de la observación cuyo intervalo contiene esa fecha (2.4), con su fecha si es otra.
+ * valor de cada serie es el de la observación cuyo intervalo contiene esa fecha (2.4), con su fecha si es otra. Con
+ * sombreado, cada fecha lleva además su período y el reparto, ubicados con la regla de la serie que marca las fechas.
  */
-export function filasGuia(c: Comparacion, docs: Documento[], estado: EstadoVista, contextos: ContextoUbicacion[]):
-  { filas: FilaGuia[]; campos: Array<{ campo: string; titulo: string }> } {
+export function filasGuia(c: Comparacion, docs: Documento[], estado: EstadoVista, contextos: ContextoUbicacion[], asignacion?: AsignacionGuia): Guia {
   const orden: Record<string, number> = { diaria: 0, mensual: 1, trimestral: 3, semestral: 6, anual: 12 };
   const conDato = c.series.filter((s) => s.frecuencia !== null);
-  if (!conDato.length) return { filas: [], campos: [] };
+  if (!conDato.length) return { filas: [], campos: [], origen: [], ubicaciones: [], contexto: contextos[0] ?? { agregacion: "promedio" } };
   const guia = conDato.reduce((a, s) => (orden[s.frecuencia!] < orden[a.frecuencia!] ? s : a));
   const r0 = guia.resultados[guia.entidades.find((id) => conDatos(guia.resultados[id])) ?? guia.entidades[0]];
+  const contexto = contextos[guia.indice];
   const lineas = c.series.flatMap((s) => s.entidades.map((id) => ({ s, id })));
   const campos = lineas.map(({ s, id }) => ({
     campo: `s${s.indice + 1}${id ? `_${id}` : ""}`,
@@ -362,9 +404,12 @@ export function filasGuia(c: Comparacion, docs: Documento[], estado: EstadoVista
   });
   // Las fechas de la guía y las observaciones de cada línea están en orden: se recorren juntas, en una sola pasada.
   const cursores = observaciones.map(() => 0);
+  const origen: Guia["origen"] = [];
+  const ubicaciones: Ubicacion[] = [];
   const filas = r0.datos.map(([f], k): FilaGuia => {
     const frec = r0.frecuencias[k];
-    const t = fechaDeDibujo(referenciaDe(f, frec, contextos[guia.indice]));
+    const ref = referenciaDe(f, frec, contexto);
+    const t = fechaDeDibujo(ref);
     const dia = t.slice(0, 10);
     const fila: FilaGuia = { t, fecha: fechaLegible(f, frec) };
     observaciones.forEach((obs, j) => {
@@ -373,22 +418,55 @@ export function filasGuia(c: Comparacion, docs: Documento[], estado: EstadoVista
       fila[campos[j].campo] = !o || o.val === null ? "—"
         : o.f === f && o.frec === frec ? numero(o.val, o.variacion) : `${fechaLegible(o.f, o.frec)} (${o.frec}): ${numero(o.val, o.variacion)}`;
     });
+    if (asignacion) {
+      const u = ubicar(ref, asignacion.periodos, asignacion.tipo);
+      fila.periodo = textoPeriodo(u);
+      fila.reparto = textoReparto(u) || "—";
+      ubicaciones.push(u);
+    }
+    origen.push({ f, frec });
     return fila;
   });
-  return { filas, campos };
+  return { filas, campos, origen, ubicaciones, contexto };
+}
+
+/**
+ * Lo que dice el lector de teclado en cada fecha de la guía común (SPEC 6.2): la fecha, el valor de cada serie y, como
+ * con una serie, el período con sus fechas y el reparto, el episodio y los eventos marcados dentro de la observación.
+ */
+export function lecturasGuia(g: Guia, d: { sh: OpcionSombreado | ""; episodios?: BandaEpisodio[]; eventos?: MarcaEvento[]; modo?: ModoEventos }):
+  Array<{ t: string; texto: string }> {
+  return g.filas.flatMap((fila, k) => {
+    const valores = g.campos.filter((x) => fila[x.campo] !== "—");
+    if (!valores.length) return [];
+    const u = g.ubicaciones[k];
+    return [{
+      t: fila.t,
+      texto: textoLectura({
+        fecha: g.origen[k].f, frecuencia: g.origen[k].frec, valor: valores.map((x) => `${x.titulo}, ${fila[x.campo]}`).join("; "),
+        contexto: g.contexto, ...(u && d.sh ? { columna: columnaPeriodo(d.sh), ubicacion: u } : {}),
+        episodios: d.episodios, eventos: d.eventos, modo: d.modo,
+      }),
+    }];
+  });
 }
 
 /**
  * Las capas de la guía común: en cada panel, puntos invisibles a lo alto con el tooltip de todas las series, y una regla
  * vertical en la fecha más cercana al cursor. La regla de cada panel sigue al cursor en cualquiera de los paneles.
  */
-function guiaComun(c: Comparacion, docs: Documento[], estado: EstadoVista, contextos: ContextoUbicacion[], tema: Tema, nombres: string[], dom?: { ini: number; fin: number }) {
-  const { filas, campos } = filasGuia(c, docs, estado, contextos);
-  // Sin eje propio: el de fechas lo dibujan las capas de la serie (y solo en el último panel).
+function guiaComun(c: Comparacion, docs: Documento[], estado: EstadoVista, contextos: ContextoUbicacion[], tema: Tema, nombres: string[],
+  dom?: { ini: number; fin: number }, asignacion?: AsignacionGuia) {
+  const datos = filasGuia(c, docs, estado, contextos, asignacion);
+  const { filas, campos } = datos;
+  // Sin eje propio: el de fechas lo dibujan las capas de la serie (y solo en el último panel). Un `axis: null`
+  // acá le ganaba al eje de las líneas al combinar las capas, y el gráfico quedaba sin fechas (encontrado en el PR B).
   const iso = (i: number) => `${Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}-01`;
-  const x = { field: "t", type: "temporal", scale: { type: "utc", ...(dom ? { domain: [iso(dom.ini), iso(dom.fin)] } : {}) }, title: null, axis: null };
+  const x = { field: "t", type: "temporal", scale: { type: "utc", ...(dom ? { domain: [iso(dom.ini), iso(dom.fin)] } : {}) }, title: null };
   const enCualquiera = { or: nombres.map((param) => ({ param, empty: false })) };
+  const periodo = asignacion ? [{ field: "periodo", title: "Período" }, { field: "reparto", title: "Reparto" }] : [];
   return {
+    datos,
     datasets: { guia: filas },
     capas: (alto: number, nombre: string): Record<string, unknown>[] => (filas.length ? [
       {
@@ -398,7 +476,7 @@ function guiaComun(c: Comparacion, docs: Documento[], estado: EstadoVista, conte
       {
         data: { name: "guia" }, mark: { type: "point", opacity: 0, size: 300 },
         params: [{ name: nombre, select: { type: "point", fields: ["t"], on: "pointermove", nearest: true, clear: "pointerout" } }],
-        encoding: { x, y: { value: alto / 2 }, tooltip: [{ field: "fecha", title: "Fecha" }, ...campos.map((k) => ({ field: k.campo, title: k.titulo }))] },
+        encoding: { x, y: { value: alto / 2 }, tooltip: [{ field: "fecha", title: "Fecha" }, ...campos.map((k) => ({ field: k.campo, title: k.titulo })), ...periodo] },
       },
     ] : []),
   };
