@@ -21,6 +21,7 @@
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",
     "@vaiven/cita": "0.1.0",
+    "@vaiven/grafico": "0.1.0",
     "@vaiven/transformaciones": "0.1.0",
     "zod": "4.6.7"
   },

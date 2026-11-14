@@ -1,0 +1,25 @@
+{
+  "name": "@vaiven/grafico",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Armado de las vistas de Vaivén (SPEC 4.1, 6.2 y 7.2): estado en la URL, períodos y eventos, formato y especificación de Vega-Lite. Lo comparten la web y el MCP; no depende del navegador ni de Vega.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "verificar": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vaiven/cita": "0.1.0",
+    "@vaiven/transformaciones": "0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "5.0.5",
+    "@types/node": "24.19.2"
+  }
+}
