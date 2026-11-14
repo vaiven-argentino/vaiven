@@ -1,6 +1,6 @@
-# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.8
+# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.9
 
-*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a · v1.2: 07/11/2026, segunda revisión de la 4a · v1.3: 12/11/2026, períodos y eventos de la 4b · v1.4: 12/11/2026, correcciones de la revisión externa de la 4b (datos y método) · v1.5: 12/11/2026, correcciones de la revisión externa de la 4b (interfaz) · v1.6: 13/11/2026, cierre de la 4b · v1.7: 13/11/2026, comparación de series (4c/4d) y gráfico interactivo en el MCP (4e) · v1.8: 14/11/2026, medición de la CPU de `especificacion_grafico` (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
+*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a · v1.2: 07/11/2026, segunda revisión de la 4a · v1.3: 12/11/2026, períodos y eventos de la 4b · v1.4: 12/11/2026, correcciones de la revisión externa de la 4b (datos y método) · v1.5: 12/11/2026, correcciones de la revisión externa de la 4b (interfaz) · v1.6: 13/11/2026, cierre de la 4b · v1.7: 13/11/2026, comparación de series (4c/4d) y gráfico interactivo en el MCP (4e) · v1.8: 14/11/2026, medición de la CPU de `especificacion_grafico` · v1.9: 14/11/2026, explorador con varias series (PR B de la 4c/4d) (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
 
 ---
 
@@ -372,6 +372,7 @@ vaiven/
 ├── export/             lo que consumen la web y el MCP
 ├── paquetes/transformaciones/   TypeScript (web + MCP)
 ├── paquetes/cita/      cita sugerida (web + MCP: las dos devuelven lo mismo)
+├── paquetes/grafico/   estado en la URL, períodos y eventos, formato y armado de la vista (`armarVista`; web + MCP)
 ├── web/                Astro; web/scripts/: copia del export, enlaces, revisión visual, punta a punta
 ├── mcp/                servidor MCP (TypeScript): remoto y stdio
 ├── worker/             punto de entrada del Worker: assets estáticos + /mcp
@@ -407,21 +408,27 @@ En la fase 4b, el explorador (`/explorador/`) mostraba una serie por vez. Desde 
   - **Parámetros de cada serie:** `s`, `v`, `t`, `m`, `d`, `pib`, `pa`, `f`, `mm`, `base`, `log` y `p` (países: el resaltado primero; solo en la serie internacional).
     - Sin número son los de la serie 1; con sufijo `2`, `3` y `4`, los de las demás (`s2`, `t2`, `p3`…). Una URL de la 4b, con una sola serie, sigue dando la misma vista.
   - **Parámetros comunes:** `desde`, `hasta`, `sh`, `ev` y `ejes`.
+    - `ejes` admite `paneles` y `doble` (el doble eje pedido en el celular). Sin `ejes`, la disposición es la automática de 4.1.
+    - Sin `desde`, el período es el de la vista inicial de la serie 1.
   - Lo que coincide con la vista inicial de cada serie no se escribe.
   - Un parámetro que la serie no admite se ignora con un aviso, y también un índice sin su `s` (por ejemplo, `t3` sin `s3`).
   - Si falta un índice intermedio (`s3` sin `s2`), las series se renumeran al canonizar la URL.
   - Las comas de las listas (`p`, `ev`) van sin codificar.
 - **Varias series:**
-  - En la sección «Serie» del panel, cada serie tiene su bloque, plegable, con serie, variante y transformación. Hay un botón «Agregar serie» (hasta 4) y, en cada bloque, «Quitar».
+  - En la sección «Serie» del panel, la lista «Serie que editás» tiene un bloque por serie, con su color, su número, su nombre, su transformación y «Quitar». Con una sola serie, la lista no se muestra.
+  - Los controles de la serie (serie, variante, países y transformación) editan la serie elegida en la lista, en todas las pantallas (6.5). El período, el sombreado y los eventos son comunes a todas.
+  - «Agregar serie» (hasta 4) abre un bloque vacío («Elegí una serie…»), que no se dibuja ni va a la URL hasta que se elige la serie. La serie agregada entra con su vista inicial (transformación, medida y frecuencia), salvo el período, el sombreado y los eventos.
+  - Al agregar y al quitar, el foco va al selector de la serie nueva o al bloque que ocupa ese lugar (o a «Agregar serie»), y un anuncio lo dice a los lectores de pantalla.
   - El orden de los bloques es el de los índices. Al quitar una serie, las siguientes suben.
   - No se puede agregar una segunda serie internacional: el selector la muestra deshabilitada, con la razón.
-  - Cada serie lleva un color de la paleta categórica, en orden fijo según su índice. El color sigue a la serie: no cambia al quitar otra (al quitar la serie 2, la serie 3 conserva su color hasta que se recarga la URL canónica).
+  - No se admite una serie repetida (misma serie, variante y transformación): la opción que la repetiría va deshabilitada, y un cambio que la repetiría no se aplica, con un aviso.
+  - Cada serie lleva un color de la paleta categórica, en orden fijo según su índice. El color sigue a la serie: no cambia al quitar otra (al quitar la serie 2, la serie 3 conserva su color hasta que se recarga la URL canónica). Una serie agregada toma el primer color libre.
   - El nombre de cada serie va al final de su línea, como en las series internacionales.
   - Los países de la serie internacional usan la paleta de 8 de su panel, sin mezclarse con los colores de las otras series.
 - **Disposición** (regla de 4.1):
   - **Doble eje:**
     - un botón «Ver en paneles» va junto al gráfico, a la vista, y no en el panel de controles;
-    - en paneles, el mismo lugar ofrece «Ver en doble eje».
+    - en paneles, el mismo lugar ofrece «Ver en doble eje», que en el celular escribe `ejes=doble` y en pantallas más anchas vuelve a la disposición automática.
   - **Paneles:**
     - apilados, con eje temporal común; el eje de fechas va solo en el último;
     - cada panel lleva arriba su unidad y los nombres de sus series;
@@ -436,15 +443,25 @@ En la fase 4b, el explorador (`/explorador/`) mostraba una serie por vez. Desde 
 - **Tooltip y lector de teclado:**
   - Una sola guía vertical recorre todos los paneles.
   - En cada fecha se ve el valor de cada serie: el de la observación cuyo intervalo contiene la fecha (2.4), con la fecha de esa observación si es otra («2001 (anual): 458.796»).
-  - Las flechas recorren las fechas de la serie de frecuencia más alta.
+  - Las flechas recorren las fechas de la serie de frecuencia más alta; con un empate, las de la serie de índice más bajo.
+  - Con sombreado, cada fecha lleva además el período vigente y el reparto, ubicados con la regla de la serie que marca las fechas (2.4).
 - **Exportación:**
-  - **PNG y SVG:** todos los paneles en una imagen, con el título, las fuentes, la variante y la transformación de cada serie, el sombreado y la versión de datos.
-  - **CSV:** formato largo (`fecha, serie, variante, transformacion, unidad, valor, periodo, periodo_proporcion, otros_periodos`), con una fila por observación y la fecha de cada serie en su frecuencia. En la serie internacional se suma la columna `pais`.
+  - **PNG y SVG:** todos los paneles en una imagen, con el título, las fuentes, la variante y la transformación de cada serie, el sombreado y la versión de datos. Con varias series, el título es «Comparación: …», el pie lleva una línea por serie y las líneas largas se parten en renglones.
+  - **CSV:** formato largo, también con una sola serie: `fecha, serie, variante, pais, transformacion, unidad, valor, periodo, periodo_proporcion, otros_periodos`, con una fila por observación y la fecha de cada serie en su frecuencia.
+    - `pais` va solo si la vista tiene una serie internacional.
+    - `serie` y `variante` son los identificadores; `transformacion` va en palabras («variación interanual, en términos reales (IPC oficial)»), o `nivel` sin transformación.
+    - Las tres columnas del período van siempre, vacías sin sombreado.
+    - El CSV de la ficha sigue en el formato de una serie (`fecha[, pais], valor[, periodo, …]`).
   - **XLSX:**
-    - una hoja en formato largo, igual al CSV;
-    - una hoja en formato ancho, a la frecuencia común (4.1), con una columna por serie (y por país);
-    - la hoja de metadatos, con una cita por serie y la regla de alineación.
-- **Tabla de la vista:** a la frecuencia común, con una columna por serie.
+    - «Datos (largo)», igual al CSV;
+    - «Datos (frecuencia común)», en formato ancho a la frecuencia común (4.1), con una columna por serie (y por país), una fila con la unidad de cada columna y, con sombreado, las columnas del período de cada fila;
+    - «Metadatos», con la regla de alineación, las notas de cada columna, los avisos de la comparación y un bloque por serie;
+    - «Cita», con una cita por serie, y «Períodos», con sombreado.
+  - **Nombres de archivo:** con una serie, los de la 4b; con varias, `vaiven_<s1>_y_<s2>[_y_…]_<desde>_<hasta>[_sombreado_x]`, con `<s>-<variante>` solo si la variante no es la de por defecto o si la serie se repite.
+- **Tabla de la vista:**
+  - Con una serie, la de la 4b.
+  - Con varias, a la frecuencia común, con una columna por serie (y por país) y una nota sobre la alineación.
+  - Con sombreado, las columnas del período de cada fila (su intervalo, ubicado con la regla de la serie 1) están ocultas por defecto y se muestran con un botón a la vista.
 - **Advertencias visibles:** si el rango cruza un quiebre, aparece un aviso junto al gráfico y una marca en el eje temporal.
 - **Riesgo país:** se carga en vivo desde ArgentinaDatos, con la fuente indicada y sin opción de descarga masiva.
 - **Series internacionales:** cuenta como una serie dentro del límite de 4, y hay una como máximo por vista, con hasta 8 países o agregados por gráfico (más líneas dejan de leerse). Selección inicial: Argentina, Brasil, Estados Unidos, América Latina y el Caribe y Mundo. En el explorador, cada país lleva su color (paleta de 8, probada para daltonismo) y su nombre al final de la línea, con el resaltado más grueso; en la ficha, el resaltado va en color y el resto en tono secundario. Además del gráfico de líneas, una vista de tabla por década (crecimiento promedio) para comparar sin ruido anual.
@@ -466,7 +483,7 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
 - **Diseño adaptable al celular:**
   - Los paneles se apilan a todo el ancho.
   - Por debajo de 600 px, dos unidades también van en paneles por defecto, porque los dos ejes le quitan al gráfico el ancho que el celular no tiene; el botón ofrece el doble eje.
-  - Los controles van en el panel desplegable. Dentro de él se edita una serie por vez, con un selector de la serie activa.
+  - Los controles van en el panel desplegable. Se edita una serie por vez, con el selector de la serie activa: la lista «Serie que editás» de 6.2, la misma en todas las pantallas.
   - Desde 1100 px, los controles pasan a un panel lateral fijo (6.2).
 - Sombreado: los grises A, B y de facto tienen, contra el fondo, el mismo contraste en los dos modos (1,12, 1,25 y 1,47:1 o más), y la franja de los planes y los carriles de planes y episodios de `/periodos/`, 1,47:1 o más; lo controla una prueba que lee los tokens de `global.css`.
 - **Texto alternativo:** cada panel tiene el suyo, con un resumen de sus series. La tabla de la vista es la alternativa accesible al conjunto.
@@ -564,8 +581,8 @@ MCP Apps es la extensión oficial del protocolo para que un servidor muestre una
   - una serie sin datos en el rango;
   - variación interanual alineada a anual;
   - límite de observaciones con una serie internacional.
-- **Contrato de `comparar_series` y `especificacion_grafico`:** esquemas de respuesta en `tests/contrato/`, con la misma regla de versión de 2.5.
-- **Una sola implementación:** una prueba compara, para las mismas vistas, la especificación de `especificacion_grafico` con la del explorador; tienen que ser iguales salvo el tamaño.
+- **Contrato de `comparar_series` y `especificacion_grafico`:** esquemas de respuesta en `tests/contrato/`, con la misma regla de versión de 2.5. El contrato se valida con las respuestas reales; el `outputSchema` declarado es más laxo en los campos grandes (los datos y la especificación), porque el SDK lo valida en cada pedido.
+- **Una sola implementación:** una prueba compara, para las mismas vistas, la especificación de `especificacion_grafico` con la del explorador; tienen que ser iguales salvo el tamaño. Se corre dos veces: sin navegador (Vitest) y con el explorador real en el navegador (`web/scripts/igualdad-explorador.mjs`, con el MCP local por stdio), con el gráfico al tamaño del MCP.
 - **URL:** las URL de una sola serie de la 4b dan la misma vista que antes (pruebas de regresión con las URL guardadas en la 4b).
 - **MCP Apps (4e):** prueba manual en Claude web y en Claude Desktop (`mcp/PRUEBA_MANUAL.md`), y prueba de que un cliente sin la extensión recibe el resultado completo en texto.
 
@@ -684,3 +701,10 @@ Para el `probador-mcp`, el repo suma un `.mcp.json` con el servidor local por st
 - **v1.8 (14/11/2026):** medición de la 4c/4d (`NOTAS_FASE4.md`, «4c/4d»):
   - `especificacion_grafico` con un límite de 1.000 observaciones, por la CPU (7.2 y 7.3);
   - su texto sin la especificación de Vega-Lite, que va solo en `structuredContent` (7.2 y 7.4).
+- **v1.9 (14/11/2026):** explorador con varias series (`NOTAS_FASE4.md`, «4c/4d · Explorador con varias series (PR B)»):
+  - `paquetes/grafico/` en la estructura del repositorio (5.4);
+  - `ejes=doble` y el período sin `desde` (6.2);
+  - la lista «Serie que editás», con la serie activa en todas las pantallas; la serie agregada arranca vacía; foco y anuncios; la serie repetida no se admite; el color de una serie agregada (6.2);
+  - el período y el reparto en el tooltip y el lector de varias series (6.2);
+  - las columnas del CSV largo, también con una serie; las hojas del XLSX; los nombres de archivo; la tabla de varias series con las columnas del período a pedido (6.2);
+  - el contrato validado con las respuestas reales y la prueba de igualdad en el navegador (10).
