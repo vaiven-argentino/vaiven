@@ -26,6 +26,14 @@ const COLUMNA: Record<OpcionSombreado, string> = {
 export function nombreSombreado(sh: OpcionSombreado, tipos?: Array<{ id: string; nombre: string }>): string {
   return sh === "catedra" ? (tipos?.find((t) => t.id === "catedra")?.nombre ?? NOMBRE.catedra) : NOMBRE[sh];
 }
+const EN_FRASE: Record<Exclude<OpcionSombreado, "catedra">, string> = {
+  gobierno: "gobiernos", mandato: "gobiernos, por mandato", ministro: "ministros de Economía", plan: "planes de estabilización",
+  regimen_cambiario: "regímenes cambiarios",
+};
+/** El nombre dentro de una frase («Sombreado por ministros de Economía»), como lo dice el explorador. */
+export function nombreSombreadoEnFrase(sh: OpcionSombreado, tipos?: Array<{ id: string; nombre: string }>): string {
+  return sh === "catedra" ? nombreSombreado(sh, tipos).toLowerCase() : EN_FRASE[sh];
+}
 export const columnaPeriodo = (sh: OpcionSombreado) => COLUMNA[sh];
 export const esSombreado = (x: string | null): x is OpcionSombreado => (OPCIONES_SOMBREADO as readonly string[]).includes(x ?? "");
 
