@@ -43,19 +43,8 @@ function explorador(url: string, ancho: number, alto: number) {
   return armarVista({ estado: r.estado, docs: r.docs, insumos: { series, ...(signos ? { signos } : {}) }, periodos: PERIODOS, eventos: EVENTOS, tema: TEMA_CLARO, ancho, alto });
 }
 
-const VISTAS: Array<[string, ArgsEspecificacion]> = [
-  ["una serie", { series: [{ id: "ipc", transformacion: "var_interanual" }], desde: "2000", hasta: "2010" }],
-  ["una serie, toda la historia", { series: [{ id: "reservas" }] }],
-  ["doble eje", { series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "1995", hasta: "2010" }],
-  ["doble eje pedido en paneles", { series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "1995", hasta: "2010", ejes: "paneles" }],
-  ["tres unidades con sombreado y eventos", {
-    series: [{ id: "ipc", transformacion: "var_mensual" }, { id: "tc-oficial", transformacion: "var_mensual" }, { id: "reservas" }, { id: "pib", transformacion: "var_interanual" }],
-    desde: "1988", hasta: "1991", sombreado: "gobierno", eventos: true,
-  }],
-  ["internacional con otra serie", { series: [{ id: "pib", transformacion: "var_interanual", frecuencia: "anual" }, { id: "int-pib", paises: ["ARG", "BRA", "USA"] }], desde: "2000", hasta: "2015" }],
-  ["frecuencias mixtas y una medida", { series: [{ id: "desocupacion" }, { id: "salario-real", variante: "ripte", medida: "real" }], desde: "1995", hasta: "2020", sombreado: "plan" }],
-  ["dos variantes de la misma serie, con un filtro de eventos", { series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "ipc", variante: "provincias", transformacion: "var_interanual" }], desde: "2007", hasta: "2015", eventos: ["cambiario", "episodio"] }],
-];
+// Las mismas vistas que compara en el navegador web/scripts/igualdad-explorador.mjs (con el explorador real).
+const VISTAS = JSON.parse(readFileSync(join(import.meta.dirname, "vistas-igualdad.json"), "utf-8")) as Array<[string, ArgsEspecificacion]>;
 
 describe("la especificación del MCP es la del explorador", () => {
   it.each(VISTAS)("%s", async (_, args) => {
