@@ -1345,3 +1345,83 @@ Con la URL de versión, siguiendo `mcp/PRUEBA_MANUAL.md`, sección «4. MCP Apps
 3. **Ancho:** los paneles tienen un ancho fijo de 800 px y `angosto` cambia la disposición. En un celular se puede escalar el SVG o pedirle otro ancho a la herramienta.
 4. **Formato en español y exportación:** separar `LOCALE_*`, `dibujarEn` y `exportarImagen` de `web/src/graficos/comun.ts` en un módulo sin dependencias de la web.
 5. **Variante local por stdio:** según el issue #671, la app puede no verse por stdio, y por stdio no hay `ui.domain`.
+
+### Prueba en Claude Desktop (14/11/2026, informe de Camilo)
+
+Claude Desktop en macOS, con la sonda 1 en la URL de versión. Claude web no se probó.
+
+| Qué | Resultado en Desktop |
+|---|---|
+| La app se muestra | Sí, en los dos pedidos. |
+| Script del dominio propio (`resourceDomains`) | **Cargó**. |
+| `unsafe-eval` | **Permitido**: Vega dibuja con el intérprete y sin él (el intérprete tarda unos 30 ms más). |
+| Tema | `hostContext.theme` pasa a `dark` al cambiar Claude, con `hostcontextchanged`; `prefers-color-scheme` dentro del iframe sigue «claro». |
+| Capacidades | `openLinks`, `downloadFile`, `serverTools`, `serverResources`, `logging`, `sandbox`, `updateModelContext` y `message`. Además: idioma `es-419`, contenedor de 734 px de ancho y modos `inline` y `fullscreen`. |
+| Caso grande (996 observaciones) | El resultado de 124.049 caracteres llega entero a la app. No se probó qué pasa por encima de los 130 a 150 KB, porque el límite de 1.000 observaciones no deja llegar ahí. |
+| Botones | Funcionan «Otro período» (`callServerTool`), las descargas (`downloadFile`, con confirmación) y «Abrir en el explorador» (`openLink`, que abre el panel del navegador de Claude). |
+| `resources/read` en la URL de versión | De 0,33 a 0,65 s de reloj, sin errores. |
+
+### Revisión del informe (contrastada con el código)
+
+1. **A2 (los eventos no se ven):** el explorador no tiene ese problema: debajo del gráfico muestra «Episodios y eventos» (`#x-lista-eventos`), y la descripción de la vista lo anuncia. Que las marcas vayan sin letra sale de la regla compartida `modoEventosDe` (letras o rayitas según el ancho), que vale igual en el explorador. `structuredContent.eventos` ya trae letra, fecha y nombre: alcanza con que la interfaz dibuje la lista. La sonda 2 lo comprueba.
+2. **M1 (advertencias numeradas):** el explorador las lista en `#x-avisos`, pero la herramienta no manda la numeración (`vista.quiebres`). Para la leyenda ①②③ hay que sumar un campo al contrato (Paso 1).
+3. **M2, M4, M5 y M6** salen del armado compartido (`armarVista`): la igualdad con el explorador (8 de 8) dice que el explorador muestra lo mismo. No son de la 4e y van a los pendientes generales. M5 ya estaba anotado («4c/4d · Cierre», pendiente 3).
+4. **«SVG distintos»:** la hipótesis del informe es correcta. Vega numera los `id` internos con un contador por página. En el host de prueba local, con `unsafe-eval` permitido como en Desktop, los dos SVG dan **iguales** después de renumerar los `id`, tanto en el pedido 1 como en el 2.
+5. **«Sin error 1102»:** los tiempos son de reloj, y las URL de versión no tienen registros de CPU. Unos pocos pedidos sin error no prueban que `resources/read` entre en los 10 ms: la referencia sigue siendo la medición en Node (9,8 ms de mediana). Lo resuelve el HTML mínimo con el script desde el dominio propio, que en Desktop anda.
+6. **M8:** la SPEC vigente es la v1.9; la 7.4 no cambió desde la v1.7.
+7. **«El conector principal no respondió»:** producción respondía a esa hora (`/salud` 0.2.0, verificado desde la sesión), así que fue una falla del conector en Desktop, o puntual.
+8. **A1, el texto propuesto:** el servidor no tiene estado y no sabe si el cliente muestra la interfaz, así que el texto tiene que ser condicional. La señal segura es `updateModelContext`, que la app manda después de dibujar.
+
+### Hallazgos clasificados
+
+- **Para la interfaz definitiva (Paso 1):**
+  - A2: la lista de eventos;
+  - A3: la imagen con título, cita y versión de datos, y nombres de archivo con las series y las fechas;
+  - M1: la leyenda de advertencias, con un campo nuevo en el contrato;
+  - M3: el formato en español (reusar `LOCALE_NUMEROS` y `LOCALE_FECHAS`);
+  - M7: el tema oscuro de Vega con `hostContext.theme`, y `prefers-color-scheme` solo como respaldo;
+  - M8: el HTML mínimo, si Claude web acepta el dominio;
+  - B1: un texto legible para el modelo;
+  - B2: mantener `ast: true` hasta saber qué hace Claude web.
+- **Del armado compartido con el explorador** (pendientes generales, fuera de la 4e):
+  - M2: la legibilidad del doble eje: el título largo del eje y los rótulos que se pisan;
+  - M4: una variante que tapa a la otra donde coinciden;
+  - M5: escalas muy distintas en un mismo panel (decisión de Camilo);
+  - M6: los rótulos de gobiernos cortos y los interinos.
+- **De la sonda:** S1 a S4, hechos en la sonda 2.
+
+### Qué se hizo (sonda 2)
+
+- **A1:**
+  - la sonda manda `updateModelContext` después de dibujar («el gráfico ya se mostró… no lo vuelvas a dibujar…»);
+  - el campo `especificacion` del texto pasa a ser condicional («Si tu cliente muestra la interfaz de Vaivén… no lo vuelvas a dibujar… Si no la muestra, compartí `url_explorador`»);
+  - la descripción de `especificacion_grafico` suma que en los clientes con MCP Apps el gráfico aparece solo.
+- **S1:** el registro va plegado, con una línea corta por evento.
+- **S2, «Ver desde …»:**
+  - el botón dice el período al que va;
+  - si la herramienta falla, no avanza y muestra el mensaje;
+  - sus filas van aparte de las de la llamada del modelo;
+  - un `isError` ya no se informa como «¿el host lo mandó a un archivo?».
+- **S3:** los SVG se comparan sin los `id` internos; si difieren, se informa la primera diferencia.
+- **S4:** «Copiar resultados» copia un JSON con la tabla y el registro. El recurso pide `permissions.clipboardWrite`; sin permiso, el JSON queda seleccionado en un cuadro de texto para copiarlo a mano.
+- **Lista de eventos** debajo del gráfico, desde `structuredContent.eventos`.
+- **`/salud`:** «4e (sonda 2)».
+- **`PRUEBA_MANUAL.md`, sección 4:**
+  - Claude web primero;
+  - el conector principal apagado y la conversación fuera de los proyectos;
+  - el modo oscuro con la sonda a la vista;
+  - el error esperado en el pedido 2;
+  - las filas nuevas: A1 y la lista de eventos;
+  - «Copiar resultados».
+
+**Host de prueba local, sonda 2** (390 y 1280 px, claro y oscuro, pedidos 1 y 2):
+- el aviso al modelo se envía, también después de «Ver desde 1990»;
+- la lista muestra los 17 eventos;
+- en el pedido 2, «Ver desde 1990» muestra el error del límite (1.476 observaciones) y el gráfico no cambia;
+- sin permiso de portapapeles, el JSON queda para copiar a mano.
+
+### Pendiente
+
+1. **Prueba en Claude web**, con la sonda 2. Decide la regla del Paso 0: el dominio propio y el intérprete.
+2. **En Desktop:** comprobar que, con el aviso y el texto nuevo, Claude no rearma el gráfico (fila i del manual).
+3. **La consola de desarrollo** en los dos clientes: los avisos de CSP.

@@ -59,28 +59,37 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 - Si Claude no encuentra el conector, si da error al conectar o si alguna respuesta tarda más de unos segundos.
 
 ## 4. MCP Apps (4e): la sonda en Claude web y en Claude Desktop
-*14/11/2026 · Paso 0 de la 4e (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). La sonda no es el gráfico definitivo: muestra qué permite cada cliente.*
+*14/11/2026 · Paso 0 de la 4e (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). La sonda no es el gráfico definitivo: muestra qué permite cada cliente. Versión 2, tras la primera prueba en Claude Desktop.*
 
-**Conector de prueba:** en Claude web, **Personalizar → Conectores → + Agregar → Agregar conector personalizado**. Nombre: `Vaivén prueba`. URL: `https://prueba-4e-vaiven.argentino.workers.dev/mcp`. Sin inicio de sesión. En Claude Desktop aparece solo. Antes de probar en Desktop, **cerrá la app del todo** (no alcanza con cerrar la ventana), porque guarda los recursos en caché. La URL de versión deja de responder si el despliegue diario de producción apaga las URL de versión: probá el mismo día en que se sube.
+**Orden de la prueba:** primero **Claude web**, que todavía no se probó. Después **Claude Desktop**, solo para verificar que Claude ya no rearma el gráfico (fila i).
 
-**En cada cliente**, en una conversación nueva con solo `Vaivén prueba` activado:
-1. Pedí: «Haceme un gráfico de la inflación interanual y las reservas internacionales entre 2000 y 2010».
-2. Pedí: «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos». Es el caso de unas 1.000 observaciones y unos 110 KB, cerca del umbral de 130 a 150 KB de Claude.
-3. Repetí el pedido 1 con Claude en modo oscuro.
+**Preparación**
+- **Conector de prueba:** en Claude web, **Personalizar → Conectores → + Agregar → Agregar conector personalizado**. Nombre: `Vaivén prueba`. URL: `https://prueba-4e-vaiven.argentino.workers.dev/mcp`. Sin inicio de sesión. En Claude Desktop aparece solo.
+- Comprobá que `https://prueba-4e-vaiven.argentino.workers.dev/salud` diga «4e (sonda 2)». Si da `error code: 1042`, el despliegue diario apagó las URL de versión: volvé a encenderlas en Cloudflare (**Workers & Pages → vaiven → Domains → Preview**).
+- **Apagá el conector `Vaivén`** (producción) y dejá activado solo `Vaivén prueba`.
+- Trabajá en una **conversación nueva fuera de los proyectos**, sin archivos ni memoria del proyecto, para ver cómo usa la herramienta un Claude sin contexto.
+- En Desktop, **cerrá la app del todo** (Cmd+Q) antes de probar, porque guarda los recursos en caché.
 
-**Qué anotar** (la sonda lo muestra en una tabla, en verde o en naranja):
+**Pedidos**
+1. «Haceme un gráfico de la inflación interanual y las reservas internacionales entre 2000 y 2010».
+2. «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos». Es el caso de 996 observaciones y unos 124.000 caracteres, el más grande que admite la herramienta.
+3. **Modo oscuro:** con la sonda del pedido 1 a la vista, pasá Claude a modo oscuro y mirá si cambia la fila «Tema del host». No repitas el pedido: Claude puede no volver a llamar a la herramienta.
 
-| # | Fila de la sonda | Qué se quiere saber |
+**Qué anotar:** la sonda lo muestra en una tabla, en verde o en naranja. Al terminar cada pedido, tocá **«Copiar resultados»** y pegá el JSON en tus notas. Si el cliente no da permiso de portapapeles, el JSON aparece abajo, seleccionado: copialo con Cmd+C.
+
+| # | Fila de la sonda o qué mirar | Qué se quiere saber |
 |---|---|---|
-| a | (que aparezca) «Hola: la sonda de Vaivén se cargó» | Si Claude muestra la app. Si no aparece nada, anotá si la llamada a `especificacion_grafico` dio error. |
-| b | Script externo (`…/mcp-app/sonda.js`) | **Cargó** o **no cargó**: si Claude acepta el dominio de Vaivén en la CSP. |
+| a | (que aparezca) «Hola: la sonda de Vaivén se cargó (sonda 2)» | Si Claude muestra la app. Si no aparece nada, anotá si la llamada a `especificacion_grafico` dio error. |
+| b | Script externo (`…/mcp-app/sonda.js`) | **Cargó** o **no cargó**: si Claude acepta el dominio de Vaivén en la CSP. Es lo más importante de Claude web. |
 | c | `unsafe-eval` | **Permitido** o **bloqueado**. |
-| d | Vega con intérprete / sin intérprete / SVG con y sin intérprete | Cuál de los dos gráficos se dibujó y si los SVG son iguales. |
-| e | Tema del host | `light` o `dark`, y si cambia al pasar Claude a modo oscuro. |
-| f | Capacidades del host, `downloadFile`, `openLinks`, `serverTools` | Qué ofrece el cliente. |
-| g | Resultado recibido y `structuredContent` (pedido 2) | Si la app recibe la especificación o si Claude mandó el resultado a un archivo. |
-| h | Botones «Otro período», «Descargar SVG», «Descargar PNG» y «Abrir en el explorador» | Si cada uno funciona (la fila correspondiente se pone en verde; la descarga y el enlace piden confirmación). |
+| d | Vega con intérprete / sin intérprete / «SVG con y sin intérprete (sin los id internos)» | Cuál de los dos gráficos se dibujó y si dan el mismo SVG (en el host de prueba local, «iguales»). |
+| e | Tema del host | `light` o `dark`, y si cambia en el pedido 3. |
+| f | Capacidades del host, `downloadFile`, `openLinks`, `serverTools` y `updateModelContext` | Qué ofrece el cliente. |
+| g | Resultado recibido y `structuredContent` (pedido 2) | Si la app recibe la especificación entera. |
+| h | Botones | **«Ver desde …»** corre el inicio diez años para atrás y lo dice en el botón. En el pedido 1 se tiene que dibujar el período nuevo («Otro período: resultado», en verde). En el pedido 2 se espera **un error por el límite de 1.000 observaciones**: la app lo muestra en «Otro período: structuredContent» y el gráfico no cambia. **«Descargar SVG»**, **«Descargar PNG»** y **«Abrir en el explorador»** piden confirmación. |
+| i | «Aviso al modelo (updateModelContext)» y **la respuesta de Claude** | Si el aviso dice «enviado» y si Claude, además de la app, **dibujó su propio gráfico o volvió a pedir los datos** con `comparar_series` u `obtener_serie`. Si lo hizo, la respuesta está **mal** (hallazgo A1). |
+| j | Lista «Eventos» debajo del gráfico (pedido 2) | Si se ve la lista con letra, fecha y nombre (17 eventos). |
 
-Si podés, abrí la consola de desarrollo (en Desktop: **Help → Troubleshooting → Enable Developer Mode**) y copiá los errores de CSP. Una captura de la tabla en cada cliente alcanza.
+Si podés, abrí la consola de desarrollo (en Desktop: **Help → Troubleshooting → Enable Developer Mode**; en el navegador, las herramientas de desarrollo) y copiá los errores o avisos de CSP, aunque todo haya cargado.
 
-**Si la app no aparece:** comprobá que el conector responde (`https://prueba-4e-vaiven.argentino.workers.dev/salud` tiene que decir «4e (sonda)»). Un error 1102 en el recurso sería la CPU del plan gratuito, no la CSP.
+**Si la app no aparece:** comprobá que `/salud` responde bien. Un error 1102 en el recurso sería la CPU del plan gratuito, no la CSP.
