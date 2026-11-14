@@ -63,6 +63,15 @@ export class Repositorio {
     return this.leer<Catalogo>("catalogo.json");
   }
 
+  /**
+   * El día del último cambio de signo monetario (1992-01-01, el peso), de export/auxiliares/signos-monetarios.json, que
+   * sale de metadatos/signos_monetarios.yaml (SPEC 2.5): desde ese día, pesos actuales y moneda de la época coinciden.
+   */
+  async ultimoCambioDeSigno(): Promise<string> {
+    const { signos } = await this.leer<SignosMonetarios>("auxiliares/signos-monetarios.json");
+    return signos.map((s) => s.desde).sort().at(-1)!;
+  }
+
   /** Los registros de períodos y eventos (desde la fase 4b). Sin ellos en el export, un error que entiende el modelo. */
   async periodos(): Promise<DocumentoPeriodos> {
     // La 1.1 suma episodios, fases y confianza; la 1.0 se sigue leyendo (por ejemplo, con un export local viejo).

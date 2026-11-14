@@ -17,3 +17,9 @@ export {
   textoOtros, textoPeriodo, textoReparto, ubicar, ubicarFechas,
   type ContextoUbicacion, type Referencia, type TramoReparto, type Ubicacion,
 } from "./ubicacion";
+export {
+  ErrorComparacion, LIMITE_OBSERVACIONES, LIMITE_PAISES, LIMITE_SERIES, alinear, cerosAlineados, comparar, disposicion,
+  frecuenciaComun,
+  type AdvertenciaCombinacion, type Alineada, type Columna, type Comparacion, type Disposicion, type Ejes,
+  type FrecuenciaComun, type Panel, type PedidoComparacion, type PedidoSerie, type SerieComparada,
+} from "./alinear";

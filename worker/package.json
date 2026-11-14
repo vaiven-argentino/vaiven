@@ -2,7 +2,7 @@
   "name": "vaiven-worker",
   "version": "0.0.0",
   "vaiven": {
-    "fase": "4b"
+    "fase": "4c/4d"
   },
   "private": true,
   "description": "Punto de entrada del Worker de Vaivén: assets estáticos, /salud, /mcp y el Cron del disparo diario.",
@@ -19,6 +19,6 @@
     "wrangler": "4.152.0"
   },
   "dependencies": {
-    "@vaiven/mcp": "0.1.0"
+    "@vaiven/mcp": "0.2.0"
   }
 }

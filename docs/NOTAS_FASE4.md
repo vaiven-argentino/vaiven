@@ -887,3 +887,178 @@ La SPEC pasa a la v1.6:
   - los huecos entre ministros de 1971 y 1981;
   - la p. 25 de Cagan;
   - la opción `detalle: false` del MCP.
+
+
+## 4c/4d · Comparación de series (PR 0 y PR A)
+
+*14/11/2026 · Las subfases 4c y 4d van juntas (SPEC v1.7). El PR 0 (vaiven-argentino/vaiven#28) integra la SPEC, pasa los subagentes a Sonnet y suma el `probador-mcp` y el MCP local por stdio. El PR A suma `alinear.ts`, el armado compartido de la vista y las dos herramientas del MCP. El explorador con varias series va en el PR B.*
+
+### Decisiones tomadas con Camilo (13 y 14/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Número de la SPEC | v1.7 para los cambios aprobados (la v1.6 ya era la del cierre de la 4b); v1.8 para lo que resultó de medir la CPU. El archivo de cambios entró en un commit y se borró en el siguiente. |
+| Pendientes de la «4c» vieja | Eventos y episodios candidatos, extremos de regímenes sin norma, huecos entre ministros, la p. 25 de Cagan y `detalle: false` quedan fuera de esta fase. |
+| Dónde vive el armado de la vista | Un paquete nuevo, `paquetes/grafico` (`@vaiven/grafico`), con el estado en la URL, períodos y eventos, formato, la especificación y `armarVista`. No depende del navegador ni de Vega. |
+| Doble eje pedido en el celular | Un valor más de la URL: `ejes=doble` (además de `ejes=paneles`). Sin `ejes`, la disposición automática. |
+| Transformación sin equivalente a la frecuencia común | La columna queda en null, con un aviso (`c.sin-equivalente`) que sugiere `alinear: "ninguna"`. Igual en la web y en el MCP. |
+| EPH mixta (semestral hasta 2003, trimestral después) | La frecuencia común depende de los datos dentro del rango: 2004–2010 con el PIB da trimestral; 1995–2005, anual. |
+| Límite de `especificacion_grafico` | 1.000 observaciones (las demás herramientas, 10.000), aceptando excesos esporádicos sobre los 10 ms; se mide en producción y se baja si aparecen errores 1102. |
+| Texto de `especificacion_grafico` | Todo menos la especificación de Vega-Lite, que va solo en `structuredContent`. |
+
+Respuestas por defecto del plan (preguntas sin contestar en contra): tamaño del gráfico del MCP 800 × 400 px; tema claro fijo en el MCP (el oscuro, con la 4e); colores de la internacional junto con otras series: la paleta de 8 en su panel, aunque repita los de las series de otros paneles; sin `desde`, el MCP muestra toda la historia (`desde=todo`) y el explorador, la vista inicial de la serie 1; cada serie agregada arranca con su vista inicial; con dos series mensuales, el lector sigue a la de índice más bajo.
+
+### Qué se hizo
+
+- **SPEC v1.7 y v1.8** (`docs/SPEC_v1.md`).
+- **Subagentes** (PR 0): `explorador` y `tester` pasan a Sonnet; `probador-mcp` es nuevo, con `tools: mcp__vaiven-local__*`. `.mcp.json` declara `vaiven-local`, que arranca `mcp/scripts/stdio-local.mjs` (empaqueta con la API de esbuild y deja stdout limpio: `npm run local` escribía su encabezado en stdout). El entorno de la nube «Vaivén» corre `npm ci` al armarse.
+- **Regresión de la 4b**, guardada antes de tocar el parser: 672 URL (26 fijas, los 558 accesos de `/periodos/` y los 92 enlaces de las fichas). `web/test/regresion-4b.test.ts` compara serie, estado, avisos, URL canónica y opciones (también con el parser de varias series), y `web/scripts/regresion-urls.mjs` compara en el navegador el SVG, la tabla, los avisos y la URL final en 1280 y 390 px.
+- **`paquetes/grafico`**: los módulos puros de la web se mudaron sin cambios; la web los reexporta. La regresión en el navegador dio sin diferencias (322 vistas).
+- **`alinear.ts`** (`paquetes/transformaciones`): `comparar`, `alinear`, `frecuenciaComun`, `disposicion` y `cerosAlineados`, con las 23 pruebas de la sección 10.
+- **URL indexada**: `seriesDeUrl`, `vistaDesdeUrl` y `urlDesdeVista`, encima de las funciones de la 4b. La URL de la serie 1 se escribe como en la 4b; después van las series 2 a 4 con sufijo y al final `ejes`.
+- **`armarVista`** (`paquetes/grafico/src/vista.ts`): con una serie, la entrada del explorador de la 4b (probado contra ese camino en 239 URL y dos tamaños); con varias, un gráfico, doble eje (escalas independientes, eje derecho, ceros alineados, aviso fijo) o paneles (`vconcat`, eje de fechas en el último, sombreado en todos, planes arriba, episodios y letras abajo), con la guía común y el texto alternativo por panel.
+- **MCP:** `comparar_series` y `especificacion_grafico`, con `outputSchema` y `structuredContent`; contrato en `tests/contrato/` (publicado en `/esquemas/`); prueba de igualdad con el explorador en 8 vistas; `obtener.ts` separado en piezas que usan las tres herramientas.
+
+### CPU de `especificacion_grafico` (SPEC 7.3)
+
+Medida con `mcp/scripts/medir-cpu.mjs`: el código del Worker, empaquetado con esbuild, y `process.cpuUsage()` alrededor de `manejarMcp` (Node 22.23.4, en este entorno). En la fase 3, producción dio de 2 a 4 veces lo de Node.
+
+| Pedido | Respuesta | En caliente (mediana · p90) | Proceso nuevo (mediana) |
+|---|---|---|---|
+| Peor caso de la SPEC (4 mensuales 1970–hoy, gobiernos y eventos), antes de optimizar | 1.550 KB | 164 · 251 ms | 340 ms |
+| El mismo, después de optimizar | 554 KB | 34 · 52 ms | 165 ms |
+| Peor caso dentro del límite (4 mensuales 2000–2020-09, 996 obs., gobiernos y eventos) | 109 KB | 16,5 · 24,9 ms | 112 ms |
+| 2 series (doble eje), 1995–2010 | 44 KB | 7,1 · 12,0 ms | 99 ms |
+| Fuera del límite (el error) | 1 KB | 4,8 · 7,4 ms | 75 ms |
+| `comparar_series`, 4 mensuales 1970–hoy | 86 KB | 7,6 · 11,0 ms | 92 ms |
+| `obtener_serie`, IPC completo (referencia) | 18 KB | 1,3 · 2,3 ms | 59 ms |
+
+Lo que se optimizó (sin cambiar la vista de una serie):
+- `puntosDe` recuerda los puntos de cada serie (por su arreglo `datos`): `disponibles()` y `transformar()` los rearmaban muchas veces por vista. Dos series de dos años pasaron de 10,9 a 2,0 ms, y `obtener_serie` también bajó.
+- Con varias series, las líneas van con filas compactas (fecha corta, 6 cifras, sin el período punto por punto) y una capa por línea; la guía común se arma en una pasada.
+- El texto de la respuesta no repite la especificación.
+
+El primer pedido de un proceso sigue rondando los 100 ms (`obtener_serie`, unos 60 ms): `precalentar()` suma una vista de dos series, pero lo que queda es el arranque del SDK. En producción se mide después del despliegue.
+
+### Contrastes del revisor de datos (14/11/2026, con un script propio y sin leer `alinear.ts`)
+
+Los cuatro casos coinciden, sin una sola diferencia (6 cifras significativas):
+- IPC mensual con PIB trimestral, 2004–2008: trimestral; 20 de 20 filas en cada serie.
+- Desocupación con PIB, 1995–2008: anual; 14 de 14. 2003 en null (mezcla la onda de mayo con dos trimestres), con la nota.
+- IPC interanual alineado a anual con exportaciones, 2003–2012: 10 de 10, con la variación del promedio anual (2003 usa 2002 como base, fuera del rango).
+- Desocupación con PIB interanual, 2004–2010: trimestral, 28 de 28, sin avisos de la combinación.
+
+### Diferencias con la SPEC (para la próxima versión)
+
+- 5.4: falta `paquetes/grafico/` en la estructura del repositorio.
+- 6.2: `ejes` admite también `doble` (el doble eje elegido en el celular).
+- 10: el contrato de las dos herramientas se valida con las respuestas reales; el `outputSchema` declarado es más laxo en los campos grandes (los datos y la especificación), porque el SDK lo valida en cada pedido.
+
+### Pendientes
+
+- **Del revisor de datos** (ninguno cambió un resultado): el promedio de las dos ondas de la EPH puntual es una convención y la nota podría decirlo; un año base fuera del rango se usa sin aviso; falta un caso de prueba con un año de una sola onda.
+- **PR B:** el explorador con varias series, la tabla a la frecuencia común, las exportaciones y la revisión visual.
+- **`probador-mcp`:** se corrió tres veces, en sesiones nuevas sobre la rama; los resultados están en «Ajustes tras la prueba del MCP».
+- **Prueba manual:** las preguntas 19 a 24 de `mcp/PRUEBA_MANUAL.md`, junto con la prueba ciega de la 4b, que sigue a cargo de Camilo.
+- **Producción:** medir la CPU de `especificacion_grafico` después del despliegue y bajar el límite si aparecen errores 1102.
+
+
+## 4c/4d · Ajustes tras la prueba del MCP (incluye los ajustes de la 4b)
+
+*14/11/2026 · El probador-mcp corrió 14 preguntas sobre el MCP local de la rama del PR A (en una sesión aparte, session_018y7WtXMKjSKV4DuXsx9RZB). Por decisión de Camilo, los ajustes de la 4b que estaban previstos para un PR desde `main` van en esta rama, en commits separados, con un solo PR y un solo despliegue (servidor 0.2.0).*
+
+### Decisiones tomadas con Camilo (14/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Alcance | Todo junto en la rama del PR A: ajustes de la 4b (A) y lo que encontró el probador (B). |
+| A1, sustantivo de la unidad nominal | Sale del nombre de la serie sin «real» («Salario real» → «salario»); si no termina en «real», «(nominal)». |
+| B6, variante por defecto | Una nota general en toda serie con varias variantes publicadas, sin casos escritos a mano ni metadatos nuevos. El enlace al explorador no cambia: sin `v` abre la variante por defecto. |
+| B7, tipo de cambio oficial | Una nota en las variantes de `metadatos/series/tc-oficial.yaml`. |
+
+### Probador, antes de los ajustes (14 preguntas)
+
+| # | Primera herramienta | Resultado | ¿Confusión? |
+|---|---|---|---|
+| 1 | obtener_serie | bien | no |
+| 2 | comparar_series | bien, con reparos | sí (qué variante del dólar) |
+| 3 | comparar_series | a medias | sí (2003 en null, sin aviso en la descripción) |
+| 4, 5, 6, 7, 10, 12, 14 | las esperadas | bien | no |
+| 8 | especificacion_grafico | a medias | sí (resultado fiscal: el primario sin aviso) |
+| 9 | comparar_series | mal y después bien | sí (salario nominal; dos bases distintas en la misma respuesta) |
+| 11 | obtener_serie | mal, resuelto a mano | sí (la agregación anual de las reservas es fin de año) |
+| 13 | especificacion_grafico | mal y después bien | sí (límite de 1.000 sin mencionar; agregaciones mezcladas sin aviso) |
+
+### Qué se hizo
+
+- **A1** (`respuestaSerie`): si la ficha arranca con una medida y el pedido no trae ninguna, la primera nota dice en qué está la respuesta y cómo pedir lo de la ficha; con `medida: real` en la ficha, la unidad dice «nominal» (también en las columnas de `comparar_series`).
+- **A2:** la nota de pesos actuales, solo si algún dato es anterior al último cambio de signo (de `signos-monetarios.json`), y la sugerencia de la medida real, solo si la variante la admite.
+- **A3:** pregunta 12 del manual.
+- **A4:** relevancia del buscador (aprobado por Camilo). Un término coincide de verdad en lo principal (id, código, nombre, bloque) o con su forma literal en la definición; si alguna serie coincide de verdad con todos, quedan solo esas. Solo cambia «inflación» (de 7 series a solo el IPC: las otras entraban por el sinónimo «precios» en «a precios constantes»); «dólar», «salario», «PRE-01», «Brasil», «mercado de trabajo», «resultado fiscal», «precios» y «reservas del BCRA» dan lo mismo que antes.
+- **B1, B2, B3 y B5:** descripciones (límite del gráfico, agregación fija con ejemplos comprobados en el export, null de los períodos incompletos, `base_real` que cambia con cada actualización).
+- **B2 y B4** (`alinear.ts`): aviso `c.agregaciones-distintas`; la serie con medida real queda a la frecuencia común con la misma base que en su frecuencia (`Resultado.baseReal`). Contrato 1.1 de las dos herramientas (versión menor; las 1.0 siguen publicadas).
+- **B6:** nota de la variante por defecto en las respuestas con datos.
+- **B7:** notas de las variantes del tipo de cambio oficial; `describir_serie` y la ficha muestran la nota también en las variantes publicadas.
+- **Versión:** MCP 0.2.0 y fase «4c/4d» en `/salud`, desde el próximo despliegue.
+
+### B8 · Decimales largos de la desocupación (sin cambios en los datos)
+
+El probador marcó como sospechosos 2020-10 (10,95793221) y 2022-10 (6,281803916). Son 32 de las 149 observaciones de `desocupacion.total-urbano` (casi todos los trimestres de 2003 a 2009, más 2020-10, 2021-04, 2022-10, 2023-01, 2023-07, 2024-04 y 2025-04) y vienen así de la fuente: datos.gob.ar `42.3_EPH_PUNTUATAL_0_M_30` devuelve, por ejemplo, 0.109579322139272 para 2020-10. Vaivén solo los multiplica por 100. Redondeados, coinciden con lo que publicó el INDEC (contraste de la otra sesión, de memoria: queda por cotejar con los informes).
+
+### Hallazgo al regenerar el export (para revisar)
+
+Para B7 se probó regenerar el export sin red (`uv run python -m pipeline actualizar --sin-red`), como pide CLAUDE.md antes de mergear un PR que toque el export. La corrida publicaba el IPC (las dos variantes) y el TCR bilateral hasta 2026-10 y les borraba la marca de desactualizada, cuando la corrida diaria del 13/11 los había **retenido**: «f.indec.ipc-gba-base-2016 · historia: La fuente perdió 72 fechas que ya tenía (de 2020-09 a 2026-08)». Se descartó esa regeneración: el PR A no toca `export/` ni `datos/`, y el catálogo con las notas de B7 lo genera la corrida diaria cuando el cambio llegue a `main`. Hay que entender por qué la corrida local sin red no reproduce la retención antes de volver a usar ese procedimiento.
+
+### Probador, después de los ajustes
+
+**Segunda corrida** (14 preguntas, las mismas de la primera; sesión session_018y7WtT1fBCjSfGk1mX9FSb). Hubo 10 bien, 4 de ellas con dudas leves, 2 a medias (6 y 9) y 2 mal en el primer intento (11 y 13). En la primera corrida habían sido 8, 2 y 4.
+- La 11 y la 13 fallaron por la misma causa que en la primera corrida: la agregación de fin de año de las reservas y el límite de 1.000 observaciones. Esa información estaba en las descripciones, pero lejos de donde el modelo la buscaba. Se movió (commit «MCP: descripciones según la segunda corrida del probador»):
+  - el límite pasó al comienzo de la descripción de `especificacion_grafico`;
+  - el fin de año de las series de saldo quedó en `frecuencia`;
+  - `pesos_actuales` aclara en qué variantes vale;
+  - `comparar_series` dice que se admite una sola serie internacional;
+  - `buscar_series` aclara qué es `variante_por_defecto`.
+
+**Regresión del manual** (preguntas 12 y 14 a 18, en la segunda corrida): hubo 4 bien y 2 a medias. En las dos, los datos eran correctos y la falla fue una omisión del modelo; ninguna herramienta se cambió por eso.
+- La 14 no menciona la etapa.
+- La 17 no menciona el umbral de Cagan ni la fase de julio, y agrega una frase falsa sobre Alfonsín.
+
+**Tercera corrida** (6 preguntas: 2, 9, 11 y 13, más dos de control; sesión session_018y7WtVBJB61fkYihgM4GMN). Ninguna herramienta devolvió error.
+
+| # | Pregunta | Primera herramienta | Resultado | Antes (2.ª corrida) |
+|---|---|---|---|---|
+| 2 | IPC y dólar oficial, variación mensual de 1989 | comparar_series | bien | bien, con reparos |
+| 9 | salario real RIPTE y desocupación, 2017–2023 | comparar_series | bien: frecuencia común trimestral; el modelo fijó `base_real` por su cuenta | a medias |
+| 11 | promedio anual de las reservas en 2005 y 2015 | obtener_serie con `frecuencia: anual` | mal en el primer intento (saldo de fin de año); bien en el segundo, con la serie mensual y el promedio a mano | mal en el primer intento |
+| 13 | IPC y reservas desde 1970, en un gráfico | especificacion_grafico con `frecuencia: anual` | a medias: entra en el límite al primer intento y avisa `c.agregaciones-distintas`, pero el IPC va en nivel, ilegible desde 1970 | mal en el primer intento |
+| control | base monetaria e inflación interanual desde 2015 | especificacion_grafico | a medias: la cobertura de `buscar_series` (2026-05) no es la de la variante por defecto (2026-04) | no estaba |
+| control | PIB per cápita de Argentina y Brasil, y PIB del INDEC, 1995–2010 | comparar_series | a medias, bien en el segundo intento: el nombre «retropolada (tasas de variación)» hizo esperar tasas, pero el PIB vino en nivel | no estaba |
+
+Se cortó el ciclo acá, porque lo que queda no se arregla con más texto en las descripciones:
+- en la 11, el modelo eligió `frecuencia: anual` antes de leer el parámetro, cuya descripción ya lo explica;
+- en la 13, pedir el IPC en nivel fue una elección del modelo;
+- los otros dos son nombres y datos del catálogo, y van a la lista de pendientes.
+
+Las sugerencias del probador que no entraron fueron:
+- repetir en `buscar_series` y en `especificacion_grafico` que la frecuencia anual de una serie de saldo da el fin de año;
+- sugerir `var_interanual` para el IPC largo;
+- pedir la misma transformación en series de unidades distintas;
+- cambiar la frase de la ficha del salario («arranca en términos reales»), que ya explica la nota A1 de la respuesta.
+
+Si la prueba ciega muestra que hacen falta, se suman.
+
+### Pendientes
+
+Para decidir con Camilo (no son de descripciones):
+- **Nombres en los metadatos:**
+  - «Resultado primario y financiero», el nombre de `resultado-fiscal`, cuya variante por defecto es solo el primario;
+  - la variante «Retropolada desde la base 2004 (tasas de variación)» del PIB: las tasas son el método de la retropolación, pero la serie está en nivel.
+- **`buscar_series`, cobertura:** hoy es la de la serie (la unión de sus variantes). Podría ser la de la variante por defecto, o ir por variante. Por ejemplo, `base-monetaria` dice 2026-05, y su variante por defecto, `fin-de-mes`, llega a 2026-04.
+- **`periodo_en_fecha`** (observaciones del probador):
+  - cómo nombra a los interinos;
+  - el campo `asignacion.gobierno.promedio_o_suma`.
+- **Prueba ciega:** vigilar las preguntas 14 y 17 (omisiones del modelo con datos correctos) y la frase falsa sobre Alfonsín.
+
+Después del despliegue:
+- verificar en producción, por JSON-RPC, los casos de A1 y A2, y la CPU de `especificacion_grafico`;
+- entender por qué la corrida local sin red no reproduce la retención de la corrida diaria (ver el hallazgo).

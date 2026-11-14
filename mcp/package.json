@@ -1,6 +1,6 @@
 {
   "name": "@vaiven/mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Servidor MCP de Vaivén (SPEC, sección 7): el mismo código corre remoto en el Worker (/mcp) y local por stdio.",
   "license": "MIT",
@@ -21,12 +21,14 @@
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",
     "@vaiven/cita": "0.1.0",
+    "@vaiven/grafico": "0.1.0",
     "@vaiven/transformaciones": "0.1.0",
     "zod": "4.6.7"
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "2.4.0",
     "@types/node": "24.19.2",
+    "ajv": "8.20.0",
     "esbuild": "0.28.2",
     "typescript": "5.9.3",
     "vitest": "5.0.5"

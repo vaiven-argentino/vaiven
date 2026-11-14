@@ -134,6 +134,7 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
   const incompletos: number[] = [];
   let puntos = puntosDe(serie);
   let unidad = serie.unidad;
+  let baseReal: string | undefined;
 
   // 1. Pesos actuales (antes que la frecuencia, para no promediar signos monetarios distintos).
   if (opciones.pesosActuales) {
@@ -151,7 +152,7 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
 
   // 3. Medida: real, en dólares o % del PIB.
   if (opciones.medida) {
-    [puntos, unidad] = aplicarMedida(serie, puntos, opciones, insumos, notas, extra);
+    [puntos, unidad, baseReal] = aplicarMedida(serie, puntos, opciones, insumos, notas, extra);
   }
 
   // 4. Base 100, variación o índice desde tasas (son excluyentes).
@@ -213,6 +214,7 @@ export function transformar(serie: SerieExportada, opciones: Opciones = {}, insu
       return i >= inicio && i <= fin;
     }),
     notas,
+    ...(baseReal ? { baseReal } : {}),
   };
 }
 
@@ -221,8 +223,26 @@ function unicas(advertencias: Advertencia[]): Advertencia[] {
   return advertencias.filter((a) => (vistos.has(a.id) ? false : (vistos.add(a.id), true)));
 }
 
+/**
+ * Los puntos de cada serie, recordados por su arreglo `datos` (el mismo aunque la serie se copie con otros campos, como
+ * hacen la ficha y el explorador): `disponibles` y `transformar` los piden muchas veces por vista, y armarlos recorre
+ * toda la serie (SPEC 7.3: la CPU del MCP). Vale solo si los excluidos, los tramos y la frecuencia son los mismos.
+ * Nadie modifica los puntos: cada paso de la cadena arma los suyos.
+ */
+const PUNTOS = new WeakMap<object, { excluidos: unknown; tramos: unknown; frecuencia: string; puntos: Punto[] }>();
+
 /** Datos de la variante más los excluidos (como null), en orden y con la frecuencia de cada observación. */
 function puntosDe(serie: SerieExportada): Punto[] {
+  const guardado = Array.isArray(serie.datos) ? PUNTOS.get(serie.datos) : undefined;
+  if (guardado && guardado.excluidos === serie.excluidos && guardado.tramos === serie.tramos && guardado.frecuencia === serie.frecuencia) {
+    return guardado.puntos;
+  }
+  const puntos = armarPuntos(serie);
+  PUNTOS.set(serie.datos, { excluidos: serie.excluidos, tramos: serie.tramos, frecuencia: serie.frecuencia, puntos });
+  return puntos;
+}
+
+function armarPuntos(serie: SerieExportada): Punto[] {
   if (!Array.isArray(serie.datos)) {
     throw new ErrorTransformacion(`La serie ${serie.id} tiene dimensión pais: elegí una entidad con serieDeEntidad().`);
   }
@@ -301,7 +321,7 @@ function enPeriodos(ins: SerieExportada, puntos: Punto[]): Map<number, Valor> {
 }
 
 function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opciones, insumos: InsumosCargados,
-  notas: string[], extra: Advertencia[]): [Punto[], string] {
+  notas: string[], extra: Advertencia[]): [Punto[], string, string?] {
   const medida = opciones.medida!;
   const declarado = serie.insumos![medida]!;
   const frecs = new Set(puntos.map((p) => p.f));
@@ -317,6 +337,7 @@ function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opcione
     const valores = enPeriodos(ipc, puntos);
     let ipcBase: Valor;
     let nombre: string;
+    let base: string | undefined = opciones.baseReal;
     if (opciones.baseReal) {
       // «AAAA»: el IPC promedio de ese año; «AAAA-MM»: el de ese mes.
       const anual = /^\d{4}$/.test(opciones.baseReal);
@@ -325,14 +346,15 @@ function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opcione
       nombre = nombrePeriodo(ib, anual ? "anual" : "mensual");
       if (ipcBase === null) throw new ErrorTransformacion(`No hay IPC (completo) en ${opciones.baseReal} para usar como base.`);
     } else {
-      const base = [...puntos].reverse().find((p) => p.v !== null && valores.get(p.i) != null);
-      if (!base) throw new ErrorTransformacion("No hay un período con dato de la serie y del IPC para usar como base.");
-      ipcBase = valores.get(base.i)!;
-      nombre = nombrePeriodo(base.i, base.f);
+      const ultimo = [...puntos].reverse().find((p) => p.v !== null && valores.get(p.i) != null);
+      if (!ultimo) throw new ErrorTransformacion("No hay un período con dato de la serie y del IPC para usar como base.");
+      ipcBase = valores.get(ultimo.i)!;
+      nombre = nombrePeriodo(ultimo.i, ultimo.f);
+      base = ultimo.f === "mensual" || ultimo.f === "anual" ? etiqueta(ultimo.i, ultimo.f) : undefined;
     }
     notas.push(notaReal(opcion, nombre));
     extra.push(...ipc.advertencias);
-    return [deflactar(puntos, valores, ipcBase), declarado.unidad.replace("{base}", nombre)];
+    return [deflactar(puntos, valores, ipcBase), declarado.unidad.replace("{base}", nombre), base];
   }
 
   if (medida === "en_dolares") {

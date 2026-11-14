@@ -64,6 +64,8 @@ export async function describirSerie(repo: Repositorio, args: ArgsDescribir) {
     if (!version || doc.version_datos > version) version = doc.version_datos;
     return {
       ...base,
+      // La nota de una variante publicada dice cuándo conviene (por ejemplo, las del tipo de cambio oficial: ajustes, B7).
+      ...(v.nota ? { nota: v.nota } : {}),
       cobertura: doc.cobertura,
       ultimo_dato: doc.cobertura.hasta,
       atraso: atraso(doc, new Date().toISOString()),
