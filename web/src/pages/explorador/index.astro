@@ -169,6 +169,8 @@ const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio:
       <div class="vista-cabeza">
         <h2 id="titulo-grafico">Gráfico</h2>
         <p class="unidad" id="x-unidad"></p>
+        <!-- Con dos unidades: «Ver en paneles» en el doble eje y «Ver en doble eje» en los paneles (SPEC 6.2). -->
+        <button type="button" class="boton-ejes" id="x-ejes" hidden>Ver en paneles</button>
       </div>
       <p class="ultimo" id="x-ultimo"></p>
 
@@ -287,6 +289,9 @@ const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio:
   .atajos { display: flex; flex-wrap: wrap; gap: 6px; }
   .atajo { background: var(--fondo); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; min-height: 44px; cursor: pointer; font-size: 0.85rem; color: var(--texto); }
   .atajo:hover { border-color: var(--acento); }
+  /* Junto al gráfico, a la vista (SPEC 6.2): con el mismo estilo que los atajos del período. */
+  .boton-ejes { margin-left: auto; align-self: center; background: var(--fondo); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 14px; min-height: 44px; cursor: pointer; font-size: 0.88rem; color: var(--texto); }
+  .boton-ejes:hover { border-color: var(--acento); }
   .paises-lista { display: flex; flex-wrap: wrap; gap: 0 16px; }
   .casilla { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
   .casilla input { width: 20px; height: 20px; accent-color: var(--acento); }

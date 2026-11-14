@@ -1,21 +1,25 @@
-// Explorador (SPEC 6.2; fase 4b: una serie por vez). Arma los controles según lo que admite la variante elegida, pide
-// los datos a /datos/ y guarda todo en la URL. El gráfico usa la misma especificación que la ficha, con sombreado por
-// períodos, eventos y, en las series internacionales, un color por país.
+// Explorador (SPEC 6.2): de una a cuatro series. Arma los controles según lo que admite la variante elegida, pide los
+// datos a /datos/ y guarda todo en la URL. La URL se lee con `seriesDeUrl` y `vistaDesdeUrl` y se escribe con
+// `urlDesdeVista`; el gráfico lo arma `armarVista`, la misma función que usa `especificacion_grafico` del MCP (con una
+// serie, el gráfico de la 4b). Los controles, por ahora, editan la serie 1.
 import { apa, bibtex, citaRegistro, NOMBRE_DENOMINADOR, nombreTransformacion, textoCita } from "@vaiven/cita";
 import {
-  ErrorTransformacion, REGLA_UBICACION, atraso, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, serieDeEntidad, tienePais,
-  transformar,
-  type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type Transformacion,
+  REGLA_UBICACION, atraso, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, tienePais,
+  type Comparacion, type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
+import { alinearVista, armarVista, compararVista, lecturasGuia, nombreSombreadoEnFrase, type Vista } from "@vaiven/grafico";
 import { csvDeVista, hojasXlsx, type VistaDescarga } from "../lib/descarga";
-import { estadoDesdeUrl, MAX_PAISES, MEDIAS, opcionesDe, porDefecto, serieDeUrl, serieVista, urlDesdeEstado, type Documento, type Estado, type IndiceSerie } from "../lib/estado";
-import { esVariacion, numerarQuiebres, rangoQuiebre, resumen, type QuiebreNumerado } from "../lib/ficha";
+import {
+  MAX_PAISES, MEDIAS, opcionesDe, porDefecto, serieVista, seriesDeUrl, urlDesdeEstado, urlDesdeVista, vistaDesdeUrl,
+  type Documento, type Estado, type EstadoVista, type IndiceSerie,
+} from "../lib/estado";
+import { esVariacion, rangoQuiebre, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato } from "../lib/formato";
 import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen, tema, type Cargados, type VistaGrafico } from "./comun";
-import { diaLegible, especificacion, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
+import { diaLegible, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
 import {
-  ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, bandasDe, columnasDe, contextoDe, episodiosEnRango,
-  eventosEnRango, periodosEnRango, textoConfianza, textoLectura, tipoDe, ubicacionesDe, type ColumnasPeriodo,
+  ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, columnasDe, contextoDe, textoConfianza, textoLectura,
+  ubicacionesDe, type ColumnasPeriodo,
 } from "../lib/periodos";
 import { conectarLector, type Lectura } from "./lector";
 
@@ -38,11 +42,9 @@ interface DatosPagina {
 
 /** Desde este ancho, el explorador va en dos columnas: el panel de controles a la izquierda y el gráfico (SPEC 6.2). */
 const ESCRITORIO = "(min-width: 1100px)";
+/** Por debajo de 600 px, dos unidades van en paneles por defecto (SPEC 6.5). */
+const ANGOSTO = "(max-width: 599px)";
 
-const NOMBRE_SOMBREADO: Record<string, string> = {
-  gobierno: "gobiernos", mandato: "gobiernos, por mandato", ministro: "ministros de Economía", plan: "planes de estabilización",
-  regimen_cambiario: "regímenes cambiarios",
-};
 const COLUMNA_PERIODO: Record<string, string> = {
   gobierno: "Gobierno", mandato: "Gobierno (mandato)", ministro: "Ministro de Economía", plan: "Plan", regimen_cambiario: "Régimen cambiario",
 };
@@ -52,8 +54,7 @@ function iniciar(): void {
   if (!nodo?.textContent) return;
   const pagina = JSON.parse(nodo.textContent) as DatosPagina;
   const indice = pagina.series;
-  const nombreTipo = new Map(pagina.tipos.map((t) => [t.id, t.nombre]));
-  const nombreSombreado = (sh: string) => (sh === "catedra" ? (nombreTipo.get("catedra") ?? "Etapas").toLowerCase() : NOMBRE_SOMBREADO[sh]);
+  const nombreSombreado = (sh: string) => nombreSombreadoEnFrase(sh as never, pagina.tipos);
   const columnaPeriodo = (sh: string) => sh === "catedra" ? "Etapa" : COLUMNA_PERIODO[sh];
   // El filtro de eventos: las categorías de eventos.json y, al final, los episodios.
   const CATEGORIAS = [...pagina.categorias.map((k) => k.id), EPISODIO];
@@ -83,9 +84,23 @@ function iniciar(): void {
   const cargados: Cargados = { series: {} };
   let registroPeriodos: DocumentoPeriodos | null = null;
   let registroEventos: DocumentoEventos | null = null;
+  /** La vista: una o más series (los controles editan la serie 1, `estado`, con su documento, `doc`). */
+  let vistaEstado!: EstadoVista;
+  let docs: DocumentoCompleto[] = [];
+  /** El color de cada serie (índice de la paleta): sigue a la serie, no a su posición (SPEC 6.2). */
+  let colores: number[] = [];
   let doc!: DocumentoCompleto;
   let estado!: Estado;
   let avisosUrl: string[] = [];
+  /** Fija la vista entera y sus atajos a la serie 1. */
+  function fijarVista(v: EstadoVista, ds: DocumentoCompleto[]): void {
+    vistaEstado = v;
+    docs = ds;
+    if (colores.length !== ds.length) colores = ds.map((_, k) => k);
+    estado = v.series[0];
+    doc = ds[0];
+  }
+  const varias = () => vistaEstado.series.length > 1;
 
   document.querySelectorAll<HTMLElement>("[data-requiere-js]").forEach((el) => (el.hidden = false));
   // En escritorio, «Opciones del gráfico» queda siempre abierto (su título se oculta) y las secciones se pliegan a mano.
@@ -101,6 +116,9 @@ function iniciar(): void {
   if (window.matchMedia("(max-width: 700px)").matches) panel.open = false;
   acomodarPanel();
   escritorio.addEventListener("change", () => { acomodarPanel(); void dibujar(); });
+  const angosto = window.matchMedia(ANGOSTO);
+  // Cambia la disposición con dos unidades (paneles por defecto en el celular): se vuelve a comparar.
+  angosto.addEventListener("change", () => void actualizar());
 
   async function documento(s: string, v: string): Promise<DocumentoCompleto> {
     const clave = `${s}.${v}`;
@@ -206,91 +224,109 @@ function iniciar(): void {
     if (estado.m === "pct_pib" && !estado.f && !["anual", "trimestral"].includes(serie.frecuencia) && disp.frecuencias.includes("anual")) estado.f = "anual";
   }
 
-  // ---- Períodos y eventos ----
-  async function periodosVisibles(r: Resultado): Promise<Periodo[]> {
-    if (!estado.sh) return [];
-    registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
-    return periodosEnRango(registroPeriodos, estado.sh, r);
-  }
-
-  /** Los eventos de las categorías elegidas, y cuántos hay en el rango sin filtro (para el aviso). */
-  async function eventosVisibles(r: Resultado): Promise<{ eventos: MarcaEvento[]; total: number }> {
-    if (!estado.ev.length) return { eventos: [], total: 0 };
-    registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
-    return { eventos: eventosEnRango(registroEventos, r, estado.ev), total: eventosEnRango(registroEventos, r).length };
-  }
-
-  /** Los episodios (hiperinflación…) se marcan junto con los eventos, si el filtro los incluye. */
-  async function episodiosVisibles(r: Resultado): Promise<BandaEpisodio[]> {
-    if (!estado.ev.includes(EPISODIO)) return [];
-    registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
-    return episodiosEnRango(registroPeriodos, r);
-  }
-
   // ---- Vista ----
-  let ultimo: {
+  interface Ultimo {
+    /** La vista armada (sin el tamaño final: el gráfico se arma de nuevo al dibujar, con la misma comparación). */
+    vista: Vista;
+    comparacion: Comparacion;
+    /** La serie 1 (con su primer país en las internacionales) y sus otros países. */
     r: Resultado; otras: Array<{ id: string; nombre: string; resultado: Resultado }>; quiebres: QuiebreNumerado[];
-    periodos: Periodo[]; eventos: MarcaEvento[]; episodios: BandaEpisodio[]; transformacion: string | undefined;
+    periodos: Periodo[]; eventos: MarcaEvento[]; episodios: BandaEpisodio[];
+    /** La transformación de cada serie, en palabras. */
+    transformaciones: Array<string | undefined>; transformacion: string | undefined;
     contexto: ContextoUbicacion; totalEventos: number;
-  } | null = null;
+  }
+  let ultimo: Ultimo | null = null;
+
+  const entradaVista = (ancho: number, alto: number) => ({
+    estado: vistaEstado, docs, insumos: cargados, periodos: registroPeriodos ?? undefined, eventos: registroEventos ?? undefined,
+    tema: tema(), ancho, alto, angosto: angosto.matches, colores,
+  });
 
   async function actualizar(): Promise<void> {
-    const serie = serieVista(doc, estado.p);
-    const o = opcionesDe(estado, serie);
-    let r: Resultado;
+    const opciones = vistaEstado.series.map((e, k) => opcionesDe(e, serieVista(docs[k], e.p)));
+    let comparacion: Comparacion;
     try {
-      await cargarInsumos(serie, o, cargados, () => { estadoTexto.textContent = "Cargando los datos que necesita la medida…"; });
-      r = transformar(serie, o, cargados);
+      for (const [k, e] of vistaEstado.series.entries()) {
+        await cargarInsumos(serieVista(docs[k], e.p), opciones[k], cargados, () => { estadoTexto.textContent = "Cargando los datos que necesita la medida…"; });
+      }
+      comparacion = compararVista({ estado: vistaEstado, docs, insumos: cargados, angosto: angosto.matches });
     } catch (err) {
-      estadoTexto.textContent = err instanceof ErrorTransformacion || err instanceof Error ? err.message : String(err);
+      estadoTexto.textContent = err instanceof Error ? err.message : String(err);
       estadoTexto.dataset.tipo = "error";
       return;
     }
     estadoTexto.textContent = "";
     delete estadoTexto.dataset.tipo;
-    const otras = tienePais(doc) ? estado.p.slice(1).flatMap((id) => {
-      try { return [{ id, nombre: nombrePais(id), resultado: transformar(serieDeEntidad(doc, id), o, cargados) }]; } catch { return []; }
-    }) : [];
-    let periodos: Periodo[] = [], eventos: MarcaEvento[] = [], episodios: BandaEpisodio[] = [], totalEventos = 0;
+    // Los períodos y los eventos se leen recién cuando se piden.
     try {
-      let ev: { eventos: MarcaEvento[]; total: number };
-      [periodos, ev, episodios] = await Promise.all([periodosVisibles(r), eventosVisibles(r), episodiosVisibles(r)]);
-      ({ eventos, total: totalEventos } = ev);
+      if (estado.sh || estado.ev.includes(EPISODIO)) registroPeriodos ??= await leerDatos<DocumentoPeriodos>("periodos.json");
+      if (estado.ev.length) registroEventos ??= await leerDatos<DocumentoEventos>("eventos.json");
     } catch (err) {
       estadoTexto.textContent = `No se pudieron leer los períodos o los eventos (${err instanceof Error ? err.message : String(err)}).`;
     }
-    const quiebres = numerarQuiebres({ ...serie, advertencias: doc.advertencias });
-    const transformacion = nombreTransformacion({ ...o, deflactor: o.deflactor ?? (o.medida === "real" ? serie.insumos?.real?.por_defecto : undefined) });
-    ultimo = { r, otras, quiebres, periodos, eventos, episodios, transformacion, contexto: contextoDe(serie.agregacion, o), totalEventos };
+    const ancho = contenedor.clientWidth || 600;
+    const vista = armarVista({ ...entradaVista(ancho, altoGrafico(ancho)), comparacion });
+    const s0 = comparacion.series[0];
+    const r = s0.resultados[s0.entidades[0]];
+    const otras = s0.entidades.slice(1).map((id) => ({ id, nombre: nombrePais(id), resultado: s0.resultados[id] }));
+    const transformaciones = vistaEstado.series.map((e, k) => {
+      const o = opciones[k];
+      return nombreTransformacion({ ...o, deflactor: o.deflactor ?? (o.medida === "real" ? serieVista(docs[k], e.p).insumos?.real?.por_defecto : undefined) });
+    });
+    ultimo = {
+      vista, comparacion, r, otras, quiebres: vista.quiebres[0], periodos: vista.periodos, eventos: vista.eventos, episodios: vista.episodios,
+      transformaciones, transformacion: transformaciones[0], contexto: contextoDe(serieVista(doc, estado.p).agregacion, opciones[0]),
+      totalEventos: vista.totalEventos,
+    };
     armarControles();
     const positivos = r.datos.every((d) => d[1] === null || d[1] > 0) && otras.every((x) => x.resultado.datos.every((d) => d[1] === null || d[1] > 0));
     c.log.disabled = !positivos;
     c.campoLog.classList.toggle("deshabilitado", !positivos);
-    $("x-unidad").textContent = r.unidad;
+    $("x-unidad").textContent = varias() ? "" : r.unidad;
     ultimoDatoSerie();
     leyendas();
     avisos();
     tabla();
     cita();
+    botonEjes();
     $<HTMLAnchorElement>("x-ficha").href = urlFicha();
-    history.replaceState(null, "", `${location.pathname}${urlDesdeEstado(estado, doc, indice, CATEGORIAS)}${location.hash}`);
+    history.replaceState(null, "", `${location.pathname}${urlDesdeVista(vistaEstado, docs, indice, CATEGORIAS)}${location.hash}`);
     resumenOpciones();
     void dibujar();
   }
 
-  /** El último dato de la variante y su atraso respecto del calendario de la fuente, como en la ficha. */
+  /** Con dos unidades (y sin serie internacional), el botón que pasa del doble eje a los paneles y al revés (SPEC 6.2). */
+  function botonEjes(): void {
+    const b = $<HTMLButtonElement>("x-ejes");
+    const d = ultimo?.comparacion.disposicion;
+    const alternativa = !!d && d.paneles.length === 2 && !d.paneles.some((p) => p.internacional);
+    b.hidden = !alternativa;
+    if (alternativa) b.textContent = d.tipo === "doble_eje" ? "Ver en paneles" : "Ver en doble eje";
+  }
+
+  /** El último dato de cada variante y su atraso respecto del calendario de la fuente, como en la ficha. */
   function ultimoDatoSerie(): void {
-    const d = doc as DocumentoCompleto & { cobertura: { hasta: string }; tramos: Array<{ frecuencia: string }>; frecuencia: string };
+    const linea = (d0: DocumentoCompleto, prefijo: string): Array<Node | string> => {
+      const d = d0 as DocumentoCompleto & { cobertura: { hasta: string }; tramos: Array<{ frecuencia: string }>; frecuencia: string };
+      const version = [pagina.version_sitio, d.version_datos].sort().at(-1)!;
+      const texto = textoAtraso(atraso(d as never, version));
+      return [prefijo, Object.assign(document.createElement("strong"), {
+        textContent: ultimoDato(d.cobertura.hasta, d.tramos.at(-1)?.frecuencia ?? d.frecuencia),
+      }), ...(texto ? [Object.assign(document.createElement("span"), { className: "atraso", textContent: ` · ${texto}` })] : [])];
+    };
     const nodo = $("x-ultimo");
-    const version = [pagina.version_sitio, doc.version_datos].sort().at(-1)!;
-    const texto = textoAtraso(atraso(d as never, version));
-    nodo.replaceChildren("Último dato de la serie: ", Object.assign(document.createElement("strong"), {
-      textContent: ultimoDato(d.cobertura.hasta, d.tramos.at(-1)?.frecuencia ?? d.frecuencia),
-    }), ...(texto ? [Object.assign(document.createElement("span"), { className: "atraso", textContent: ` · ${texto}` })] : []));
+    if (!varias()) { nodo.replaceChildren(...linea(doc, "Último dato de la serie: ")); return; }
+    nodo.replaceChildren("Último dato: ", ...docs.flatMap((d, k) => [...(k ? ["; "] : []), ...linea(d, `${k + 1}. ${d.nombre}, `)]));
   }
 
   function resumenOpciones(): void {
     if (!ultimo) return;
+    if (varias()) {
+      const periodo = estado.desde || estado.hasta ? `${estado.desde || "inicio"}–${estado.hasta || "hoy"}` : "toda la serie 1";
+      $("x-resumen-opciones").textContent = [docs.map((d) => d.nombre).join(", "), periodo, ...(estado.sh ? [`sombreado: ${nombreSombreado(estado.sh)}`] : [])].join(" · ");
+      return;
+    }
     const partes = [doc.nombre];
     if (tienePais(doc)) partes.push(estado.p.map(nombrePais).join(", "));
     if (ultimo.transformacion) partes.push(ultimo.transformacion);
@@ -299,18 +335,8 @@ function iniciar(): void {
     $("x-resumen-opciones").textContent = partes.join(" · ");
   }
 
-  function textoResumen(): string {
-    if (!ultimo) return "";
-    const { r, quiebres, periodos, eventos, episodios } = ultimo;
-    let t = resumen(r, r.unidad, esVariacion(estado.t), quiebres);
-    if (periodos.length) {
-      t += ` Sombreado por ${nombreSombreado(estado.sh)}: ${periodos.length === 1 ? "un período" : `${periodos.length} períodos`}, de ${periodos[0].nombre} a ${periodos[periodos.length - 1].nombre}.`;
-      t += " Cada dato se asigna al período vigente a mitad de su intervalo (los saldos en nivel, el último día).";
-    }
-    if (episodios.length) t += ` ${episodios.length === 1 ? "Un episodio marcado" : `${episodios.length} episodios marcados`}: ${episodios.map((x) => x.nombre).join("; ")}.`;
-    if (eventos.length) t += ` ${eventos.length === 1 ? "Un evento marcado" : `${eventos.length} eventos marcados`} (lista debajo del gráfico).`;
-    return t;
-  }
+  /** El texto alternativo del gráfico (SPEC 6.5): el de la vista, con un resumen por panel si hay varias series. */
+  const textoResumen = (): string => ultimo?.vista.descripcion ?? "";
 
   function leyendas(): void {
     if (!ultimo) return;
@@ -343,15 +369,19 @@ function iniciar(): void {
     $("x-aviso-filtro").textContent = filtro;
     $("x-aviso-filtro").hidden = !filtro;
     const lpaises = $("x-leyenda-paises");
-    lpaises.hidden = !tienePais(doc);
-    if (tienePais(doc)) {
+    // La serie internacional (puede no ser la 1): sus países, con la paleta de 8 de su panel.
+    const ki = docs.findIndex((d) => tienePais(d));
+    lpaises.hidden = ki < 0;
+    if (ki >= 0) {
       const t = tema();
-      lpaises.replaceChildren(...estado.p.map((id, k) => {
+      const di = docs[ki], ei = vistaEstado.series[ki];
+      const nombre = (id: string) => (tienePais(di) ? di.entidades.find((e) => e.id === id)?.nombre : undefined) ?? id;
+      lpaises.replaceChildren(...ei.p.map((id, k) => {
         const s = document.createElement("span");
         const muestra = Object.assign(document.createElement("span"), { className: "muestra" });
         muestra.style.borderTopColor = t.paleta?.[k] ?? t.serie;
         muestra.setAttribute("aria-hidden", "true");
-        s.append(muestra, k === 0 ? Object.assign(document.createElement("strong"), { textContent: nombrePais(id) }) : nombrePais(id));
+        s.append(muestra, k === 0 ? Object.assign(document.createElement("strong"), { textContent: nombre(id) }) : nombre(id));
         return s;
       }));
     }
@@ -363,7 +393,7 @@ function iniciar(): void {
   }
 
   /** Cómo se marcan los eventos en el gráfico de la pantalla: con letras o, si no hay lugar, con rayitas. */
-  const modoActual = (): ModoEventos => (ultimo ? modoEventosDe(ultimo.r, ultimo.eventos, contenedor.clientWidth || 600) : "letras");
+  const modoActual = (): ModoEventos => (ultimo ? modoEventosDe(varias() && ultimo.vista.dominio ? ultimo.vista.dominio : ultimo.r, ultimo.eventos, contenedor.clientWidth || 600) : "letras");
 
   /** La lista de los eventos marcados, siempre completa: con su letra o, con rayitas, con la fecha. */
   function listaEventos(): void {
@@ -382,17 +412,23 @@ function iniciar(): void {
 
   function avisos(): void {
     if (!ultimo) return;
-    const { r, otras, quiebres } = ultimo;
-    const ids = new Set([r, ...otras.map((x) => x.resultado)].flatMap((x) => x.advertencias.map((a) => a.id)));
-    const cruzados = quiebres.filter((q) => ids.has(q.advertencia.id) && q.forma !== "general");
     const lineas = [...avisosUrl];
-    if (cruzados.length) {
-      lineas.push(`El período cruza ${cruzados.length === 1 ? "un quiebre" : `${cruzados.length} quiebres`}: ${cruzados
-        .map((q) => `${q.n}. ${NOMBRE_TIPO_QUIEBRE[q.advertencia.tipo] ?? q.advertencia.tipo} (${rangoQuiebre(q.advertencia)})`)
-        .join("; ")}. El detalle está en la ficha de la serie.`);
-    }
-    for (const e of r.excluidos) lineas.push(`${fechaCorta(e.fecha)}: dato excluido hasta confirmarlo. ${e.motivo}`);
-    for (const n of r.notas) lineas.push(n);
+    // Con varias series, los avisos de la combinación (4.1) y los de cada serie, con su número.
+    if (varias()) lineas.push(...ultimo.vista.avisos.map((a) => a.descripcion));
+    ultimo.comparacion.series.forEach((s, k) => {
+      const prefijo = varias() ? `Serie ${k + 1}: ` : "";
+      const resultados = s.entidades.map((id) => s.resultados[id]);
+      const ids = new Set(resultados.flatMap((x) => x.advertencias.map((a) => a.id)));
+      const cruzados = ultimo!.vista.quiebres[k].filter((q) => ids.has(q.advertencia.id) && q.forma !== "general");
+      if (cruzados.length) {
+        lineas.push(`${prefijo}El período cruza ${cruzados.length === 1 ? "un quiebre" : `${cruzados.length} quiebres`}: ${cruzados
+          .map((q) => `${q.n}. ${NOMBRE_TIPO_QUIEBRE[q.advertencia.tipo] ?? q.advertencia.tipo} (${rangoQuiebre(q.advertencia)})`)
+          .join("; ")}. El detalle está en la ficha de la serie.`);
+      }
+      const r = resultados[0];
+      for (const e of r.excluidos) lineas.push(`${prefijo}${fechaCorta(e.fecha)}: dato excluido hasta confirmarlo. ${e.motivo}`);
+      for (const n of r.notas) lineas.push(`${prefijo}${n}`);
+    });
     // La regla de ubicación y el filtro de eventos no son advertencias: van debajo del gráfico y en la leyenda.
     $("x-regla").hidden = !ultimo.periodos.length;
     const caja = $("x-avisos");
@@ -412,8 +448,32 @@ function iniciar(): void {
     return tienePais(doc) ? [...de(r, estado.p[0]), ...otras.flatMap((o) => de(o.resultado, o.id))] : de(r);
   }
 
+  /** Con varias series, la tabla va a la frecuencia común, con una columna por serie (y por país) (SPEC 6.2). */
+  function tablaComun(): void {
+    const u = ultimo!;
+    const a = alinearVista({ estado: vistaEstado, docs, insumos: cargados, angosto: angosto.matches }, u.comparacion);
+    const nombreColumna = (col: (typeof a.columnas)[number]) => {
+      const d = docs[col.serie - 1];
+      const pais = col.pais && tienePais(d) ? d.entidades.find((e) => e.id === col.pais)?.nombre ?? col.pais : "";
+      return `${col.serie}. ${d.nombre}${pais ? ` · ${pais}` : ""} (${col.unidad})`;
+    };
+    const cab = document.createElement("tr");
+    for (const t of [`Fecha (${a.frecuencia})`, ...a.columnas.map(nombreColumna)]) cab.append(Object.assign(document.createElement("th"), { scope: "col", textContent: t }));
+    $("x-tabla-cabeza").replaceChildren(cab);
+    const variaciones = a.columnas.map((col) => esVariacion(vistaEstado.series[col.serie - 1].t));
+    const filas = a.filas.map(([fecha, ...valores]) => {
+      const tr = document.createElement("tr");
+      tr.append(Object.assign(document.createElement("th"), { scope: "row", textContent: fechaLegible(fecha, a.frecuencia) }));
+      valores.forEach((v, k) => tr.append(Object.assign(document.createElement("td"), { className: "valor", textContent: numero(v, variaciones[k]) })));
+      return tr;
+    });
+    $("x-tabla-cuerpo").replaceChildren(...filas);
+    $("x-tabla-cantidad").textContent = `${filas.length} filas`;
+  }
+
   function tabla(): void {
     if (!ultimo) return;
+    if (varias()) { tablaComun(); return; }
     const { r } = ultimo;
     const conPais = tienePais(doc);
     const conPeriodo = !!estado.sh && ultimo.periodos.length > 0;
@@ -445,8 +505,12 @@ function iniciar(): void {
 
   function cita(): void {
     if (!ultimo) return;
-    const paises = tienePais(doc) ? estado.p.map(nombrePais) : undefined;
-    let texto = textoCita(doc, ultimo.transformacion, paises);
+    const citaDe = (k: number) => {
+      const d = docs[k], e = vistaEstado.series[k];
+      const paises = tienePais(d) ? e.p.map((id) => d.entidades.find((x) => x.id === id)?.nombre ?? id) : undefined;
+      return textoCita(d, ultimo!.transformaciones[k], paises);
+    };
+    let texto = varias() ? docs.map((_, k) => `${k + 1}. ${citaDe(k)}`).join("\n") : citaDe(0);
     if (ultimo.periodos.length && registroPeriodos) texto += `\nSombreado: ${citaRegistro("periodos", registroPeriodos.version_datos)}`;
     $("x-cita").textContent = texto;
   }
@@ -473,6 +537,11 @@ function iniciar(): void {
    */
   function lecturas(): Lectura[] {
     if (!ultimo) return [];
+    // Con varias series, la guía común: las fechas de la serie de frecuencia más alta y el valor de cada serie.
+    if (varias()) {
+      const g = ultimo.vista.guia;
+      return g ? lecturasGuia(g, { sh: estado.sh, episodios: ultimo.episodios, eventos: ultimo.eventos, modo: modoActual() }) : [];
+    }
     const { r, periodos, contexto, episodios, eventos } = ultimo;
     const us = periodos.length && estado.sh ? ubicacionesDe(periodos, estado.sh, r, contexto) : [];
     const variacion = esVariacion(estado.t);
@@ -488,17 +557,9 @@ function iniciar(): void {
   }
   let turno = 0;
 
-  function entrada(ancho: number, alto: number, impreso?: { titulo: string; subtitulo: string; pie: string[] }) {
-    const { r, otras, quiebres, periodos, eventos, episodios, contexto } = ultimo!;
-    const bandas = bandasDe(periodos);
-    const serie = serieVista(doc, estado.p);
-    return especificacion({
-      resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(estado.t),
-      log: estado.log && !c.log.disabled, alto, ancho, descripcion: textoResumen(),
-      nombre: tienePais(doc) ? nombrePais(estado.p[0]) : undefined, otras: otras.map((o) => ({ nombre: o.nombre, resultado: o.resultado })),
-      colores: tienePais(doc), sombreado: bandas.length ? { bandas, franja: estado.sh === "plan" } : undefined, eventos, impreso,
-      ubicacion: contexto, asignacion: bandas.length && estado.sh ? { periodos, tipo: tipoDe(estado.sh) } : undefined, episodios,
-    });
+  /** La especificación de la vista con su tamaño (y, para la imagen exportada, su título y su pie). */
+  function entrada(ancho: number, alto: number, impreso?: { titulo: string; subtitulo: string; pie: string[] }): Record<string, unknown> {
+    return armarVista({ ...entradaVista(ancho, alto), comparacion: ultimo!.comparacion, ...(impreso ? { impreso } : {}) }).especificacion;
   }
 
   /** En escritorio, el gráfico ocupa un 60 % del alto de la pantalla (menos el eje); si no, 260 o 360 px como antes. */
@@ -515,7 +576,10 @@ function iniciar(): void {
       await import("vega-embed");
       if (mio !== turno) return;
       vista?.finalize();
-      vista = await dibujarEn(contenedor, entrada(ancho, altoGrafico(ancho)));
+      const spec = entrada(ancho, altoGrafico(ancho));
+      // Lo que se dibujó, para la prueba de igualdad con `especificacion_grafico` (web/scripts/igualdad-explorador.mjs).
+      (contenedor as HTMLElement & { especificacion?: unknown }).especificacion = spec;
+      vista = await dibujarEn(contenedor, spec);
       contenedor.dataset.listo = "1";
       contenedor.dataset.eventos = ultimo.eventos.length ? modoActual() : "";
       listaEventos();
@@ -617,19 +681,32 @@ function iniciar(): void {
     const serie = indice.find((x) => x.id === s)!;
     const variante = v ?? serie.variante_por_defecto;
     estadoTexto.textContent = "Cargando la serie…";
+    let nuevo: DocumentoCompleto;
     try {
-      doc = await documento(s, variante);
+      nuevo = await documento(s, variante);
     } catch (err) {
       estadoTexto.textContent = `No se pudo cargar la serie (${err instanceof Error ? err.message : String(err)}).`;
       estadoTexto.dataset.tipo = "error";
       return;
     }
-    // Se conservan el sombreado y los eventos; lo demás vuelve a la vista inicial de la serie.
-    const { sh, ev } = estado;
-    estado = { ...porDefecto(s, variante, doc), sh, ev };
+    // Se conservan el sombreado y los eventos; lo demás vuelve a la vista inicial de la serie. Con varias series, el
+    // período también se conserva: es común a todas.
+    const { sh, ev, desde, hasta } = estado;
+    const e = { ...porDefecto(s, variante, nuevo), sh, ev, ...(varias() ? { desde, hasta } : {}) };
+    fijarVista({ ...vistaEstado, series: [e, ...vistaEstado.series.slice(1)] }, [nuevo, ...docs.slice(1)]);
     avisosUrl = [];
     await actualizar();
   }
+
+  // Doble eje ⇄ paneles (SPEC 6.2 y 6.5): en el celular, el doble eje hay que pedirlo (`ejes=doble`); en pantallas
+  // más anchas es lo automático, así que volver a él borra `ejes`.
+  $("x-ejes").addEventListener("click", () => {
+    const d = ultimo?.comparacion.disposicion;
+    if (!d) return;
+    vistaEstado.ejes = d.tipo === "doble_eje" ? "paneles" : angosto.matches ? "doble" : "";
+    avisosUrl = [];
+    void actualizar();
+  });
 
   c.serie.addEventListener("change", () => void elegirSerie(c.serie.value));
   c.variante.addEventListener("change", () => void elegirSerie(estado.s, c.variante.value));
@@ -694,17 +771,18 @@ function iniciar(): void {
   // ---- Arranque: la URL manda ----
   void (async () => {
     const q = new URLSearchParams(location.search);
-    const { serie, variante, avisos: a1 } = serieDeUrl(q, indice);
+    const { pedidas, avisos: a1 } = seriesDeUrl(q, indice);
+    let leidos: DocumentoCompleto[];
     try {
-      doc = await documento(serie.id, variante);
+      leidos = await Promise.all(pedidas.map((p) => documento(p.serie.id, p.variante)));
     } catch (err) {
       estadoTexto.textContent = `No se pudo cargar la serie (${err instanceof Error ? err.message : String(err)}).`;
       estadoTexto.dataset.tipo = "error";
       return;
     }
-    const { estado: e, avisos: a2 } = estadoDesdeUrl(q, serie.id, variante, doc, CATEGORIAS);
-    estado = e;
-    avisosUrl = [...a1, ...a2];
+    const r = vistaDesdeUrl(q, pedidas, leidos, CATEGORIAS);
+    fijarVista(r.estado, r.docs as DocumentoCompleto[]);
+    avisosUrl = [...a1, ...r.avisos];
     await actualizar();
   })();
 }
