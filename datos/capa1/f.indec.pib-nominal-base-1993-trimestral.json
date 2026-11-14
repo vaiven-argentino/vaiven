@@ -2,9 +2,9 @@
   "fuente": "f.indec.pib-nominal-base-1993-trimestral",
   "unidad": "millones de pesos corrientes, a ritmo anual",
   "frecuencia": "trimestral",
-  "snapshot": "snapshots/f.indec.pib-nominal-base-1993-trimestral/2026-10-24",
-  "descargado": "2026-10-24T23:23:35Z",
-  "sha256": "82bc90469106531174fc6067519ff6faccaa4c7680cd4859ed861e72d86f05a9",
+  "snapshot": "snapshots/f.indec.pib-nominal-base-1993-trimestral/2026-11-13",
+  "descargado": "2026-11-13T21:27:20Z",
+  "sha256": "6154b68910706215a59ed2f850b1c7f400852091a08bdf4b9a44f92a8f90f420",
   "observaciones": 83,
   "desde": "1993-01-01",
   "hasta": "2013-07-01"

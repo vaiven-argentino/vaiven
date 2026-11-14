@@ -2,10 +2,10 @@
   "fuente": "f.indec.ipc-nacional-base-2016",
   "unidad": "índice dic. 2016 = 100",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.indec.ipc-nacional-base-2016/2026-10-24",
-  "descargado": "2026-10-24T04:59:02Z",
-  "sha256": "912f84bbe32364f147d207b17a6b6514478527e15909170471295994f74e9ef4",
-  "observaciones": 117,
+  "snapshot": "snapshots/f.indec.ipc-nacional-base-2016/2026-11-13",
+  "descargado": "2026-11-13T21:27:27Z",
+  "sha256": "7150ec9d434a599fd98b06403ab284ce962f7469af4b438b34b0eaefb25f1f27",
+  "observaciones": 119,
   "desde": "2016-12-01",
-  "hasta": "2026-08-01"
+  "hasta": "2026-10-01"
 }

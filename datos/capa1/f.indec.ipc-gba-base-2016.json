@@ -2,10 +2,10 @@
   "fuente": "f.indec.ipc-gba-base-2016",
   "unidad": "índice dic. 2016 = 100",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.indec.ipc-gba-base-2016/2026-10-24",
-  "descargado": "2026-10-24T04:59:01Z",
-  "sha256": "1da5c472b173f5e7fdc363457a3524c10d5dc7c74d81dca22800d522ba14c7cb",
-  "observaciones": 125,
+  "snapshot": "snapshots/f.indec.ipc-gba-base-2016/2026-11-13",
+  "descargado": "2026-11-13T21:27:26Z",
+  "sha256": "4ecc4f13557add992a9081c7d4bd2546de862cbcf1030e409778ccada19feb09",
+  "observaciones": 53,
   "desde": "2016-04-01",
-  "hasta": "2026-08-01"
+  "hasta": "2020-08-01"
 }

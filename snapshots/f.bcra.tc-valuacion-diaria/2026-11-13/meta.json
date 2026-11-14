@@ -1,0 +1,21 @@
+{
+  "fuente": "f.bcra.tc-valuacion-diaria",
+  "descargado": "2026-11-13T21:27:44Z",
+  "sha256": "c7ca305f11292dec4e804450a7dbd4599d3eb3485a651fd9379123909da2641e",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_TIPO_CAMBIION_0_0_21_24&format=json&limit=5000&start=0&metadata=full&collapse=month&collapse_aggregation=end_of_period&end_date=2026-10-31",
+      "bytes": 10643,
+      "sha256": "0859cb0cda716e8d93391afda3a0f55f499cb5b448266c4663df53a9fc47d199"
+    },
+    {
+      "nombre": "ultimo-diario.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_TIPO_CAMBIION_0_0_21_24&format=json&limit=1&sort=desc&metadata=none&end_date=2026-10-31",
+      "bytes": 295,
+      "sha256": "fa11ca0c10f4fbdb4abf2a8129ca929c5bf04577fead394d358d5c3475f5de4f"
+    }
+  ]
+}

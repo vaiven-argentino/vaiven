@@ -50,7 +50,7 @@
   ],
   "cobertura": {
     "desde": "1970-01",
-    "hasta": "2026-08"
+    "hasta": "2026-09"
   },
   "advertencias": [
     {
@@ -104,8 +104,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tipo de cambio nominal oficial, variante «moneda-de-epoca». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tc-oficial/moneda-de-epoca/",
-  "version_datos": "2026-11-07T20:41:28Z",
+  "cita": "Vaivén (2026). Tipo de cambio nominal oficial, variante «moneda-de-epoca». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/tc-oficial/moneda-de-epoca/",
+  "version_datos": "2026-11-13T21:23:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 3.5],
@@ -787,6 +787,7 @@
     ["2026-05", 1410.2904],
     ["2026-06", 1483.0198],
     ["2026-07", 1488.4531],
-    ["2026-08", 1509.4686]
+    ["2026-08", 1509.4686],
+    ["2026-09", 1517.5209]
   ]
 }

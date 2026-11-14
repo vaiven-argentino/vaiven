@@ -2,9 +2,9 @@
   "fuente": "f.bcra.itcrm-diario",
   "unidad": "índice 17-12-2015 = 100",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.bcra.itcrm-diario/2026-11-07",
-  "descargado": "2026-11-07T20:37:06Z",
-  "sha256": "4628ba6a4634292521e4f7c648684dc4605cdd47b01e86511589d85e8c11b4b5",
+  "snapshot": "snapshots/f.bcra.itcrm-diario/2026-11-13",
+  "descargado": "2026-11-13T21:27:48Z",
+  "sha256": "6e9638090a4caa1a716b4e752fbbad256781c214853b8d383d9a70a27674de20",
   "observaciones": 348,
   "desde": "1997-01-01",
   "hasta": "2025-12-01"

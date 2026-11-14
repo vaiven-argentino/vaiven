@@ -1,6 +1,6 @@
 {
   "esquema": "periodos-1.1",
-  "version_datos": "2026-11-13T04:49:02Z",
+  "version_datos": "2026-11-13T21:23:46Z",
   "descripcion": "Gobiernos, ministros de Economía, planes de estabilización, regímenes cambiarios, etapas de la política económica según la periodización de un curso universitario y episodios, 1970–hoy. Intervalos semiabiertos [desde, hasta): el día del traspaso es del período que empieza; `hasta` null quiere decir vigente. `confianza` dice cuán firme es cada fecha (alta, media o baja).",
   "fuente": "metadatos/periodos.yaml",
   "licencia": "CC-BY-4.0",

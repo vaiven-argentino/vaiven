@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ibif-corriente-base-1993",
+  "descargado": "2026-11-13T21:27:18Z",
+  "sha256": "4f1b61404aabeb0dd2c05ae6b44609bfb4d100a1b598161c62a6080c04aa80e8",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=2.4_DGI_1993_T_19&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6439,
+      "sha256": "38f200208962942f6ec3073361db980e21c13f3b5e5866aed43c664e1126d2a8"
+    }
+  ]
+}

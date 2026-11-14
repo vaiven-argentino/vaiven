@@ -2,9 +2,9 @@
   "fuente": "f.bcra.bp-cuenta-corriente",
   "unidad": "millones de US$",
   "frecuencia": "anual",
-  "snapshot": "snapshots/f.bcra.bp-cuenta-corriente/2026-10-24",
-  "descargado": "2026-10-24T23:07:13Z",
-  "sha256": "902f675485b107100db4c32ef4dfff4da99f7eaf00c584dea38e65489c2f3e86",
+  "snapshot": "snapshots/f.bcra.bp-cuenta-corriente/2026-11-13",
+  "descargado": "2026-11-13T21:23:58Z",
+  "sha256": "ed1461f3b006a27e46a80e60d1d0318d51a6ad96b5b6f44e0b47d08e7e559cc1",
   "observaciones": 129,
   "desde": "1881-01-01",
   "hasta": "2009-01-01"

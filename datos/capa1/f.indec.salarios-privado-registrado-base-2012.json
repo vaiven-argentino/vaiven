@@ -2,9 +2,9 @@
   "fuente": "f.indec.salarios-privado-registrado-base-2012",
   "unidad": "índice",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.indec.salarios-privado-registrado-base-2012/2026-10-27",
-  "descargado": "2026-10-27T19:41:37Z",
-  "sha256": "05de533c3035164573a1798cb547057091b353a56995d8485dfb7d05bb5c9e19",
+  "snapshot": "snapshots/f.indec.salarios-privado-registrado-base-2012/2026-11-13",
+  "descargado": "2026-11-13T21:27:39Z",
+  "sha256": "cbd16ee9cefff9b4502c075c982e51bc9d372ee0a50fc49c9f2ce50d0630de34",
   "observaciones": 183,
   "desde": "2001-10-01",
   "hasta": "2016-12-01"

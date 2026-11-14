@@ -30,7 +30,7 @@
   ],
   "cobertura": {
     "desde": "1999-01",
-    "hasta": "2026-08"
+    "hasta": "2026-09"
   },
   "advertencias": [
     {
@@ -54,8 +54,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tasa de interés pasiva, variante «badlar». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/tasa-pasiva/badlar/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Tasa de interés pasiva, variante «badlar». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/tasa-pasiva/badlar/",
+  "version_datos": "2026-11-13T21:23:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1999-01", 10.9554583],
@@ -389,6 +389,7 @@
     ["2026-05", 21.34539474],
     ["2026-06", 20.69047619],
     ["2026-07", 21.31845238],
-    ["2026-08", 22.721875]
+    ["2026-08", 22.721875],
+    ["2026-09", 22.46875]
   ]
 }

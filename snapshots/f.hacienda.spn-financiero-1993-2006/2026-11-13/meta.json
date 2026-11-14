@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spn-financiero-1993-2006",
+  "descargado": "2026-11-13T21:27:36Z",
+  "sha256": "fa95d11400c1d656dcb4dcafd1bcb8c0e387541bd31f843e84a7e6d261b1864d",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=379.7_RESULTADO_006__43_20&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 8852,
+      "sha256": "b032fd1ca5d7ff276cf495a9ba7f139ec53d4495cfa03fe8e1c45b6451fa2b8c"
+    }
+  ]
+}

@@ -2,9 +2,9 @@
   "fuente": "f.indec.ibif-corriente-base-2004",
   "unidad": "millones de pesos corrientes, a ritmo anual",
   "frecuencia": "trimestral",
-  "snapshot": "snapshots/f.indec.ibif-corriente-base-2004/2026-10-27",
-  "descargado": "2026-10-27T19:35:19Z",
-  "sha256": "7741185750479e41c4ffdcf23ddd154517e33634a53b7e321d2d217d1ff1114f",
+  "snapshot": "snapshots/f.indec.ibif-corriente-base-2004/2026-11-13",
+  "descargado": "2026-11-13T21:27:21Z",
+  "sha256": "868a7d2d2f559631c72a07bdb08806b7b3264017d7de8a88d1e8ec51cd5be55b",
   "observaciones": 90,
   "desde": "2004-01-01",
   "hasta": "2026-04-01"

@@ -1,0 +1,21 @@
+{
+  "fuente": "f.bcra.reservas-diaria",
+  "descargado": "2026-11-13T21:27:33Z",
+  "sha256": "ee9a86adb803e18162fffb43c41b806fdce0818b509320a9fc70f5a19601fb04",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_RESERVAS_IRES_0_0_32_40&format=json&limit=5000&start=0&metadata=full&collapse=month&collapse_aggregation=end_of_period&end_date=2026-10-31",
+      "bytes": 11438,
+      "sha256": "15bbbbc166610d43e2c902b15eca93eaad7677a31efd06829396916b6d4f4380"
+    },
+    {
+      "nombre": "ultimo-diario.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=92.2_RESERVAS_IRES_0_0_32_40&format=json&limit=1&sort=desc&metadata=none&end_date=2026-10-31",
+      "bytes": 293,
+      "sha256": "56913943ab4f305536d7b6821db456d6e9f773f08bc650955010e67e57b3d2be"
+    }
+  ]
+}

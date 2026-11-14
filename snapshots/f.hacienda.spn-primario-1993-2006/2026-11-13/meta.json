@@ -1,0 +1,15 @@
+{
+  "fuente": "f.hacienda.spn-primario-1993-2006",
+  "descargado": "2026-11-13T21:27:34Z",
+  "sha256": "a193d89ed43a2498527eed71b65a534e292826b46e0a3c9266a35784b2be0c61",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=379.7_SUPERAVIT_006__28_65&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 9349,
+      "sha256": "c98e9e487ce1137e25a332004801627b2a8b0288c504f8152bb29d6def6aeebf"
+    }
+  ]
+}

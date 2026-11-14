@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.bp-cuenta-corriente",
+  "descargado": "2026-11-13T21:23:58Z",
+  "sha256": "ed1461f3b006a27e46a80e60d1d0318d51a6ad96b5b6f44e0b47d08e7e559cc1",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_COTAL__23&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6330,
+      "sha256": "2a536b874162885b3c170bb13a4081427a1ede7a6bec65d6a5d88a9ee80cd9e9"
+    }
+  ]
+}

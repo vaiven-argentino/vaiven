@@ -1,0 +1,15 @@
+{
+  "fuente": "f.caba.ipcba-base-2011-2012",
+  "descargado": "2026-11-13T21:27:26Z",
+  "sha256": "1ee8d167543ca819ba2813696adc55ea7724644bd2c224825325f9e54f14312d",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=193.1_NIVEL_GENERAL_JULI_0_13&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6218,
+      "sha256": "5262da2cbaf941b5cd0f92727c61c40ee3702d74066762b23946a2c2152ce678"
+    }
+  ]
+}

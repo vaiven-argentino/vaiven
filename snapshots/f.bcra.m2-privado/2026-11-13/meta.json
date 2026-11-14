@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.m2-privado",
+  "descargado": "2026-11-13T21:23:55Z",
+  "sha256": "c8d1b73868379f5e421a4e48f925e5214a95949c4f92f833a42843d33e08212c",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=90.1_AMTMA_0_0_39&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 13316,
+      "sha256": "0683e9b0e72bedb6012c13f47e56bcc9c3ebc195f0d70755f9d9e7dae6523e4d"
+    }
+  ]
+}

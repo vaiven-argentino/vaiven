@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.bp-importaciones",
+  "descargado": "2026-11-13T21:25:47Z",
+  "sha256": "8b968327192608d2d2fb1452cf21f70ffdb532e0616bc94398f8a71dc738a86f",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=335.1_CUENTA_CONES_IV__42&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6408,
+      "sha256": "78f4089db6223475f7b0953afd6dd810628258e86af256274db8f5d4fea9d152"
+    }
+  ]
+}

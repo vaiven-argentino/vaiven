@@ -2,10 +2,10 @@
   "fuente": "f.indec.ica-exportaciones-mensual",
   "unidad": "millones de US$",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.indec.ica-exportaciones-mensual/2026-10-24",
-  "descargado": "2026-10-24T05:13:59Z",
-  "sha256": "a8c14cf5a38c0d28a627127b1e65f85305e9a2303fb1233abe30b108d426ad76",
-  "observaciones": 416,
+  "snapshot": "snapshots/f.indec.ica-exportaciones-mensual/2026-11-13",
+  "descargado": "2026-11-13T21:25:43Z",
+  "sha256": "99ddeabb9f8d6b0528b359ff972f5b68a48e3813d6207583987e2fb2941ae8c9",
+  "observaciones": 417,
   "desde": "1992-01-01",
-  "hasta": "2026-08-01"
+  "hasta": "2026-09-01"
 }

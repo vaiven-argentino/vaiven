@@ -81,7 +81,7 @@
   ],
   "cobertura": {
     "desde": "1992-01",
-    "hasta": "2026-08"
+    "hasta": "2026-09"
   },
   "advertencias": [],
   "excluidos": [],
@@ -106,8 +106,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Saldo comercial, variante «mensual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/saldo-comercial/mensual/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Saldo comercial, variante «mensual». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/saldo-comercial/mensual/",
+  "version_datos": "2026-11-13T21:23:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1992-01", -177.148033],
@@ -525,6 +525,7 @@
     ["2026-05", 3449.793922],
     ["2026-06", 2235.188183],
     ["2026-07", 2098.128087],
-    ["2026-08", 2186.590855]
+    ["2026-08", 2159.291849],
+    ["2026-09", 2976.47401]
   ]
 }

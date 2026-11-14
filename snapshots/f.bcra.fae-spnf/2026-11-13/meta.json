@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.fae-spnf",
+  "descargado": "2026-11-13T21:25:43Z",
+  "sha256": "77da4104106ed6a0ebb5440ef45f45980d311269ddbd84a16537da12999ec2d5",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=182.1_C_K_FINC_CINC_0_M_56&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 12408,
+      "sha256": "4a0f1d5c3e8958f2ff7d74a40db15ab1a7911c356d9aebb5f92a8257a071ece5"
+    }
+  ]
+}

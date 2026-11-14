@@ -2,9 +2,9 @@
   "fuente": "f.bcra.itcrm-base-2015",
   "unidad": "índice 17-12-2015 = 100",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.bcra.itcrm-base-2015/2026-10-24",
-  "descargado": "2026-10-24T23:19:30Z",
-  "sha256": "e6bef121448a75cf376e7a396785ec3a16bf48a378a8d219310c48418c9fefa2",
+  "snapshot": "snapshots/f.bcra.itcrm-base-2015/2026-11-13",
+  "descargado": "2026-11-13T21:27:47Z",
+  "sha256": "ca1a7ecc81600b8053e105530089c1a3d72540dc46348741d07f3205e27b4aee",
   "observaciones": 336,
   "desde": "1997-01-01",
   "hasta": "2024-12-01"

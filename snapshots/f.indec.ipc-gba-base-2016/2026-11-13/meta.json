@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ipc-gba-base-2016",
+  "descargado": "2026-11-13T21:27:26Z",
+  "sha256": "4ecc4f13557add992a9081c7d4bd2546de862cbcf1030e409778ccada19feb09",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=101.1_I2NG_2016_M_22&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 4846,
+      "sha256": "11a03cee78cab4feb6a174dc406a19c163282e1720b5ffb5b984f610b1f52f15"
+    }
+  ]
+}

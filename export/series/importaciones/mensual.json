@@ -74,7 +74,7 @@
   ],
   "cobertura": {
     "desde": "1992-01",
-    "hasta": "2026-08"
+    "hasta": "2026-09"
   },
   "advertencias": [],
   "excluidos": [],
@@ -90,8 +90,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Importaciones, variante «mensual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/importaciones/mensual/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Importaciones, variante «mensual». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/importaciones/mensual/",
+  "version_datos": "2026-11-13T21:23:46Z",
   "desactualizada_desde": null,
   "datos": [
     ["1992-01", 902.946207],
@@ -509,6 +509,7 @@
     ["2026-05", 6128.02646],
     ["2026-06", 6876.661623],
     ["2026-07", 6755.731447],
-    ["2026-08", 6695.991644]
+    ["2026-08", 6706.592916],
+    ["2026-09", 7059.501178]
   ]
 }

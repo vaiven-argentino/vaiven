@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.ibif-corriente-base-2004",
+  "descargado": "2026-11-13T21:27:21Z",
+  "sha256": "868a7d2d2f559631c72a07bdb08806b7b3264017d7de8a88d1e8ec51cd5be55b",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=4.4_DGI_2004_T_19&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6690,
+      "sha256": "54b5e3bc3289d6f12f307843f99b153afd2775c464415cd5c54b88b0e8a7e6c4"
+    }
+  ]
+}

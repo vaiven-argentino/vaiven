@@ -1,0 +1,15 @@
+{
+  "fuente": "f.indec.eph-continua-total",
+  "descargado": "2026-11-13T21:24:01Z",
+  "sha256": "cf2ea71876b4850edf6cb76ef69b887de5551904d697102621e7692aa58e00c7",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=42.3_EPH_PUNTUATAL_0_M_30&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 6121,
+      "sha256": "5703d11fe65245e202251f6a3031de2aee122090849e6dfa56c636bd1d709d60"
+    }
+  ]
+}

@@ -2,9 +2,9 @@
   "fuente": "f.bcra.base-monetaria-mensual",
   "unidad": "millones de pesos actuales (pesos equivalentes)",
   "frecuencia": "mensual",
-  "snapshot": "snapshots/f.bcra.base-monetaria-mensual/2026-10-24",
-  "descargado": "2026-10-24T23:14:11Z",
-  "sha256": "a1ff5af676aa330f759a813a25d4e3b570fb4f272152942fc7c1946aa14afe97",
+  "snapshot": "snapshots/f.bcra.base-monetaria-mensual/2026-11-13",
+  "descargado": "2026-11-13T21:23:56Z",
+  "sha256": "a12d42a0c6b2bd5959b354e6298cac8806d9583d5a46800843c9f629e438ddd5",
   "observaciones": 1031,
   "desde": "1940-06-01",
   "hasta": "2026-04-01"

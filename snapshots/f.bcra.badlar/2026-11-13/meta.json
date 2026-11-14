@@ -1,0 +1,15 @@
+{
+  "fuente": "f.bcra.badlar",
+  "descargado": "2026-11-13T21:27:42Z",
+  "sha256": "4dc7670d96dda6a7fd3cb11b467dc36c970e3a4b94e54f515ec37c33339ee0a6",
+  "licencia": "CC-BY-4.0",
+  "redistribuible": true,
+  "archivos": [
+    {
+      "nombre": "pagina-001.json",
+      "url": "https://apis.datos.gob.ar/series/api/series/?ids=89.1_TIB_0_0_20&format=json&limit=5000&start=0&metadata=full",
+      "bytes": 14553,
+      "sha256": "508a8525ad4007e2554e89fc8f80269749959d0d5f7a9f73292be9c62aa4a270"
+    }
+  ]
+}
