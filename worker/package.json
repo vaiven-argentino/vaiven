@@ -19,6 +19,6 @@
     "wrangler": "4.152.0"
   },
   "dependencies": {
-    "@vaiven/mcp": "0.1.0"
+    "@vaiven/mcp": "0.2.0"
   }
 }
