@@ -100,10 +100,14 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
       {serie.variantes.map((v) => (
         <li class={v.estado === "publicada" ? "publicada" : "pendiente"}>
           {v.estado === "publicada" ? (
-            <a href={urlFicha(serie.id, v.id, v.id === serie.variante_por_defecto)} aria-current={v.id === doc.variante ? "page" : undefined}>
-              <span class="v-nombre">{v.nombre}</span>
-              {v.id === serie.variante_por_defecto && <span class="v-marca">por defecto</span>}
-            </a>
+            <>
+              <a href={urlFicha(serie.id, v.id, v.id === serie.variante_por_defecto)} aria-current={v.id === doc.variante ? "page" : undefined}>
+                <span class="v-nombre">{v.nombre}</span>
+                {v.id === serie.variante_por_defecto && <span class="v-marca">por defecto</span>}
+              </a>
+              {/* La nota de una variante publicada dice cuándo conviene (por ejemplo, las del tipo de cambio oficial). */}
+              {v.nota && <p class="v-nota">{v.nota}</p>}
+            </>
           ) : (
             <div class="v-pendiente">
               <span class="v-nombre">{v.nombre}</span>

@@ -16,6 +16,9 @@ variantes:
   - id: pesos-actuales
     nombre: En pesos actuales
     estado: publicada
+    nota: >-
+      Para variaciones, esta variante y la de moneda de cada época dan lo mismo. Para comparar niveles a través de
+      los cambios de signo monetario (1983, 1985 y 1992), usá esta.
     empalme: yuxtaponer
     metodo: >-
       Serie histórica mensual del BCRA en pesos equivalentes, sin cambios. Cada valor está expresado en pesos
@@ -31,6 +34,10 @@ variantes:
   - id: moneda-de-epoca
     nombre: En la moneda de cada época
     estado: publicada
+    nota: >-
+      Cada valor en el signo monetario vigente, como se publicó. Sirve para leer una cifra de su época; para
+      comparar niveles a través de los cambios de signo, usá la variante en pesos actuales. Las variaciones no
+      cruzan los cambios de signo: para calcularlas, pasala a pesos actuales.
     empalme: yuxtaponer
     unidad: moneda de cada época por dólar (peso ley 18.188, peso argentino, austral o peso)
     moneda: moneda_de_epoca

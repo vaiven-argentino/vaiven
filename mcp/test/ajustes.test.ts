@@ -77,3 +77,18 @@ describe("B6 · la variante por defecto, dicha", () => {
     expect(r.notas.join(" ")).not.toContain("Sin `variante`");
   });
 });
+
+describe("B7 · la nota de una variante publicada", () => {
+  it("describir_serie la incluye, como la ficha y buscar_series", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { repoCon, EXPORT } = await import("./ayuda");
+    const { describirSerie } = await import("../src/herramientas/describir");
+    const catalogo = JSON.parse(readFileSync(join(EXPORT, "catalogo.json"), "utf-8"));
+    const tc = catalogo.series.find((s: { id: string }) => s.id === "tc-oficial");
+    tc.variantes.find((v: { id: string }) => v.id === "pesos-actuales").nota = "Para variaciones, cualquiera de las dos.";
+    const r = await describirSerie(repoCon({ "catalogo.json": catalogo }), { id: "tc-oficial" });
+    const v = (r.variantes as Array<{ id: string; nota?: string }>).find((x) => x.id === "pesos-actuales")!;
+    expect(v.nota).toBe("Para variaciones, cualquiera de las dos.");
+  });
+});
