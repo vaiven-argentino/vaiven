@@ -1009,7 +1009,56 @@ El probador marcó como sospechosos 2020-10 (10,95793221) y 2022-10 (6,281803916
 
 Para B7 se probó regenerar el export sin red (`uv run python -m pipeline actualizar --sin-red`), como pide CLAUDE.md antes de mergear un PR que toque el export. La corrida publicaba el IPC (las dos variantes) y el TCR bilateral hasta 2026-10 y les borraba la marca de desactualizada, cuando la corrida diaria del 13/11 los había **retenido**: «f.indec.ipc-gba-base-2016 · historia: La fuente perdió 72 fechas que ya tenía (de 2020-09 a 2026-08)». Se descartó esa regeneración: el PR A no toca `export/` ni `datos/`, y el catálogo con las notas de B7 lo genera la corrida diaria cuando el cambio llegue a `main`. Hay que entender por qué la corrida local sin red no reproduce la retención antes de volver a usar ese procedimiento.
 
+### Probador, después de los ajustes
+
+**Segunda corrida** (14 preguntas, las mismas de la primera; sesión session_018y7WtT1fBCjSfGk1mX9FSb). Hubo 10 bien, 4 de ellas con dudas leves, 2 a medias (6 y 9) y 2 mal en el primer intento (11 y 13). En la primera corrida habían sido 8, 2 y 4.
+- La 11 y la 13 fallaron por la misma causa que en la primera corrida: la agregación de fin de año de las reservas y el límite de 1.000 observaciones. Esa información estaba en las descripciones, pero lejos de donde el modelo la buscaba. Se movió (commit «MCP: descripciones según la segunda corrida del probador»):
+  - el límite pasó al comienzo de la descripción de `especificacion_grafico`;
+  - el fin de año de las series de saldo quedó en `frecuencia`;
+  - `pesos_actuales` aclara en qué variantes vale;
+  - `comparar_series` dice que se admite una sola serie internacional;
+  - `buscar_series` aclara qué es `variante_por_defecto`.
+
+**Regresión del manual** (preguntas 12 y 14 a 18, en la segunda corrida): hubo 4 bien y 2 a medias. En las dos, los datos eran correctos y la falla fue una omisión del modelo; ninguna herramienta se cambió por eso.
+- La 14 no menciona la etapa.
+- La 17 no menciona el umbral de Cagan ni la fase de julio, y agrega una frase falsa sobre Alfonsín.
+
+**Tercera corrida** (6 preguntas: 2, 9, 11 y 13, más dos de control; sesión session_018y7WtVBJB61fkYihgM4GMN). Ninguna herramienta devolvió error.
+
+| # | Pregunta | Primera herramienta | Resultado | Antes (2.ª corrida) |
+|---|---|---|---|---|
+| 2 | IPC y dólar oficial, variación mensual de 1989 | comparar_series | bien | bien, con reparos |
+| 9 | salario real RIPTE y desocupación, 2017–2023 | comparar_series | bien: frecuencia común trimestral; el modelo fijó `base_real` por su cuenta | a medias |
+| 11 | promedio anual de las reservas en 2005 y 2015 | obtener_serie con `frecuencia: anual` | mal en el primer intento (saldo de fin de año); bien en el segundo, con la serie mensual y el promedio a mano | mal en el primer intento |
+| 13 | IPC y reservas desde 1970, en un gráfico | especificacion_grafico con `frecuencia: anual` | a medias: entra en el límite al primer intento y avisa `c.agregaciones-distintas`, pero el IPC va en nivel, ilegible desde 1970 | mal en el primer intento |
+| control | base monetaria e inflación interanual desde 2015 | especificacion_grafico | a medias: la cobertura de `buscar_series` (2026-05) no es la de la variante por defecto (2026-04) | no estaba |
+| control | PIB per cápita de Argentina y Brasil, y PIB del INDEC, 1995–2010 | comparar_series | a medias, bien en el segundo intento: el nombre «retropolada (tasas de variación)» hizo esperar tasas, pero el PIB vino en nivel | no estaba |
+
+Se cortó el ciclo acá, porque lo que queda no se arregla con más texto en las descripciones:
+- en la 11, el modelo eligió `frecuencia: anual` antes de leer el parámetro, cuya descripción ya lo explica;
+- en la 13, pedir el IPC en nivel fue una elección del modelo;
+- los otros dos son nombres y datos del catálogo, y van a la lista de pendientes.
+
+Las sugerencias del probador que no entraron fueron:
+- repetir en `buscar_series` y en `especificacion_grafico` que la frecuencia anual de una serie de saldo da el fin de año;
+- sugerir `var_interanual` para el IPC largo;
+- pedir la misma transformación en series de unidades distintas;
+- cambiar la frase de la ficha del salario («arranca en términos reales»), que ya explica la nota A1 de la respuesta.
+
+Si la prueba ciega muestra que hacen falta, se suman.
+
 ### Pendientes
 
-- Repetir el probador (las 14 preguntas y, como regresión, las preguntas 12 y 14 a 18 del manual) en una sesión nueva sobre la rama subida: el servidor local de esta sesión arrancó antes de los cambios.
-- Después del despliegue: verificar en producción, por JSON-RPC, los casos de A1 y A2.
+Para decidir con Camilo (no son de descripciones):
+- **Nombres en los metadatos:**
+  - «Resultado primario y financiero», el nombre de `resultado-fiscal`, cuya variante por defecto es solo el primario;
+  - la variante «Retropolada desde la base 2004 (tasas de variación)» del PIB: las tasas son el método de la retropolación, pero la serie está en nivel.
+- **`buscar_series`, cobertura:** hoy es la de la serie (la unión de sus variantes). Podría ser la de la variante por defecto, o ir por variante. Por ejemplo, `base-monetaria` dice 2026-05, y su variante por defecto, `fin-de-mes`, llega a 2026-04.
+- **`periodo_en_fecha`** (observaciones del probador):
+  - cómo nombra a los interinos;
+  - el campo `asignacion.gobierno.promedio_o_suma`.
+- **Prueba ciega:** vigilar las preguntas 14 y 17 (omisiones del modelo con datos correctos) y la frase falsa sobre Alfonsín.
+
+Después del despliegue:
+- verificar en producción, por JSON-RPC, los casos de A1 y A2, y la CPU de `especificacion_grafico`;
+- entender por qué la corrida local sin red no reproduce la retención de la corrida diaria (ver el hallazgo).
