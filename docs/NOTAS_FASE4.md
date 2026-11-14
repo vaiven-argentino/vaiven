@@ -1226,3 +1226,41 @@ El `revisor-visual` revisó 90 vistas: una página y 23 casos fijos, en 390 y 12
 - La prueba ciega del MCP: el gráfico de varias series cambió (eje de fechas, período en la guía, colores en minúscula). La pregunta 21 de `mcp/PRUEBA_MANUAL.md` pide verificar el eje de fechas.
 - La CPU de `especificacion_grafico` en el panel de Cloudflare, por el período en la guía.
 - Una URL que ya trae dos series iguales se dibuja tal cual: la regla de la serie repetida vale para lo que se edita en el panel.
+
+
+## 4c/4d · Cierre
+
+*14/11/2026 · Los PR B (vaiven-argentino/vaiven#30) y de notas (vaiven-argentino/vaiven#31) se mergearon; el PR B se desplegó y se verificó en producción. Con esto la 4c/4d queda terminada en el código. La SPEC pasa a la v1.9.*
+
+### SPEC v1.9
+
+Incorpora las diferencias anotadas en «4c/4d · Comparación de series» y las decisiones del PR B:
+- `paquetes/grafico/` en la estructura del repositorio (5.4);
+- `ejes=doble` y el período sin `desde` (6.2);
+- el panel con la lista «Serie que editás», también en el escritorio (6.2 y 6.5);
+- la serie agregada, que arranca vacía, el foco y los anuncios (6.2);
+- la serie repetida, que no se admite, y el color de una serie agregada (6.2);
+- el período en el tooltip y el lector de varias series (6.2);
+- las columnas del CSV largo, las hojas del XLSX, los nombres de archivo y la tabla con las columnas del período a pedido (6.2);
+- el contrato validado con las respuestas reales y la prueba de igualdad en el navegador (10).
+
+### Pendientes (por decisión de Camilo, 14/11/2026)
+
+Quedan anotados, sin trabajo previsto en la 4c/4d.
+
+De la 4c/4d:
+1. **Prueba manual del MCP:** las preguntas 19 a 24 de `mcp/PRUEBA_MANUAL.md` (la 21 pide verificar el eje de fechas) y la prueba ciega de la 4b. Hay que vigilar las preguntas 14 y 17 (omisiones del modelo con datos correctos) y la frase falsa sobre Alfonsín.
+2. **CPU de `especificacion_grafico`** en el panel de Cloudflare: mirar si aparecen errores 1102, más ahora que la guía suma el período cuando hay sombreado, y bajar el límite de 1.000 observaciones si aparecen.
+3. **Dos series de la misma unidad con escalas muy distintas:** comparten panel por la regla de la 4.1, y la de menor amplitud queda plana (por ejemplo, el IPC interanual desde 1970 con el PIB real interanual). Se puede dejar así o sumar una regla que las separe, lo que sería un cambio de la SPEC.
+
+De antes, que no son de la 4c/4d:
+- **Nombres en los metadatos:** «Resultado primario y financiero» (`resultado-fiscal`, cuya variante por defecto es solo el primario) y la variante «Retropolada desde la base 2004 (tasas de variación)» del PIB, que está en nivel.
+- **Cobertura en `buscar_series`:** hoy es la de la serie; podría ser la de la variante por defecto o ir por variante.
+- **`periodo_en_fecha`:** cómo nombra a los interinos y el campo `asignacion.gobierno.promedio_o_suma`.
+- **Regeneración sin red del export:** entender por qué la corrida local sin red no reproduce la retención de la corrida diaria.
+- **Observaciones del revisor de datos:**
+  - la nota sobre el promedio de las dos ondas de la EPH puntual;
+  - el aviso de un año base fuera del rango;
+  - un caso de prueba con un año de una sola onda.
+- **Serie repetida que llega por la URL:** una URL con dos series iguales se dibuja tal cual. La regla vale para lo que se edita en el panel.
+
