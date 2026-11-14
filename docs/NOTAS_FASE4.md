@@ -1264,3 +1264,84 @@ De antes, que no son de la 4c/4d:
   - un caso de prueba con un año de una sola onda.
 - **Serie repetida que llega por la URL:** una URL con dos series iguales se dibuja tal cual. La regla vale para lo que se edita en el panel.
 
+
+---
+
+## 4e · Gráfico interactivo en Claude
+
+*14/11/2026 · Paso 0: prueba de concepto antes del plan del gráfico. La 4e no es condición para cerrar la fase 4 (SPEC 11): si MCP Apps no funciona en Claude, se documenta y se frena.*
+
+### Fuentes consultadas (14/11/2026)
+
+| Fuente | Qué dice |
+|---|---|
+| Claude, [quickstart de MCP Apps](https://claude.com/docs/connectors/building/mcp-apps/quickstart) (sin fecha; dice estar verificado con ext-apps 1.7.5) | MIME `text/html;profile=mcp-app`. Por defecto, el iframe solo corre scripts en línea o de su propio origen: «serve the client script from your own origin, or bundle it into the HTML, and list only that origin in `resourceDomains`». `_meta.ui.csp` va en `contents[]` de `resources/read`. El ejemplo es un servidor sin estado y la vista usa `callServerTool`. |
+| Claude: design guidelines, transparent theming, download files, external links y troubleshooting | Todo origen externo está bloqueado salvo lo declarado; `frameDomains` no se aplica en claude.ai y `baseUriDomains` se ignora. El tema llega en `hostContext.theme` (`light` o `dark`) y sus cambios, con `hostcontextchanged`. Descargas: «no download starts from an `<a download>` link, a `blob:` URL, or a `data:` URL»; van por `app.downloadFile`. Enlaces: `app.openLink`, con un modal de confirmación en los conectores personalizados. `ui.domain` tiene que ser `{hash}.claudemcpcontent.com` (no hay dominio propio) y no existe por stdio. A partir de unos 150.000 caracteres, el resultado de una herramienta va a un archivo. |
+| [Overview de la extensión](https://modelcontextprotocol.io/extensions/apps/overview) y especificación (repositorio `modelcontextprotocol/ext-apps`, estable 2026-01-26 y borrador) | La CSP por defecto es `script-src 'self' 'unsafe-inline'`, **sin `unsafe-eval`**. `resourceDomains` se suma a `script-src`, `style-src`, `img-src`, `font-src` y `media-src`. `_meta.ui` en el contenido tiene prioridad sobre el de `resources/list`. `visibility` vale `["model","app"]` por defecto. Un host sin la extensión usa el texto. No hay un límite documentado para el HTML. |
+| SDK `@modelcontextprotocol/ext-apps` (npm) | `latest`: 2.0.4 (27/10/2026); la 2.1.0 está publicada pero sin esa etiqueta. Es compatible con `@modelcontextprotocol/server` 2.4.0. Sus tipos dicen «Views typically run under a strict CSP without `unsafe-eval`». |
+| [Issue ext-apps #671](https://github.com/modelcontextprotocol/ext-apps/issues/671) | **Sigue abierto**, sin respuesta de los mantenedores (última actividad: 28/10/2026). A quienes lo resolvieron les sirvió empaquetar todo en el HTML sin `resourceDomains`, declarar la extensión y poner `_meta.ui` también en el resultado. Un comentario dice: «Local stdio servers are affected. HTTPS connectors work». |
+| Issues relacionados: ext-apps #761, anthropics/claude-ai-mcp #40 y anthropics/claude-code #105199 | Reportes contradictorios sobre `resourceDomains`: anda en Desktop; en claude.ai y en iOS hay capturas sin los dominios declarados. En capturas de la comunidad aparece `unsafe-eval` en claude.ai, sin confirmación oficial. |
+| Skill [`build-mcp-app`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/mcp-server-dev/skills/build-mcp-app/SKILL.md) (plugin `mcp-server-dev`) | «bundling is mandatory»; resultado por debajo de unos 130 KB; «Desktop caches UI resources aggressively». |
+
+### Decisiones tomadas con Camilo (14/11/2026)
+
+| Tema | Decisión |
+|---|---|
+| Cómo probar en Claude | Con una URL de versión del Worker (`wrangler versions upload --preview-alias prueba-4e`), que no pasa a producción. Se sube solo con permiso explícito. |
+| Qué se prueba | La sonda completa, en una sola ronda. |
+| Clientes | Claude web y Claude Desktop. La app del celular y el MCP local en Desktop no se prueban en el Paso 0. |
+
+### Qué se hizo (Paso 0)
+
+- **Recurso `ui://vaiven/grafico`** (`mcp/src/app/recurso.ts`): MIME `text/html;profile=mcp-app`, `_meta.ui.csp.resourceDomains` con el dominio que atiende el pedido (producción o la URL de versión) y `prefersBorder`. Solo `especificacion_grafico` lo declara (`_meta.ui.resourceUri` y la clave vieja `ui/resourceUri`, como `registerAppTool`). El servidor declara la extensión `io.modelcontextprotocol/ui`.
+- **Sonda** (`mcp/app/`): un HTML que muestra:
+  - lo que recibe;
+  - si cargó un script del dominio de Vaivén (`/mcp-app/sonda.js`);
+  - si hay `unsafe-eval`;
+  - si Vega dibuja con el intérprete (`ast: true`) y sin él, y si los dos SVG son iguales;
+  - el tema, el idioma, el contenedor y las capacidades del host.
+
+  Además prueba las tres acciones de la 7.4: volver a llamar a `especificacion_grafico`, `downloadFile` (SVG y PNG) y `openLink`. No es el gráfico definitivo.
+- **Armado** (`mcp/scripts/armar-app.mjs`): esbuild empaqueta la vista con `ext-apps/app-with-deps` y vega-embed, y la pone en línea. El resultado (`mcp/src/app/html.generado.ts`) no se versiona: lo regeneran `pretest`, `preverificar`, `preempaquetar`, el lanzador local y el `build` de `wrangler.jsonc`.
+- **Versión:** servidor 0.3.0; `/salud` dice «4e (sonda)».
+- **Host de la prueba:** `HOST_PRUEBA` (`prueba-4e-vaiven.argentino.workers.dev`) se acepta en `/mcp`. Se quita al cerrar la 4e.
+
+### Tamaño y CPU
+
+- HTML con todo en línea: **1.451.477 caracteres**, de los cuales unos 600 KB son el SDK de la app (zod y el cliente MCP) y unos 850 KB, Vega con Vega-Lite. El Worker pasa a 2.865 KiB (684 KiB comprimido), dentro de los 64 MiB del plan gratuito.
+- `resources/read` del HTML en línea, con `mcp/scripts/medir-cpu.mjs` (Node 22.23.4, en este entorno): **9,8 ms de mediana en caliente** (p90: 13,7) y 12,7 ms en un proceso nuevo. Más de la mitad es serializar el JSON (5,1 ms solo `JSON.stringify`). En la fase 3, producción dio de 2 a 4 veces lo de Node: **todo en línea pasa los 10 ms**. El HTML mínimo con el script desde el dominio propio pesa unos 3 KB y no tiene ese problema. Si hay que ir todo en línea, el Paso 1 tiene que achicar el HTML o servir el recurso ya serializado.
+
+### Host de prueba local (sin Claude)
+
+Una página con `AppBridge` de ext-apps, que lee el recurso del MCP de `wrangler dev` y lo monta en un iframe `sandbox="allow-scripts"` con la CSP del borrador de la especificación más el `resourceDomains` declarado (los archivos quedan en el scratchpad de la sesión, no en el repositorio). Probado en 390 y 1280 px, en claro y oscuro:
+- el script del dominio declarado **cargó**;
+- `unsafe-eval` **bloqueado** (`EvalError`): Vega sin el intérprete falla y **con el intérprete dibuja**;
+- el tema del host llega (`light` y `dark`) y se aplica;
+- funcionan `callServerTool` (otro período: 504 observaciones), `downloadFile` (SVG de 164 KB y PNG) y `openLink`;
+- a 390 px, el doble eje entra en el ancho (usa `width: "container"`).
+
+Esto confirma que la sonda funciona; lo que haga Claude solo se sabe probándola en Claude.
+
+### Verificación
+
+`npm test` (todo pasa, incluidas 9 pruebas nuevas en `mcp/test/app.test.ts` y la lectura del recurso por stdio), `npm run verificar` (sin errores), `uv run pytest -q` (302 pasan, 7 omitidas), el armado del sitio, la revisión de enlaces (1625, sin rotos) y la igualdad con el explorador (**8 de 8**).
+
+### Pendiente: la prueba de Camilo en Claude web y Claude Desktop
+
+Con la URL de versión, siguiendo `mcp/PRUEBA_MANUAL.md`, sección «4. MCP Apps (4e)». La regla de decisión:
+- Si el script del dominio propio carga en web **y** en Desktop: HTML mínimo y script desde el dominio de Vaivén (lo que pide la SPEC).
+- Si falla en alguno: todo en línea, con la CPU de `resources/read` resuelta.
+- Si `unsafe-eval` está bloqueado en alguno, o no está confirmado: `vega-interpreter` siempre.
+- Si la app no aparece en ningún cliente: se documenta y se frena la 4e.
+
+### Preguntas para el plan del Paso 1
+
+1. **Tema oscuro:** los colores van incrustados en la especificación. Hay dos caminos:
+   - un `TEMA_OSCURO` en `paquetes/grafico`, controlado contra `global.css` como el claro, más un parámetro de la herramienta para pedirlo;
+   - que la interfaz cambie los colores, lo que sería una segunda regla.
+
+   Cualquiera de los dos cambia la 7.2.
+2. **Imagen descargable:** el título y el pie con las fuentes y la licencia se arman en `web/src/graficos/explorador.ts` (`lineasPie`, `imagen`). Para dar la misma imagen hay que mudarlos a `paquetes/grafico`.
+3. **Ancho:** los paneles tienen un ancho fijo de 800 px y `angosto` cambia la disposición. En un celular se puede escalar el SVG o pedirle otro ancho a la herramienta.
+4. **Formato en español y exportación:** separar `LOCALE_*`, `dibujarEn` y `exportarImagen` de `web/src/graficos/comun.ts` en un módulo sin dependencias de la web.
+5. **Variante local por stdio:** según el issue #671, la app puede no verse por stdio, y por stdio no hay `ui.domain`.
