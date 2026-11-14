@@ -54,6 +54,10 @@ const VISTAS_EXPLORADOR = [
   // lista completa; con un filtro, solo esas categorías y el aviso de cuántos quedan afuera.
   { url: "?desde=1970&ev=1", eventos: eventosDesde(1970), rayitas: true },
   { url: "?desde=1970&ev=cambiario,deuda", eventos: eventosDesde(1970, ["cambiario", "deuda"]), filtro: ["cambiario", "deuda"] },
+  // Varias series (4c/4d): doble eje (o paneles en 390 px), cuatro paneles con sombreado y eventos, y una internacional.
+  { url: "?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1&s2=tc-oficial&t2=var_mensual", sombreado: true, eventos: true },
+  { url: "?s=reservas&s2=ipc&s3=desocupacion&s4=pib&ejes=paneles", series: 4 },
+  { url: "?s=pib&s2=int-pib&p2=ARG,BRA", paises: 2, series: 2 },
 ];
 
 const controlesExplorador = (pagina) => pagina.$$eval("#x-controles select, #x-controles input, #x-serie, #x-variante",
@@ -87,6 +91,7 @@ async function explorador(pagina, ancho) {
       ok(aviso.startsWith(`Se muestran ${v.eventos} de ${eventosDesde(1970)} eventos (filtro: cambiario, deuda)`), `${id}: el aviso del filtro dice «${aviso}»`);
     }
     if (v.paises) ok(await pagina.$$eval("#x-leyenda-paises > span", (ls) => ls.length) === v.paises, `${id}: la leyenda no tiene ${v.paises} países`);
+    if (v.series) ok(await pagina.$$eval("#x-series-lista li", (ls) => ls.length) === v.series, `${id}: la lista no tiene ${v.series} series`);
     // Ida y vuelta: recargar la URL da los mismos controles.
     const antes = await controlesExplorador(pagina);
     await pagina.reload({ waitUntil: "networkidle" });
@@ -110,7 +115,8 @@ async function explorador(pagina, ancho) {
   ok(await controlesExplorador(pagina) === antes, `${id}: la URL no reproduce la vista`);
   // Descargas de la vista: no vacías.
   const csv = await bajar(pagina, () => pagina.click("#x-bajar-csv"), "csv");
-  ok(csv.bytes > 100 && /^fecha,valor,periodo/.test(readFileSync(csv.ruta, "utf-8")), `${id}: CSV vacío o sin la columna del período`);
+  // CSV largo, también con una serie (decisión del PR B de la 4c/4d).
+  ok(csv.bytes > 100 && readFileSync(csv.ruta, "utf-8").startsWith("fecha,serie,variante,transformacion,unidad,valor,periodo,periodo_proporcion,otros_periodos\n"), `${id}: CSV vacío o sin las columnas del formato largo`);
   const xlsx = await bajar(pagina, () => pagina.click("#x-bajar-xlsx"), "xlsx");
   ok(xlsx.bytes > 3000 && xlsx.nombre.endsWith(".xlsx") && readFileSync(xlsx.ruta).subarray(0, 2).toString() === "PK", `${id}: XLSX vacío o no es un ZIP (${xlsx.bytes} B)`);
   const png = await bajar(pagina, () => pagina.click("#x-bajar-png"), "png");
@@ -134,6 +140,58 @@ async function explorador(pagina, ancho) {
   q = new URL(pagina.url()).search;
   ok(q === "", `${idFiltro}: sin eventos, la URL quedó ${q}`);
   console.log(`${idFiltro}: casillas → URL canónica`);
+  await exploradorVarias(pagina, ancho);
+}
+
+/** Varias series (SPEC 6.2, 4c/4d): agregar y quitar con el teclado, el botón de los ejes y las descargas de la vista. */
+async function exploradorVarias(pagina, ancho) {
+  const id = `explorador (varias series) @ ${ancho}px`;
+  const listo = () => pagina.waitForSelector("#x-grafico[data-listo='1'] svg", { timeout: 15000 });
+  const q = () => new URL(pagina.url()).search;
+  await pagina.goto(`${base}/explorador/?t=var_interanual&desde=1995&hasta=2010`, { waitUntil: "networkidle" });
+  await listo();
+  // Agregar con el teclado: el foco va al selector de la serie nueva, que arranca vacía y no va a la URL.
+  await pagina.focus("#x-agregar");
+  await pagina.keyboard.press("Enter");
+  await pagina.waitForTimeout(300);
+  ok(await pagina.evaluate(() => document.activeElement?.id) === "x-serie", `${id}: al agregar, el foco no va al selector de la serie`);
+  // La URL canónica no escribe `t`: la variación interanual es la vista inicial del IPC.
+  ok(await pagina.$eval("#x-serie", (s) => s.value) === "" && q() === "?desde=1995&hasta=2010", `${id}: la serie agregada no arranca vacía (${q()})`);
+  await pagina.selectOption("#x-serie", "reservas");
+  await pagina.waitForTimeout(800);
+  await listo();
+  ok(q() === "?desde=1995&hasta=2010&s2=reservas", `${id}: la URL quedó ${q()}`);
+  // Dos unidades: doble eje en la computadora y paneles en el celular; el botón pasa a la otra disposición.
+  const angosto = ancho < 600;
+  const antes = await pagina.$eval("#x-ejes", (b) => b.textContent);
+  ok(antes === (angosto ? "Ver en doble eje" : "Ver en paneles"), `${id}: el botón dice «${antes}»`);
+  await pagina.click("#x-ejes");
+  await pagina.waitForTimeout(800);
+  ok(q().endsWith(angosto ? "&ejes=doble" : "&ejes=paneles"), `${id}: el botón de los ejes dejó la URL en ${q()}`);
+  // Quitar la serie 1: la 2 pasa a ser la 1 y conserva el período.
+  await pagina.click("#x-series-lista li:first-child button.quitar");
+  await pagina.waitForTimeout(800);
+  await listo();
+  ok(q().startsWith("?s=reservas&desde=1995&hasta=2010"), `${id}: al quitar la serie 1, la URL quedó ${q()}`);
+  ok(await pagina.evaluate(() => document.activeElement?.id) === "x-agregar", `${id}: al quitar, el foco no va a «Agregar serie»`);
+  // Descargas con varias series: doble eje con sombreado y cuatro paneles.
+  for (const url of ["?t=var_interanual&desde=1995&hasta=2010&sh=gobierno&s2=reservas&ejes=doble", "?s=reservas&s2=ipc&s3=desocupacion&s4=pib&ejes=paneles"]) {
+    await pagina.goto(`${base}/explorador/${url}`, { waitUntil: "networkidle" });
+    await listo();
+    const csv = await bajar(pagina, () => pagina.click("#x-bajar-csv"), "csv");
+    const texto = readFileSync(csv.ruta, "utf-8");
+    ok(texto.startsWith("fecha,serie,variante,transformacion,unidad,valor,") && texto.includes(",reservas,"), `${id}: CSV largo inesperado (${url})`);
+    ok(/^vaiven_ipc_y_reservas|^vaiven_reservas_y_ipc/.test(csv.nombre), `${id}: nombre del CSV inesperado (${csv.nombre})`);
+    const xlsx = await bajar(pagina, () => pagina.click("#x-bajar-xlsx"), "xlsx");
+    ok(xlsx.bytes > 3000 && readFileSync(xlsx.ruta).subarray(0, 2).toString() === "PK", `${id}: XLSX vacío o no es un ZIP (${xlsx.bytes} B)`);
+    const png = await bajar(pagina, () => pagina.click("#x-bajar-png"), "png");
+    ok(png.bytes > 5000, `${id}: PNG vacío (${png.bytes} B)`);
+    const svg = await bajar(pagina, () => pagina.click("#x-bajar-svg"), "svg");
+    const s = readFileSync(svg.ruta, "utf-8");
+    if (url.includes("ejes=doble")) ok(s.includes("Las escalas de los dos ejes son independientes"), `${id}: el SVG del doble eje no lleva el aviso`);
+    else ok(s.includes("4. PIB real") || s.includes("Serie 4"), `${id}: el SVG de los paneles no lleva la serie 4`);
+    console.log(`${id}: ${url}: CSV ${csv.bytes} B, XLSX ${xlsx.bytes} B, PNG ${png.bytes} B (${png.ruta}), SVG ${svg.bytes} B (${svg.ruta})`);
+  }
 }
 
 // La regla de ubicación va debajo del gráfico (segunda revisión externa de la 4b, 2.2): con sombreado, el gráfico empieza en
