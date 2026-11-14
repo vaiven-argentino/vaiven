@@ -6,7 +6,10 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { estadoDesdeUrl, opcionesDe, serieDeUrl, serieVista, urlDesdeEstado, type Documento, type IndiceSerie } from "../src/lib/estado";
+import {
+  estadoDesdeUrl, opcionesDe, serieDeUrl, serieVista, seriesDeUrl, urlDesdeEstado, urlDesdeVista, vistaDesdeUrl,
+  type Documento, type IndiceSerie,
+} from "../src/lib/estado";
 import { categoriasEv } from "../src/lib/periodos";
 
 const EXPORT = join(import.meta.dirname, "..", "..", "export");
@@ -52,3 +55,20 @@ describe("las URL de la 4b dan la misma vista", () => {
   });
 });
 
+// El parser de varias series (4c/4d) lee las URL de una sola serie igual que el de la 4b: la misma serie 1, los mismos
+// avisos y la misma URL canónica.
+describe("las URL de la 4b, con el parser de varias series", () => {
+  it.each(todas)("%s", (url) => {
+    const q = new URLSearchParams(url);
+    const { pedidas, avisos: a1 } = seriesDeUrl(q, indice);
+    expect(pedidas).toHaveLength(1);
+    const docs = pedidas.map((p) => doc(p.serie.id, p.variante));
+    const { estado, avisos: a2, docs: quedan } = vistaDesdeUrl(q, pedidas, docs, CATEGORIAS);
+    const g = guardados[url];
+    expect(estado.series).toHaveLength(1);
+    expect(estado.series[0]).toEqual(g.estado);
+    expect(estado.ejes).toBe("");
+    expect([...a1, ...a2]).toEqual(g.avisos);
+    expect(urlDesdeVista(estado, quedan, indice, CATEGORIAS)).toBe(g.canonica);
+  });
+});

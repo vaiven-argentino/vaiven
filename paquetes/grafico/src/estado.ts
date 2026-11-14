@@ -228,3 +228,126 @@ export function opcionesDe(e: Estado, serie: SerieExportada): Opciones {
   if (e.hasta) o.hasta = e.hasta;
   return o;
 }
+
+// ── Varias series (fase 4c/4d, SPEC 6.2) ─────────────────────────────────────────
+// Los parámetros sin número son los de la serie 1; con sufijo 2, 3 y 4, los de las demás (`s2`, `t2`, `p3`…). Los
+// comunes (`desde`, `hasta`, `sh`, `ev`, `ejes`) no llevan número. La serie 1 se lee y se escribe con las mismas
+// funciones de la 4b (`estadoDesdeUrl`, `urlDesdeEstado`), así una URL de una sola serie da la misma vista y la misma
+// URL canónica que antes.
+
+export const MAX_SERIES = 4;
+/** Disposición pedida (SPEC 4.1): vacío, la automática; `paneles` o `doble`, la que eligió el usuario con el botón. */
+export const EJES = ["", "paneles", "doble"] as const;
+export type EjesVista = (typeof EJES)[number];
+/** Los parámetros de cada serie (con sufijo desde la serie 2). `e` es el país resaltado, como en la ficha. */
+export const PARAMETROS_SERIE = ["s", "v", "p", "e", "pa", "m", "d", "pib", "t", "f", "mm", "base", "log"] as const;
+const COMUNES = ["desde", "hasta", "sh", "ev"] as const;
+
+export interface EstadoVista {
+  /** Una por serie, en orden. El período, el sombreado y los eventos son los mismos en todas (los de la serie 1). */
+  series: Estado[];
+  ejes: EjesVista;
+}
+
+/** Una serie pedida en la URL: el número que traía (para los avisos) y sus parámetros sin sufijo (los comunes, solo en la 1). */
+export interface SeriePedida {
+  numero: number;
+  q: URLSearchParams;
+  serie: IndiceSerie;
+  variante: string;
+}
+
+/**
+ * Primera etapa con varias series: qué series y variantes pide la URL (para saber qué JSON bajar). Los parámetros de
+ * cada serie vuelven sin sufijo, junto con los comunes, para leerlos con `estadoDesdeUrl`. Un índice sin su `s` (por
+ * ejemplo, `t3` sin `s3`) se ignora con un aviso; si falta un índice intermedio, las series se renumeran.
+ */
+export function seriesDeUrl(q: URLSearchParams, indice: IndiceSerie[]): { pedidas: SeriePedida[]; avisos: string[] } {
+  const avisos: string[] = [];
+  const numeros = new Set<number>();
+  for (const clave of q.keys()) {
+    const m = /^([a-z]+)([2-9]|[1-9]\d+)$/.exec(clave);
+    if (m && (PARAMETROS_SERIE as readonly string[]).includes(m[1])) numeros.add(Number(m[2]));
+  }
+  const conSerie = [...numeros].filter((n) => q.get(`s${n}`)).sort((a, b) => a - b);
+  for (const n of [...numeros].filter((x) => !q.get(`s${x}`)).sort((a, b) => a - b)) {
+    const claves = PARAMETROS_SERIE.map((p) => `${p}${n}`).filter((k) => q.has(k));
+    avisos.push(`La URL tiene ${claves.length === 1 ? "un parámetro" : "parámetros"} de la serie ${n} (${claves.join(", ")}) sin \`s${n}\`: se ${claves.length === 1 ? "ignoró" : "ignoraron"}.`);
+  }
+  const sobran = conSerie.slice(MAX_SERIES - 1);
+  if (sobran.length) avisos.push(`Se comparan hasta ${MAX_SERIES} series: se ignoraron las series ${sobran.join(", ")} de la URL.`);
+  const pedidas: SeriePedida[] = [];
+  for (const numero of [1, ...conSerie.slice(0, MAX_SERIES - 1)]) {
+    const sub = new URLSearchParams();
+    for (const p of PARAMETROS_SERIE) {
+      const v = q.get(numero === 1 ? p : `${p}${numero}`);
+      if (v !== null) sub.set(p, v);
+    }
+    // Los comunes van solo con la serie 1: las demás toman su período, su sombreado y sus eventos.
+    for (const p of numero === 1 ? COMUNES : []) {
+      const v = q.get(p);
+      if (v !== null) sub.set(p, v);
+    }
+    const { serie, variante, avisos: a } = serieDeUrl(sub, indice);
+    avisos.push(...a.map((x) => (numero === 1 ? x : `Serie ${numero}: ${x}`)));
+    pedidas.push({ numero, q: sub, serie, variante });
+  }
+  return { pedidas, avisos };
+}
+
+/**
+ * Segunda etapa, con los JSON de cada serie: el estado de la vista. Una segunda serie internacional se ignora con un
+ * aviso (SPEC 4.1: hay una como máximo por vista). El período es el de la serie 1 (por defecto, su vista inicial).
+ */
+export function vistaDesdeUrl(q: URLSearchParams, pedidas: SeriePedida[], docs: Documento[], categorias: readonly string[]):
+  { estado: EstadoVista; avisos: string[]; docs: Documento[] } {
+  const avisos: string[] = [];
+  const series: Estado[] = [];
+  const quedan: Documento[] = [];
+  let internacional = false;
+  pedidas.forEach((p, k) => {
+    const doc = docs[k];
+    if (tienePais(doc)) {
+      if (internacional) {
+        avisos.push(`La serie ${p.numero} (${p.serie.nombre}) es internacional, y hay una como máximo por vista: se ignoró.`);
+        return;
+      }
+      internacional = true;
+    }
+    const r = estadoDesdeUrl(p.q, p.serie.id, p.variante, doc, categorias);
+    avisos.push(...(k === 0 ? r.avisos : r.avisos.map((a) => `Serie ${p.numero}: ${a}`)));
+    const e = r.estado;
+    if (series.length) Object.assign(e, { desde: series[0].desde, hasta: series[0].hasta, sh: series[0].sh, ev: series[0].ev });
+    series.push(e);
+    quedan.push(doc);
+  });
+  const ejes = q.get("ejes") ?? "";
+  let e: EjesVista = "";
+  if ((EJES as readonly string[]).includes(ejes)) e = ejes as EjesVista;
+  else avisos.push(`La URL pedía una disposición que no existe («${ejes}»; usá \`ejes=paneles\` o \`ejes=doble\`): se ignoró.`);
+  return { estado: { series, ejes: e }, avisos, docs: quedan };
+}
+
+/**
+ * La URL canónica de una vista: la de la serie 1 tal como en la 4b; después, los parámetros de las series 2 a 4, con su
+ * sufijo y en el mismo orden (`s` siempre, lo demás solo si difiere de la vista inicial de esa serie); al final, `ejes`.
+ */
+export function urlDesdeVista(v: EstadoVista, docs: Documento[], indice: IndiceSerie[], categorias: readonly string[]): string {
+  const [primera, ...resto] = v.series;
+  let texto = urlDesdeEstado(primera, docs[0], indice, categorias).replace(/^\?/, "");
+  const extra = new URLSearchParams();
+  resto.forEach((e, k) => {
+    const n = k + 2;
+    const q = new URLSearchParams(urlDesdeEstado({ ...e, desde: porDefecto(e.s, e.v, docs[k + 1]).desde, hasta: "", sh: "", ev: [] }, docs[k + 1], indice, categorias));
+    extra.set(`s${n}`, e.s);
+    for (const p of PARAMETROS_SERIE) {
+      if (p === "s") continue;
+      const valor = q.get(p);
+      if (valor !== null) extra.set(`${p}${n}`, valor);
+    }
+  });
+  if (v.ejes) extra.set("ejes", v.ejes);
+  const mas = extra.toString().replaceAll("%2C", ",");
+  texto = [texto, mas].filter(Boolean).join("&");
+  return texto ? `?${texto}` : "";
+}
