@@ -1207,7 +1207,22 @@ El `revisor-visual` revisó 90 vistas: una página y 23 casos fijos, en 390 y 12
 
 - **Dos series de la misma unidad con escalas muy distintas** (el IPC interanual desde 1970 con el PIB real interanual): la 4.1 las pone en el mismo panel, y la de menor amplitud queda plana. Una opción es dejarlo así: se puede pedir otra transformación o acortar el período. Otra es sumar una regla, por ejemplo, separar en paneles si una serie ocupa menos de un 5 % del rango. Sería un cambio de la SPEC.
 
+### En producción (14/11/2026, después del merge de vaiven-argentino/vaiven#30)
+
+- **Merge y despliegue:** el merge (`6d35bc6`) disparó «Publicar» (`wrangler deploy`), que terminó bien. `/salud` responde `{"estado":"ok","version":"0.2.0","fase":"4c/4d"}`; la versión del servidor no cambió.
+- **Explorador, en el navegador y contra producción:**
+  - `?desde=1995&hasta=2010&sh=gobierno&s2=reservas`: en 1280 px, doble eje con «Ver en paneles»; en 390 px, paneles con «Ver en doble eje»;
+  - `?s=reservas&s2=ipc&s3=desocupacion&s4=pib`: cuatro series en la lista, en paneles;
+  - `?t=var_interanual&desde=2000&hasta=2010`: una serie, como antes, y la URL canónica sin `t`;
+  - en todas, el eje de fechas con sus etiquetas y ningún error de JavaScript.
+- **Igualdad:** `web/scripts/igualdad-explorador.mjs --base https://vaiven.argentino.workers.dev`, con el explorador desplegado y el MCP local leyendo el export publicado, dio 8 de 8 vistas.
+- **MCP remoto:** `mcp/scripts/probar-endpoint.mjs https://vaiven.argentino.workers.dev` dio «Todo bien».
+- **Lo que esta verificación no cubre:**
+  - la CPU por pedido de `especificacion_grafico`, que ahora suma el período en la guía cuando hay sombreado. Se ve en el panel de Cloudflare: hay que mirar si aparecen errores 1102;
+  - la prueba ciega del MCP.
+
 ### Pendientes
 
-- La prueba ciega del MCP: el gráfico de varias series cambió (eje de fechas, período en la guía, colores en minúscula), y el MCP en producción no lo tiene hasta el próximo despliegue.
+- La prueba ciega del MCP: el gráfico de varias series cambió (eje de fechas, período en la guía, colores en minúscula). La pregunta 21 de `mcp/PRUEBA_MANUAL.md` pide verificar el eje de fechas.
+- La CPU de `especificacion_grafico` en el panel de Cloudflare, por el período en la guía.
 - Una URL que ya trae dos series iguales se dibuja tal cual: la regla de la serie repetida vale para lo que se edita en el panel.
