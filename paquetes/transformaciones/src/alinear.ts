@@ -153,7 +153,8 @@ export function comparar(p: PedidoComparacion): Comparacion {
   const { disposicion: d, advertencias: avisos } = disposicion(series.map((s) => s.unidad), internacionales[0] ?? null,
     series.map((s) => s.log), p.ejes ?? "auto", p.angosto ?? false);
   const agregadas = avisoAgregaciones(p.series.map((s, k) => (s.opciones?.frecuencia ? k : -1)).filter((k) => k >= 0), p);
-  return { series, disposicion: d, advertencias: [...advertencias, ...avisos, ...(agregadas ? [agregadas] : [])], observaciones };
+  const escalas = avisosEscalas(series, d);
+  return { series, disposicion: d, advertencias: [...advertencias, ...avisos, ...(agregadas ? [agregadas] : []), ...escalas], observaciones };
 }
 
 /** La frecuencia más baja (la de períodos más largos) de los datos de una serie. */
@@ -209,6 +210,37 @@ export function disposicion(unidades: string[], internacional: number | null, lo
     }
   }
   return { disposicion: { tipo, paneles }, advertencias };
+}
+
+/** Cuántas veces el rango de una serie tiene que superar el de otra del mismo eje o panel para avisar (M5 de la 4e). */
+export const FACTOR_ESCALAS = 10;
+
+/**
+ * Dos series de la misma unidad comparten eje o panel (SPEC 4.1), y si el rango de una es más de 10 veces el de otra,
+ * la de menor rango queda casi plana (el dólar interanual de 2002 contra la inflación, o la hiperinflación contra todo).
+ * La disposición no cambia: un aviso lo dice y sugiere cómo leerla (M5, decidido con Camilo el 14/11/2026).
+ */
+function avisosEscalas(series: SerieComparada[], d: Disposicion): AdvertenciaCombinacion[] {
+  const rango = (s: SerieComparada) => {
+    const valores = Object.values(s.resultados).flatMap((r) => r.datos.map((x) => x[1]).filter((v): v is number => v !== null && Number.isFinite(v)));
+    return valores.length ? Math.max(...valores) - Math.min(...valores) : null;
+  };
+  const salida: AdvertenciaCombinacion[] = [];
+  for (const panel of d.paneles) {
+    if (panel.internacional || panel.log || panel.series.length < 2) continue;
+    const rangos = panel.series.map((k) => ({ k, r: rango(series[k]) })).filter((x): x is { k: number; r: number } => x.r !== null && x.r > 0);
+    if (rangos.length < 2) continue;
+    const mayor = rangos.reduce((a, b) => (b.r > a.r ? b : a));
+    const aplastadas = rangos.filter((x) => x !== mayor && mayor.r / x.r > FACTOR_ESCALAS);
+    if (!aplastadas.length) continue;
+    const lugar = d.tipo === "doble_eje" ? "eje" : "panel";
+    const nombres = aplastadas.map((x) => x.k + 1);
+    salida.push({
+      id: "c.escalas-distintas", series: [mayor.k + 1, ...nombres],
+      descripcion: `En el ${lugar} de ${panel.unidad}, la serie ${mayor.k + 1} varía más de ${FACTOR_ESCALAS} veces lo que ${nombres.length === 1 ? `varía la serie ${nombres[0]}, que queda` : `varían las series ${nombres.join(" y ")}, que quedan`} casi ${nombres.length === 1 ? "plana" : "planas"}. Para leer${nombres.length === 1 ? "la" : "las"}, acotá el período, pedí la escala logarítmica (si los valores son positivos) o grafica${nombres.length === 1 ? "la" : "las"} aparte.`,
+    });
+  }
+  return salida;
 }
 
 const NOMBRE_AGREGACION: Record<string, string> = { promedio: "promedio", suma: "suma", fin_de_periodo: "valor de fin de período" };

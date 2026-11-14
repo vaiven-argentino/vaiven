@@ -15,7 +15,7 @@ import {
   type Documento, type Estado, type EstadoVista, type IndiceSerie,
 } from "../lib/estado";
 import { esVariacion, rangoQuiebre, type QuiebreNumerado } from "../lib/ficha";
-import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato } from "../lib/formato";
+import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato, unidadVisible } from "../lib/formato";
 import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen, tema, type Cargados, type VistaGrafico } from "./comun";
 import { diaLegible, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
 import {
@@ -322,13 +322,14 @@ function iniciar(): void {
     };
     armarControles();
     actualizarLog();
-    $("x-unidad").textContent = varias() ? "" : r.unidad;
+    $("x-unidad").textContent = varias() ? "" : unidadVisible(r.unidad);
     ultimoDatoSerie();
     leyendas();
     avisos();
     tabla();
     cita();
     botonEjes();
+    botonLeyenda();
     $<HTMLAnchorElement>("x-ficha").href = urlFicha();
     history.replaceState(null, "", `${location.pathname}${urlDesdeVista(vistaEstado, docs, indice, CATEGORIAS)}${location.hash}`);
     resumenOpciones();
@@ -350,6 +351,14 @@ function iniciar(): void {
     const alternativa = !!d && d.paneles.length === 2 && !d.paneles.some((p) => p.internacional);
     b.hidden = !alternativa;
     if (alternativa) b.textContent = d.tipo === "doble_eje" ? "Ver en paneles" : "Ver en doble eje";
+  }
+
+  /** Con varias series, el botón que pasa de los nombres al final de las líneas a la leyenda única y al revés (N8). */
+  function botonLeyenda(): void {
+    const b = $<HTMLButtonElement>("x-leyenda");
+    b.hidden = !varias();
+    b.textContent = vistaEstado.leyenda ? "Nombres en las líneas" : "Leyenda arriba";
+    b.setAttribute("aria-pressed", String(!!vistaEstado.leyenda));
   }
 
   /** El último dato de cada variante y su atraso respecto del calendario de la fuente, como en la ficha. */
@@ -710,7 +719,7 @@ function iniciar(): void {
     const d = ultimo.comparacion.disposicion;
     const unidades = [...new Set(d.paneles.map((p) => p.unidad))];
     const titulo = varias() ? `Comparación: ${docs.map((x) => x.nombre).join(" · ")}` : `${docs[0].nombre} · ${docs[0].nombre_variante}`;
-    const subtitulo = varias() ? (unidades.length === 1 ? unidades[0] : "Varias unidades: cada una en su eje o en su panel") : ultimo.r.unidad;
+    const subtitulo = varias() ? (unidades.length === 1 ? unidadVisible(unidades[0]) : "Varias unidades: cada una en su eje o en su panel") : unidadVisible(ultimo.r.unidad);
     // En paneles, 200 px por panel (el alto mínimo es 180 px, SPEC 6.2).
     const alto = d.tipo === "paneles" ? Math.max(400, d.paneles.length * 200) : 400;
     const spec = entrada(900, alto, { titulo, subtitulo, pie: lineasPie() });
@@ -968,6 +977,13 @@ function iniciar(): void {
     const d = ultimo?.comparacion.disposicion;
     if (!d) return;
     vistaEstado.ejes = d.tipo === "doble_eje" ? "paneles" : angosto.matches ? "doble" : "";
+    avisosUrl = [];
+    void actualizar();
+  });
+
+  $("x-leyenda").addEventListener("click", () => {
+    const { leyenda: _l, ...resto } = vistaEstado;
+    vistaEstado = vistaEstado.leyenda ? resto : { ...resto, leyenda: true };
     avisosUrl = [];
     void actualizar();
   });

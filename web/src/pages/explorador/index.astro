@@ -193,6 +193,8 @@ const datos = JSON.stringify({ series, tipos, etapas, categorias, version_sitio:
         <p class="unidad" id="x-unidad"></p>
         <!-- Con dos unidades: «Ver en paneles» en el doble eje y «Ver en doble eje» en los paneles (SPEC 6.2). -->
         <button type="button" class="boton-ejes" id="x-ejes" hidden>Ver en paneles</button>
+        <!-- Con varias series: los nombres al final de las líneas o una leyenda única arriba (URL `ley=1`, N8 de la 4e). -->
+        <button type="button" class="boton-ejes" id="x-leyenda" aria-pressed="false" hidden>Leyenda arriba</button>
       </div>
       <p class="ultimo" id="x-ultimo"></p>
 

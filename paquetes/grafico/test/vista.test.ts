@@ -11,7 +11,7 @@ import {
 import {
   AVISO_DOBLE_EJE, armarVista, bandasDe, categoriasEv, episodiosEnRango, especificacion, esVariacion, eventosEnRango,
   lecturasGuia, nombreSombreadoEnFrase, numerarQuiebres, partirEnRenglones, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
-  vistaDesdeUrl, EPISODIO, type Documento, type IndiceSerie, type Tema,
+  vistaDesdeUrl, urlDesdeVista, rotuloQueEntra, EPISODIO, type Documento, type IndiceSerie, type Tema,
 } from "../src/index";
 
 const EXPORT = join(import.meta.dirname, "..", "..", "..", "export");
@@ -241,3 +241,66 @@ describe("con varias series", () => {
 });
 
 void ({} as Resultado);
+
+describe("cómo se identifican las series (N8, M4 y M6 de la 4e)", () => {
+  type Capa = Record<string, unknown> & { mark?: { type?: string; align?: string; strokeDash?: number[] }; data?: { values?: Array<Record<string, unknown>> }; layer?: Capa[] };
+  const todas = (spec: Record<string, unknown>): Capa[] => {
+    const salida: Capa[] = [];
+    const recorrer = (c: Capa) => { salida.push(c); for (const k of ["layer", "vconcat"]) for (const h of (c[k] as Capa[] | undefined) ?? []) recorrer(h); };
+    recorrer(spec as Capa);
+    return salida;
+  };
+  const nombres = (spec: Record<string, unknown>) => todas(spec)
+    .filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "pais")
+    .flatMap((c) => (c.data?.values ?? []).map((v) => v.pais));
+
+  it("por defecto, cada serie lleva su nombre al final de la línea, también la que va sola en su eje", () => {
+    const v = armar("?t=var_interanual&desde=2000&hasta=2010&s2=ipc&v2=provincias&t2=var_interanual&s3=reservas");
+    expect(v.comparacion.disposicion.tipo).toBe("doble_eje");
+    expect(new Set(nombres(v.especificacion))).toEqual(new Set(["Inflación minorista (IPC) · oficial", "Inflación minorista (IPC) · provincias", "Reservas internacionales"]));
+    // En el doble eje, los nombres van dentro del gráfico (alineados a la derecha), no en el margen del eje derecho.
+    expect(todas(v.especificacion).filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "pais").every((c) => c.mark!.align === "right")).toBe(true);
+    valido(v.especificacion);
+  });
+
+  it("el título de cada eje es solo la unidad, horizontal y arriba", () => {
+    const v = armar("?t=var_interanual&desde=2000&hasta=2005&s2=reservas");
+    const ejes = todas(v.especificacion).flatMap((c) => {
+      const y = (c.encoding as { y?: { title?: string; axis?: { titleAngle?: number } } } | undefined)?.y;
+      return y?.title ? [{ titulo: y.title, angulo: y.axis?.titleAngle }] : [];
+    });
+    expect(ejes).toEqual(expect.arrayContaining([{ titulo: "Variación % interanual", angulo: 0 }, { titulo: "Millones de US$", angulo: 0 }]));
+  });
+
+  it("con ley=1, una leyenda única arriba (con el lado del eje) y ningún nombre al final de las líneas", () => {
+    const v = armar("?t=var_interanual&desde=2000&hasta=2010&s2=reservas&ley=1");
+    expect(v.comparacion.disposicion.tipo).toBe("doble_eje");
+    expect(nombres(v.especificacion)).toEqual([]);
+    const textos = todas(v.especificacion).filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "texto")
+      .flatMap((c) => (c.data?.values ?? []).map((x) => x.texto));
+    expect(textos).toEqual(["1. Inflación minorista (IPC) (eje izq.)", "2. Reservas internacionales (eje der.)"]);
+    valido(v.especificacion);
+  });
+
+  it("ley=1 va y vuelve por la URL, solo con varias series", () => {
+    const { estado, docs } = vistaDe("?t=var_interanual&s2=reservas&ley=1");
+    expect(estado.leyenda).toBe(true);
+    expect(urlDesdeVista(estado, docs, indice, CATEGORIAS)).toMatch(/&ley=1$/);
+    const una = vistaDe("?ley=1");
+    expect(una.estado.leyenda).toBeUndefined();
+  });
+
+  it("la segunda variante de una misma serie va con trazo discontinuo (M4)", () => {
+    const v = armar("?t=var_interanual&desde=2000&hasta=2010&s2=ipc&v2=provincias&t2=var_interanual");
+    const conTrazo = todas(v.especificacion).filter((c) => c.mark?.type === "line" && c.mark.strokeDash);
+    expect(conTrazo).toHaveLength(1);
+    valido(v.especificacion);
+  });
+
+  it("los rótulos de las bandas: el nombre corto, sus iniciales o nada (M6)", () => {
+    expect(rotuloQueEntra("Macri", 200)).toBe("Macri");
+    expect(rotuloQueEntra("A. Fernández", 30)).toBe("AF");
+    expect(rotuloQueEntra("Duhalde", 32)).toBe("Duh.");
+    expect(rotuloQueEntra("Duhalde", 5)).toBe("");
+  });
+});

@@ -223,3 +223,23 @@ describe("ajustes tras la prueba del MCP", () => {
     expect(a.advertencias.map((x) => x.id)).toEqual(["c.frecuencia-comun", "c.agregaciones-distintas"]);
   });
 });
+
+describe("escalas muy distintas en un mismo eje o panel (M5, 4e)", () => {
+  const variacion = { transformacion: "var_interanual" as const };
+  it("avisa si el rango de una serie es más de 10 veces el de otra de la misma unidad", () => {
+    // La hiperinflación (1989–1990) contra el crecimiento del PIB: el mismo eje, «variación % interanual».
+    const c = comparar({ series: [{ documento: IPC, opciones: variacion }, { documento: PIB, opciones: variacion }], desde: "1985", hasta: "2000" });
+    expect(c.disposicion.tipo).toBe("unico");
+    const aviso = c.advertencias.find((a) => a.id === "c.escalas-distintas");
+    expect(aviso).toMatchObject({ series: [1, 2] });
+    expect(aviso!.descripcion).toMatch(/la serie 1 varía más de 10 veces lo que varía la serie 2, que queda casi plana/);
+  });
+  it("no avisa con rangos parecidos", () => {
+    const c = comparar({ series: [{ documento: IPC, opciones: variacion }, { documento: PIB, opciones: variacion }], desde: "2005", hasta: "2010" });
+    expect(c.advertencias.some((a) => a.id === "c.escalas-distintas")).toBe(false);
+  });
+  it("no avisa entre series de unidades distintas (van en ejes distintos)", () => {
+    const c = comparar({ series: [{ documento: IPC, opciones: variacion }, { documento: RESERVAS }], desde: "1985", hasta: "2000" });
+    expect(c.advertencias.some((a) => a.id === "c.escalas-distintas")).toBe(false);
+  });
+});

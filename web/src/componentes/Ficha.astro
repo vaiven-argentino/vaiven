@@ -6,7 +6,7 @@ import { NOMBRE_DENOMINADOR, apa, bibtex, nombreTransformacion, textoCita } from
 import { MOSTRAR_BIBLIOGRAFIA, catalogo, descargaCompleta, eventos as leerEventos, insumosDe, periodos as leerPeriodos, quiebres as leerQuiebres, tamano, urlFicha, type DocumentoSerie, type SerieCatalogo } from "../lib/export";
 import { OPCIONES_SOMBREADO, REGLA_CORTA, nombreSombreado } from "../lib/periodos";
 import { aniosDe, crecimientoPorDecada, desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial } from "../lib/ficha";
-import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, cobertura, diaDeVersion, fechaCorta, textoAtraso, ultimoDato } from "../lib/formato";
+import { NOMBRE_ESTADO, NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, cobertura, diaDeVersion, fechaCorta, textoAtraso, ultimoDato, unidadVisible } from "../lib/formato";
 
 interface Props {
   serie: SerieCatalogo;
@@ -123,7 +123,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
   <section class="vista" aria-labelledby="titulo-grafico">
     <div class="vista-cabeza">
       <h2 id="titulo-grafico">{doc.es_variante_por_defecto ? "Gráfico" : `Gráfico · ${doc.nombre_variante}`}</h2>
-      <p class="unidad" id="unidad-grafico">{r.unidad}</p>
+      <p class="unidad" id="unidad-grafico">{unidadVisible(r.unidad)}</p>
     </div>
 
     <details class="panel-opciones" id="panel-opciones" open data-requiere-js hidden>
@@ -296,7 +296,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
       <div class="tabla-marco" tabindex="0" role="region" aria-label="Tabla de datos (con desplazamiento)">
         <table>
           <caption class="visualmente-oculto">{titulo}: datos de la vista actual</caption>
-          <thead><tr><th scope="col">Fecha</th><th scope="col" id="tabla-unidad">{r.unidad}</th><th scope="col" id="tabla-periodo" hidden></th><th scope="col" id="tabla-proporcion" hidden>Proporción</th><th scope="col" id="tabla-otros" hidden>Otros períodos</th></tr></thead>
+          <thead><tr><th scope="col">Fecha</th><th scope="col" id="tabla-unidad">{unidadVisible(r.unidad)}</th><th scope="col" id="tabla-periodo" hidden></th><th scope="col" id="tabla-proporcion" hidden>Proporción</th><th scope="col" id="tabla-otros" hidden>Otros períodos</th></tr></thead>
           <tbody id="tabla-cuerpo">
             {filasTabla(r, variacion).map((f) => (
               <tr class={f.excluido ? "excluido" : undefined}><th scope="row">{f.etiqueta}</th><td>{f.valor}</td></tr>

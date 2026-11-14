@@ -10,7 +10,7 @@ import { repoReal } from "./ayuda";
 const repo = repoReal();
 const CONTRATO = join(import.meta.dirname, "..", "..", "tests", "contrato");
 const ajv = new Ajv2020({ allErrors: true, strict: false });
-const validar = (nombre: string) => ajv.compile(JSON.parse(readFileSync(join(CONTRATO, `${nombre}-1.1.schema.json`), "utf-8")));
+const validar = (nombre: string) => ajv.compile(JSON.parse(readFileSync(join(CONTRATO, `${nombre}-1.2.schema.json`), "utf-8")));
 const comparar = validar("comparar_series");
 const grafico = validar("especificacion_grafico");
 
@@ -31,14 +31,14 @@ const GRAFICO: ArgsEspecificacion[] = [
   { series: [{ id: "ipc", frecuencia: "anual" }, { id: "reservas", frecuencia: "anual" }], desde: "1990", hasta: "2020" },
 ];
 
-describe("comparar_series cumple comparar_series-1.1", () => {
+describe("comparar_series cumple comparar_series-1.2", () => {
   it.each(COMPARAR.map((a, k) => [k + 1, a] as const))("caso %i", async (_, args) => {
     const r = await compararSeries(repo, args);
     expect(comparar(JSON.parse(JSON.stringify(r))), JSON.stringify(comparar.errors)).toBe(true);
   });
 });
 
-describe("especificacion_grafico cumple especificacion_grafico-1.1", () => {
+describe("especificacion_grafico cumple especificacion_grafico-1.2", () => {
   it.each(GRAFICO.map((a, k) => [k + 1, a] as const))("caso %i", async (_, args) => {
     const r = await especificacionGrafico(repo, args);
     expect(grafico(JSON.parse(JSON.stringify(r))), JSON.stringify(grafico.errors)).toBe(true);

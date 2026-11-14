@@ -8,7 +8,7 @@ import {
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
-import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero } from "../lib/formato";
+import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, unidadVisible } from "../lib/formato";
 import { diaLegible, especificacion, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
 import {
   ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, bandasDe, columnaPeriodo, columnasDe, contextoDe,
@@ -226,7 +226,7 @@ function iniciar(): void {
     const positivos = r.datos.every((d) => d[1] === null || d[1] > 0);
     cLog.disabled = !positivos;
     campoLog.classList.toggle("deshabilitado", !positivos);
-    $("unidad-grafico")!.textContent = r.unidad;
+    $("unidad-grafico")!.textContent = unidadVisible(r.unidad);
     leyendaPaises();
     $("resumen-grafico")!.textContent = resumen(r, r.unidad, variacion, quiebres)
       + (sombreado() || ultimo.eventos.length ? textoSombreado(sombreado() ?? "gobierno", ultimo.periodos, ultimo.eventos, tiposPeriodo()) : "");
@@ -354,7 +354,7 @@ function iniciar(): void {
 
   function tabla(r: Resultado, variacion: boolean): void {
     const cuerpo = $<HTMLTableSectionElement>("tabla-cuerpo")!;
-    $("tabla-unidad")!.textContent = r.unidad;
+    $("tabla-unidad")!.textContent = unidadVisible(r.unidad);
     const sh = sombreado();
     const conPeriodo = !!sh && !!ultimo?.periodos.length;
     const cabPeriodo = $("tabla-periodo");
@@ -487,7 +487,7 @@ function iniciar(): void {
       ...marcasDelGrafico(),
       impreso: {
         titulo: `${doc.nombre} · ${doc.nombre_variante}`,
-        subtitulo: r.unidad,
+        subtitulo: unidadVisible(r.unidad),
         pie: [`Fuentes: ${fuentes}.`, ...lineaPaises(), ...lineasMarcas,
           `Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. ${licenciaImagen()}`, location.href],
       },
