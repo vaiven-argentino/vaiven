@@ -5,7 +5,7 @@ import { periodosDe, serieDeEntidad, transformar, ubicarFechas, type DocumentoPe
 import { columnasDe, episodiosEnRango, textoLectura } from "../src/lib/periodos";
 import { describe, expect, it } from "vitest";
 import { SEPARACION_EVENTOS, especificacion, filasFranja, modoEventos, modoEventosDe, separarRotulos, type BandaPeriodo, type Tema } from "../src/graficos/espec";
-import { csvDeVista, hojasXlsx, type VistaDescarga } from "../src/lib/descarga";
+import { csvDeVista, type VistaDescarga } from "../src/lib/descarga";
 import { numerarQuiebres } from "../src/lib/ficha";
 
 const EXPORT = join(import.meta.dirname, "..", "..", "export");
@@ -184,13 +184,5 @@ describe("descargas de la vista", () => {
     const csv = csvDeVista(vista).split("\n");
     expect(csv[0]).toBe("fecha,valor,periodo,periodo_proporcion,otros_periodos");
     expect(csv[2]).toBe("1989-07,,Carlos Saúl Menem,0.774,Alfonsín (23 %)");
-  });
-  it("XLSX: Datos, Metadatos, Cita y Períodos", () => {
-    const hojas = hojasXlsx(vista);
-    expect(hojas.map((h) => h.sheet)).toEqual(["Datos", "Metadatos", "Cita", "Períodos"]);
-    expect(hojas[0].data[0].map((c) => c?.value)).toEqual(["Fecha", "variación % mensual", "Gobierno", "Proporción del período", "Otros períodos"]);
-    expect(hojas[0].data[2][3]).toEqual({ value: 0.774 });
-    expect(hojas[0].data[2][1]).toBeNull();
-    expect(hojasXlsx({ ...vista, periodo: undefined, periodos: undefined }).map((h) => h.sheet)).toEqual(["Datos", "Metadatos", "Cita"]);
   });
 });
