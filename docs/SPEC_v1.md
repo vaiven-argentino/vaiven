@@ -1,6 +1,6 @@
-# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.6
+# Vaivén · Series económicas argentinas, 1970–hoy · SPEC v1.7
 
-*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a · v1.2: 07/11/2026, segunda revisión de la 4a · v1.3: 12/11/2026, períodos y eventos de la 4b · v1.4: 12/11/2026, correcciones de la revisión externa de la 4b (datos y método) · v1.5: 12/11/2026, correcciones de la revisión externa de la 4b (interfaz) · v1.6: 13/11/2026, cierre de la 4b (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
+*v1: 22/10/2026 · v1.1: 05/11/2026, incorpora lo decidido en las fases 1 a 4a · v1.2: 07/11/2026, segunda revisión de la 4a · v1.3: 12/11/2026, períodos y eventos de la 4b · v1.4: 12/11/2026, correcciones de la revisión externa de la 4b (datos y método) · v1.5: 12/11/2026, correcciones de la revisión externa de la 4b (interfaz) · v1.6: 13/11/2026, cierre de la 4b · v1.7: 13/11/2026, comparación de series (4c/4d) y gráfico interactivo en el MCP (4e) (ver «Historial de versiones», al final; el detalle de cada decisión queda en `NOTAS_FASE1.md` a `NOTAS_FASE4.md`) · Documentos relacionados: `DECISIONES_v0.md`, `ARQUITECTURA_v0.md`, `planificacion/catalogo_mvp_propuesta.csv`, `planificacion/inventario_graficos.csv`*
 
 ---
 
@@ -305,6 +305,32 @@ Reglas:
 - Nunca se interpola: un dato faltante o excluido da `null` en todo lo que lo usa, y un insumo con un subperíodo faltante también. `indice_desde_tasas` corta la cadena en un año sin dato.
 - Las medidas se ofrecen solo si el export trae sus insumos; la web y el MCP los leen recién cuando se piden.
 
+### 4.1 Comparación de series
+Un módulo de la librería (`paquetes/transformaciones/alinear.ts`) combina hasta 4 series ya transformadas. Lo usan el explorador, las descargas de la vista, `comparar_series` y `especificacion_grafico`. Igual que `ubicacion.ts`, no tiene una segunda implementación.
+
+- **Cada serie con su cadena.** Cada serie aplica su propia cadena de transformaciones (sección 4, en el orden fijo) antes de combinarse. La combinación no transforma nada: solo agrupa, alinea y avisa.
+- **Rango común.** `desde` y `hasta` valen para todas las series. Las fechas sin dato de una serie dan `null`, y nunca se interpola.
+- **Unidad resultante.** Es la unidad de cada serie después de su cadena (por ejemplo, «% de variación interanual» o «índice, base 2004 = 100»). Dos series comparten panel solo si su unidad resultante es idéntica.
+- **Disposición.** La decide la cantidad de unidades resultantes:
+  - **Una unidad:** un solo gráfico.
+  - **Dos unidades:** doble eje por defecto.
+    - El eje izquierdo es el de la unidad de la primera serie. Cada eje lleva, junto a su título, una muestra del trazo de sus series.
+    - Cada eje toma un rango automático que incluye todos los datos visibles. Si los dos rangos incluyen el cero, los ceros se alinean, para que una serie no parezca negativa cuando la otra cruza el cero.
+    - El gráfico lleva fijo el aviso: «Las escalas de los dos ejes son independientes: que las líneas se crucen o se acerquen no indica una relación entre las series».
+    - Los paneles son la alternativa: `ejes=paneles` en la URL y `ejes: "paneles"` en el MCP.
+  - **Tres o cuatro unidades, o una serie internacional junto con otra serie:** paneles, sin alternativa. Un doble eje no puede mostrar tres unidades, y 8 países en un eje con otra serie en el segundo no se leen.
+  - **Paneles:**
+    - uno por unidad resultante, en el orden en que aparece la primera serie de cada unidad, hasta 4;
+    - comparten el eje temporal, el sombreado y los eventos;
+    - con una sola unidad, `ejes=paneles` se ignora con un aviso.
+- **Frecuencias distintas.**
+  - **En el gráfico:** cada serie en su frecuencia, ubicada con `ubicacion.ts` (sección 2.4).
+  - **Alineación a frecuencia común** (tabla de la vista, XLSX en formato ancho y `comparar_series` por defecto): todas las series pasan a la frecuencia más baja del conjunto, con la `agregacion` de cada una y solo con períodos completos (como `frecuencia`). El orden es mensual < trimestral < anual. Una serie semestral (EPH puntual) lleva la frecuencia común a anual, porque la onda no es un semestre calendario. Una serie diaria cuenta como mensual.
+  - **Límite:** la alineación usa la transformación `frecuencia` de cada serie, y solo después aplica la medida y la variación. Por eso una variación interanual alineada a anual es la variación del promedio anual, y no el promedio de las variaciones mensuales. Se avisa.
+- **Serie internacional.** Como máximo una por vista. Si hay otras series, la vista va en paneles, y la internacional ocupa uno propio con sus países (hasta 8, sección 6.2), aunque otra serie tenga la misma unidad resultante. Para el límite de 4, cuenta como una serie.
+- **Advertencias.** Cada serie trae las suyas, también las de sus insumos. La combinación agrega las propias: frecuencia común aplicada, una serie sin datos en el rango, `ejes=paneles` ignorado.
+- **Límite de observaciones:** 10.000 en total, sumando las series y los países (sección 7.3).
+
 ---
 
 ## 5. Pipeline
@@ -351,7 +377,8 @@ vaiven/
 ├── worker/             punto de entrada del Worker: assets estáticos + /mcp
 ├── tests/              unitarios (Python y TS) y casos de la bibliografía
 ├── .github/workflows/  actualizar.yml, pruebas.yml, publicar.yml, release.yml (acciones fijadas por SHA)
-├── .claude/agents/     subagentes de Claude Code (explorador, verificador de fuentes, revisor de datos, revisor visual, tester)
+├── .claude/agents/     subagentes de Claude Code, en Sonnet (explorador, tester, revisor de datos, revisor visual, probador del MCP, verificador de fuentes; sección 11)
+├── .mcp.json           servidor MCP local por stdio, para el probador del MCP
 ├── package.json        workspaces de npm
 ├── CITATION.cff, LICENSE (MIT), LICENSE-DATOS (CC BY 4.0)
 ```
@@ -366,7 +393,7 @@ vaiven/
 | **Inicio** | Qué es Vaivén, accesos a catálogo y explorador, series destacadas, última actualización. |
 | **Catálogo** | Las 39 series por bloque, con filtros (bloque, prioridad, frecuencia, fuente) y búsqueda. |
 | **Ficha de serie** | Último dato bien visible (y su atraso respecto del calendario habitual de la fuente, que nombra al intermediario si el atraso es de la copia de datos.gob.ar; la versión de las fuentes de descarga manual); gráfico con quiebres y, a pedido, períodos sombreados y eventos marcados, con filtro por categoría (apagados por defecto; parámetros `sh` y `ev`, como en el explorador), con un enlace a la misma vista en el explorador; selector de variante; transformaciones y medidas (con su IPC o su PIB); tabla; descargas; metodología; quiebres; fuentes; uso en la bibliografía (fichas del inventario: oculto hasta que la cátedra responda, sección 12); cómo citar. En las series internacionales, la selección inicial de países con el elegido resaltado y la tabla por década (como en el explorador, 6.2). |
-| **Explorador** | Hasta 4 series a la vez, transformaciones por serie, período, frecuencia, sombreado por gobierno, plan o régimen, eventos, dos ejes cuando hace falta. En las series internacionales, selector de países y agregados. |
+| **Explorador** | Hasta 4 series a la vez (una puede ser internacional, con hasta 8 países), cada una con su variante y sus transformaciones. Doble eje con dos unidades (los paneles, a un clic) y paneles apilados con tres o más. Período, sombreado por gobierno, mandato, ministro, plan, régimen cambiario o etapa del curso, y eventos. Tabla a la frecuencia común y descargas de la vista. |
 | **Períodos** | Línea de tiempo de gobiernos, ministros de Economía, planes, regímenes cambiarios, etapas del curso, episodios y eventos (los carriles de planes y episodios, en el gris de la franja). Debajo, una tabla compacta por tipo: nombre · desde · hasta · carácter o cargo · marcas (◇ corte convencional, ⚠ «fecha a confirmar» en las de confianza baja); en los eventos, nombre · fecha · vigente desde · categoría. Cada fila es un `<details>` que se despliega con la descripción, las notas, los mandatos o las fases, las fuentes con su confianza y los accesos al explorador (una lista de enlaces). Cada fila conserva su ancla `#id` (también los mandatos y las fases); la página se lee entera sin JavaScript, y un script mínimo abre la fila al llegar con un `#id`. En el celular, cada fila va en una línea (nombre corto, fechas y marcas). Accesos al explorador ya filtrados (gobiernos, mandatos y etapas: inflación interanual, PIB real, desocupación, tipo de cambio real, reservas y resultado fiscal; ministros, planes y regímenes: inflación mensual, tipo de cambio oficial, tipo de cambio real y reservas; de un año antes a un año después, con el sombreado de ese tipo). |
 | **Metodología** | Capas, empalmes, quiebres, variantes, glosario, revisiones. |
 | **Para agentes de IA** | Cómo conectar el MCP remoto (conector personalizado en Claude) y el local; lista de herramientas; ejemplos. |
@@ -374,18 +401,54 @@ vaiven/
 | **Cómo citar / Acerca / Licencias** | Cita sugerida, DOI, créditos, licencias de cada fuente. |
 
 ### 6.2 Explorador
-En la fase 4b, el explorador (`/explorador/`) muestra **una serie por vez** (o una internacional con hasta 8 países); la comparación de hasta 4 series y los dos ejes llegan en la 4c.
-- **Estado en la URL:** series, variantes, transformaciones, período y sombreado quedan en la URL, para compartir una vista exacta. Los parámetros son los de la ficha (`t`, `m`, `d`, `pib`, `pa`, `f`, `mm`, `base`, `desde`, `hasta`, `log`) más `s` y `v` (serie y variante), `p` (países, el resaltado primero), `sh` (sombreado: `catedra`, `gobierno`, `mandato`, `ministro`, `plan`, `regimen_cambiario`) y `ev` (eventos). Lo que coincide con la vista inicial de la serie no se escribe; un parámetro que la serie no admite se ignora con un aviso. Las comas de las listas (`p`, `ev`) van sin codificar.
+En la fase 4b, el explorador (`/explorador/`) mostraba una serie por vez. Desde la 4c/4d compara **hasta 4 series** (sección 4.1).
+- **Estado en la URL:**
+  - Las series, variantes, transformaciones, período, sombreado y eventos van en la URL, así una vista exacta se puede compartir.
+  - **Parámetros de cada serie:** `s`, `v`, `t`, `m`, `d`, `pib`, `pa`, `f`, `mm`, `base`, `log` y `p` (países: el resaltado primero; solo en la serie internacional).
+    - Sin número son los de la serie 1; con sufijo `2`, `3` y `4`, los de las demás (`s2`, `t2`, `p3`…). Una URL de la 4b, con una sola serie, sigue dando la misma vista.
+  - **Parámetros comunes:** `desde`, `hasta`, `sh`, `ev` y `ejes`.
+  - Lo que coincide con la vista inicial de cada serie no se escribe.
+  - Un parámetro que la serie no admite se ignora con un aviso, y también un índice sin su `s` (por ejemplo, `t3` sin `s3`).
+  - Si falta un índice intermedio (`s3` sin `s2`), las series se renumeran al canonizar la URL.
+  - Las comas de las listas (`p`, `ev`) van sin codificar.
+- **Varias series:**
+  - En la sección «Serie» del panel, cada serie tiene su bloque, plegable, con serie, variante y transformación. Hay un botón «Agregar serie» (hasta 4) y, en cada bloque, «Quitar».
+  - El orden de los bloques es el de los índices. Al quitar una serie, las siguientes suben.
+  - No se puede agregar una segunda serie internacional: el selector la muestra deshabilitada, con la razón.
+  - Cada serie lleva un color de la paleta categórica, en orden fijo según su índice. El color sigue a la serie: no cambia al quitar otra (al quitar la serie 2, la serie 3 conserva su color hasta que se recarga la URL canónica).
+  - El nombre de cada serie va al final de su línea, como en las series internacionales.
+  - Los países de la serie internacional usan la paleta de 8 de su panel, sin mezclarse con los colores de las otras series.
+- **Disposición** (regla de 4.1):
+  - **Doble eje:**
+    - un botón «Ver en paneles» va junto al gráfico, a la vista, y no en el panel de controles;
+    - en paneles, el mismo lugar ofrece «Ver en doble eje».
+  - **Paneles:**
+    - apilados, con eje temporal común; el eje de fechas va solo en el último;
+    - cada panel lleva arriba su unidad y los nombres de sus series;
+    - **alto:** el conjunto ocupa el 60 % del alto de la pantalla, con un mínimo de 180 px por panel; si no alcanza, la página se desplaza.
+  - **Escala logarítmica:** `log` es de cada serie, pero se aplica a su eje o a su panel. Si las series de un eje o de un panel no coinciden, vale la de la primera, con un aviso.
+  - El sombreado y las reglas de los eventos cruzan todos los paneles. La franja de los planes va arriba del primero, y la de los episodios, debajo del último.
+  - La regla de densidad de los eventos se aplica una sola vez, para todo el gráfico.
 - **Parámetro `ev`:** `ev=1` marca todo (las categorías de `eventos.json` y los episodios); una lista separada por comas marca solo esas categorías (`ev=cambiario,deuda`; `episodio` para los episodios, por ejemplo `ev=deuda,episodio`). La forma canónica sigue el orden de `eventos.json`, con `episodio` al final, y con todas las categorías se escribe `ev=1`. Una categoría que no existe se ignora con un aviso. En la ficha y en el explorador, el filtro va en casillas dentro de «Sombreado y eventos», y con un filtro parcial un aviso dice cuántos eventos del rango quedan afuera («Se muestran 12 de 30 eventos (filtro: cambiario, deuda)»). No hay un campo de relevancia.
 - **Panel:** desde 1100 px de ancho, el explorador va en dos columnas: a la izquierda, un panel fijo de 300 px con todos los controles en secciones plegables (Serie · Transformación · Período · Sombreado y eventos); a la derecha, el gráfico, con un 60 % del alto de la pantalla, y los avisos debajo de él. En pantallas más chicas, la serie va arriba y el resto en el panel desplegable de 6.5.
 - **Sombreado y eventos:** bandas de fondo en dos grises que se alternan, con los gobiernos de facto en uno más oscuro (sin superposiciones: gobiernos, mandatos, ministros, regímenes y etapas); los planes, que pueden superponerse, en una franja arriba del gráfico. Con sombreado, los quiebres pierden el relleno y quedan como barra punteada con número. Los eventos van como reglas finas con una letra y una lista debajo del gráfico. **Densidad:** si dos marcas quedarían a menos de 18 px, todos los eventos pasan a rayitas sobre el eje, sin letras ni reglas punteadas; el nombre aparece al pasar el cursor y en el lector de teclado, y la lista de debajo sigue completa, con la fecha en lugar de la letra (también en el pie de la imagen exportada, según su ancho). Los episodios, con «Marcar eventos» (o la categoría `episodio`), en una franja debajo del eje, con el estilo de los quiebres largos (línea punteada con topes, también en el cambio de fase). La franja de los planes usa un gris de 1,47:1 o más contra el fondo, en los dos modos, con un borde entre planes contiguos.
 - **Ubicación de los datos** (2.4): cada punto se dibuja en su fecha de referencia (el último día en los saldos en nivel, el punto medio en lo demás), y la tabla y las descargas lo asignan al período del sombreado con la misma regla. Debajo del gráfico, en una línea y en tono neutro (no es una advertencia), va la regla («Cada dato se asigna al período vigente a mitad de su intervalo; los saldos a fin de período, al último día.»), con el texto completo y su límite en un desplegable «Cómo se asigna»; con sombreado, el gráfico empieza en el mismo lugar que sin él. La caja de avisos de arriba queda para las advertencias (quiebres, datos excluidos). El tooltip y el lector de teclado (con el foco en el gráfico, las flechas recorren los datos) dicen el período con sus fechas (también en las bandas sin rótulo, y todos los planes superpuestos) y, si el dato cruza un cambio, el reparto; el lector dice además el episodio y la fase del dato y los eventos marcados que caen dentro de su intervalo.
+- **Tooltip y lector de teclado:**
+  - Una sola guía vertical recorre todos los paneles.
+  - En cada fecha se ve el valor de cada serie: el de la observación cuyo intervalo contiene la fecha (2.4), con la fecha de esa observación si es otra («2001 (anual): 458.796»).
+  - Las flechas recorren las fechas de la serie de frecuencia más alta.
 - **Exportación:**
-  - gráfico en PNG y SVG (vega-embed), con título, fuentes, variante, transformación, sombreado y versión de datos impresos en la imagen;
-  - datos de la vista en CSV y XLSX (con `write-excel-file`, que se carga solo al pedirlo), con las columnas `periodo`, `periodo_proporcion` y `otros_periodos` del sombreado (regla de 2.4; con las etapas del curso, la aclaración «etapas según la periodización de un curso universitario»), una hoja de metadatos con la regla, la cita y, si hay sombreado, los períodos con sus fuentes.
+  - **PNG y SVG:** todos los paneles en una imagen, con el título, las fuentes, la variante y la transformación de cada serie, el sombreado y la versión de datos.
+  - **CSV:** formato largo (`fecha, serie, variante, transformacion, unidad, valor, periodo, periodo_proporcion, otros_periodos`), con una fila por observación y la fecha de cada serie en su frecuencia. En la serie internacional se suma la columna `pais`.
+  - **XLSX:**
+    - una hoja en formato largo, igual al CSV;
+    - una hoja en formato ancho, a la frecuencia común (4.1), con una columna por serie (y por país);
+    - la hoja de metadatos, con una cita por serie y la regla de alineación.
+- **Tabla de la vista:** a la frecuencia común, con una columna por serie.
 - **Advertencias visibles:** si el rango cruza un quiebre, aparece un aviso junto al gráfico y una marca en el eje temporal.
 - **Riesgo país:** se carga en vivo desde ArgentinaDatos, con la fuente indicada y sin opción de descarga masiva.
-- **Series internacionales:** cada una cuenta como una serie dentro del límite de 4, con hasta 8 países o agregados por gráfico (más líneas dejan de leerse). Selección inicial: Argentina, Brasil, Estados Unidos, América Latina y el Caribe y Mundo. En el explorador, cada país lleva su color (paleta de 8, probada para daltonismo) y su nombre al final de la línea, con el resaltado más grueso; en la ficha, el resaltado va en color y el resto en tono secundario. Además del gráfico de líneas, una vista de tabla por década (crecimiento promedio) para comparar sin ruido anual.
+- **Series internacionales:** cuenta como una serie dentro del límite de 4, y hay una como máximo por vista, con hasta 8 países o agregados por gráfico (más líneas dejan de leerse). Selección inicial: Argentina, Brasil, Estados Unidos, América Latina y el Caribe y Mundo. En el explorador, cada país lleva su color (paleta de 8, probada para daltonismo) y su nombre al final de la línea, con el resaltado más grueso; en la ficha, el resaltado va en color y el resto en tono secundario. Además del gráfico de líneas, una vista de tabla por década (crecimiento promedio) para comparar sin ruido anual.
+- **La ficha** sigue mostrando una sola serie. El enlace «Abrir esta vista en el explorador» abre esa serie como serie 1.
 
 ### 6.3 Identidad visual
 - **Concepto:** una hoja de árbol que cae sin dirección clara. Su trayectoria oscilante es la metáfora de Vaivén: la economía argentina como movimiento de ida y vuelta, y también la línea de una serie temporal.
@@ -400,8 +463,13 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
 
 ### 6.5 Accesibilidad y uso en celular
 - WCAG 2.1 AA: contraste, navegación por teclado, textos alternativos con resumen de cada gráfico, tablas accesibles como alternativa al gráfico.
-- Diseño adaptable a celular: en pantallas chicas el explorador muestra de a una serie por vez y los controles en un panel desplegable; desde 1100 px, en un panel lateral fijo (6.2).
+- **Diseño adaptable al celular:**
+  - Los paneles se apilan a todo el ancho.
+  - Por debajo de 600 px, dos unidades también van en paneles por defecto, porque los dos ejes le quitan al gráfico el ancho que el celular no tiene; el botón ofrece el doble eje.
+  - Los controles van en el panel desplegable. Dentro de él se edita una serie por vez, con un selector de la serie activa.
+  - Desde 1100 px, los controles pasan a un panel lateral fijo (6.2).
 - Sombreado: los grises A, B y de facto tienen, contra el fondo, el mismo contraste en los dos modos (1,12, 1,25 y 1,47:1 o más), y la franja de los planes y los carriles de planes y episodios de `/periodos/`, 1,47:1 o más; lo controla una prueba que lee los tokens de `global.css`.
+- **Texto alternativo:** cada panel tiene el suyo, con un resumen de sus series. La tabla de la vista es la alternativa accesible al conjunto.
 
 ---
 
@@ -418,18 +486,36 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
 | `buscar_series` | `texto?`, `bloque?`, `prioridad?`, `desde?`, `hasta?` | Lista de series con id, nombre, bloque, cobertura, variantes y, si corresponde, entidades disponibles. Si alguna serie coincide con todos los términos (cada uno con sus sinónimos, también de frase: «mercado de trabajo»), solo esas; si ninguna, las que coinciden con alguno. |
 | `describir_serie` | `id` | Metadatos completos: definición, variantes (con su último dato, sus transformaciones, medidas, deflactores y PIB disponibles), quiebres, fuentes, licencias, países y cita. La bibliografía, cuando la cátedra lo confirme. Los parámetros de todas las herramientas son estrictos: uno desconocido da error. |
 | `obtener_serie` | `id`, `variante?`, `desde?`, `hasta?`, `pesos_actuales?`, `frecuencia?`, `medida?` (real, en_dolares, pct_pib), `deflactor?`, `base_real?`, `denominador?`, `transformacion?`, `base?`, `paises?` (códigos ISO3; solo series internacionales; por defecto, la selección inicial) | Datos (por país en las internacionales), unidad resultante, último dato y su atraso, advertencias por quiebres en el rango (las de un solo país, si ese país se pidió), versión de datos y cita (con los países por su nombre). Un rango que es solo un período sin dato (excluido o incompleto) lo devuelve como `null`, con su motivo y sus advertencias. Una `frecuencia` igual a la de la variante se ignora con una nota. En pesos actuales, una nota fija dice que es una equivalencia entre signos monetarios, no un ajuste por inflación. |
-| `comparar_series` | `ids[]` (hasta 4) y los mismos parámetros por serie | Series alineadas en fecha, con advertencias y citas. |
+| `comparar_series` | `series[]`: de 1 a 4 objetos, cada uno con `id` y los parámetros de transformación de `obtener_serie` (`variante`, `pesos_actuales`, `frecuencia`, `medida`, `deflactor`, `base_real`, `denominador`, `transformacion`, `base`, `paises`); comunes: `desde?`, `hasta?`, `alinear?` (`frecuencia_comun`, por defecto, o `ninguna`) | Con `frecuencia_comun`: `frecuencia`, `columnas` (una por serie y por país) y `datos` como filas `[fecha, v1, v2…]`. Con `ninguna`: los datos de cada serie en su frecuencia. Siempre: por serie, la unidad resultante, el último dato y su atraso, las advertencias y la cita; además, las advertencias de la combinación (4.1) y `version_datos`. |
 | `listar_periodos` | `tipo?` (`gobierno`, `ministro`, `plan`, `regimen_cambiario`, `catedra`, `episodio`), `por_mandato?` | Períodos con fechas, fuente y `confianza` de cada fecha (y las fases de los episodios), con aviso de los cortes convencionales y de las fechas de confianza baja. Sin `tipo`, una lista compacta sin fuentes (la completa pasa los 100 KB), que marca las fechas a confirmar. |
 | `periodo_en_fecha` | `fecha` (AAAA-MM-DD, o AAAA-MM para todo lo vigente en algún momento del mes) | Gobierno (y mandato), ministro, planes, régimen cambiario, etapa y episodios vigentes, con sus fuentes y confianza, y los eventos de ese día o mes. Con un mes, `asignacion`: a qué período va un dato mensual (regla de 2.4) y el reparto por días. En los episodios, la fase: con un día, `fase_vigente`; con un mes, la del punto medio y la del último día. |
-| `especificacion_grafico` | igual que `comparar_series` + `sombreado?` | Especificación de Vega-Lite y un link al explorador con esa vista. |
+| `especificacion_grafico` | los de `comparar_series` (sin `alinear`), más `sombreado?` (los valores de `sh`), `eventos?` (los valores de `ev`: `true` o una lista de categorías) y `ejes?` (`auto`, por defecto, que sigue la regla de 4.1, o `paneles`) | La especificación de Vega-Lite de la vista, con los datos incluidos y el mismo armado que el explorador; `url_explorador`, con esa vista; las advertencias y las citas. Todo va también en `structuredContent`, para que el gráfico interactivo (7.4) lo lea sin pedir nada más. |
 | `riesgo_pais` | `desde?`, `hasta?`, `frecuencia?` | Consulta en vivo a ArgentinaDatos, con fuente y aviso de licencia; no se almacena. |
 | `citar` | `id`, `variante?`, `formato?` (APA, texto, BibTeX) y los mismos parámetros de transformación de `obtener_serie` | Cita lista para usar, con versión de datos y lo que calculó Vaivén. |
+
+Nota de cambio respecto de la v1.6: `comparar_series` pasa de `ids[]` con parámetros sueltos a `series[]` con un objeto por serie, porque cada serie tiene su propia cadena de transformaciones.
 
 ### 7.3 Reglas de respuesta
 - Toda respuesta con datos incluye `advertencias`, `version_datos`, `fuentes` y `cita`.
 - Límites por pedido: hasta 4 series y 10.000 observaciones; si se superan, se pide acotar. En las series internacionales, cada país cuenta para el límite de observaciones, no para el de series.
 - El servidor no calcula empalmes: solo lee variantes ya publicadas y aplica transformaciones livianas. Eso lo mantiene dentro de los 10 ms de CPU del plan gratuito.
 - Las descripciones de las herramientas están en español, pensadas para que un modelo elija bien cuál usar.
+- **CPU de `especificacion_grafico`:** armar la especificación con los datos incluidos tiene que caber en los 10 ms de CPU del plan gratuito. En la 4c/4d se mide con el peor caso (4 series mensuales, de 1970 a hoy). Si no entra, la herramienta baja su límite de observaciones (no el de las demás) y lo dice en el error. El límite que resulte de la medición se anota en `NOTAS_FASE4.md` y en esta sección.
+
+### 7.4 Gráfico interactivo en Claude (MCP Apps)
+MCP Apps es la extensión oficial del protocolo para que un servidor muestre una interfaz dentro de la conversación. En Vaivén se usa para un solo recurso:
+
+- **Recurso:** `ui://vaiven/grafico`, declarado en `_meta.ui.resourceUri` de `especificacion_grafico`. Es la única herramienta que lo lleva: `obtener_serie` y `comparar_series` siguen devolviendo solo datos, para no abrir un gráfico cada vez que el modelo consulta una cifra.
+- **Qué hace:**
+  - recibe el resultado de la herramienta (`structuredContent`), dibuja el gráfico con vega-embed y muestra los avisos y las citas;
+  - deja cambiar la transformación, el período, el sombreado y los eventos sin escribir otro mensaje, llamando otra vez a `especificacion_grafico` desde la interfaz;
+  - ofrece «Abrir en el explorador» (`url_explorador`) y la descarga en PNG y SVG.
+- **Mismo armado:** el recurso usa la misma librería que arma la especificación del explorador (`paquetes/`), compilada en un solo HTML. No hay un segundo armado de gráficos.
+- **Peso y CSP:** el HTML del recurso es mínimo y carga el script desde el propio dominio de Vaivén (assets estáticos del Worker, que no consumen CPU), declarado en `_meta.ui.csp`. No usa CDN de terceros **[se verifica en la 4e: que el host acepte el dominio propio en la CSP; si no, va todo en línea y se mide la CPU de `resources/read`]**.
+- **Vega y CSP:** si la CSP del host no permite `unsafe-eval`, Vega necesita su intérprete compatible con CSP (`vega-interpreter`) **[se verifica en la 4e]**.
+- **Sin soporte de MCP Apps:** un cliente que no soporta la extensión recibe el resultado de siempre (la especificación, el enlace al explorador, los avisos y las citas). Nada de la 4c/4d depende de la 4e.
+- **Variante local:** el mismo recurso, por stdio.
+- **Modo claro y oscuro:** sigue el del host si lo informa y, si no, el del sistema.
 
 ---
 
@@ -469,6 +555,18 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
 - **MCP:** pruebas automáticas de cada herramienta y prueba manual con Claude (web y escritorio) en cada actualización del protocolo o del SDK y antes de cada despliegue de fase (`mcp/PRUEBA_MANUAL.md`).
 - **Series que calcula Vaivén** (derivadas, retropolaciones, unidades inferidas, empalmes): se contrastan con al menos una cifra publicada antes de publicarse, con un revisor que no vio cómo se armaron, y el método se aprueba explícitamente.
 - **Medidas:** se contrastan con valores publicados (por ejemplo, el índice desde tasas con los niveles del Banco Mundial y el % del PIB con la cuenta corriente en % del PIB del Banco Mundial).
+- **`alinear.ts`:** pruebas unitarias con casos conocidos:
+  - la disposición según la cantidad de unidades, con y sin serie internacional;
+  - ceros alineados en el doble eje;
+  - mensual con trimestral y con anual;
+  - semestral de la EPH con trimestral (la frecuencia común da anual);
+  - una serie sin datos en el rango;
+  - variación interanual alineada a anual;
+  - límite de observaciones con una serie internacional.
+- **Contrato de `comparar_series` y `especificacion_grafico`:** esquemas de respuesta en `tests/contrato/`, con la misma regla de versión de 2.5.
+- **Una sola implementación:** una prueba compara, para las mismas vistas, la especificación de `especificacion_grafico` con la del explorador; tienen que ser iguales salvo el tamaño.
+- **URL:** las URL de una sola serie de la 4b dan la misma vista que antes (pruebas de regresión con las URL guardadas en la 4b).
+- **MCP Apps (4e):** prueba manual en Claude web y en Claude Desktop (`mcp/PRUEBA_MANUAL.md`), y prueba de que un cliente sin la extensión recibe el resultado completo en texto.
 
 ---
 
@@ -483,9 +581,31 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
 | **4. Núcleo completo** | Resto de las series de prioridad A, explorador, períodos y sombreado, resto de las herramientas del MCP. Además, las dos series de contexto internacional: tienen una sola fuente, sin empalmes, y sirven para probar la dimensión `pais` en el explorador y en el MCP. | Las 20 series A y las 2 internacionales están publicadas con metadatos y pruebas. |
 | **5. Catálogo completo** | Series de prioridad B, riesgo país en vivo, Zenodo, página de datos abiertos, accesibilidad revisada. | Las 39 series están publicadas; primera release con DOI. |
 
-**Subfases de la fase 4:** 4a, datos del núcleo (las 20 series A, las 2 internacionales, las auxiliares y las medidas en la librería, la ficha y el MCP); 4b, explorador y períodos; 4c, comparación de series; 4d, el resto de las herramientas del MCP.
+**Subfases de la fase 4:**
+- **4a:** datos del núcleo (las 20 series A, las 2 internacionales, las auxiliares y las medidas en la librería, la ficha y el MCP).
+- **4b:** explorador de una serie y períodos.
+- **4c/4d:** comparación de series en la web y en el MCP: `alinear.ts`, explorador con hasta 4 series y paneles, `comparar_series` y `especificacion_grafico`.
+- **4e:** gráfico interactivo en Claude (MCP Apps, sección 7.4).
 
-**Sugerencia de trabajo en Claude Code:** Opus para el diseño de los empalmes, la capa 2 y el MCP; Sonnet para componentes de la web, tareas repetitivas del pipeline y los subagentes que verifican números (verificador de fuentes, revisor de datos). Una sesión por fase o subfase, empezando cada una con esta SPEC y el catálogo en el contexto.
+La 4e no forma parte de la condición de «Listo cuando» de la fase 4: si se demora, la fase se cierra igual.
+
+**Sugerencia de trabajo en Claude Code:**
+- **Sesión principal en Opus:** esfuerzo high para el plan, la capa 2, `alinear.ts` y el MCP; medio para los componentes de la web.
+- **Una sesión por subfase,** empezando cada una con esta SPEC y el catálogo en el contexto.
+- **Para la 4e:** el plugin oficial de MCP Apps para Claude Code (`modelcontextprotocol/ext-apps`) trae instrucciones para agregar una interfaz a un servidor existente.
+
+**Subagentes** (`.claude/agents/`, todos en Sonnet). Hay uno por cada tipo de tarea que necesita contexto limpio, o un informe con cifras y errores literales. Una tarea que solo cambia de objeto no lleva un subagente nuevo. Devuelven resúmenes, pero citan literal los errores y las diferencias numéricas.
+
+| Subagente | Tarea | Cuándo |
+|---|---|---|
+| `explorador` | Ubica código y convenciones del repo, y resume sin pegar archivos. | Todas las fases |
+| `tester` | Corre las pruebas y devuelve los fallos literales. | Todas las fases |
+| `revisor-datos` | Recalcula los casos con un script propio, sin leer la implementación (en la 4c/4d: alineación, frecuencia común, medidas), y compara las cifras. | Siempre que Vaivén calcule algo nuevo (sección 10) |
+| `revisor-visual` | Captura y revisa las vistas: doble eje, paneles, sombreado, modo oscuro, celular, exportaciones y, en la 4e, el gráfico dentro de Claude. | Cuando cambia la web o la 4e |
+| `probador-mcp` | **Nuevo.** Usa el MCP local solo a través de sus herramientas (`tools:` limitado al servidor local de `.mcp.json`), sin ver el código. Contesta un juego de preguntas e informa si eligió bien la herramienta y los parámetros, y dónde lo confundieron las descripciones. No reemplaza la prueba ciega manual antes del despliegue. | 4d, 4e y cada cambio del MCP |
+| `verificador-fuentes` | Contrasta cifras con las fuentes originales. | Fase 5 (series B). En la 4c–4e no hay fuentes nuevas, así que queda sin uso. |
+
+Para el `probador-mcp`, el repo suma un `.mcp.json` con el servidor local por stdio, que lee el export del repo. Así funciona también en las sesiones en la nube.
 
 ---
 
@@ -501,6 +621,8 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
 | Licencias de terceros | Registro por fuente; sin descarga para lo que no se puede redistribuir. |
 | Diferencias entre el PIB de Argentina según el Banco Mundial y según el INDEC | Aviso en las fichas de ACT-01 e INT-01; la comparación internacional usa siempre la misma fuente para todos los países. |
 | Mantenimiento por una sola persona | Automatización, documentación y releases periódicas. |
+| El soporte de MCP Apps varía entre clientes y la extensión puede cambiar | Es opcional: sin ella, el resultado en texto está completo. Se prueba en cada actualización del SDK, como el resto del MCP. |
+| El doble eje (por defecto con dos unidades) sugiere relaciones que no existen | Aviso fijo, ceros alineados cuando corresponde, botón «Ver en paneles» junto al gráfico y paneles obligatorios con tres o más unidades. |
 
 ### Preguntas abiertas
 - Licencias de la variante de IPC de Cavallo–Bertolotto y de las series largas académicas de salario real.
@@ -551,3 +673,10 @@ Sombreado opcional en todos los gráficos. Hasta que la cátedra responda si qui
   - la hiperinflación en tres fases, con la tregua del Plan Bunge y Born aparte (ejemplo de 2.4);
   - la regla de ubicación debajo del gráfico, en tono neutro (6.2);
   - `buscar_series` con todos los términos y sinónimos de frase; `obtener_serie` con el período sin dato como `null`, la frecuencia redundante ignorada y la nota de pesos actuales; `periodo_en_fecha` con la fase del episodio (7.2).
+- **v1.7 (13/11/2026):** comparación de series y gráfico interactivo en el MCP:
+  - módulo de alineación compartido; doble eje por defecto con dos unidades y paneles con más (o a pedido); frecuencia común (4.1);
+  - explorador con hasta 4 series: URL indexada compatible con la 4b, colores por serie, tooltip común y exportación en formato largo y ancho (6.1 y 6.2);
+  - celular y texto alternativo por panel (6.5);
+  - `comparar_series` con `series[]` y `alinear`, y `especificacion_grafico` con `structuredContent` (7.2);
+  - CPU de `especificacion_grafico` (7.3) y gráfico interactivo con MCP Apps (7.4);
+  - pruebas (10); subfases 4c/4d y 4e, subagentes en Sonnet y nuevo `probador-mcp` (11 y 5.4); riesgos (12).
