@@ -220,6 +220,8 @@ export const VERSION_SERVIDOR = paquete.version;
 export interface OpcionesServidor {
   /** El dominio de Vaivén que declara el recurso del gráfico (SPEC 7.4); por defecto, el de producción. */
   origenApp?: string;
+  /** El HTML del recurso del gráfico, si no es el mínimo (la variante local lo lleva con el script adentro). */
+  htmlApp?: (origen: string) => string;
 }
 
 export function crearServidor(repo: Repositorio, opciones: OpcionesServidor = {}): McpServer {
@@ -248,6 +250,6 @@ export function crearServidor(repo: Repositorio, opciones: OpcionesServidor = {}
   // La única herramienta con interfaz (SPEC 7.4): obtener_serie y comparar_series siguen devolviendo solo datos.
   servidor.registerTool("especificacion_grafico", { ...config("especificacion_grafico"), inputSchema: ESQUEMAS.especificacion_grafico, outputSchema: SALIDAS.especificacion_grafico, _meta: META_HERRAMIENTA_GRAFICO },
     (a) => responder(async () => conTopeDeTamano(await especificacionGrafico(repo, a)), true, sinEspecificacion));
-  registrarRecursoGrafico(servidor, opciones.origenApp ?? ORIGEN_PUBLICO);
+  registrarRecursoGrafico(servidor, opciones.origenApp ?? ORIGEN_PUBLICO, opciones.htmlApp);
   return servidor;
 }

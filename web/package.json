@@ -8,7 +8,7 @@
   "scripts": {
     "datos": "node scripts/copiar-datos.mjs",
     "dev": "npm run datos && astro dev",
-    "build": "npm run datos && astro build",
+    "build": "npm run datos && node ../mcp/scripts/armar-app.mjs && astro build",
     "preview": "astro preview",
     "verificar": "npm run datos && astro check",
     "test": "vitest run",

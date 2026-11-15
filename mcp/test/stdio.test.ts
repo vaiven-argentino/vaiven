@@ -27,6 +27,11 @@ it.each([["legacy"], [{ pin: "2026-07-28" }]] as const)("responde por stdio con 
   // El mismo recurso del gráfico que el remoto (SPEC 7.4, variante local).
   const { contents } = await cliente.readResource({ uri: "ui://vaiven/grafico" });
   expect(contents[0]).toMatchObject({ mimeType: "text/html;profile=mcp-app" });
+  // La variante local lleva el script adentro (el del dominio de Vaivén puede ser de otra versión), sin cortes.
+  const texto = (contents[0] as { text: string }).text;
+  expect(texto).not.toMatch(/<script type="module" src=/);
+  const modulo = texto.slice(texto.indexOf('<script type="module">') + 22);
+  expect(modulo.indexOf("</script")).toBe(modulo.lastIndexOf("</script"));
   const r = await cliente.callTool({ name: "obtener_serie", arguments: { id: "desocupacion", desde: "2002-05", hasta: "2002-05" } });
   expect(JSON.parse((r.content as Array<{ text: string }>)[0].text).datos).toEqual([["2002-05", 21.5]]);
   await cliente.close();

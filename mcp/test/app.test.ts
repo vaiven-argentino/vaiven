@@ -1,5 +1,7 @@
 // El recurso del gráfico interactivo (MCP Apps, SPEC 7.4), en las dos eras del protocolo: se declara solo en
 // especificacion_grafico, se lee con su MIME y su CSP, y un cliente sin la extensión sigue recibiendo el texto completo.
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 import { afterEach, describe, expect, it } from "vitest";
 import { EXTENSION_UI, MIME_APP, ORIGEN_PUBLICO, URI_GRAFICO } from "../src/app/recurso";
@@ -45,14 +47,16 @@ describe.each([
     const { contents } = await c.readResource({ uri: URI_GRAFICO });
     expect(contents).toHaveLength(1);
     const [html] = contents as Array<{ uri: string; mimeType: string; text: string; _meta: unknown }>;
-    expect(html).toMatchObject({ uri: URI_GRAFICO, mimeType: MIME_APP, _meta: { ui: { csp: { resourceDomains: [ORIGEN_PUBLICO] }, permissions: { clipboardWrite: {} }, prefersBorder: true } } });
+    expect(html).toMatchObject({ uri: URI_GRAFICO, mimeType: MIME_APP, _meta: { ui: { csp: { resourceDomains: [ORIGEN_PUBLICO] }, prefersBorder: true } } });
     expect(html.text).toMatch(/^<!doctype html>/);
-    expect(html.text).toContain(`<script src="${ORIGEN_PUBLICO}/mcp-app/sonda.js">`);
+    // El HTML es mínimo: pide el script, con el hash de su contenido, al dominio de Vaivén (assets del Worker, sin CPU).
+    expect(html.text.length).toBeLessThan(10_000);
+    const script = new RegExp(`<script type="module" src="${ORIGEN_PUBLICO}/mcp-app/(grafico-[0-9a-f]{12}\\.js)"></script>`).exec(html.text);
+    expect(script).not.toBeNull();
+    // Y ese script es el que arma el sitio (web/public/mcp-app/, que se copia a los assets).
+    expect(existsSync(join(import.meta.dirname, "..", "..", "web", "public", "mcp-app", script![1]))).toBe(true);
     expect(html.text).not.toContain("__ORIGEN__");
-    expect(html.text).not.toContain("/*__VAIVEN_APP__*/");
-    // El script en línea no puede cerrar su etiqueta antes de tiempo.
-    const modulo = html.text.slice(html.text.indexOf('<script type="module">') + 22);
-    expect(modulo.indexOf("</script")).toBe(modulo.lastIndexOf("</script"));
+    expect(html.text).not.toContain("__SCRIPT__");
   });
 
   it("un cliente sin la extensión recibe el resultado completo en el texto", async () => {
@@ -85,8 +89,8 @@ it("el recurso pide el script al dominio que atiende el pedido (producción o un
   const c = await conectar("legacy", repoReal(), { origenApp: origen });
   const { contents } = await c.readResource({ uri: URI_GRAFICO });
   const [html] = contents as Array<{ text: string; _meta: unknown }>;
-  expect(html._meta).toEqual({ ui: { csp: { resourceDomains: [origen] }, permissions: { clipboardWrite: {} }, prefersBorder: true } });
-  expect(html.text).toContain(`<script src="${origen}/mcp-app/sonda.js">`);
+  expect(html._meta).toEqual({ ui: { csp: { resourceDomains: [origen] }, prefersBorder: true } });
+  expect(html.text).toMatch(new RegExp(`<script type="module" src="${origen}/mcp-app/grafico-[0-9a-f]{12}\\.js">`));
   expect(html.text).toContain(`window.__vaivenOrigen = "${origen}"`);
 });
 

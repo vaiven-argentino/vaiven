@@ -11,8 +11,9 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Scripts del recurso ui://vaiven/grafico del MCP (SPEC 7.4), que se piden desde el iframe del host (otro origen).
+# El script de la interfaz del gráfico en Claude (ui://vaiven/grafico, SPEC 7.4): se pide desde el iframe del host, de
+# otro origen, como módulo (por eso el CORS). El nombre lleva el hash del contenido, así que la caché puede ser larga.
 /mcp-app/*
   Access-Control-Allow-Origin: *
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=31536000, immutable
   X-Content-Type-Options: nosniff

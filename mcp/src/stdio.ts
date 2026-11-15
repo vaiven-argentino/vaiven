@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import { Repositorio, fuenteUrl, type FuenteDatos } from "./datos";
 import { fuenteCarpeta } from "./fuente-carpeta";
+import { PARTES_HTML_GRAFICO_EN_LINEA } from "./app/html-en-linea.generado";
 import { VERSION_SERVIDOR, crearServidor } from "./servidor";
 
 const URL_PUBLICADA = "https://vaiven.argentino.workers.dev/datos/";
@@ -31,4 +32,6 @@ const fuente: FuenteDatos = carpeta ? fuenteCarpeta(resolve(carpeta)) : fuenteUr
 const repo = new Repositorio(fuente);
 // stdout es el canal del protocolo: los avisos van por stderr.
 process.stderr.write(`Vaivén MCP ${VERSION_SERVIDOR} por stdio, con el export de ${carpeta ? resolve(carpeta) : opcion("--url") ?? URL_PUBLICADA}\n`);
-serveStdio(() => crearServidor(repo), { onerror: (e) => process.stderr.write(`MCP: ${e.message}\n`) });
+// El recurso del gráfico, con el script adentro: el del dominio de Vaivén puede ser de otra versión (SPEC 7.4).
+const htmlApp = (origen: string) => PARTES_HTML_GRAFICO_EN_LINEA.join(origen);
+serveStdio(() => crearServidor(repo, { htmlApp }), { onerror: (e) => process.stderr.write(`MCP: ${e.message}\n`) });

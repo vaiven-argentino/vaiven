@@ -38,3 +38,6 @@ web/.astro/
 mcp/dist/
 # MCP: el HTML del recurso ui://vaiven/grafico, armado desde mcp/app/ (npm run armar-app -w @vaiven/mcp)
 mcp/src/app/html.generado.ts
+mcp/src/app/html-en-linea.generado.ts
+# Web: el script de la interfaz del gráfico en Claude, con el hash de su contenido (lo arma armar-app.mjs)
+web/public/mcp-app/grafico-*.js
