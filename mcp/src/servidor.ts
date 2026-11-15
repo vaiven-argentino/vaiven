@@ -209,9 +209,9 @@ export function conTopeDeTamano(r: Record<string, unknown>): Record<string, unkn
     const es = (n: number) => n.toLocaleString("es-AR");
     throw new ErrorHerramienta(
       `El gráfico pesaría ${es(caracteres)} caracteres y el límite de especificacion_grafico es ${es(LIMITE_CARACTERES_GRAFICO)}: ` +
-      "por encima de unos 150.000, Claude puede no pasarle el resultado a la interfaz del gráfico. Si el usuario no pidió el " +
-      "sombreado o los eventos, sacalos; si los pidió, acotá el período, la cantidad de series o de países, o pasá alguna " +
-      "serie a una frecuencia más baja. Para " +
+      "por encima de unos 150.000, Claude puede no pasarle el resultado a la interfaz del gráfico. Si el usuario no pidió en " +
+      "su mensaje el sombreado o los eventos, sacalos; si los pidió, acotá el período, la cantidad de series o de países, o " +
+      "pasá alguna serie a una frecuencia más baja. Para " +
       `verlo igual, compartí el enlace al explorador, que muestra esta misma vista: ${String(r.url_explorador)}`,
     );
   }

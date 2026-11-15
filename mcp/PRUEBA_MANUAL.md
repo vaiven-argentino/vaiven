@@ -59,18 +59,19 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 - Si Claude no encuentra el conector, si da error al conectar o si alguna respuesta tarda más de unos segundos.
 
 ## 4. MCP Apps (4e): el gráfico interactivo en Claude web y en Claude Desktop
-*15/11/2026, actualizada con las correcciones de la sonda 3 · Interfaz definitiva de `ui://vaiven/grafico` (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). Reemplaza la prueba de la sonda. Primero en la URL de versión (`prueba-4e`) y, después del despliegue de la 4e, en producción.*
+*15/11/2026, actualizada con las correcciones de las sondas 3 y 4 · Interfaz definitiva de `ui://vaiven/grafico` (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). Reemplaza la prueba de la sonda. Primero en la URL de versión (`prueba-4e`) y, después del despliegue de la 4e, en producción.*
 
 **Preparación**
-- **Conector:** antes del despliegue, `Vaivén prueba` con `https://prueba-4e-vaiven.argentino.workers.dev/mcp` (sección 1, sin inicio de sesión); después, el conector `Vaivén` de siempre. `/salud` tiene que decir «4e» y, en `app`, el script de la interfaz de la última versión de la rama (el nombre de `web/public/mcp-app/` después del armado; por ejemplo, `grafico-8d76e389a0fa.js`). Si `app` no coincide, la URL de versión sigue con el código anterior: revisá que `git pull` haya traído los commits y repetí el armado y la subida. Si la URL de versión da `error code: 1042`, el despliegue diario apagó las URL de versión: volvé a encenderlas en Cloudflare (**Workers & Pages → vaiven → Domains → Preview**).
+- **Conector:** antes del despliegue, `Vaivén prueba` con `https://prueba-4e-vaiven.argentino.workers.dev/mcp` (sección 1, sin inicio de sesión); después, el conector `Vaivén` de siempre. `/salud` tiene que decir «4e» y, en `app`, el script de la interfaz de la última versión de la rama (el nombre de `web/public/mcp-app/` después del armado; por ejemplo, `grafico-032ec42a816e.js`). Si `app` no coincide, la URL de versión sigue con el código anterior: revisá que `git pull` haya traído los commits y repetí el armado y la subida. Si la URL de versión da `error code: 1042`, el despliegue diario apagó las URL de versión: volvé a encenderlas en Cloudflare (**Workers & Pages → vaiven → Domains → Preview**).
 - **Una conversación nueva fuera de los proyectos**, sin archivos ni memoria, con un solo conector de Vaivén activado. Si Claude lee la memoria del proyecto, sabe que es una prueba y responde distinto. Abrila desde el inicio de claude.ai («Nueva conversación», no desde un proyecto) y comprobá que arriba, junto al título, no aparezca el nombre de un proyecto.
+- **Anotá el modelo y el esfuerzo** de la conversación. Como referencia, **Sonnet 5.5 con esfuerzo medio**, el más probable entre los estudiantes; si se usa otro, decilo en el informe (cambia la fila b y lo que hace Claude con el sombreado y los eventos).
 - En Desktop, **cerrá la app del todo** (Cmd+Q) antes de probar: guarda los recursos en caché.
 - **Consola:** abrila **antes** de recargar la conversación. En Desktop: **Help → Troubleshooting → Enable Developer Mode** y `Cmd + Option + I`; en la web, las herramientas de desarrollo del navegador. Guardá el registro con clic derecho → **Save as…**.
 
 **Pedidos** (en Claude web y en Claude Desktop)
 1. «Haceme un gráfico de la inflación interanual y las reservas internacionales entre 2000 y 2010».
 2. «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos».
-3. «Graficá las reservas internacionales» (toda la serie, unos 100.000 caracteres). Si Claude agrega por su cuenta el sombreado o los eventos, **anotalo**: la descripción le pide usarlos solo si se piden (H5).
+3. «Graficá las reservas internacionales» (toda la serie, unos 100.000 caracteres). Se espera **toda la serie, sin sombreado ni eventos**: la descripción le pide a Claude usar esas capas solo si se piden en ese mensaje y, sin período, toda la serie (H5 y H1 de la sonda 4). Si reutiliza el período o las capas del pedido anterior, **anotalo**.
 4. **Modo oscuro:** con el gráfico del pedido 1 a la vista, pasá Claude a modo oscuro: el gráfico se tiene que volver a pedir y quedar oscuro (fondo, ejes y líneas).
 
 **En cada gráfico, probá:**
@@ -94,14 +95,14 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 | a | El gráfico aparece | Sin errores; los números con punto de miles («50.000»). |
 | b | La respuesta de Claude | **No dibuja su propio gráfico ni vuelve a pedir los datos** para graficar: comenta la disposición, las advertencias y las citas. Si lo hace, está **mal** (A1). |
 | c | Cómo se identifican las series | Por su nombre corto, nunca por número («IPC oficial», «IPC provincias», «Reservas»): en un eje o en paneles, al final de cada línea; en el doble eje, en una leyenda arriba, una serie por renglón con su eje. La variante «provincias», con trazo discontinuo. |
-| d | Los títulos | La cabecera: las variables en el título, más grande; el período y la disposición debajo; y una serie por renglón con su trazo, su variante, su unidad y su eje o panel. Cada eje dice su serie y su unidad («Reservas · millones de US$»); «millones de pesos actuales (sin ajuste por inflación)»; la escala logarítmica, en la lista de la cabecera. |
+| d | Los títulos | La cabecera: las variables en el título, más grande; el período y la disposición debajo; y una serie por renglón con su trazo, su variante, su unidad y su eje o panel. **Cada eje** dice sus series y su unidad («IPC oficial e IPC provincias · variación % interanual», «Reservas · millones de US$»); «millones de pesos actuales (sin ajuste por inflación)»; la escala logarítmica, en la lista de la cabecera, con la grilla solo en las potencias de 10. En el doble eje, **sin leyenda dentro del gráfico** (la cabecera dice el eje de cada serie); en el explorador y en la imagen descargada, la leyenda sí va. |
 | e | El modo oscuro (pedido 4) | El gráfico entero pasa a oscuro, no solo el fondo de la interfaz. |
 | f | Los controles y el error | Cada cambio redibuja; el error se lee y no cambia el gráfico. |
 | g | Las descargas | El archivo tiene título, pie y el nombre de la vista. |
 | h | El alto | Sin barra de desplazamiento interna con los desplegables cerrados (M9). |
 | j | En el celular (o con la ventana de Claude angosta) | El gráfico se vuelve a armar para ese ancho: el doble eje pasa a paneles (la casilla dice «Doble eje» para pedirlo) y el texto se lee. Al girar el celular, se rearma. |
 | i | La consola | Sin «Refused to load» ni «Refused to execute». |
-| k | La lectura del gráfico | Los gobiernos, en una cinta entre el gráfico y los años, con su nombre adentro (o las iniciales); los eventos, con una letra en un círculo arriba (los muy juntos, agrupados: «I–J»); cada quiebre largo en su renglón, con su número y en el color de su serie; debajo del gráfico, una línea que dice a qué remiten los números y las letras. Nada se pisa. |
+| k | La lectura del gráfico | Los gobiernos, en una cinta pegada a los años, con su nombre adentro (o las iniciales); los eventos, con una letra en un círculo arriba (los muy juntos, agrupados: «I–J»); los episodios (la hiperinflación), arriba, debajo de las letras, con su nombre; cada quiebre largo en su renglón, con su número y en el color de su serie; debajo del gráfico, una línea que dice a qué remiten los números y las letras. Nada se pisa, y **al pasar el cursor** por una letra, un número, la cinta, un episodio o una línea **aparece un cartel** (el de los datos, con los nombres cortos). |
 
 **Avisos de la consola que se pueden ignorar** (no son de Vaivén):
 - `Unrecognized Content-Security-Policy directive 'webrtc'`;
@@ -109,9 +110,9 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 - `MaxListenersExceededWarning`;
 - `[MCP Apps] … handler replaced`;
 - `[BrowserSSETransport] Dropping …`;
-- `[MCP] fsr taken held` y `[MCP] fsr dropped closed`;
+- `[MCP] fsr taken held`, `[MCP] fsr dropped closed` y `[MCP] fsr dropped released`;
 - `Blocked script execution in 'about:srcdoc' … 'allow-scripts' permission is not set` (marcos propios de claude.ai);
 - `net::ERR_BLOCKED_BY_CONTENT_BLOCKER` (un bloqueador de contenido del navegador);
 - el 404 del ícono de `argentino.workers.dev` que Claude pide a `gstatic.com`.
 
-Mandá **las capturas como imágenes adjuntas en el mismo mensaje que los resultados** (no enlaces a una app de notas ni en mensajes aparte), al menos una en modo oscuro y una en el celular o con la ventana angosta, y el registro de la consola si aparece algo de Vaivén.
+**Pegá las respuestas de Claude de cada pedido** (o capturas de ellas): la conversación queda fuera del proyecto y desde ahí no se puede leer. Mandá **las capturas como imágenes adjuntas en el mismo mensaje que los resultados** (no enlaces a una app de notas ni en mensajes aparte), al menos una en modo oscuro y una en el celular o con la ventana angosta, y el registro de la consola si aparece algo de Vaivén.

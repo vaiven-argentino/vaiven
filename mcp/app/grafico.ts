@@ -206,10 +206,21 @@ function controles(r: Respuesta): void {
     const select = document.createElement("select");
     select.dataset.serie = String(k);
     const actual = typeof s.transformacion === "string" ? s.transformacion : "";
-    select.append(new Option(actual ? NOMBRE_TRANSFORMACION[actual] ?? actual : "La inicial de la serie", actual));
+    // La transformación con que se dibujó (la que devolvió la herramienta): sin una pedida, la inicial de la serie, con su
+    // nombre (H2, sonda 4: «La inicial de la serie» no se entendía). Mientras describir_serie trae las demás, el
+    // desplegable queda deshabilitado.
+    const dibujada = actual || r.series[k]?.transformacion || "nivel";
+    const nombre = (t: string) => NOMBRE_TRANSFORMACION[t] ?? t;
+    select.append(new Option(nombre(dibujada), actual));
     select.disabled = true;
     void transformacionesDe(String(s.id), typeof s.variante === "string" ? s.variante : undefined).then((lista) => {
-      select.replaceChildren(new Option("La inicial de la serie", ""), ...lista.map((t) => new Option(NOMBRE_TRANSFORMACION[t] ?? t, t)));
+      // La opción vacía (la inicial) lleva el nombre de la que se dibujó sin pedir ninguna; las demás, sin repetirla. Si se
+      // eligió otra, la inicial no se conoce acá y la opción conserva su nombre genérico.
+      const inicial = actual ? undefined : dibujada;
+      select.replaceChildren(
+        new Option(inicial ? `${nombre(inicial)} (la inicial)` : "La inicial de la serie", ""),
+        ...lista.filter((t) => t !== inicial).map((t) => new Option(nombre(t), t)),
+      );
       select.value = actual;
       select.disabled = false;
     });
@@ -250,7 +261,9 @@ async function pedir(nuevo: Args, motivo = "Actualizando el gráfico…"): Promi
   estado(motivo);
   try {
     const ancho = anchoDisponible();
-    const r = (await app.callServerTool({ name: "especificacion_grafico", arguments: { ...nuevo, tema, ancho } })) as Resultado;
+    // Sin leyenda en el doble eje: la cabecera ya dice el eje de cada serie (C1, sonda 4). Con «Leyenda arriba» marcada,
+    // la leyenda única del gráfico de un eje.
+    const r = (await app.callServerTool({ name: "especificacion_grafico", arguments: { ...nuevo, leyenda: nuevo.leyenda === true, tema, ancho } })) as Resultado;
     if (r.isError || !r.structuredContent) {
       estado(textoDe(r) || "La herramienta no devolvió el gráfico.", true);
       if (ultima) controles(ultima);
@@ -345,9 +358,11 @@ app.addEventListener("toolresult", (p) => {
   // celular), se vuelve a pedir, en un solo pedido, con los colores y el ancho que corresponden.
   const otroTema = (temaPedido === "oscuro" ? "oscuro" : "claro") !== tema;
   const otroAncho = Math.abs(anchoDisponible() - anchoUsado) > TOLERANCIA_ANCHO;
-  if (otroTema || otroAncho) {
+  // El modelo pide el doble eje con la leyenda (la del explorador); la interfaz lo muestra sin ella (C1, sonda 4).
+  const conLeyenda = r.structuredContent.disposicion.tipo === "doble_eje" && args.leyenda !== false;
+  if (otroTema || otroAncho || conLeyenda) {
     // El aviso al modelo va con la vista que queda, no con la intermedia.
-    const motivo = otroTema ? (tema === "oscuro" ? "Pasando el gráfico a modo oscuro…" : "Pasando el gráfico a modo claro…") : "Ajustando el gráfico al ancho…";
+    const motivo = otroTema ? (tema === "oscuro" ? "Pasando el gráfico a modo oscuro…" : "Pasando el gráfico a modo claro…") : otroAncho ? "Ajustando el gráfico al ancho…" : "Preparando el gráfico…";
     void mostrar(r.structuredContent, false).then(() => pedir(args, motivo));
   } else {
     void mostrar(r.structuredContent);

@@ -105,7 +105,9 @@ export const DESCRIPCION = {
     "(salvo `base_real`); `desde` y `hasta` valen para todas. Cada serie va en su frecuencia. Con dos unidades " +
     "distintas, el gráfico va en doble eje (o en paneles, con `ejes: paneles`); con tres o cuatro unidades, o con una " +
     "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios: " +
-    "usalos solo si el usuario los pide (o si los pidió para el gráfico anterior del mismo tema), porque agrandan la respuesta. " +
+    "usalos solo si el usuario los pide en ese mensaje, aunque los haya pedido para un gráfico anterior (agrandan la " +
+    "respuesta). Si el usuario no dice el período, el gráfico va con toda la serie: no reutilices el de un gráfico " +
+    "anterior salvo que lo pida. " +
     "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico. " +
     "En los clientes que muestran interfaces de MCP Apps (como Claude), el gráfico aparece solo, interactivo, en la " +
     "conversación: no lo vuelvas a dibujar ni pidas los datos para graficarlo. Si el usuario pide más series de las que " +
@@ -207,8 +209,9 @@ export const PARAMETRO = {
     "Ancho del gráfico en píxeles, de 320 a 1.200 (por defecto, 800). Con menos de 600, la vista del celular, como en el " +
     "explorador. Lo pide la interfaz del gráfico según su espacio; no hace falta pedirlo.",
   leyenda:
-    "Con varias series, true pone una leyenda única arriba del gráfico en lugar del nombre al final de cada línea. Lo usa " +
-    "sobre todo la interfaz del gráfico; no hace falta pedirlo.",
+    "Con varias series, true pone una leyenda única arriba del gráfico en lugar del nombre al final de cada línea; false " +
+    "saca también la del doble eje (la interfaz del gráfico dice el eje de cada serie en su cabecera). Lo usa la interfaz " +
+    "del gráfico; no hace falta pedirlo.",
   tema:
     "claro (por defecto) u oscuro: los colores del gráfico. Lo pide la interfaz del gráfico según el modo de Claude; no " +
     "hace falta pedirlo.",

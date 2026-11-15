@@ -1766,3 +1766,61 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
 - **El título del explorador y el de la imagen** («Comparación: …», SPEC 6.2) no cambiaron. La cabecera nueva (O5) está solo en Claude.
 - **En el doble eje, en Claude,** la lista de la cabecera y la leyenda del gráfico repiten los colores. La leyenda tiene que estar en el gráfico, para el explorador y la imagen. Si molesta, la lista puede ir sin trazo en el doble eje.
 - **M5:** el pedido 2 del manual ya da `c.escalas-distintas` en el servidor (controlado el 15/11/2026). Falta verlo en «Advertencias» en la próxima prueba en Claude.
+
+### Sonda 4 en Claude web y sus correcciones (15/11/2026)
+
+**El informe de Camilo** (`INFORME_PRUEBA_MCP_APPS_4e_sonda4.md`):
+- **Cómo se hizo:**
+  - Claude web, con **Sonnet 5.5, esfuerzo medio**;
+  - fuera de los proyectos;
+  - con `/salud` → `grafico-8d76e389a0fa.js`. La ronda anterior no se había subido porque `git pull` lo frenó un cambio local; desde entonces `/salud` dice el script.
+- **Lo que mejoró mucho:** los nombres cortos, la cabecera, la cinta, las letras agrupadas, los quiebres numerados y en su color, y el modo oscuro.
+- **Lo pendiente:**
+  - C1, la leyenda del doble eje, pegada al título del eje y repetida con la cabecera;
+  - C2, los carteles;
+  - C3, el episodio entre la cinta y los años;
+  - C4, la grilla logarítmica irregular;
+  - H1, que Sonnet reutilizó el período, el sombreado y los eventos;
+  - H2, «La inicial de la serie»;
+  - H3, el cartel de los datos con números;
+  - H4, el pico que aplasta la serie;
+  - la fila d, el eje izquierdo con solo la unidad.
+
+**Decisiones de Camilo:**
+- C1: sin leyenda en Claude, y con la leyenda en el explorador y en la imagen;
+- H1: las capas solo si se piden en ese mensaje, y sin período, toda la serie;
+- C4: la grilla solo en las potencias de 10;
+- H4: el aviso del pico, como en la ficha.
+
+**Qué se hizo:**
+- **C1:**
+  - `leyenda: false` (`EstadoVista.leyenda` admite `false`) saca la leyenda del doble eje;
+  - la interfaz lo pide siempre, y en el doble eje vuelve a pedir la vista del modelo, en el mismo pedido que corrige el ancho o el tema;
+  - no va en la URL: el enlace abre el explorador con la leyenda. La imagen la lleva siempre;
+  - en el explorador, la leyenda va un renglón más arriba del título del eje.
+- **Fila d:** con dos ejes, los dos títulos completos van si entran juntos en el ancho. Si no, el más largo queda en la unidad.
+- **C2, la causa:** la guía común usa `nearest: true`. Vega-Lite le agrega una capa de Voronoi que cubre toda el área, y como la guía se agregaba al final, quedaba encima de las letras, los números y las barras de los quiebres, y les tapaba los carteles.
+  - La guía va ahora antes de esas anotaciones.
+  - Las letras tienen un área sensible de 24 × 24 px.
+  - Las letras, los números, la cinta, las barras y los episodios tienen cursor de mano.
+- **C3:** los episodios van arriba del área, en el primer panel, en un renglón debajo de las letras. Llevan su nombre desde el inicio si entra antes del borde, y las fases en el cartel. La cinta queda pegada a los años.
+- **C4:** las marcas y la grilla logarítmicas van en las potencias de 10 (`marcasLog`); con menos de dos décadas, también en el 2 y el 5.
+- **H1:** la descripción de `especificacion_grafico` dice «solo si el usuario los pide en ese mensaje, aunque los haya pedido para un gráfico anterior» y «sin período, toda la serie». El error de tamaño también.
+- **H2:** la opción vacía del desplegable nombra la transformación con que se dibujó («Nivel (valor publicado) (la inicial)»).
+- **H3:** los títulos del cartel de los datos usan los nombres cortos (`nombreCortoSerie`, la misma regla del gráfico).
+- **H4:** `picoQueComprime` pasó de la ficha a `paquetes/grafico/src/ficha.ts`.
+  - La vista avisa `c.pico` cuando una serie en escala lineal tiene un máximo de más de 15 veces su percentil 90.
+  - Sugiere la escala logarítmica solo si todos los valores son positivos.
+  - Lo muestran el explorador (también con una serie) y Claude.
+- **Además:** en el doble eje, el dominio fijo de los ceros alineados no reservaba lugar arriba, y el pico de la hiperinflación pasaba por encima de las letras. Ahora los dos ejes reservan lo mismo (la mayor de las dos reservas, `reservaMinima` y `RESERVA`), y los ceros siguen alineados.
+
+**Para la SPEC v1.10:**
+- 6.2: los episodios arriba, la grilla logarítmica en las potencias de 10, la leyenda del doble eje con aire y opcional, y el aviso `c.pico`;
+- 7.2: `leyenda: false`, `c.pico`, y la regla de las capas y del período.
+
+**Pendientes:**
+- **La prueba en Claude** con esta versión, con atención a:
+  - los carteles al pasar el cursor;
+  - las filas f a j, que no se informaron en la sonda 4;
+  - las respuestas de Claude de cada pedido.
+- **Claude Desktop.**

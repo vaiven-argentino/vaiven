@@ -194,7 +194,10 @@ function estadoDe(args: ArgsEspecificacion, preparadas: SeriePreparada[], catego
       log: logInicial(serieVista(doc, paises), t, m), p: paises, sh: args.sombreado ?? "", ev,
     };
   });
-  return { series, ejes: args.ejes === "paneles" || args.ejes === "doble" ? args.ejes : "", ...(args.leyenda && series.length > 1 ? { leyenda: true as const } : {}) };
+  return {
+    series, ejes: args.ejes === "paneles" || args.ejes === "doble" ? args.ejes : "",
+    ...(args.leyenda === true && series.length > 1 ? { leyenda: true } : args.leyenda === false && series.length > 1 ? { leyenda: false } : {}),
+  };
 }
 
 /**
@@ -218,11 +221,15 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
   // La URL del explorador, y la vista que el explorador leería de ella: tienen que coincidir con lo pedido.
   // El enlace dice siempre la transformación de cada serie (salvo el nivel), aunque sea la de la vista inicial: así el
   // modelo no da por hecho que la serie va en nivel (H8, sonda 3 de la 4e). El explorador lo lee igual.
-  const url = urlDesdeVista(estado, docs, indice, categorias, { transformacionSiempre: true });
+  // `leyenda: false` (sin leyenda en el doble eje) es de la interfaz en Claude, que dice el eje de cada serie en su
+  // cabecera (C1, sonda 4): no va en la URL, y el explorador abre con la leyenda.
+  const { leyenda: _sinLeyenda, ...enUrl } = estado;
+  const estadoUrl: EstadoVista = estado.leyenda === false ? enUrl : estado;
+  const url = urlDesdeVista(estadoUrl, docs, indice, categorias, { transformacionSiempre: true });
   const q = new URLSearchParams(url);
   const { pedidas, avisos: a1 } = seriesDeUrl(q, indice);
   const leida = vistaDesdeUrl(q, pedidas, docs, categorias);
-  if (a1.length || leida.avisos.length || JSON.stringify(leida.estado) !== JSON.stringify(estado)) {
+  if (a1.length || leida.avisos.length || JSON.stringify(leida.estado) !== JSON.stringify(estadoUrl)) {
     throw new ErrorHerramienta(`El explorador no puede mostrar exactamente esta vista: ${[...a1, ...leida.avisos].join(" ") || "algún parámetro no tiene equivalente en la URL"}. Pedí los datos con comparar_series.`);
   }
   const insumos: InsumosCargados = { series: Object.assign({}, ...preparadas.map((p) => p.insumos.series ?? {})), ...(preparadas.find((p) => p.insumos.signos) ? { signos: preparadas.find((p) => p.insumos.signos)!.insumos.signos } : {}) };

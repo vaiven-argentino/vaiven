@@ -153,6 +153,15 @@ describe("especificacion_grafico en la 4e: parámetros y campos nuevos, y el top
     expect(r.isError).toBeFalsy();
     expect((r.structuredContent as { url_explorador: string }).url_explorador).toMatch(/&ley=1$/);
   });
+  it("sonda 4: leyenda: false saca la leyenda del doble eje, sin cambiar el enlace al explorador", async () => {
+    const args = { series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "2000", hasta: "2010" };
+    const con = (await llamar(args)).structuredContent as { url_explorador: string; especificacion: unknown };
+    const sin = (await llamar({ ...args, leyenda: false })).structuredContent as { url_explorador: string; especificacion: unknown };
+    expect(sin.url_explorador).toBe(con.url_explorador);
+    expect(sin.url_explorador).not.toMatch(/ley=/);
+    expect(JSON.stringify(con.especificacion)).toContain("eje izquierdo");
+    expect(JSON.stringify(sin.especificacion)).not.toContain("eje izquierdo");
+  });
   it("una serie mensual con toda su historia entra en el tope (la especificación lleva cada dato una vez)", async () => {
     const r = await llamar({ series: [{ id: "ipc", transformacion: "var_interanual" }] });
     expect(r.isError).toBeFalsy();
