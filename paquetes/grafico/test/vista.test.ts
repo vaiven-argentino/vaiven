@@ -11,7 +11,7 @@ import {
 import {
   AVISO_DOBLE_EJE, armarVista, bandasDe, categoriasEv, enumerar, episodiosEnRango, especificacion, esVariacion, eventosEnRango,
   lecturasGuia, nombreSombreadoEnFrase, numerarQuiebres, partirEnRenglones, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
-  vistaDesdeUrl, urlDesdeVista, rotuloQueEntra, EPISODIO, type Documento, type IndiceSerie, type Tema,
+  vistaDesdeUrl, urlDesdeVista, rotuloQueEntra, marcasLog, EPISODIO, type Documento, type IndiceSerie, type Tema,
 } from "../src/index";
 
 const EXPORT = join(import.meta.dirname, "..", "..", "..", "export");
@@ -201,7 +201,7 @@ describe("con varias series", () => {
     expect(tooltip.slice(-2)).toEqual(["Período", "Reparto"]);
     const lecturas = lecturasGuia(v.guia!, { sh: "gobierno", episodios: v.episodios, eventos: v.eventos });
     expect(lecturas).toHaveLength(12);
-    expect(lecturas[6].texto).toMatch(/^jul\. 1989: 1\. .+; 2\. .+ · Gobierno: .*Menem.* · reparto: Menem/);
+    expect(lecturas[6].texto).toMatch(/^jul\. 1989: IPC oficial, .+; PIB real, .+ · Gobierno: .*Menem.* · reparto: Menem/);
     // Sin sombreado, ni el tooltip ni la guía llevan el período.
     const sin = armar("?desde=1989-01&hasta=1989-12&s2=pib");
     expect(Object.keys((sin.especificacion as { datasets: { guia: Array<Record<string, string>> } }).datasets.guia[0])).toEqual(["t", "fecha", "s1", "s2"]);
@@ -337,3 +337,67 @@ describe("cómo se identifican las series (N8, M4 y M6 de la 4e)", () => {
     expect(rotuloQueEntra("Duhalde", 5)).toBe("");
   });
 });
+
+describe("sonda 4 de la 4e", () => {
+  type Capa = Record<string, unknown> & { mark?: { type?: string }; data?: { name?: string; values?: Array<Record<string, unknown>> }; layer?: Capa[]; encoding?: Record<string, unknown> };
+  const textosLeyenda = (spec: Record<string, unknown>) => ((spec.layer as Capa[])?.flatMap((c) => c.layer ?? [c]) ?? [])
+    .filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "texto");
+  const DOBLE = "?t=var_interanual&desde=2000&hasta=2010&s2=ipc&v2=provincias&t2=var_interanual&s3=reservas";
+
+  it("C1: con leyenda: false, el doble eje va sin leyenda; la imagen exportada la lleva igual", () => {
+    const base = { ...vistaDe(DOBLE), periodos: PERIODOS, eventos: EVENTOS, tema: TEMA, alto: 400, ancho: 800 };
+    expect(textosLeyenda(armarVista(base).especificacion)).toHaveLength(1);
+    const sin = { ...base, estado: { ...base.estado, leyenda: false } };
+    expect(textosLeyenda(armarVista(sin).especificacion)).toHaveLength(0);
+    const imagen = armarVista({ ...sin, ancho: 900, impreso: { titulo: "t", subtitulo: "s", pie: ["p"] } });
+    expect(textosLeyenda(imagen.especificacion)).toHaveLength(1);
+  });
+
+  it("fila d: en el doble eje, los dos títulos completos si entran juntos (700 px, como en Claude)", () => {
+    const titulos = todasLasCapas(armar(DOBLE, 700).especificacion).flatMap((c) => {
+      const t = (c.encoding as { y?: { title?: string } } | undefined)?.y?.title;
+      return t ? [t] : [];
+    });
+    expect(new Set(titulos)).toEqual(new Set(["IPC oficial e IPC provincias · variación % interanual", "Reservas · millones de US$"]));
+  });
+
+  it("C2: la guía común va antes de las letras de los eventos y de los números de los quiebres", () => {
+    const capas = (armar(`${DOBLE}&ev=1`).especificacion.layer as Capa[])[0].layer!;
+    const guia = capas.findIndex((c) => c.data?.name === "guia");
+    const letras = capas.findIndex((c) => c.data?.name?.endsWith("letras"));
+    const marcadores = capas.findIndex((c) => c.data?.name?.endsWith("marcadores"));
+    expect(guia).toBeGreaterThanOrEqual(0);
+    expect(letras).toBeGreaterThan(guia);
+    expect(marcadores).toBeGreaterThan(guia);
+  });
+
+  it("C3: los episodios van arriba del área, en el primer panel, con su nombre", () => {
+    const v = armar("?t=var_mensual&desde=1985&hasta=1995&ev=1&s2=reservas&s3=pib&ejes=paneles");
+    const paneles = (v.especificacion as { vconcat: Array<{ layer: Capa[] }> }).vconcat;
+    const conEpisodios = paneles.map((p) => p.layer.some((c) => c.data?.name?.endsWith("episodios")));
+    expect(conEpisodios).toEqual([true, false, false]);
+    const datos = (v.especificacion as { datasets: Record<string, Array<{ y: number }>> }).datasets;
+    const episodios = Object.entries(datos).find(([k]) => k.endsWith("episodios"))![1];
+    expect(episodios.every((x) => x.y < 80)).toBe(true);
+  });
+
+  it("C4: en escala logarítmica, las marcas en las potencias de 10 (con el 2 y el 5 si hay menos de dos décadas)", () => {
+    expect(marcasLog(15_000, 3_000_000)).toEqual([10_000, 100_000, 1_000_000, 10_000_000]);
+    expect(marcasLog(150, 800)).toEqual([100, 200, 500, 1000]);
+  });
+
+  it("H4: el aviso del pico que aplasta la serie, en escala lineal", () => {
+    const v = armar("?t=var_interanual&desde=1990&hasta=2010&s2=reservas");
+    const pico = v.avisos.find((a) => a.id === "c.pico");
+    expect(pico?.series).toEqual([1]);
+    expect(pico?.descripcion).toMatch(/^El máximo de IPC oficial \(.+ en .+\) comprime el resto del gráfico: acotá el período\.$/);
+    expect(armar("?t=var_interanual&desde=2000&hasta=2010&s2=reservas").avisos.some((a) => a.id === "c.pico")).toBe(false);
+  });
+});
+
+function todasLasCapas(spec: Record<string, unknown>): Array<Record<string, unknown>> {
+  const salida: Array<Record<string, unknown>> = [];
+  const recorrer = (c: Record<string, unknown>) => { salida.push(c); for (const k of ["layer", "vconcat"]) for (const h of (c[k] as Array<Record<string, unknown>> | undefined) ?? []) recorrer(h); };
+  recorrer(spec);
+  return salida;
+}

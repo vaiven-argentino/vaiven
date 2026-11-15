@@ -471,6 +471,8 @@ function iniciar(): void {
     const lineas = [...avisosUrl];
     // Con varias series, los avisos de la combinación (4.1) y los de cada serie, con su número.
     if (varias()) lineas.push(...ultimo.vista.avisos.map((a) => a.descripcion));
+    // Con una serie, el del pico que la aplasta (H4, sonda 4 de la 4e; la ficha ya lo tenía).
+    else lineas.push(...ultimo.vista.avisos.filter((a) => a.id === "c.pico").map((a) => a.descripcion));
     ultimo.comparacion.series.forEach((s, k) => {
       // Cada serie, por su nombre corto, como en el gráfico (O1, sonda 3 de la 4e).
       const prefijo = varias() ? `${ultimo!.vista.identificacion[k]?.nombre ?? `Serie ${k + 1}`}: ` : "";

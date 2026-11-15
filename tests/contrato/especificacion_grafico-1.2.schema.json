@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://vaiven.argentino.workers.dev/esquemas/especificacion_grafico-1.2.json",
   "title": "Respuesta de especificacion_grafico (MCP de Vaivén), versión 1.1",
-  "description": "SPEC 7.2 y 7.4. La especificación de Vega-Lite de la vista, con los datos incluidos y el mismo armado que el explorador; url_explorador con esa vista; la disposición, las advertencias y las citas. La especificación va solo en structuredContent; el texto lleva lo demás (SPEC 7.2). Regla de versión de la sección 2.5. La 1.1 (menor) sumó el aviso c.agregaciones-distintas; la 1.2 (menor), en la 4e: el aviso c.escalas-distintas, la escala de cada panel, los quiebres numerados (con su id, corridos), el aviso c.doble-eje, los datos excluidos de cada serie, su nombre corto, su color y su trazo, los episodios y el nombre del archivo; acepta además los parámetros tema, imagen y leyenda, que no cambian la forma. Las anteriores siguen publicadas.",
+  "description": "SPEC 7.2 y 7.4. La especificación de Vega-Lite de la vista, con los datos incluidos y el mismo armado que el explorador; url_explorador con esa vista; la disposición, las advertencias y las citas. La especificación va solo en structuredContent; el texto lleva lo demás (SPEC 7.2). Regla de versión de la sección 2.5. La 1.1 (menor) sumó el aviso c.agregaciones-distintas; la 1.2 (menor), en la 4e: el aviso c.escalas-distintas, la escala de cada panel, los quiebres numerados (con su id, corridos), los avisos c.doble-eje y c.pico, los datos excluidos de cada serie, su nombre corto, su color y su trazo, los episodios y el nombre del archivo; acepta además los parámetros tema, imagen y leyenda, que no cambian la forma. Las anteriores siguen publicadas.",
   "type": "object",
   "required": [
     "especificacion",
@@ -237,7 +237,8 @@
               "c.sin-equivalente",
               "c.agregaciones-distintas",
               "c.escalas-distintas",
-              "c.doble-eje"
+              "c.doble-eje",
+              "c.pico"
             ]
           },
           "descripcion": {

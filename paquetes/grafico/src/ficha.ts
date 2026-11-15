@@ -157,3 +157,18 @@ export function aniosDe(serie: SerieExportada): [number, number] {
 }
 
 export { PASO };
+
+/**
+ * Si el máximo supera 15 veces el percentil 90 (en valor absoluto), la mayor parte de la serie queda aplastada contra el
+ * eje: devuelve el máximo y su fecha («20.266,1 % en mar. 1990») o null. Lo usan la ficha y, desde la sonda 4 de la 4e,
+ * la vista (el aviso `c.pico` del explorador y de Claude).
+ */
+export function picoQueComprime(r: Resultado, variacion: boolean): string | null {
+  const conDato = r.datos.map((d, k) => ({ f: d[0], v: d[1], k })).filter((d): d is { f: string; v: number; k: number } => d.v !== null);
+  if (conDato.length < 20) return null;
+  const abs = conDato.map((d) => Math.abs(d.v)).sort((a, b) => a - b);
+  const p90 = abs[Math.floor(abs.length * 0.9)];
+  const max = conDato.reduce((a, b) => (Math.abs(b.v) > Math.abs(a.v) ? b : a));
+  if (!p90 || Math.abs(max.v) < 15 * p90) return null;
+  return `${numero(max.v, variacion)} en ${fechaLegible(max.f, r.frecuencias[max.k])}`;
+}

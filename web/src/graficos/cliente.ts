@@ -7,7 +7,7 @@ import {
 } from "@vaiven/transformaciones";
 import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
-import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
+import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, picoQueComprime as picoQueComprimeSerie, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, unidadVisible } from "../lib/formato";
 import { diaLegible, especificacion, type BandaEpisodio, type MarcaEvento } from "./espec";
 import {
@@ -275,16 +275,10 @@ function iniciar(): void {
     caja.hidden = !lineas.length;
   }
 
-  /** Si el máximo supera 15 veces el percentil 90 (en valor absoluto), la mayor parte de la serie queda aplastada. */
+  /** El pico que aplasta la serie (la regla está en paquetes/grafico, la misma de la vista), salvo en escala logarítmica. */
   function picoQueComprime(r: Resultado): string | null {
     if (cLog.checked && !cLog.disabled) return null;
-    const conDato = r.datos.map((d, k) => ({ f: d[0], v: d[1], k })).filter((d): d is { f: string; v: number; k: number } => d.v !== null);
-    if (conDato.length < 20) return null;
-    const abs = conDato.map((d) => Math.abs(d.v)).sort((a, b) => a - b);
-    const p90 = abs[Math.floor(abs.length * 0.9)];
-    const max = conDato.reduce((a, b) => (Math.abs(b.v) > Math.abs(a.v) ? b : a));
-    if (!p90 || Math.abs(max.v) < 15 * p90) return null;
-    return `${numero(max.v, esVariacion(cTransf.value))} en ${fechaLegible(max.f, r.frecuencias[max.k])}`;
+    return picoQueComprimeSerie(r, esVariacion(cTransf.value));
   }
 
   /** Los nombres de los tipos de período (el de las etapas del curso, público), leídos del selector. */

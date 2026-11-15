@@ -268,9 +268,11 @@ export interface EstadoVista {
   ejes: EjesVista;
   /**
    * Con varias series, una leyenda única arriba del gráfico en lugar de los nombres al final de las líneas (URL `ley=1`,
-   * N8 de la 4e). Solo está cuando vale `true`, así el estado de siempre no cambia.
+   * N8 de la 4e). Solo está cuando vale `true`, así el estado de siempre no cambia. `false` es «sin leyenda» también en
+   * el doble eje: lo pide la interfaz en Claude, que dice el eje de cada serie en su cabecera (C1, sonda 4). No va en la
+   * URL: el explorador muestra la leyenda.
    */
-  leyenda?: true;
+  leyenda?: boolean;
 }
 
 /** Una serie pedida en la URL: el número que traía (para los avisos) y sus parámetros sin sufijo (los comunes, solo en la 1). */
