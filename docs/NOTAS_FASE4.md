@@ -1649,3 +1649,103 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
 **Para la SPEC v1.10:**
 - 7.2: el parámetro `ancho` y `ejes: doble` en `especificacion_grafico`;
 - 4.1: el umbral de 5 del aviso de escalas.
+
+### Sonda 3 en Claude web y sus correcciones (15/11/2026)
+
+**El informe de Camilo** (`INFORME_PRUEBA_MCP_APPS_4e_sonda3.md`, Claude web; Desktop no se probó):
+- **Lo que anda:** el gráfico aparece, el modo oscuro alcanza al gráfico entero, los controles redibujan, el error del límite de 1.000 observaciones se ve, las descargas traen título y pie, y no hay errores de Vaivén en la consola.
+- **Resuelto:**
+  - A1 en la web: Claude no rearma el gráfico;
+  - el recurso pesa 5.853 caracteres;
+  - el tope responde con un error claro;
+  - los avisos de Vega desaparecieron.
+- **Lo que falló:**
+  - las etiquetas del doble eje (H1);
+  - la lectura del gráfico (O1 a O6);
+  - los quiebres salteados (H2);
+  - el peso del sombreado y los eventos (H6), y que Claude los agregara sin que se los pidieran (H5).
+- **Además, Camilo pidió repensar el sombreado de gobiernos:** el estilo no lo convencía y los nombres quedaban dentro del gráfico.
+
+**Decisiones de Camilo:**
+
+| Tema | Decisión |
+|---|---|
+| Gobiernos | Con maquetas de datos reales (arriba o abajo, con o sin bandas de fondo), eligió **una cinta debajo del eje, sin fondo**. |
+| Eventos (O6) | **Una letra por fecha, arriba**, con la regla en todos los paneles y los eventos juntos agrupados. Descartó la letra sobre cada curva: con 4 series tapa las líneas. |
+| Título y leyenda (O5, O2, H1) | La propuesta: las variables en el título; una serie por renglón; cada eje con su serie y su unidad; en el doble eje, la leyenda en lugar de los nombres al final de las líneas. |
+| O1 | Un **`nombre_corto`** en el YAML de cada serie (y de la variante que lo necesite). Revisó y aprobó la lista. |
+| N7 | Con más de 4 series, la **variante por defecto**. |
+| H4 | La variación diciembre–diciembre, **en diciembre**. |
+| H3 | La base 100 por defecto, en el **primer año a la vista**. |
+
+**Qué se hizo** (vale para la ficha, el explorador y Claude, salvo lo marcado):
+- **La cinta de los períodos.** El sombreado sin superposición ya no pinta el fondo: va en una cinta de 15 px entre el eje X y los años.
+  - Cada período lleva su nombre adentro, o las iniciales si no entra.
+  - Los tonos son `--periodo-b` y `--periodo-facto`, que se alternan, y `--periodo-cinta-facto` (nuevo) para los de facto. El texto queda a 7:1 o más; lo controla `contraste.test.ts`.
+  - Los períodos de menos de 3 px van como rayita.
+  - En los paneles, la cinta va debajo del último.
+  - Como ya no hay bandas de fondo, los quiebres conservan su relleno.
+- **Los eventos.** Llevan una letra en un círculo arriba del área, en el primer panel, y una regla punteada en todos.
+  - Los que se pisarían se agrupan en un rectángulo («I–J», `agruparEventos`), con los nombres en el tooltip.
+  - Ya no hay rayitas (`modoEventos` sale), y las listas van siempre con letra.
+- **Los quiebres:**
+  - **H2:** la vista numera corrido solo los que dibuja. La ficha conserva la numeración de su lista «Quiebres».
+  - **O3:** cada quiebre largo va en su renglón, con su número después del tope de inicio, la barra en el color de su serie y la descripción al pasar el cursor.
+  - **H2 y H7, en Claude:** «Advertencias» suma las advertencias generales (sin número), los datos excluidos (×) y los episodios. Una línea debajo del gráfico dice a qué remiten los números y las letras.
+- **O4:** el aviso del doble eje sale del título y pasa a las advertencias como `c.doble-eje`. En la imagen exportada sigue en el subtítulo.
+- **Los nombres de las series:**
+  - **O1:** las series se nombran por su nombre corto en las etiquetas, la leyenda, los subtítulos de los paneles, el texto alternativo, los avisos, el pie de la imagen y la interfaz.
+  - **O2:** cada eje dice sus series y su unidad, y si no entra, solo la unidad.
+  - **H1:** en el doble eje va la leyenda, con una serie por renglón y su eje.
+- **O5, solo en Claude:** la cabecera lleva:
+  - el título con las variables, más grande;
+  - el período, la disposición y el sombreado;
+  - una lista de una serie por renglón: trazo, color, nombre corto, variante, unidad y eje o panel.
+
+  La vista expone `identificacion` (nombre, color y trazo), y `especificacion_grafico` la devuelve en `series[]`.
+- **H3:** con «Índice base 100» sin base, la vista toma el primer año a la vista (`baseInicial`). La ficha no cambia: su campo ya muestra la base.
+- **H4:** `var_dic_dic` se ubica el 31 de diciembre de su año (`esInstante`), también al asignar el período, y `REGLA_UBICACION` lo dice.
+- **H5 y N7:** la descripción de `especificacion_grafico` dice que el sombreado y los eventos se usan solo si se piden. Con más de 4 series, va la variante por defecto (en el IPC, la oficial). El error de tamaño propone primero sacar las capas no pedidas.
+- **H6:**
+  - los eventos van una vez para todo el gráfico, en `datasets`;
+  - el sombreado, los episodios, los quiebres y los marcadores, también en `datasets`;
+  - la línea lleva la fecha en ISO corto, y el tramo solo si se usa.
+- **H8:** el enlace del MCP escribe siempre la transformación, salvo el nivel (`transformacionSiempre`). La URL canónica del explorador no cambia: escribirla siempre rompía la ida y vuelta de la 4b y los accesos de /periodos/.
+- **Datos:** `nombre_corto` en el JSON de cada variante. El esquema sube a 1.4 (`tests/contrato/serie-1.4.schema.json`). Al regenerar el export sin red, se repuso a mano el `desactualizada_desde` de tcr-bilateral.
+
+**Medido:**
+- **El pedido 3** (reservas mensuales desde 1970, con gobiernos y eventos) bajó de 158.652 caracteres a unos 128.000, y entra en el tope.
+- **La regresión de la 4b**, contra el export 71b1306, en 322 vistas en el navegador:
+  - cambian el SVG (256), los avisos y el resumen (64 cada uno: la numeración) y la lista de eventos (98);
+  - no cambian la URL, la tabla, la cita, el último dato ni el enlace a la ficha;
+  - la referencia nueva queda guardada.
+- **Las pruebas:**
+  - Vitest: transformaciones 171, gráficos 232, cita 7, web 1.509 y MCP 161;
+  - `verificar` sin errores;
+  - pytest: 302 pasan y 7 se saltean;
+  - la igualdad con el explorador, 8 de 8 en el navegador;
+  - 1.626 enlaces sin rotos.
+- **El host local**, a 390 y 1280 px, en claro y en oscuro: sin errores de consola y sin desbordes.
+
+**Para la SPEC v1.10** (reemplaza, en lo que choca, la lista de «Diferencias con la SPEC» de arriba):
+- **2.2 y 2.5:** `nombre_corto` en la serie y la variante, y el esquema 1.4.
+- **2.4:** la variación diciembre–diciembre, el último día del año.
+- **6.2:**
+  - la cinta de los períodos debajo del eje, en lugar de las bandas de fondo;
+  - los eventos con letra arriba y agrupados, sin rayitas, que reemplazan la regla de densidad de 18 px;
+  - los quiebres numerados corrido en la vista, cada quiebre largo en su renglón y color, y su relleno aunque haya sombreado;
+  - los nombres cortos, los ejes con su serie y su unidad, y la leyenda en el doble eje;
+  - el aviso del doble eje, entre las advertencias;
+  - la base 100 por defecto, en el primer año a la vista.
+- **7.2:**
+  - en `series[]`: `nombre_corto`, `color`, `trazo` y `excluidos`;
+  - `episodios`, el `id` de cada quiebre y `c.doble-eje`;
+  - el enlace, siempre con la transformación.
+
+**Pendientes:**
+- **La prueba en Claude** (web y Desktop), con la sección 4 de `PRUEBA_MANUAL.md` actualizada y en una conversación fuera de los proyectos.
+- **El `probador-mcp`,** en una sesión nueva.
+- **H4, a medias:** antes de 2007, los puntos de «provincias» se dibujan encima de la línea de la oficial (las dos coinciden). El trazo discontinuo ya empieza en 2007.
+- **El título del explorador y el de la imagen** («Comparación: …», SPEC 6.2) no cambiaron. La cabecera nueva (O5) está solo en Claude.
+- **En el doble eje, en Claude,** la lista de la cabecera y la leyenda del gráfico repiten los colores. La leyenda tiene que estar en el gráfico, para el explorador y la imagen. Si molesta, la lista puede ir sin trazo en el doble eje.
+- **M5:** el pedido 2 del manual ya da `c.escalas-distintas` en el servidor (controlado el 15/11/2026). Falta verlo en «Advertencias» en la próxima prueba en Claude.
