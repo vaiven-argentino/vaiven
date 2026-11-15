@@ -94,6 +94,10 @@ describe("aire arriba del eje Y", () => {
     const yPico = 300 * (1 - pico / tope); // escala lineal desde cero, en píxeles desde arriba
     expect(yPico).toBeGreaterThanOrEqual(reserva - 0.5);
   });
+  it("en un panel bajo, la reserva se limita al 45 % del alto en lugar de perderse (revisión visual de la sonda 3)", () => {
+    // 150 px pedidos en un panel de 300: se reservan 135 (antes, nada).
+    expect(topeY([0, 100], 150, 300, false, true)).toBeCloseTo(100 + 100 * (135 / 165), 6);
+  });
   it("sin marcas arriba no cambia el eje", () => {
     expect(topeY([1, 2, 3], 0, 300, false, true)).toBeUndefined();
   });

@@ -360,9 +360,9 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const inicioBarras = (cortos.length ? Math.max(...cortos.map((m) => m.y)) + 18 : 10 + arriba);
   const filasBarras = filasFranja(barras.map((r) => ({ a: r.a, b: r.b })));
   const barrasY = barras.map((r, k) => ({ ...r, y: inicioBarras + filasBarras[k] * 18 }));
-  // El número de un quiebre largo va justo después del tope de inicio, 10 px más adelante (no encima del eje Y, si
-  // empieza en el borde).
-  const corrido = (i: number) => isoDia(i + (10 / Math.max(e.ancho - 75, 100)) * (fin - ini));
+  // El número de un quiebre largo va justo después del tope de inicio, unos 13 px más adelante (no encima del eje Y, si
+  // empieza en el borde, ni del tope).
+  const corrido = (i: number) => isoDia(i + (13 / Math.max(e.ancho - 130, 100)) * (fin - ini));
   const marcadores = [...cortos, ...barrasY.map((r) => ({ n: String(r.n), t: corrido(r.a), y: r.y, texto: r.texto }))];
   const frecDe = (fecha: string) => e.resultado.frecuencias[e.resultado.datos.findIndex((d) => d[0] === fecha)] ?? frecUltima;
   const excluidos = e.resultado.excluidos.map((x) => ({
@@ -657,8 +657,11 @@ export function reservaSuperior(marcadores: Array<{ y: number }>, hayBarras: boo
  * Máximo del eje Y que deja libres los `reserva` píxeles de arriba, para que la serie no toque los números de los
  * quiebres (por ejemplo, el pico de desocupación de 2002). En escala logarítmica, la cuenta se hace en logaritmos.
  */
-export function topeY(valores: number[], reserva: number, alto: number, log: boolean, cero: boolean): number | undefined {
-  if (!reserva || !valores.length || reserva >= alto / 2) return undefined;
+export function topeY(valores: number[], reservaPedida: number, alto: number, log: boolean, cero: boolean): number | undefined {
+  if (!reservaPedida || !valores.length) return undefined;
+  // En un panel bajo, la reserva no pasa del 45 % del alto (revisión visual de la sonda 3: si pasaba de la mitad, no se
+  // reservaba nada y el pico del dólar en 2002 subía hasta las letras de los eventos).
+  const reserva = Math.min(reservaPedida, alto * 0.45);
   const fraccion = reserva / (alto - reserva);
   if (log) {
     const lo = Math.log10(Math.min(...valores)), hi = Math.log10(Math.max(...valores));

@@ -1727,6 +1727,22 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
   - 1.626 enlaces sin rotos.
 - **El host local**, a 390 y 1280 px, en claro y en oscuro: sin errores de consola y sin desbordes.
 
+**Revisión visual** (`revisor-visual`, 15/11/2026; 6 vistas a 390 y 1280 px, claro y oscuro, más el host):
+- **Sin problemas en:**
+  - desbordes y consola del sitio;
+  - el contraste del texto de la cinta (7,27:1 o más en oscuro, 8,41:1 en claro);
+  - las letras, los grupos y los números de los quiebres, que no se pisan.
+- **Corregido:**
+  - en un panel bajo (390 px, cuatro series), la reserva de arriba pasaba de la mitad del alto y `topeY` no reservaba nada: el pico del dólar de 2002 subía hasta las letras de los eventos. Ahora la reserva se limita al 45 % del alto;
+  - el número de un quiebre largo tapaba su tope de inicio: ahora va unos 13 px más adelante.
+
+  Por eso la referencia de la 4b se volvió a guardar (cambian 32 SVG, nada más).
+- **Sin cambio:**
+  - el 405 de la consola es del host de prueba;
+  - los períodos sin rótulo en 390 px son los que no entran (el nombre, al pasar el cursor);
+  - las marcas sueltas de 1989–1990 son la franja del episodio de la hiperinflación, que en un eje de 56 años no tiene lugar para el nombre (en Claude, «Advertencias» la nombra).
+- **CPU** (`medir-cpu.mjs`, el peor caso con 996 observaciones): unos 23 ms de mediana en caliente. El commit anterior (b0d19aa), medido en la misma máquina y en el mismo momento, da 25 ms: la diferencia con los 16,6 ms de la ronda anterior es de la máquina, no del cambio.
+
 **Para la SPEC v1.10** (reemplaza, en lo que choca, la lista de «Diferencias con la SPEC» de arriba):
 - **2.2 y 2.5:** `nombre_corto` en la serie y la variante, y el esquema 1.4.
 - **2.4:** la variación diciembre–diciembre, el último día del año.

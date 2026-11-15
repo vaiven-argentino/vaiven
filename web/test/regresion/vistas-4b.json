@@ -49,7 +49,7 @@
   "leyendas": "aa414aae003e6757",
   "cita": "e896e0f0ade27b2c",
   "tabla": "9f88c3810c899c6a",
-  "svg": "904b70dda840deea"
+  "svg": "bf4d05933bd528a5"
  },
  "1280 ?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011": {
   "url": "?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011",
@@ -114,7 +114,7 @@
   "leyendas": "cc76637e025ad4da",
   "cita": "9aa4962516e7825f",
   "tabla": "bcc47cd9d9c7f6ff",
-  "svg": "4d9880472051b1c9"
+  "svg": "b14c1fdfccef6f83"
  },
  "1280 ?desde=1970&ev=cambiario,deuda": {
   "url": "?desde=1970&ev=cambiario,deuda",
@@ -270,7 +270,7 @@
   "leyendas": "56b70aead2933220",
   "cita": "e896e0f0ade27b2c",
   "tabla": "89983a94994c7e26",
-  "svg": "df808133d32c2f13"
+  "svg": "f6f98ed889d115c8"
  },
  "1280 ?s=reservas&sh=catedra": {
   "url": "?s=reservas&sh=catedra",
@@ -608,7 +608,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec6816a98d881367",
   "tabla": "6b4239a84e9e4e90",
-  "svg": "82610ea994ca967e"
+  "svg": "e4c4447ceab2149a"
  },
  "1280 ?s=desocupacion&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&sh=gobierno&ev=1",
@@ -621,7 +621,7 @@
   "leyendas": "e4c99d4d8e7451d1",
   "cita": "9aa4962516e7825f",
   "tabla": "9e88ea1f7d741e11",
-  "svg": "3925ae6949e20dc0"
+  "svg": "d41e7096da8aca72"
  },
  "1280 ?s=desocupacion&v=gba": {
   "url": "?s=desocupacion&v=gba",
@@ -1141,7 +1141,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "8b3a8f5190eaa7ab",
   "tabla": "870c44acc0866b6c",
-  "svg": "55785beed27e165d"
+  "svg": "7c89ab6b36d9ab81"
  },
  "1280 ?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1": {
   "url": "?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1",
@@ -1154,7 +1154,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "d0712a94e8c9baee"
+  "svg": "2e74f1b8874d6872"
  },
  "1280 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -1544,7 +1544,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9aa4962516e7825f",
   "tabla": "54a1735211611aa3",
-  "svg": "80bc19228020f7e4"
+  "svg": "b90b08a02a47ed9e"
  },
  "1280 ?s=desocupacion&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=desocupacion&desde=2000&hasta=2002&sh=gobierno",
@@ -1557,7 +1557,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9aa4962516e7825f",
   "tabla": "6c68a160383c5d55",
-  "svg": "83f3cc2e43ebe816"
+  "svg": "56d713995740edd2"
  },
  "1280 ?s=desocupacion&desde=2022&sh=gobierno": {
   "url": "?s=desocupacion&desde=2022&sh=gobierno",
@@ -1778,7 +1778,7 @@
   "leyendas": "2fec3fd0178102d8",
   "cita": "33a233bf161dc242",
   "tabla": "b59a3c943aef6b11",
-  "svg": "86da52c40407426b"
+  "svg": "f11680a62142db6b"
  },
  "1280 ?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario",
@@ -1791,7 +1791,7 @@
   "leyendas": "7e84f83d9d1ade24",
   "cita": "33a233bf161dc242",
   "tabla": "cecc0e57ee117e0c",
-  "svg": "fdf4fd7d5e21bac9"
+  "svg": "3ad02d1ae4699d02"
  },
  "1280 ?s=tc-oficial&desde=1981&hasta=1984&sh=ministro": {
   "url": "?s=tc-oficial&desde=1981&hasta=1984&sh=ministro",
@@ -1804,7 +1804,7 @@
   "leyendas": "ffbac1587cb7137c",
   "cita": "33a233bf161dc242",
   "tabla": "2f75171af39aa3aa",
-  "svg": "2091f242f55787da"
+  "svg": "a90535755f5fc433"
  },
  "1280 ?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario",
@@ -1817,7 +1817,7 @@
   "leyendas": "5d8e71a52ed8143d",
   "cita": "33a233bf161dc242",
   "tabla": "dd221cd6351b8308",
-  "svg": "bda6f2efc36b5460"
+  "svg": "e9f15fe996be5ba4"
  },
  "1280 ?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario",
@@ -1947,7 +1947,7 @@
   "leyendas": "74e33a29892adacd",
   "cita": "6308c9a2077d7486",
   "tabla": "633ec2e8626cf765",
-  "svg": "909730e7ae2093a9"
+  "svg": "dbf0ee4a7d8ec5b4"
  },
  "1280 ?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro",
@@ -1960,7 +1960,7 @@
   "leyendas": "c18d7ca679041728",
   "cita": "6308c9a2077d7486",
   "tabla": "f79fba38638bd38b",
-  "svg": "d9364a5aadb731d5"
+  "svg": "627f83eff6b63e99"
  },
  "1280 ?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario",
@@ -2064,7 +2064,7 @@
   "leyendas": "192978b90d51df08",
   "cita": "f661dd6b4b834234",
   "tabla": "13b2db1fc6c61af2",
-  "svg": "4eb1437ba3b7efb1"
+  "svg": "827af70303a86024"
  },
  "1280 ?t=var_mensual&desde=2017&hasta=2019&ev=1": {
   "url": "?t=var_mensual&desde=2017&hasta=2019&ev=1",
@@ -2142,7 +2142,7 @@
   "leyendas": "aa414aae003e6757",
   "cita": "e896e0f0ade27b2c",
   "tabla": "9f88c3810c899c6a",
-  "svg": "77c7a7856b0f424c"
+  "svg": "213f0a20b31d6598"
  },
  "390 ?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011": {
   "url": "?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011",
@@ -2207,7 +2207,7 @@
   "leyendas": "cc76637e025ad4da",
   "cita": "9aa4962516e7825f",
   "tabla": "bcc47cd9d9c7f6ff",
-  "svg": "70ea48222dc20cfd"
+  "svg": "65707a12f13da346"
  },
  "390 ?desde=1970&ev=cambiario,deuda": {
   "url": "?desde=1970&ev=cambiario,deuda",
@@ -2363,7 +2363,7 @@
   "leyendas": "56b70aead2933220",
   "cita": "e896e0f0ade27b2c",
   "tabla": "89983a94994c7e26",
-  "svg": "f457a9b1af96e060"
+  "svg": "4d3d3a4605865702"
  },
  "390 ?s=reservas&sh=catedra": {
   "url": "?s=reservas&sh=catedra",
@@ -2701,7 +2701,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec6816a98d881367",
   "tabla": "6b4239a84e9e4e90",
-  "svg": "d4fa547414b0edeb"
+  "svg": "9da157d075c2f40c"
  },
  "390 ?s=desocupacion&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&sh=gobierno&ev=1",
@@ -2714,7 +2714,7 @@
   "leyendas": "e4c99d4d8e7451d1",
   "cita": "9aa4962516e7825f",
   "tabla": "9e88ea1f7d741e11",
-  "svg": "388d37c67b686c79"
+  "svg": "02c5037c294ef87e"
  },
  "390 ?s=desocupacion&v=gba": {
   "url": "?s=desocupacion&v=gba",
@@ -3234,7 +3234,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "8b3a8f5190eaa7ab",
   "tabla": "870c44acc0866b6c",
-  "svg": "60ece5047b37d68d"
+  "svg": "0a7ee0050d7eb7b5"
  },
  "390 ?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1": {
   "url": "?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1",
@@ -3247,7 +3247,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "5975e801c6502007"
+  "svg": "51885c15aaae5979"
  },
  "390 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -3637,7 +3637,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9aa4962516e7825f",
   "tabla": "54a1735211611aa3",
-  "svg": "a764a26294237e8a"
+  "svg": "35677c42774fdf35"
  },
  "390 ?s=desocupacion&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=desocupacion&desde=2000&hasta=2002&sh=gobierno",
@@ -3650,7 +3650,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9aa4962516e7825f",
   "tabla": "6c68a160383c5d55",
-  "svg": "bd312c900b3ad85a"
+  "svg": "15cd8869355a9d0e"
  },
  "390 ?s=desocupacion&desde=2022&sh=gobierno": {
   "url": "?s=desocupacion&desde=2022&sh=gobierno",
@@ -3871,7 +3871,7 @@
   "leyendas": "2fec3fd0178102d8",
   "cita": "33a233bf161dc242",
   "tabla": "b59a3c943aef6b11",
-  "svg": "e84e9b57d8ee3d18"
+  "svg": "2b45b55aa7eaefe1"
  },
  "390 ?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario",
@@ -3884,7 +3884,7 @@
   "leyendas": "7e84f83d9d1ade24",
   "cita": "33a233bf161dc242",
   "tabla": "cecc0e57ee117e0c",
-  "svg": "146809c96ef6ccde"
+  "svg": "975cfbb560b14f4c"
  },
  "390 ?s=tc-oficial&desde=1981&hasta=1984&sh=ministro": {
   "url": "?s=tc-oficial&desde=1981&hasta=1984&sh=ministro",
@@ -3897,7 +3897,7 @@
   "leyendas": "ffbac1587cb7137c",
   "cita": "33a233bf161dc242",
   "tabla": "2f75171af39aa3aa",
-  "svg": "ea3cc160213b4442"
+  "svg": "322fd4b147097b5b"
  },
  "390 ?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario",
@@ -3910,7 +3910,7 @@
   "leyendas": "5d8e71a52ed8143d",
   "cita": "33a233bf161dc242",
   "tabla": "dd221cd6351b8308",
-  "svg": "f5845fdb55cd8cdf"
+  "svg": "8868cb9b20533dd0"
  },
  "390 ?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario",
@@ -4040,7 +4040,7 @@
   "leyendas": "74e33a29892adacd",
   "cita": "6308c9a2077d7486",
   "tabla": "633ec2e8626cf765",
-  "svg": "e42b2f916ae7c685"
+  "svg": "22623cd66a0dc8d4"
  },
  "390 ?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro",
@@ -4053,7 +4053,7 @@
   "leyendas": "c18d7ca679041728",
   "cita": "6308c9a2077d7486",
   "tabla": "f79fba38638bd38b",
-  "svg": "eaa3cc82ea42b2ff"
+  "svg": "65135f6efbafeefd"
  },
  "390 ?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario",
@@ -4157,7 +4157,7 @@
   "leyendas": "192978b90d51df08",
   "cita": "f661dd6b4b834234",
   "tabla": "13b2db1fc6c61af2",
-  "svg": "701d2eff998724ce"
+  "svg": "ea5a8f5832528803"
  },
  "390 ?t=var_mensual&desde=2017&hasta=2019&ev=1": {
   "url": "?t=var_mensual&desde=2017&hasta=2019&ev=1",
