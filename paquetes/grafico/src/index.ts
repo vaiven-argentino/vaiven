@@ -7,3 +7,5 @@ export * from "./estado";
 export * from "./espec";
 export * from "./vista";
 export * from "./tema";
+export * from "./imagen";
+export * from "./locale";

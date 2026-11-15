@@ -7,16 +7,16 @@ import {
   REGLA_UBICACION, atraso, disponibles, fechaDeDibujo, rangoLegible, referenciaDe, tienePais, ubicar,
   type Comparacion, type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Periodo, type Resultado, type Transformacion,
 } from "@vaiven/transformaciones";
-import { alinearVista, armarVista, compararVista, lecturasGuia, nombreSombreadoEnFrase, partirEnRenglones, type Vista } from "@vaiven/grafico";
+import { ANCHO_IMAGEN, alinearVista, armarVista, compararVista, lecturasGuia, nombreArchivoImagen, nombreSombreadoEnFrase, textoImagen, type Vista } from "@vaiven/grafico";
 import { REGLA_ALINEACION, csvLargo, hojasVista, type FilaLarga, type HojaAncha, type VistaDescargaVarias } from "../lib/descarga";
-import { agregarSerie, colorLibre, igualarComunes, nombreArchivoVista, puedeAgregar, quitarSerie, repetida } from "../lib/vista";
+import { agregarSerie, colorLibre, igualarComunes, puedeAgregar, quitarSerie, repetida } from "../lib/vista";
 import {
   MAX_PAISES, MEDIAS, opcionesDe, porDefecto, serieVista, seriesDeUrl, urlDesdeEstado, urlDesdeVista, vistaDesdeUrl,
   type Documento, type Estado, type EstadoVista, type IndiceSerie,
 } from "../lib/estado";
 import { esVariacion, rangoQuiebre, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato, unidadVisible } from "../lib/formato";
-import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, licenciaImagen, tema, type Cargados, type VistaGrafico } from "./comun";
+import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, tema, type Cargados, type VistaGrafico } from "./comun";
 import { diaLegible, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
 import {
   ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, columnasDe, contextoDe, textoConfianza, textoLectura,
@@ -670,59 +670,19 @@ function iniciar(): void {
   const paisesDe = (k: number) => (tienePais(docs[k]) ? vistaEstado.series[k].p.map((id) => nombreEntidadDe(k, id)) : undefined);
   const primera = () => vistaEstado.series[0];
 
+  /** El nombre de los archivos de la vista (el mismo armado que el MCP, paquetes/grafico/src/imagen.ts). */
   function nombreArchivo(): string {
-    if (varias()) return nombreArchivoVista(vistaEstado.series, porDefectoDe);
-    const e = primera(), d = docs[0];
-    const partes = ["vaiven", e.s, e.v, tienePais(d) ? e.p.join("-") : undefined, e.pa ? "pesos_actuales" : undefined,
-      e.f || undefined, e.m || undefined, e.t !== "nivel" ? e.t : undefined, e.mm ? `mm${e.mm}` : undefined,
-      e.desde || e.hasta ? `${e.desde || "inicio"}_${e.hasta || "hoy"}` : undefined, e.sh ? `sombreado_${e.sh}` : undefined];
-    return partes.filter(Boolean).join("_").replace(/[^\w.-]+/g, "-");
+    return nombreArchivoImagen(vistaEstado, docs, porDefectoDe);
   }
 
-  function lineasPie(): string[] {
-    const u = ultimo!;
-    const e0 = primera();
-    const pie: string[] = [];
-    if (!varias()) {
-      const d = docs[0];
-      pie.push(`Fuentes: ${[...new Set(d.fuentes.map((f) => f.organismo))].join("; ")}.`);
-      if (tienePais(d)) pie.push(`Países: ${paisesDe(0)!.join(", ")} (resaltado: ${nombreEntidadDe(0, e0.p[0])}).`);
-      if (u.transformacion) pie.push(`Transformación: ${u.transformacion} (calculada por Vaivén).`);
-    } else {
-      // Una línea por serie: su variante, su transformación y sus fuentes.
-      docs.forEach((d, k) => {
-        const paises = paisesDe(k);
-        pie.push(`${k + 1}. ${d.nombre} · ${d.nombre_variante} · ${u.transformaciones[k] ? `${u.transformaciones[k]} (calculada por Vaivén)` : "como se publica"}${paises ? ` · países: ${paises.join(", ")}` : ""} · fuentes: ${[...new Set(d.fuentes.map((f) => f.organismo))].join("; ")}.`);
-      });
-    }
-    if (u.periodos.length && registroPeriodos) {
-      pie.push(`Sombreado: ${nombreSombreado(e0.sh)}${e0.sh === "catedra" ? ` (${ACLARACION_ETAPAS})` : ""}. Cada dato, en el período vigente a mitad de su intervalo (los saldos en nivel, el último día). Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`);
-    }
-    if (u.episodios.length) pie.push(`Episodios: ${u.episodios.map((x) => x.nombre).join("; ")}.`);
-    if (u.eventos.length) {
-      // En la imagen (900 px) los eventos pueden ir con letras aunque en la pantalla vayan como rayitas.
-      const letras = modoEventosDe(varias() && u.vista.dominio ? u.vista.dominio : u.r, u.eventos, 900) === "letras";
-      pie.push(`Eventos: ${u.eventos.map((x) => (letras ? `${x.letra}. ${x.nombre}` : `${diaLegible(x.fecha)}, ${x.nombre}`)).join("; ")}.`);
-    }
-    const version = docs.map((d) => d.version_datos).sort().at(-1)!;
-    const fuentes = docs.flatMap((d) => d.fuentes);
-    pie.push(varias()
-      ? `Elaboración: Vaivén, versión de datos ${diaDeVersion(version)}. ${licenciaImagen(fuentes)}`
-      : `Elaboración: Vaivén, variante «${docs[0].variante}», versión de datos ${diaDeVersion(docs[0].version_datos)}. ${licenciaImagen(docs[0].fuentes)}`);
-    // La imagen mide 900 px: cada línea larga se parte en renglones de unos 130 caracteres para que no se corte
-    // (revisión visual del PR B). La URL va entera, al final.
-    return [...pie.flatMap((l) => partirEnRenglones(l, 130)), location.href];
-  }
-
+  /** La imagen de 900 px con título y pie: el texto lo arma paquetes/grafico (el mismo que da el MCP con `imagen`). */
   async function imagen(formato: "png" | "svg"): Promise<void> {
     if (!ultimo) return;
-    const d = ultimo.comparacion.disposicion;
-    const unidades = [...new Set(d.paneles.map((p) => p.unidad))];
-    const titulo = varias() ? `Comparación: ${docs.map((x) => x.nombre).join(" · ")}` : `${docs[0].nombre} · ${docs[0].nombre_variante}`;
-    const subtitulo = varias() ? (unidades.length === 1 ? unidadVisible(unidades[0]) : "Varias unidades: cada una en su eje o en su panel") : unidadVisible(ultimo.r.unidad);
-    // En paneles, 200 px por panel (el alto mínimo es 180 px, SPEC 6.2).
-    const alto = d.tipo === "paneles" ? Math.max(400, d.paneles.length * 200) : 400;
-    const spec = entrada(900, alto, { titulo, subtitulo, pie: lineasPie() });
+    const t = textoImagen({
+      estado: vistaEstado, docs, vista: ultimo.vista, transformaciones: ultimo.transformaciones,
+      periodos: registroPeriodos ?? undefined, url: location.href,
+    });
+    const spec = entrada(ANCHO_IMAGEN, t.alto, { titulo: t.titulo, subtitulo: t.subtitulo, pie: t.pie });
     await exportarImagen(spec, formato, `${nombreArchivo()}.${formato}`);
   }
 

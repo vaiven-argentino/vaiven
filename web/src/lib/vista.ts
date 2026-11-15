@@ -55,19 +55,5 @@ export function repetida(series: readonly Estado[], k: number): number {
   return series.findIndex((e, j) => j !== k && clave(e) === c);
 }
 
-/**
- * El nombre de los archivos de una vista con varias series (decisión del PR B):
- * `vaiven_<s1>_y_<s2>[_y_…]_<desde>_<hasta>[_sombreado_x]`. La variante va (`<s>-<variante>`) solo si no es la de por
- * defecto o si la serie se repite.
- */
-export function nombreArchivoVista(series: ReadonlyArray<Pick<Estado, "s" | "v" | "desde" | "hasta" | "sh">>, porDefecto: (s: string) => string | undefined): string {
-  const nombres = series.map((e) => {
-    const repite = series.filter((x) => x.s === e.s).length > 1;
-    return repite || e.v !== porDefecto(e.s) ? `${e.s}-${e.v}` : e.s;
-  });
-  const [primera] = series;
-  const partes = ["vaiven", nombres.join("_y_"),
-    primera.desde || primera.hasta ? `${primera.desde || "inicio"}_${primera.hasta || "hoy"}` : undefined,
-    primera.sh ? `sombreado_${primera.sh}` : undefined];
-  return partes.filter(Boolean).join("_").replace(/[^\w.-]+/g, "-");
-}
+// El nombre de los archivos de una vista se mudó a paquetes/grafico (src/imagen.ts) en la 4e: lo usa también el MCP.
+export { nombreArchivoVista } from "@vaiven/grafico";
