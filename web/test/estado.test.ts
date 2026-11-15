@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { estadoDesdeUrl, opcionesDe, porDefecto, serieDeUrl, serieVista, urlDesdeEstado, type Documento, type IndiceSerie } from "../src/lib/estado";
+import { baseInicial, estadoDesdeUrl, opcionesDe, porDefecto, serieDeUrl, serieVista, urlDesdeEstado, type Documento, type IndiceSerie } from "../src/lib/estado";
 import { avisoFiltroEventos, categoriasEv, escribirEv, leerEv } from "../src/lib/periodos";
 
 const EXPORT = join(import.meta.dirname, "..", "..", "export");
@@ -127,5 +127,22 @@ describe("filtro de eventos (parámetro ev)", () => {
     expect(avisoFiltroEventos(1, 4, ["deuda", "episodio"], cats)).toBe("Se muestra 1 de 4 eventos (filtro: deuda, episodios).");
     expect(avisoFiltroEventos(30, 30, CATEGORIAS, cats)).toBe("");
     expect(avisoFiltroEventos(0, 0, [], cats)).toBe("");
+  });
+});
+
+describe("base 100 por defecto (H3, sonda 3 de la 4e)", () => {
+  const reservas = doc("reservas", "brutas");
+  const serie = serieVista(reservas, []);
+  it("es el primer año a la vista: el de desde, si es posterior al primer dato", () => {
+    expect(baseInicial(serie, "1997")).toBe("1997");
+    expect(baseInicial(serie, "1997-06")).toBe("1997");
+    expect(baseInicial(serie, "")).toBe("1970");
+    expect(baseInicial(serie, "1950")).toBe("1970");
+    expect(baseInicial(serie, "2300")).toBe("1970");
+  });
+  it("las opciones de la vista la usan si no se eligió otra", () => {
+    const e = { ...porDefecto("reservas", "brutas", reservas), t: "base_100" as const, desde: "1997", hasta: "2010" };
+    expect(opcionesDe(e, serieVista(reservas, e.p)).base).toEqual({ desde: "1997", hasta: "1997" });
+    expect(opcionesDe({ ...e, base: "2001" }, serieVista(reservas, e.p)).base).toEqual({ desde: "2001", hasta: "2001" });
   });
 });

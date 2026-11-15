@@ -11,7 +11,7 @@ import { ANCHO_IMAGEN, alinearVista, armarVista, compararVista, lecturasGuia, no
 import { REGLA_ALINEACION, csvLargo, hojasVista, type FilaLarga, type HojaAncha, type VistaDescargaVarias } from "../lib/descarga";
 import { agregarSerie, colorLibre, igualarComunes, puedeAgregar, quitarSerie, repetida } from "../lib/vista";
 import {
-  MAX_PAISES, MEDIAS, opcionesDe, porDefecto, serieVista, seriesDeUrl, urlDesdeEstado, urlDesdeVista, vistaDesdeUrl,
+  MAX_PAISES, MEDIAS, baseInicial, opcionesDe, porDefecto, serieVista, seriesDeUrl, urlDesdeEstado, urlDesdeVista, vistaDesdeUrl,
   type Documento, type Estado, type EstadoVista, type IndiceSerie,
 } from "../lib/estado";
 import { esVariacion, rangoQuiebre, type QuiebreNumerado } from "../lib/ficha";
@@ -204,7 +204,7 @@ function iniciar(): void {
     }));
     c.campoBase.hidden = estado.t !== "base_100" && estado.t !== "indice_desde_tasas";
     c.base.value = estado.base;
-    c.base.placeholder = estado.t === "base_100" ? serie.datos[0]?.[0].slice(0, 4) ?? "" : "primer año";
+    c.base.placeholder = estado.t === "base_100" ? baseInicial(serie, estado.desde) : "primer año";
     c.campoFrecuencia.hidden = !disp.frecuencias.length;
     c.frecuencia.replaceChildren(opcion("", "Original", !estado.f), ...disp.frecuencias.map((f) => opcion(f, f === "anual" ? "Anual" : "Trimestral", f === estado.f)));
     c.campoMedia.hidden = !disp.mediaMovil;

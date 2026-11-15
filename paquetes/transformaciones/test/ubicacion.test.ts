@@ -30,6 +30,13 @@ describe("referencia de cada observación", () => {
     expect(referenciaDe("1989-07", "mensual", { ...saldo, mediaMovil: 3 }).clase).toBe("intervalo");
   });
 
+  it("la variación diciembre–diciembre va el 31 de diciembre de su año, también en un promedio (H4, sonda 3 de la 4e)", () => {
+    expect(referenciaDe("2002", "anual", { ...promedio, transformacion: "var_dic_dic" })).toEqual({ clase: "instante", dia: "2002-12-31" });
+    expect(fechaDeDibujo(referenciaDe("2002", "anual", { ...promedio, transformacion: "var_dic_dic" }))).toBe("2002-12-31T12:00:00.000Z");
+    // La interanual de un promedio sigue en el punto medio.
+    expect(referenciaDe("2002-12", "mensual", { ...promedio, transformacion: "var_interanual" }).clase).toBe("intervalo");
+  });
+
   it("las semestrales de la EPH puntual cubren el mes de la onda", () => {
     expect(referenciaDe("1989-05", "semestral", promedio)).toMatchObject({ desde: "1989-05-01", hasta: "1989-05-31" });
   });

@@ -59,8 +59,13 @@ export const NOMBRE_HUECO: Record<TipoPeriodo, string> = {
   catedra: "sin etapa", episodio: "sin episodio",
 };
 
-/** ¿Se ubica en un instante (el último día) o en un intervalo? */
+/**
+ * ¿Se ubica en un instante (el último día) o en un intervalo? Los saldos en nivel y las variaciones diciembre–diciembre,
+ * que comparan dos diciembres, van el último día (H4, sonda 3 de la 4e: a mitad de año, el 41 % de 2002 se leía como un
+ * dato de julio al lado de una serie mensual).
+ */
 export function esInstante(c: ContextoUbicacion): boolean {
+  if (c.transformacion === "var_dic_dic") return true;
   const nivel = !c.transformacion || c.transformacion === "nivel" || c.transformacion === "base_100";
   return c.agregacion === "fin_de_periodo" && nivel && !(c.mediaMovil && c.mediaMovil > 1);
 }
@@ -162,7 +167,8 @@ export function textoReparto(u: Ubicacion): string {
 /** La regla, en el texto que llevan la hoja de metadatos del XLSX, el aviso del gráfico y la SPEC. */
 export const REGLA_UBICACION =
   "Cada dato se ubica en el período vigente a mitad de su intervalo (mes, trimestre o año; en las semestrales de la EPH, " +
-  "el mes de la onda). Los saldos a fin de período en nivel (reservas, deuda, base monetaria) se ubican el último día. " +
+  "el mes de la onda). Los saldos a fin de período en nivel (reservas, deuda, base monetaria) y las variaciones " +
+  "diciembre–diciembre se ubican el último día. " +
   "Si ningún período cubre más de la mitad del intervalo, la columna del período dice «sin mayoría»; " +
   "«otros_periodos» da el resto del reparto por días. Límite: una variación interanual compara con 12 meses antes " +
   "(y una media móvil promedia meses anteriores), pero se asigna al período de la observación.";

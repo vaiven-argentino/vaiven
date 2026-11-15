@@ -178,6 +178,14 @@ export function estadoDesdeUrl(q: URLSearchParams, s: string, v: string, doc: Do
   return { estado: e, avisos };
 }
 
+/** La base por defecto de «Índice base 100»: el primer año a la vista (el de `desde` o el del primer dato, el posterior). */
+export function baseInicial(serie: SerieExportada, desde: string): string {
+  const primero = serie.datos[0]?.[0].slice(0, 4) ?? "";
+  const anio = /^\d{4}/.test(desde) ? desde.slice(0, 4) : "";
+  const ultimo = serie.datos[serie.datos.length - 1]?.[0].slice(0, 4) ?? "";
+  return anio > primero && anio <= ultimo ? anio : primero;
+}
+
 /** Opciones de la URL (H8, sonda 3 de la 4e). */
 export interface OpcionesUrl {
   transformacionSiempre?: boolean;
@@ -228,9 +236,10 @@ export function opcionesDe(e: Estado, serie: SerieExportada): Opciones {
   }
   if (e.f) o.frecuencia = e.f;
   if (e.mm) o.mediaMovil = e.mm;
-  // Base 100 necesita una base: sin elegir, el primer año con dato (como la ficha). El índice desde tasas toma por
-  // defecto el primer año con dato.
-  const base = e.base || (e.t === "base_100" ? serie.datos[0]?.[0].slice(0, 4) : "");
+  // Base 100 necesita una base: sin elegir, el primer año a la vista (el de `desde`, si es posterior al primer dato; H3,
+  // sonda 3 de la 4e: con 1997–2010, la base caía en 1970 y los valores iban de 2.000 a 7.000). El índice desde tasas
+  // toma por defecto el primer año con dato.
+  const base = e.base || (e.t === "base_100" ? baseInicial(serie, e.desde) : "");
   if ((e.t === "base_100" || e.t === "indice_desde_tasas") && base) {
     o.base = /^\d{4}$/.test(base) ? { desde: base, hasta: base } : { fecha: base };
   }
