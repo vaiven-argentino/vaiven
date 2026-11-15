@@ -1490,3 +1490,112 @@ Camilo sumó al informe lo que vio en la consola de Claude Desktop. No hay error
   - B4: que los assets no dependan del `Referer`;
   - además, lo de la segunda ronda: A2, A3, M1, M3, M7, M8, B1 y B2.
 - **De la prueba:** Claude web con la sonda 2, con el pedido 4 (unos 185.000 caracteres); en Desktop, A1 y el pedido 4.
+
+### Prueba de la sonda 2 en Claude web (14/11/2026, informe de Camilo)
+
+En la web dio lo mismo que en Desktop: el dominio propio en la CSP **carga**, `unsafe-eval` **está permitido**, el tema llega por `hostContext.theme`, y llegan `structuredContent` y `updateModelContext`. **A1 quedó resuelto en la web:** en los tres pedidos, Claude no dibujó su propio gráfico ni volvió a pedir los datos. Además, un resultado de **185.412 caracteres** (las reservas completas) llegó entero a la app con la ejecución de código encendida: el umbral de unos 150.000 no se activó en ese caso. Con eso se cierra el Paso 0: HTML mínimo, con el script desde el dominio de Vaivén (lo que pide la SPEC). El intérprete de Vega se mantiene, porque la especificación de MCP Apps no garantiza `unsafe-eval`.
+
+**Revisión del informe:**
+- **N2:** el recurso ya pedía `permissions.clipboardWrite` desde la sonda 2, y Claude web no lo concede. La interfaz definitiva no usa el portapapeles.
+- **M10:** la causa es otra. No era el período: en las capas con `x` y `x2` (sombreado, franja de planes, quiebres en banda y episodios), el `x2` iba sin `type: "temporal"`. Vega-Lite pasaba el dominio del `x` a señales `datetime()` y dejaba el del `x2` como texto. Lo mismo explica «Infinite extent». Con el tipo, los dos avisos desaparecen y el SVG queda igual.
+- **N4:** la escala logarítmica ya estaba en la disposición (`paneles[].log`); faltaba mandarla.
+- **N5 (el enlace sin `t`):** no se cambia. La URL canónica de la 4b omite lo que coincide con la vista inicial de la serie, a propósito, y `especificacion_grafico` comprueba que el explorador lea la misma vista.
+- **N3:** es un solo caso; se siguió la decisión de achicar primero y poner el tope después.
+
+**Decisiones de Camilo (14/11/2026):**
+
+| Tema | Decisión |
+|---|---|
+| N8, cómo se identifican las series | Las dos formas, con un control para pasar de una a otra. **Por defecto, nombres al final de las líneas** en todas las series; la **leyenda única** arriba, con `ley=1`. |
+| M5 | Un aviso de la combinación cuando el rango de una serie es más de 10 veces el de otra en el mismo eje o panel. |
+| M7 y A3 | Parámetros opcionales `tema` e `imagen` en `especificacion_grafico`; todo lo arma `armarVista`. |
+| M11 | Achicar la especificación y después un tope de 140.000 caracteres. |
+| N6 | Se suma el evento del 1/9/2019 (DNU 609/2019). |
+| M4 | La segunda variante de una misma serie, con trazo discontinuo. |
+| N4 | Aclarar la unidad («sin ajuste por inflación») e informar la escala de cada panel. |
+
+### Paso 1: lo que se hizo (15/11/2026)
+
+**Armado compartido** (explorador y MCP; la igualdad sigue en 8 de 8):
+- **La especificación, más chica:** los datos de cada línea van una sola vez, en `datasets` con nombre (antes, la línea y sus puntos llevaban cada uno las mismas filas). El resultado de las reservas completas baja de 181.856 a 94.292 caracteres; el SVG da igual en seis vistas de control.
+- **M10:** `x2` temporal en las capas de bandas.
+- **N8:**
+  - con varias series, todas llevan su nombre al final de la línea; en el doble eje, dentro del gráfico, sobre el final de la línea, sin pisar el eje derecho;
+  - el título de cada eje es solo la unidad, horizontal y arriba (arregla M2);
+  - con `ley=1`, la leyenda única arriba (con «eje izq.»/«eje der.»), con el botón «Leyenda arriba» / «Nombres en las líneas» en el explorador.
+- **M4:** la segunda variante de una misma serie, con trazo discontinuo.
+- **M5:** el aviso `c.escalas-distintas`.
+- **M6:** iniciales cuando el nombre corto no entra («DR», «NK», «AF»), y una franja fina para los períodos de menos de 2 px.
+- **N4:** «(sin ajuste por inflación)» en la unidad en pesos actuales, en el gráfico, la ficha, la tabla y la imagen.
+- **N6:** el evento `e.2019-09-01.vuelta-cepo`, con la norma y la Comunicación «A» 6770 (verificada: 1/9/2019, CAMEX 1-805). El export se regeneró sin red sobre `main` al día. La corrida sin red también ponía en `null` el `desactualizada_desde` del tipo de cambio real bilateral (el pendiente «Regeneración sin red»); esos tres archivos quedaron como en la corrida diaria.
+- **La imagen, el formato y el dibujo, en módulos compartidos:**
+  - `paquetes/grafico/src/imagen.ts`: el título, el pie y el nombre del archivo, mudados de `explorador.ts`;
+  - `paquetes/grafico/src/locale.ts`: el formato en español;
+  - `web/src/graficos/vega.ts`: `dibujarEn` e `imagenDe`, con la opción del intérprete.
+
+**MCP:**
+- **Parámetros nuevos:** `tema` (claro u oscuro, con `TEMA_OSCURO` controlado contra `global.css`), `imagen` y `leyenda`.
+- **Campos nuevos:** la escala de cada panel, los quiebres numerados (`quiebres`) y `nombre_archivo`. Contratos 1.2 de `comparar_series` (el aviso nuevo) y de `especificacion_grafico`.
+- **Tope de 140.000 caracteres:** el error trae el enlace al explorador. Una serie mensual completa entra (IPC interanual: unos 105.000).
+- **N7:** la descripción pide usar la variante por defecto si no entran todas las series, y decirlo.
+
+**La interfaz definitiva** (`mcp/app/`):
+- **HTML mínimo** (5,6 KB) que pide `mcp-app/grafico-<hash>.js` al dominio de Vaivén (asset estático, caché larga, CORS). La variante local por stdio lo lleva adentro.
+- **El gráfico** se dibuja con el intérprete, en español y con el tema de Claude. Al cambiar el tema se vuelve a pedir.
+- **Los controles** son el período, la transformación de cada serie (las que da `describir_serie`), el sombreado, los eventos, la leyenda y los paneles. Cada cambio vuelve a llamar a `especificacion_grafico`; si la herramienta da error, se muestra y el gráfico no cambia.
+- **Debajo, plegados:** advertencias (quiebres numerados y avisos), eventos y citas.
+- **Las acciones:**
+  - PNG y SVG con título y pie, por `downloadFile`;
+  - «Abrir en el explorador» y pantalla completa;
+  - `updateModelContext` después de dibujar.
+
+### Medido
+
+| Qué | Antes | Ahora |
+|---|---|---|
+| `resources/read` (CPU en Node, mediana en caliente) | 9,8 ms (todo en línea, 1,45 MB) | **0,6 ms** (HTML de 5,6 KB) |
+| `especificacion_grafico`, peor caso dentro del límite | 16,7 ms | 16,6 ms |
+| `especificacion_grafico`, IPC interanual completo | — | 8,6 ms (105 KB) |
+| `especificacion_grafico` con `imagen` (peor caso) | — | 28,2 ms (arma la vista dos veces; solo al descargar) |
+
+**Regresión de la 4b**, con el export de la 4b: 196 diferencias en 322 vistas, todas buscadas.
+- 46 son de la unidad aclarada.
+- 150 son del SVG, todas en vistas con sombreado: las iniciales y las franjas finas.
+
+La referencia se volvió a guardar.
+
+**Host de prueba local** (CSP de la especificación, sin `unsafe-eval`; 390 y 1280 px, claro y oscuro; pedidos 1 y 2):
+- la interfaz dibuja sin errores y el modo oscuro se aplica al gráfico;
+- los controles redibujan, y el error del límite se muestra sin cambiar el gráfico;
+- las descargas salen con el nombre de la vista, y el enlace funciona;
+- se envía el aviso al modelo.
+
+### Diferencias con la SPEC (van a la v1.10, con el cierre de la 4e)
+
+- **4.1:** el aviso `c.escalas-distintas`.
+- **6.2:**
+  - los nombres al final de las líneas en todas las series y dentro del gráfico en el doble eje;
+  - la leyenda única con `ley=1` y su botón;
+  - el título de los ejes con solo la unidad;
+  - el trazo discontinuo de la segunda variante;
+  - las iniciales y las franjas finas del sombreado;
+  - la unidad en pesos actuales aclarada.
+- **7.2:** los parámetros `tema`, `imagen` y `leyenda`, y los campos `escala`, `quiebres` y `nombre_archivo`.
+- **7.3:** el tope de 140.000 caracteres, además de las 1.000 observaciones.
+- **7.4:**
+  - el HTML mínimo con el script desde el dominio propio (confirmado en Claude web y Desktop);
+  - el intérprete de Vega siempre;
+  - `updateModelContext` y el texto condicional;
+  - la variante local con el script adentro.
+- **10:** la igualdad en modo oscuro y en la imagen, y la regresión de la 4b con la referencia nueva.
+
+### Pendientes
+
+- **M5, el umbral:** con 10 veces, el aviso no salta en el caso del informe (inflación y dólar interanuales, 2000–2020-09), donde la relación es de unas 5,4 veces; sí salta con la hiperinflación. Decidir si se baja a 5.
+- **El ancho en el celular:** los paneles tienen 800 px fijos y en 390 px la interfaz los escala (el texto queda chico). Se podría pedir un ancho a la herramienta (otro parámetro).
+- **`probador-mcp`:** el MCP local de esta sesión corre el código de cuando arrancó, así que no se pudo probar el código nuevo. Va en una sesión nueva, con las preguntas 19 a 24 y una de leyenda.
+- **La franja de los interinos** se ve bastante marcada, sobre todo en oscuro; se puede aclarar.
+- **Antes del merge:**
+  - quitar el commit TEMPORAL de `preview_urls` y el host `prueba-4e`;
+  - traer `main` y regenerar el export sin red (CLAUDE.md), cuidando el `desactualizada_desde` del tipo de cambio real bilateral.
+- **La prueba de Camilo** en Claude web y en Desktop, con la sección 4 nueva de `PRUEBA_MANUAL.md`, en la URL de versión.

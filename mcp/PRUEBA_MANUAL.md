@@ -1,6 +1,6 @@
 # Prueba manual del MCP desde Claude
 
-*Fase 3. Versiones: 05/11/2026 (fase 4a), 07/11/2026 (segunda revisión de la 4a), 12/11/2026 (períodos y episodios de la 4b, preguntas 14 a 18), 13/11/2026 (cierre de la 4b: tres fases de la hiperinflación y advertencias obligatorias en las preguntas 16 y 17) y 14/11/2026 (comparación de series de la 4c/4d, preguntas 19 a 24, y el salario nominal en la pregunta 12) · Se repite en cada actualización del protocolo o del SDK (SPEC 10) y antes de cada despliegue de fase. Los valores esperados de las preguntas 1 a 13 salen del export del 07/11/2026; si los datos se actualizan, pueden cambiar los últimos valores y la fecha de la versión de datos, no los históricos.*
+*Fase 3. Versiones: 05/11/2026 (fase 4a), 07/11/2026 (segunda revisión de la 4a), 12/11/2026 (períodos y episodios de la 4b, preguntas 14 a 18), 13/11/2026 (cierre de la 4b: tres fases de la hiperinflación y advertencias obligatorias en las preguntas 16 y 17), 14/11/2026 (comparación de series de la 4c/4d, preguntas 19 a 24, y el salario nominal en la pregunta 12) y 15/11/2026 (gráfico interactivo de la 4e, sección 4) · Se repite en cada actualización del protocolo o del SDK (SPEC 10) y antes de cada despliegue de fase. Los valores esperados de las preguntas 1 a 13 salen del export del 07/11/2026; si los datos se actualizan, pueden cambiar los últimos valores y la fecha de la versión de datos, no los históricos.*
 
 **Usá siempre la versión de `main` en GitHub, no una copia local:** <https://github.com/vaiven-argentino/vaiven/blob/main/mcp/PRUEBA_MANUAL.md>.
 
@@ -58,53 +58,56 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 - Para cada pregunta: bien, mal o a medias, y por qué (herramienta equivocada, dato distinto, faltó la advertencia o la cita).
 - Si Claude no encuentra el conector, si da error al conectar o si alguna respuesta tarda más de unos segundos.
 
-## 4. MCP Apps (4e): la sonda en Claude web y en Claude Desktop
-*14/11/2026 · Paso 0 de la 4e (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). La sonda no es el gráfico definitivo: muestra qué permite cada cliente. Versión 2, tras la primera prueba en Claude Desktop.*
-
-**Orden de la prueba:** primero **Claude web**, que todavía no se probó. Después **Claude Desktop**, solo para verificar que Claude ya no rearma el gráfico (fila i).
+## 4. MCP Apps (4e): el gráfico interactivo en Claude web y en Claude Desktop
+*15/11/2026 · Interfaz definitiva de `ui://vaiven/grafico` (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). Reemplaza la prueba de la sonda. Primero en la URL de versión (`prueba-4e`) y, después del despliegue de la 4e, en producción.*
 
 **Preparación**
-- **Conector de prueba:** en Claude web, **Personalizar → Conectores → + Agregar → Agregar conector personalizado**. Nombre: `Vaivén prueba`. URL: `https://prueba-4e-vaiven.argentino.workers.dev/mcp`. Sin inicio de sesión. En Claude Desktop aparece solo.
-- Comprobá que `https://prueba-4e-vaiven.argentino.workers.dev/salud` diga «4e (sonda 2)». Si da `error code: 1042`, el despliegue diario apagó las URL de versión: volvé a encenderlas en Cloudflare (**Workers & Pages → vaiven → Domains → Preview**).
-- **Apagá el conector `Vaivén`** (producción) y dejá activado solo `Vaivén prueba`.
-- Trabajá en una **conversación nueva fuera de los proyectos**, sin archivos ni memoria del proyecto, para ver cómo usa la herramienta un Claude sin contexto.
-- En Desktop, **cerrá la app del todo** (Cmd+Q) antes de probar, porque guarda los recursos en caché.
+- **Conector:** antes del despliegue, `Vaivén prueba` con `https://prueba-4e-vaiven.argentino.workers.dev/mcp` (sección 1, sin inicio de sesión); después, el conector `Vaivén` de siempre. `/salud` tiene que decir «4e». Si la URL de versión da `error code: 1042`, el despliegue diario apagó las URL de versión: volvé a encenderlas en Cloudflare (**Workers & Pages → vaiven → Domains → Preview**).
+- **Una conversación nueva fuera de los proyectos**, sin archivos ni memoria, con un solo conector de Vaivén activado. Si Claude lee la memoria del proyecto, sabe que es una prueba y responde distinto.
+- En Desktop, **cerrá la app del todo** (Cmd+Q) antes de probar: guarda los recursos en caché.
+- **Consola:** abrila **antes** de recargar la conversación. En Desktop: **Help → Troubleshooting → Enable Developer Mode** y `Cmd + Option + I`; en la web, las herramientas de desarrollo del navegador. Guardá el registro con clic derecho → **Save as…**.
 
-**Pedidos**
+**Pedidos** (en Claude web y en Claude Desktop)
 1. «Haceme un gráfico de la inflación interanual y las reservas internacionales entre 2000 y 2010».
-2. «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos». Es el caso de 996 observaciones y unos 124.000 caracteres, el más grande que admite la herramienta.
-3. **Modo oscuro:** con la sonda del pedido 1 a la vista, pasá Claude a modo oscuro y mirá si cambia la fila «Tema del host». No repitas el pedido: Claude puede no volver a llamar a la herramienta.
-4. **Una serie larga, por encima del umbral de Claude:** «Graficá las reservas internacionales», sin período. Con toda la historia, el resultado tiene unos 185.000 caracteres, más que los ~150.000 a partir de los cuales Claude puede guardar el resultado en un archivo en lugar de pasárselo a la app. Anotá si la app recibe la especificación (fila g, en verde, con unos 185.000 caracteres) o si dice que no llegó, y si Claude menciona que guardó el resultado en un archivo. Con esto se decide el tope por tamaño (NOTAS_FASE4, M11).
+2. «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos».
+3. «Graficá las reservas internacionales» (toda la serie, unos 100.000 caracteres).
+4. **Modo oscuro:** con el gráfico del pedido 1 a la vista, pasá Claude a modo oscuro: el gráfico se tiene que volver a pedir y quedar oscuro (fondo, ejes y líneas).
 
-**Qué anotar:** la sonda lo muestra en una tabla, en verde o en naranja. Al terminar cada pedido, tocá **«Copiar resultados»** y pegá el JSON en tus notas. Si el cliente no da permiso de portapapeles, el JSON aparece abajo, seleccionado: copialo con Cmd+C.
+**En cada gráfico, probá:**
+- **«Cambiar el gráfico»:**
+  - cambiá el período (por ejemplo, «Desde» 1995);
+  - cambiá la transformación de una serie;
+  - poné el sombreado de gobiernos;
+  - marcá «Eventos», «Leyenda arriba» y, con dos unidades, «En paneles».
 
-| # | Fila de la sonda o qué mirar | Qué se quiere saber |
+  Cada cambio redibuja el gráfico. En el pedido 2, «Desde» 1990 tiene que dar el **error del límite de 1.000 observaciones**, en naranja, y el gráfico no tiene que cambiar.
+- **«PNG» y «SVG»:** piden confirmación y bajan la imagen de 900 px con título y pie (fuentes, licencia, versión de datos y enlace). El nombre del archivo lleva las series y el período (por ejemplo, `vaiven_ipc_y_reservas_2000_2010.png`).
+- **«Abrir en el explorador»:** pide confirmación y abre la misma vista.
+- **«Pantalla completa»**, si aparece.
+- Los desplegables **«Advertencias»** (los quiebres ①②③ y los avisos de la combinación), **«Eventos»** (letra, fecha y nombre) y **«Fuentes y cita»**.
+
+**Qué anotar**
+
+| # | Qué mirar | Bien si… |
 |---|---|---|
-| a | (que aparezca) «Hola: la sonda de Vaivén se cargó (sonda 2)» | Si Claude muestra la app. Si no aparece nada, anotá si la llamada a `especificacion_grafico` dio error. |
-| b | Script externo (`…/mcp-app/sonda.js`) | **Cargó** o **no cargó**: si Claude acepta el dominio de Vaivén en la CSP. Es lo más importante de Claude web. |
-| c | `unsafe-eval` | **Permitido** o **bloqueado**. |
-| d | Vega con intérprete / sin intérprete / «SVG con y sin intérprete (sin los id internos)» | Cuál de los dos gráficos se dibujó y si dan el mismo SVG (en el host de prueba local, «iguales»). |
-| e | Tema del host | `light` o `dark`, y si cambia en el pedido 3. |
-| f | Capacidades del host, `downloadFile`, `openLinks`, `serverTools` y `updateModelContext` | Qué ofrece el cliente. |
-| g | Resultado recibido y `structuredContent` (pedidos 2 y 4) | Si la app recibe la especificación entera: unos 124.000 caracteres en el pedido 2 y unos 185.000 en el 4. |
-| h | Botones | **«Ver desde …»** corre el inicio diez años para atrás y lo dice en el botón. En el pedido 1 se tiene que dibujar el período nuevo («Otro período: resultado», en verde). En el pedido 2 se espera **un error por el límite de 1.000 observaciones**: la app lo muestra en «Otro período: structuredContent» y el gráfico no cambia. **«Descargar SVG»**, **«Descargar PNG»** y **«Abrir en el explorador»** piden confirmación. |
-| i | «Aviso al modelo (updateModelContext)» y **la respuesta de Claude** | Si el aviso dice «enviado» y si Claude, además de la app, **dibujó su propio gráfico o volvió a pedir los datos** con `comparar_series` u `obtener_serie`. Si lo hizo, la respuesta está **mal** (hallazgo A1). |
-| j | Lista «Eventos» debajo del gráfico (pedido 2) | Si se ve la lista con letra, fecha y nombre (17 eventos). |
+| a | El gráfico aparece | Sin errores; los números con punto de miles («50.000»). |
+| b | La respuesta de Claude | **No dibuja su propio gráfico ni vuelve a pedir los datos** para graficar: comenta la disposición, las advertencias y las citas. Si lo hace, está **mal** (A1). |
+| c | Cómo se identifican las series | Cada línea con su nombre (dentro del gráfico en el doble eje, sin pisar el eje derecho); con «Leyenda arriba», la leyenda única. La variante «provincias», con trazo discontinuo. |
+| d | El título de los ejes y los paneles | Solo la unidad, horizontal y arriba; «millones de pesos actuales (sin ajuste por inflación)»; la escala logarítmica dicha en el subtítulo de la interfaz. |
+| e | El modo oscuro (pedido 4) | El gráfico entero pasa a oscuro, no solo el fondo de la interfaz. |
+| f | Los controles y el error | Cada cambio redibuja; el error se lee y no cambia el gráfico. |
+| g | Las descargas | El archivo tiene título, pie y el nombre de la vista. |
+| h | El alto | Sin barra de desplazamiento interna con los desplegables cerrados (M9). |
+| i | La consola | Sin «Refused to load» ni «Refused to execute». |
 
-**Consola de desarrollo:** abrila **antes** de recargar la conversación, así registra la carga de la app:
-- **Claude Desktop:** **Help → Troubleshooting → Enable Developer Mode**, y después `Cmd + Option + I`;
-- **Claude web:** las herramientas de desarrollo del navegador (`Cmd + Option + I` en Chrome).
+**Avisos de la consola que se pueden ignorar** (no son de Vaivén):
+- `Unrecognized Content-Security-Policy directive 'webrtc'`;
+- los de `Permissions-Policy` y `focus-without-user-activation`;
+- `MaxListenersExceededWarning`;
+- `[MCP Apps] … handler replaced`;
+- `[BrowserSSETransport] Dropping …`;
+- `Blocked script execution in 'about:srcdoc' … 'allow-scripts' permission is not set` (marcos propios de claude.ai);
+- `net::ERR_BLOCKED_BY_CONTENT_BLOCKER` (un bloqueador de contenido del navegador);
+- el 404 del ícono de `argentino.workers.dev` que Claude pide a `gstatic.com`.
 
-Recargá la conversación con la consola abierta y guardá el registro con clic derecho en la consola → **Save as…**. Lo que importa son los «Refused to load» o «Refused to execute» (CSP) y cualquier error de la app.
-
-Se pueden ignorar:
-- **Avisos del host:**
-  - `Unrecognized Content-Security-Policy directive 'webrtc'`;
-  - los de `Permissions-Policy`;
-  - `MaxListenersExceededWarning`;
-  - `[MCP Apps] … handler replaced`;
-  - `[BrowserSSETransport] Dropping …`;
-  - el 404 del ícono de `argentino.workers.dev` que Claude pide a `gstatic.com`.
-- **Avisos de Vega ya conocidos:** `Conflicting scale property "domain"` y `Infinite extent for field "data"`. Salen del armado que comparten el explorador y el MCP, no impiden el dibujo y están anotados como pendientes generales.
-
-**Si la app no aparece:** comprobá que `/salud` responde bien. Un error 1102 en el recurso sería la CPU del plan gratuito, no la CSP.
+Mandá **capturas como imágenes adjuntas** (no enlaces a una app de notas), al menos una en modo oscuro, y el registro de la consola si aparece algo de Vaivén.
