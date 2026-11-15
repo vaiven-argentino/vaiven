@@ -118,6 +118,9 @@ export const ESQUEMAS = {
     sombreado: z.enum(["catedra", "gobierno", "mandato", "ministro", "plan", "regimen_cambiario"]).optional().describe(PARAMETRO.sombreado),
     eventos: z.union([z.boolean(), z.array(z.string()).min(1)]).optional().describe(PARAMETRO.eventos),
     ejes: z.enum(["auto", "paneles"]).optional().describe(PARAMETRO.ejes),
+    leyenda: z.boolean().optional().describe(PARAMETRO.leyenda),
+    tema: z.enum(["claro", "oscuro"]).optional().describe(PARAMETRO.tema),
+    imagen: z.boolean().optional().describe(PARAMETRO.imagen),
   })),
 };
 
@@ -142,11 +145,13 @@ export const SALIDAS = {
   especificacion_grafico: conJsonFijo(z.object({
     especificacion: z.record(z.string(), z.unknown()),
     url_explorador: z.string(),
-    disposicion: z.object({ tipo: z.enum(["unico", "doble_eje", "paneles"]), paneles: z.array(z.object({ unidad: z.string(), series: z.array(z.number()) })) }),
+    disposicion: z.object({ tipo: z.enum(["unico", "doble_eje", "paneles"]), paneles: z.array(z.object({ unidad: z.string(), series: z.array(z.number()), escala: z.enum(["lineal", "log"]) })) }),
     series: z.array(z.object({ numero: z.number(), id: z.string(), unidad: z.string(), cita: z.string() }).passthrough()),
     advertencias_combinacion: z.array(aviso),
     sombreado: z.object({ tipo: z.string(), periodos: z.number() }).optional(),
     eventos: z.array(z.object({ letra: z.string(), fecha: z.string(), nombre: z.string() })).optional(),
+    quiebres: z.array(z.object({ numero: z.number(), serie: z.number(), descripcion: z.string() }).passthrough()),
+    nombre_archivo: z.string(),
     n_observaciones: z.number(),
     version_datos: z.string(),
   })),
@@ -188,6 +193,28 @@ export function sinEspecificacion(r: Record<string, unknown>): Record<string, un
   };
 }
 
+/**
+ * Tope por tamaño de especificacion_grafico (M11 de la 4e, decidido con Camilo el 14/11/2026). Por encima de unos 150.000
+ * caracteres, Claude puede guardar el resultado de una herramienta en un archivo y la interfaz no recibe los datos. Va
+ * además del límite de 1.000 observaciones: el sombreado, los eventos y la guía del lector también pesan. Se mide el
+ * resultado entero (structuredContent y el texto), después de achicar la especificación (una sola copia de cada dato).
+ */
+export const LIMITE_CARACTERES_GRAFICO = 140_000;
+
+export function conTopeDeTamano(r: Record<string, unknown>): Record<string, unknown> {
+  const caracteres = JSON.stringify(r).length + JSON.stringify(sinEspecificacion(r)).length;
+  if (caracteres > LIMITE_CARACTERES_GRAFICO) {
+    const es = (n: number) => n.toLocaleString("es-AR");
+    throw new ErrorHerramienta(
+      `El gráfico pesaría ${es(caracteres)} caracteres y el límite de especificacion_grafico es ${es(LIMITE_CARACTERES_GRAFICO)}: ` +
+      "por encima de unos 150.000, Claude puede no pasarle el resultado a la interfaz del gráfico. Acotá el período, la " +
+      "cantidad de series o de países, sacá el sombreado o los eventos, o pasá alguna serie a una frecuencia más baja. Para " +
+      `verlo igual, compartí el enlace al explorador, que muestra esta misma vista: ${String(r.url_explorador)}`,
+    );
+  }
+  return r;
+}
+
 export const VERSION_SERVIDOR = paquete.version;
 
 export interface OpcionesServidor {
@@ -220,7 +247,7 @@ export function crearServidor(repo: Repositorio, opciones: OpcionesServidor = {}
     (a) => responder(() => compararSeries(repo, a), true));
   // La única herramienta con interfaz (SPEC 7.4): obtener_serie y comparar_series siguen devolviendo solo datos.
   servidor.registerTool("especificacion_grafico", { ...config("especificacion_grafico"), inputSchema: ESQUEMAS.especificacion_grafico, outputSchema: SALIDAS.especificacion_grafico, _meta: META_HERRAMIENTA_GRAFICO },
-    (a) => responder(() => especificacionGrafico(repo, a), true, sinEspecificacion));
+    (a) => responder(async () => conTopeDeTamano(await especificacionGrafico(repo, a)), true, sinEspecificacion));
   registrarRecursoGrafico(servidor, opciones.origenApp ?? ORIGEN_PUBLICO);
   return servidor;
 }

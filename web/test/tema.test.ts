@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { expect, it } from "vitest";
-import { TEMA_CLARO } from "@vaiven/grafico";
+import { TEMA_CLARO, TEMA_OSCURO } from "@vaiven/grafico";
 
 it("TEMA_CLARO coincide con las variables del modo claro de global.css", () => {
   const css = readFileSync(join(import.meta.dirname, "..", "src", "estilos", "global.css"), "utf-8");
@@ -11,6 +11,19 @@ it("TEMA_CLARO coincide con las variables del modo claro de global.css", () => {
   // En minúscula: el armado del sitio minifica el CSS y el navegador recibe «#b84a00» (ver paquetes/grafico/src/tema.ts).
   const v = (n: string) => new RegExp(`--${n}:\\s*([^;]+);`).exec(raiz)![1].trim().toLowerCase();
   expect(TEMA_CLARO).toEqual({
+    fondo: v("fondo"), texto: v("texto"), secundario: v("secundario"), linea: v("linea"), banda: v("banda"), borde: v("borde"),
+    serie: v("graf-1"), fuente: "Inter Variable, system-ui, sans-serif",
+    periodoA: v("periodo-a"), periodoB: v("periodo-b"), periodoFacto: v("periodo-facto"), periodoFranja: v("periodo-franja"),
+    paleta: [1, 2, 3, 4, 5, 6, 7, 8].map((k) => v(`graf-${k}`)),
+  });
+});
+
+it("TEMA_OSCURO coincide con las variables del modo oscuro de global.css (4e: la interfaz en Claude en modo oscuro)", () => {
+  const css = readFileSync(join(import.meta.dirname, "..", "src", "estilos", "global.css"), "utf-8");
+  const inicio = css.indexOf(':root[data-theme="dark"] {');
+  const bloque = css.slice(inicio, css.indexOf("}", inicio));
+  const v = (n: string) => new RegExp(`--${n}:\\s*([^;]+);`).exec(bloque)![1].trim().toLowerCase();
+  expect(TEMA_OSCURO).toEqual({
     fondo: v("fondo"), texto: v("texto"), secundario: v("secundario"), linea: v("linea"), banda: v("banda"), borde: v("borde"),
     serie: v("graf-1"), fuente: "Inter Variable, system-ui, sans-serif",
     periodoA: v("periodo-a"), periodoB: v("periodo-b"), periodoFacto: v("periodo-facto"), periodoFranja: v("periodo-franja"),

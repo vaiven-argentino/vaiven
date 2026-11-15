@@ -1,9 +1,11 @@
 // comparar_series y especificacion_grafico (SPEC 4.1, 7.2 y 7.3): hasta 4 series, cada una con su cadena de
 // transformaciones. Validan cada serie con las reglas de obtener_serie (prepararSerie), combinan con alinear.ts y, en
 // el gráfico, arman la vista con la misma función que el explorador (armarVista). No hay una segunda implementación.
+import { nombreTransformacion } from "@vaiven/cita";
 import {
-  EPISODIO, TEMA_CLARO, armarVista, categoriasEv, compararVista, logInicial, porDefecto, serieVista, urlDesdeVista, seriesDeUrl, vistaDesdeUrl,
-  type Documento, type Estado, type EstadoVista, type IndiceSerie, type Sombreado,
+  ANCHO_IMAGEN, EPISODIO, TEMA_CLARO, TEMA_OSCURO, armarVista, categoriasEv, compararVista, logInicial, nombreArchivoImagen, opcionesDe, porDefecto,
+  serieVista, textoImagen, urlDesdeVista, seriesDeUrl, vistaDesdeUrl,
+  type Documento, type DocumentoImagen, type Estado, type EstadoVista, type IndiceSerie, type Sombreado,
 } from "@vaiven/grafico";
 import {
   ErrorComparacion, ErrorFecha, ErrorTransformacion, alinear, comparar, tienePais,
@@ -31,6 +33,10 @@ export interface ArgsEspecificacion {
   ejes?: "auto" | "paneles";
   /** Con varias series, la leyenda única arriba en lugar de los nombres al final de las líneas (N8, 4e). */
   leyenda?: boolean;
+  /** Los colores del modo claro (por defecto) o del oscuro, los mismos del explorador (M7, 4e). */
+  tema?: "claro" | "oscuro";
+  /** La imagen para descargar: 900 px, con título y pie (fuentes, licencia y URL), como la del explorador (A3, 4e). */
+  imagen?: boolean;
 }
 
 /** Tamaño del gráfico del MCP (el explorador usa el de la pantalla; lo demás es igual, SPEC 10). */
@@ -177,6 +183,18 @@ function estadoDe(args: ArgsEspecificacion, preparadas: SeriePreparada[], catego
   return { series, ejes: args.ejes === "paneles" ? "paneles" : "", ...(args.leyenda && series.length > 1 ? { leyenda: true as const } : {}) };
 }
 
+/** Los quiebres marcados en el gráfico (los que no son generales y caen en lo que se ve), con su número. */
+function quiebresVisibles(vista: ReturnType<typeof armarVista>) {
+  return vista.quiebres.flatMap((lista, k) => {
+    const s = vista.comparacion.series[k];
+    const ids = new Set(s.entidades.flatMap((e) => s.resultados[e].advertencias.map((a) => a.id)));
+    return lista.filter((q) => q.forma !== "general" && ids.has(q.advertencia.id)).map((q) => ({
+      numero: q.n, serie: k + 1, tipo: q.advertencia.tipo, desde: q.advertencia.desde ?? null, hasta: q.advertencia.hasta ?? null,
+      descripcion: q.advertencia.descripcion,
+    }));
+  });
+}
+
 export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecificacion) {
   const preparadas = await preparar(repo, args.series, args.desde, args.hasta);
   const [indice, periodos, eventos] = await Promise.all([indiceDe(repo), repo.periodos(), repo.eventos()]);
@@ -192,7 +210,8 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
     throw new ErrorHerramienta(`El explorador no puede mostrar exactamente esta vista: ${[...a1, ...leida.avisos].join(" ") || "algún parámetro no tiene equivalente en la URL"}. Pedí los datos con comparar_series.`);
   }
   const insumos: InsumosCargados = { series: Object.assign({}, ...preparadas.map((p) => p.insumos.series ?? {})), ...(preparadas.find((p) => p.insumos.signos) ? { signos: preparadas.find((p) => p.insumos.signos)!.insumos.signos } : {}) };
-  const entrada = { estado, docs, insumos, periodos, eventos, tema: TEMA_CLARO, ancho: ANCHO_MCP, alto: ALTO_MCP };
+  const entrada = { estado, docs, insumos, periodos, eventos, tema: args.tema === "oscuro" ? TEMA_OSCURO : TEMA_CLARO, ancho: ANCHO_MCP, alto: ALTO_MCP };
+  const urlExplorador = `${URL_EXPLORADOR}${url}`;
   let vista;
   try {
     // El límite se controla antes de armar el gráfico, para no gastar la CPU en uno que no se va a devolver.
@@ -201,14 +220,24 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
       throw new ErrorHerramienta(`El gráfico tendría ${comparacion.observaciones.toLocaleString("es-AR")} observaciones y el límite de especificacion_grafico es ${LIMITE_ESPECIFICACION.toLocaleString("es-AR")} (por la CPU del servidor). Acotá el período, la cantidad de series o de países, o pasá alguna serie a una frecuencia más baja; para los datos, comparar_series admite hasta 10.000.`);
     }
     vista = armarVista({ ...entrada, comparacion });
+    if (args.imagen) {
+      // La imagen, como «Descargar PNG» del explorador: el texto sale de la vista y el gráfico se vuelve a armar a 900 px.
+      const transformaciones = estado.series.map((e, k) => {
+        const o = opcionesDe(e, serieVista(docs[k], e.p));
+        return nombreTransformacion({ ...o, deflactor: o.deflactor ?? (o.medida === "real" ? serieVista(docs[k], e.p).insumos?.real?.por_defecto : undefined) });
+      });
+      const t = textoImagen({ estado, docs: docs as DocumentoImagen[], vista, transformaciones, periodos, url: urlExplorador });
+      vista = armarVista({ ...entrada, ancho: ANCHO_IMAGEN, alto: t.alto, comparacion, impreso: { titulo: t.titulo, subtitulo: t.subtitulo, pie: t.pie } });
+    }
   } catch (e) {
     throw traducir(e, preparadas);
   }
   const c = vista.comparacion;
   return {
     especificacion: vista.especificacion,
-    url_explorador: `${URL_EXPLORADOR}${url}`,
-    disposicion: { tipo: c.disposicion.tipo, paneles: c.disposicion.paneles.map((p) => ({ unidad: p.unidad, series: p.series.map((k) => k + 1) })) },
+    url_explorador: urlExplorador,
+    // La escala que se dibuja en cada panel (N4): la logarítmica cambia cómo se ve la serie.
+    disposicion: { tipo: c.disposicion.tipo, paneles: c.disposicion.paneles.map((p, i) => ({ unidad: p.unidad, series: p.series.map((k) => k + 1), escala: vista.escalas[i] ?? "lineal" })) },
     series: preparadas.map((p, k) => {
       const r = respuestaSerie(p, c.series[k].entidades.map((e) => c.series[k].resultados[e]), { sinDatos: true });
       return {
@@ -219,6 +248,10 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
     advertencias_combinacion: avisos(vista.avisos),
     ...(vista.periodos.length ? { sombreado: { tipo: args.sombreado, periodos: vista.periodos.length } } : {}),
     ...(vista.eventos.length ? { eventos: vista.eventos.map((e) => ({ letra: e.letra, fecha: e.fecha, nombre: e.nombre })) } : {}),
+    // Los quiebres que se marcan en el gráfico con ①②③ (M1), como la caja de avisos del explorador.
+    quiebres: quiebresVisibles(vista),
+    // El nombre del archivo de la imagen y de las descargas, como en el explorador (A3).
+    nombre_archivo: nombreArchivoImagen(estado, docs, (id) => indice.find((x) => x.id === id)?.variante_por_defecto),
     n_observaciones: c.observaciones,
     version_datos: versionDe(preparadas),
   };

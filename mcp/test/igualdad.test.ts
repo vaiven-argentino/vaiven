@@ -5,8 +5,10 @@
 // del tamaño (ancho, alto y, por eso, el modo de los eventos o las marcas del eje).
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { nombreTransformacion } from "@vaiven/cita";
 import {
-  TEMA_CLARO, armarVista, categoriasEv, seriesDeUrl, vistaDesdeUrl, type Documento, type IndiceSerie,
+  ANCHO_IMAGEN, TEMA_CLARO, TEMA_OSCURO, armarVista, categoriasEv, opcionesDe, serieVista, seriesDeUrl, textoImagen, vistaDesdeUrl,
+  type Documento, type DocumentoImagen, type IndiceSerie, type Tema,
 } from "@vaiven/grafico";
 import type { DocumentoEventos, DocumentoPeriodos, InsumosCargados, SerieExportada } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
@@ -24,7 +26,7 @@ const PERIODOS = leer<DocumentoPeriodos>("periodos.json");
 const EVENTOS = leer<DocumentoEventos>("eventos.json");
 
 /** Lo que hace el explorador con una URL: leerla, bajar los JSON y sus insumos, y armar la vista. */
-function explorador(url: string, ancho: number, alto: number) {
+function explorador(url: string, ancho: number, alto: number, tema: Tema = TEMA_CLARO, impreso?: { titulo: string; subtitulo: string; pie: string[] }) {
   const q = new URLSearchParams(new URL(url).search);
   const { pedidas, avisos } = seriesDeUrl(q, indice);
   const docs = pedidas.map((p) => leer<Documento>(`series/${p.serie.id}/${p.variante}.json`));
@@ -40,7 +42,22 @@ function explorador(url: string, ancho: number, alto: number) {
       }
     }
   }
-  return armarVista({ estado: r.estado, docs: r.docs, insumos: { series, ...(signos ? { signos } : {}) }, periodos: PERIODOS, eventos: EVENTOS, tema: TEMA_CLARO, ancho, alto });
+  return armarVista({ estado: r.estado, docs: r.docs, insumos: { series, ...(signos ? { signos } : {}) }, periodos: PERIODOS, eventos: EVENTOS, tema, ancho, alto, ...(impreso ? { impreso } : {}) });
+}
+
+/** «Descargar PNG» del explorador (web/src/graficos/explorador.ts, `imagen`): el texto sale de la vista de la pantalla. */
+function imagenDelExplorador(url: string, tema: Tema) {
+  const pantalla = explorador(url, ANCHO_MCP, ALTO_MCP, tema);
+  const q = new URLSearchParams(new URL(url).search);
+  const { pedidas } = seriesDeUrl(q, indice);
+  const docs = pedidas.map((p) => leer<DocumentoImagen>(`series/${p.serie.id}/${p.variante}.json`));
+  const { estado } = vistaDesdeUrl(q, pedidas, docs, categoriasEv(EVENTOS));
+  const transformaciones = estado.series.map((e, k) => {
+    const o = opcionesDe(e, serieVista(docs[k], e.p));
+    return nombreTransformacion({ ...o, deflactor: o.deflactor ?? (o.medida === "real" ? serieVista(docs[k], e.p).insumos?.real?.por_defecto : undefined) });
+  });
+  const t = textoImagen({ estado, docs, vista: pantalla, transformaciones, periodos: PERIODOS, url });
+  return explorador(url, ANCHO_IMAGEN, t.alto, tema, { titulo: t.titulo, subtitulo: t.subtitulo, pie: t.pie }).especificacion;
 }
 
 // Las mismas vistas que compara en el navegador web/scripts/igualdad-explorador.mjs (con el explorador real).
@@ -54,5 +71,19 @@ describe("la especificación del MCP es la del explorador", () => {
     const enPantalla = explorador(r.url_explorador, 1100, 520);
     expect(enPantalla.comparacion.disposicion.tipo).toBe(r.disposicion.tipo);
     expect(enPantalla.descripcion.length).toBeGreaterThan(0);
+  });
+});
+
+describe("con tema e imagen, también la del explorador (4e)", () => {
+  it.each(VISTAS)("%s, en modo oscuro", async (_, args) => {
+    const r = await especificacionGrafico(repo, { ...args, tema: "oscuro" });
+    expect(r.especificacion).toEqual(explorador(r.url_explorador, ANCHO_MCP, ALTO_MCP, TEMA_OSCURO).especificacion);
+  });
+  it.each(VISTAS)("%s, la imagen para descargar", async (_, args) => {
+    const r = await especificacionGrafico(repo, { ...args, imagen: true });
+    expect(r.especificacion).toEqual(imagenDelExplorador(r.url_explorador, TEMA_CLARO));
+    // La URL de la vista va entera al final del pie.
+    const titulo = r.especificacion.title as { subtitle: string[] };
+    expect(titulo.subtitle.at(-1)).toBe(r.url_explorador);
   });
 });

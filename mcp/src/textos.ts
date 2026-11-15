@@ -107,7 +107,8 @@ export const DESCRIPCION = {
     "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios. " +
     "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico. " +
     "En los clientes que muestran interfaces de MCP Apps (como Claude), el gráfico aparece solo, interactivo, en la " +
-    "conversación: no lo vuelvas a dibujar ni pidas los datos para graficarlo.",
+    "conversación: no lo vuelvas a dibujar ni pidas los datos para graficarlo. Si el usuario pide más series de las que " +
+    "entran (4), usá la variante por defecto de cada una y decí cuáles quedaron afuera.",
 } as const;
 
 export const TITULO = {
@@ -197,4 +198,13 @@ export const PARAMETRO = {
     "categorías (por ejemplo, [\"cambiario\", \"deuda\"]; \"episodio\" para los episodios).",
   ejes:
     "auto (por defecto): con dos unidades, doble eje · paneles: un panel por unidad, también con dos unidades.",
+  leyenda:
+    "Con varias series, true pone una leyenda única arriba del gráfico en lugar del nombre al final de cada línea. Lo usa " +
+    "sobre todo la interfaz del gráfico; no hace falta pedirlo.",
+  tema:
+    "claro (por defecto) u oscuro: los colores del gráfico. Lo pide la interfaz del gráfico según el modo de Claude; no " +
+    "hace falta pedirlo.",
+  imagen:
+    "true devuelve la versión para descargar (900 px, con título y pie con las fuentes, la licencia y el enlace), como la " +
+    "imagen del explorador. Lo pide la interfaz del gráfico; no hace falta pedirlo.",
 } as const;

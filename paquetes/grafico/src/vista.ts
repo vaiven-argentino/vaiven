@@ -83,6 +83,11 @@ export interface Vista {
   descripcion: string;
   /** Uno por panel (o uno solo, con un gráfico o doble eje). */
   descripcionesPaneles: string[];
+  /**
+   * La escala que se dibuja en cada panel de la disposición (o en el gráfico de una serie): la logarítmica pedida solo
+   * vale si todos los valores son positivos (N4 de la 4e: el MCP la informa, para que el modelo describa bien el gráfico).
+   */
+  escalas: Array<"lineal" | "log">;
   /** Con varias series, la guía común (tooltip y lector de teclado); con una, el lector usa los datos de la serie. */
   guia?: Guia;
   especificacion: Record<string, unknown>;
@@ -92,6 +97,8 @@ type ConEmpalme = Documento & { empalme: EntradaGrafico["empalme"]; nombre?: str
 const nombreEntidad = (doc: Documento, id: string) => (tienePais(doc) ? doc.entidades.find((e) => e.id === id)?.nombre : undefined) ?? id;
 const nombreDoc = (d: Documento) => (d as ConEmpalme).nombre ?? d.id;
 const conDatos = (r: Resultado) => r.datos.some((d) => d[1] !== null);
+/** La escala logarítmica solo se dibuja si todos los valores de las líneas son positivos. */
+const todosPositivos = (rs: Resultado[]) => rs.every((x) => x.datos.every((d) => d[1] === null || d[1] > 0));
 
 /** Las opciones de la librería de cada serie, sin el período (es común: lo aplica la comparación). */
 export function opcionesSinPeriodo(e: Estado, doc: Documento) {
@@ -174,11 +181,11 @@ export function armarVista(v: EntradaVista): Vista {
     const s = c.series[0], doc = docs[0], e = primera;
     const r = s.resultados[s.entidades[0]];
     const otras = s.entidades.slice(1).map((id) => ({ nombre: nombreEntidad(doc, id), resultado: s.resultados[id] }));
-    const positivos = [r, ...otras.map((o) => o.resultado)].every((x) => x.datos.every((d) => d[1] === null || d[1] > 0));
+    const positivos = todosPositivos([r, ...otras.map((o) => o.resultado)]);
     const descripcion = resumen(r, r.unidad, esVariacion(e.t), quiebres[0]) + textoSombra;
     const serie = serieVista(doc, e.p);
     return {
-      ...comun, descripcion, descripcionesPaneles: [descripcion],
+      ...comun, descripcion, descripcionesPaneles: [descripcion], escalas: [e.log && positivos ? "log" : "lineal"],
       especificacion: especificacion({
         resultado: r, tramos: serie.tramos, empalme: (doc as ConEmpalme).empalme, quiebres: quiebres[0], tema,
         esVariacion: esVariacion(e.t), log: e.log && positivos, alto: v.alto, ancho: v.ancho, descripcion,
@@ -213,6 +220,9 @@ export function armarVista(v: EntradaVista): Vista {
     };
   });
   const descripcionesPaneles = d.paneles.map((p) => descripcionPanel(p, c, quiebres, estado));
+  const escalas = d.paneles.map((p): "lineal" | "log" =>
+    (p.log && todosPositivos(p.series.flatMap((k) => c.series[k].entidades.map((id) => c.series[k].resultados[id]))) ? "log" : "lineal"));
+  const comunV = { ...comun, escalas };
   const descripcion = `${descripcionesPaneles.join(" ")}${textoSombra}`;
   const nombresGuia = d.tipo === "paneles" ? d.paneles.map((_, k) => `guia${k + 1}`) : ["guia"];
   const guia = guiaComun(c, docs, estado, contextos, tema, nombresGuia, dom, asignacion);
@@ -226,7 +236,7 @@ export function armarVista(v: EntradaVista): Vista {
     const nombreLinea = (l: { k: number; id: string }) => (panel.internacional ? nombreEntidad(docs[l.k], l.id) : nombreSerie(l.k));
     // Otra variante de una serie que ya apareció antes en la vista: trazo discontinuo (M4).
     const discontinua = (k: number) => !panel.internacional && otraVariante(k);
-    const positivos = ordenadas.every((l) => l.r.datos.every((x) => x[1] === null || x[1] > 0));
+    const positivos = todosPositivos(ordenadas.map((l) => l.r));
     const serieP = serieVista(docs[principal.k], estado.series[principal.k].p);
     return {
       resultado: principal.r, tramos: serieP.tramos, empalme: (docs[principal.k] as ConEmpalme).empalme,
@@ -248,7 +258,7 @@ export function armarVista(v: EntradaVista): Vista {
     };
   };
   /** Sin ningún dato: el gráfico vacío de siempre. */
-  const vacio = () => ({ ...comun, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: especificacion({
+  const vacio = () => ({ ...comunV, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: especificacion({
     resultado: c.series[0].resultados[c.series[0].entidades[0]], tramos: [], empalme: "derivar", quiebres: [], tema, esVariacion: false,
     log: false, alto: v.alto, ancho: v.ancho, descripcion,
   }) });
@@ -267,13 +277,13 @@ export function armarVista(v: EntradaVista): Vista {
     const sIzq = especificacion({ ...(eIzq ?? eDer!), descripcion });
     if (!eIzq || !eDer) {
       const pIzq = sIzq.padding as Record<string, number>;
-      return { ...comun, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: { ...sIzq, ...(v.impreso ? {} : { padding: { ...pIzq, right: 6 } }), datasets: { ...datosDe(sIzq), ...guia.datasets } } };
+      return { ...comunV, descripcion, descripcionesPaneles, guia: guia.datos, especificacion: { ...sIzq, ...(v.impreso ? {} : { padding: { ...pIzq, right: 6 } }), datasets: { ...datosDe(sIzq), ...guia.datasets } } };
     }
     const sDer = especificacion({ ...eDer, descripcion });
     const impreso = sIzq.title as { text: string; subtitle: string[] } | undefined;
     const pad = (s: Record<string, unknown>) => s.padding as { top: number; right: number; bottom: number; left: number };
     return {
-      ...comun, descripcion, descripcionesPaneles, guia: guia.datos,
+      ...comunV, descripcion, descripcionesPaneles, guia: guia.datos,
       especificacion: {
         ...sIzq,
         layer: [{ layer: sIzq.layer }, { layer: sDer.layer }],
@@ -312,7 +322,7 @@ export function armarVista(v: EntradaVista): Vista {
   const ultimaEsp = specs[specs.length - 1].s;
   const impreso = v.impreso ? especificacion({ ...entradaPanel(specs[0].p, { alto })!, descripcion, impreso: v.impreso }).title : undefined;
   return {
-    ...comun, descripcion, descripcionesPaneles, guia: guia.datos,
+    ...comunV, descripcion, descripcionesPaneles, guia: guia.datos,
     especificacion: {
       $schema: "https://vega.github.io/schema/vega-lite/v6.json",
       description: descripcion,

@@ -10,3 +10,14 @@ export const TEMA_CLARO: Tema = {
   periodoA: "#f0eadd", periodoB: "#e6decd", periodoFacto: "#d8cdb5", periodoFranja: "#d8cdb5",
   paleta: ["#0b5fa5", "#b84a00", "#00785a", "#a8497f", "#8f6400", "#22201b", "#3b7ea1", "#5b3a8e"],
 };
+
+/**
+ * El tema oscuro de la web como valores fijos (4e): el MCP lo usa con `tema: oscuro`, para la interfaz dentro de Claude
+ * en modo oscuro. Son las variables de `:root[data-theme="dark"]` de global.css; una prueba controla que coincidan.
+ */
+export const TEMA_OSCURO: Tema = {
+  fondo: "#17140f", texto: "#efe9de", secundario: "#bdb3a3", linea: "#3a332a", banda: "#332c23", borde: "#857b6c",
+  serie: "#56b4e9", fuente: "Inter Variable, system-ui, sans-serif",
+  periodoA: "#231f18", periodoB: "#2d2820", periodoFacto: "#3b342a", periodoFranja: "#3b342a",
+  paleta: ["#56b4e9", "#e69f00", "#4cc9a0", "#e9a6cb", "#f0e442", "#efe9de", "#d55e00", "#b9a3e3"],
+};

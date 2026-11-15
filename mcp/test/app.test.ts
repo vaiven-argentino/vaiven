@@ -97,3 +97,39 @@ it("acepta el host de la URL de versión de la prueba", async () => {
   }), repo);
   expect(r.status).not.toBe(403);
 });
+
+describe("especificacion_grafico en la 4e: parámetros y campos nuevos, y el tope por tamaño", () => {
+  const llamar = async (args: Record<string, unknown>) => {
+    const c = await conectar("legacy", repo);
+    return c.callTool({ name: "especificacion_grafico", arguments: args });
+  };
+  it("informa la escala de cada panel, los quiebres numerados y el nombre del archivo", async () => {
+    const r = await llamar({ series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "base-monetaria" }], desde: "2000", hasta: "2015", ejes: "paneles" });
+    expect(r.isError).toBeFalsy();
+    const sc = r.structuredContent as { disposicion: { paneles: Array<{ escala: string }> }; quiebres: Array<{ numero: number; serie: number; descripcion: string }>; nombre_archivo: string };
+    expect(sc.disposicion.paneles.map((p) => p.escala)).toEqual(["lineal", "log"]);
+    // La intervención del INDEC (2007–2015) es uno de los quiebres marcados en la inflación.
+    expect(sc.quiebres.some((q) => q.serie === 1 && /INDEC/i.test(q.descripcion))).toBe(true);
+    expect(sc.quiebres.map((q) => q.numero)).toEqual([...sc.quiebres.map((q) => q.numero)].sort((a, b) => a - b));
+    expect(sc.nombre_archivo).toBe("vaiven_ipc_y_base-monetaria_2000_2015");
+  });
+  it("leyenda: true pone la leyenda única y la URL del explorador lleva ley=1", async () => {
+    const r = await llamar({ series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "2000", hasta: "2010", leyenda: true });
+    expect(r.isError).toBeFalsy();
+    expect((r.structuredContent as { url_explorador: string }).url_explorador).toMatch(/&ley=1$/);
+  });
+  it("una serie mensual con toda su historia entra en el tope (la especificación lleva cada dato una vez)", async () => {
+    const r = await llamar({ series: [{ id: "ipc", transformacion: "var_interanual" }] });
+    expect(r.isError).toBeFalsy();
+  });
+  it("un pedido de más de 140.000 caracteres da un error con el enlace al explorador", async () => {
+    const r = await llamar({
+      series: [{ id: "ipc", transformacion: "var_interanual", frecuencia: "anual" }, { id: "pib", transformacion: "var_interanual" }, { id: "reservas", frecuencia: "anual" }, { id: "int-pib", paises: ["ARG", "BRA", "CHL", "URY", "MEX", "USA", "COL", "PER"] }],
+      desde: "1970", sombreado: "ministro", eventos: true,
+    });
+    expect(r.isError).toBe(true);
+    const texto = (r.content as Array<{ text: string }>)[0].text;
+    expect(texto).toMatch(/^El gráfico pesaría [\d.]+ caracteres y el límite de especificacion_grafico es 140\.000/);
+    expect(texto).toContain("https://vaiven.argentino.workers.dev/explorador/?");
+  });
+});
