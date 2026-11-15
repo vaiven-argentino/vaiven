@@ -10,7 +10,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "ec346b05c63352e8",
-  "svg": "cc213b55d52c4f91"
+  "svg": "9d8a77759f7c1630"
  },
  "1280 ?t=var_mensual&desde=1985-06&hasta=1988-08&sh=plan&ev=1": {
   "url": "?t=var_mensual&desde=1985-06&hasta=1988-08&sh=plan&ev=1",
@@ -23,7 +23,7 @@
   "leyendas": "7c57a73e0fe100fa",
   "cita": "f661dd6b4b834234",
   "tabla": "23ec91f2fe736749",
-  "svg": "4056272a474dd98b"
+  "svg": "5ce6146005930101"
  },
  "1280 ?s=pib&t=nivel&log=1&sh=gobierno": {
   "url": "?s=pib&t=nivel&log=1&sh=gobierno",
@@ -36,20 +36,20 @@
   "leyendas": "3983a37ed7f6e36e",
   "cita": "c0c73d82fa10e2e1",
   "tabla": "b7351ff56f79ca48",
-  "svg": "eabd5050607009cb"
+  "svg": "56b71627c32f7672"
  },
  "1280 ?s=resultado-fiscal&v=financiero&desde=1993&sh=mandato": {
   "url": "?s=resultado-fiscal&v=financiero&desde=1993&sh=mandato",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/?desde=1993&sh=mandato",
   "ancho": 1280,
-  "resumen": "144f2cf40521d98a",
+  "resumen": "dfeab94a532c3683",
   "leyendas": "aa414aae003e6757",
   "cita": "e896e0f0ade27b2c",
   "tabla": "9f88c3810c899c6a",
-  "svg": "02e29fcb2514c61f"
+  "svg": "904b70dda840deea"
  },
  "1280 ?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011": {
   "url": "?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011",
@@ -75,7 +75,7 @@
   "leyendas": "4dcb90bede697a3a",
   "cita": "a1193aecdd22f7da",
   "tabla": "b7f3ed5d4b04b7e8",
-  "svg": "830361d8e9f60730"
+  "svg": "5b384fc4f631bd7f"
  },
  "1280 ?s=salario-real&m=&mm=12": {
   "url": "?s=salario-real&m=&mm=12",
@@ -92,16 +92,16 @@
  },
  "1280 ?s=reservas&f=anual&desde=1983&sh=ministro": {
   "url": "?s=reservas&f=anual&desde=1983&sh=ministro",
-  "avisos": "El período cruza un quiebre: 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza un quiebre: 1. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$ (fin de año)",
   "ficha": "/series/reservas/?f=anual&desde=1983&sh=ministro",
   "ancho": 1280,
-  "resumen": "dd3b16c282fd1fc5",
+  "resumen": "cf0dd95a9da4ea35",
   "leyendas": "b2e90e8aef2e48c2",
   "cita": "529e5efa5cda1681",
   "tabla": "93d1536afab775ef",
-  "svg": "6bde8e9fbdb33ba2"
+  "svg": "0072917e06e00519"
  },
  "1280 ?s=desocupacion&sh=catedra&ev=1": {
   "url": "?s=desocupacion&sh=catedra&ev=1",
@@ -111,10 +111,10 @@
   "ficha": "/series/desocupacion/?sh=catedra&ev=1",
   "ancho": 1280,
   "resumen": "ce33f4fe19a94ad0",
-  "leyendas": "581c9d6223ae4f50",
+  "leyendas": "cc76637e025ad4da",
   "cita": "9aa4962516e7825f",
   "tabla": "bcc47cd9d9c7f6ff",
-  "svg": "9e05671f4c179992"
+  "svg": "4d9880472051b1c9"
  },
  "1280 ?desde=1970&ev=cambiario,deuda": {
   "url": "?desde=1970&ev=cambiario,deuda",
@@ -124,10 +124,10 @@
   "ficha": "/series/ipc/?desde=1970&ev=cambiario,deuda",
   "ancho": 1280,
   "resumen": "bc0218501ec24e32",
-  "leyendas": "fa1e5c8db13b3cff",
+  "leyendas": "5884f9bc7d2e8c02",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "fb1240c9f5972a78"
+  "svg": "ee82e55b9345ae9e"
  },
  "1280 ?s=pib&sh=gobierno&ev=deuda,episodio": {
   "url": "?s=pib&sh=gobierno&ev=deuda,episodio",
@@ -137,10 +137,10 @@
   "ficha": "/series/pib/?sh=gobierno&ev=deuda,episodio",
   "ancho": 1280,
   "resumen": "9e9551fe053fd2ed",
-  "leyendas": "8ed94e9523435705",
+  "leyendas": "b49a9288563139e8",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "fbbec27caccfe7b2"
+  "svg": "340854efc5dd8365"
  },
  "1280 ?t=var_mensual&desde=1988&hasta=1991&ev=episodio": {
   "url": "?t=var_mensual&desde=1988&hasta=1991&ev=episodio",
@@ -179,7 +179,7 @@
   "leyendas": "2f078a149651a4bd",
   "cita": "9393fe10be49a54d",
   "tabla": "716c4ee719341403",
-  "svg": "1eeb30102f9100ee"
+  "svg": "4623d142ea34d309"
  },
  "1280 ?s=fuga": {
   "url": "?s=fuga",
@@ -202,23 +202,23 @@
   "ficha": "/series/ipc/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "bc11fb059777bdd9",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "5a485d793d08a370",
   "tabla": "ddb9ad8c6dceca06",
-  "svg": "45e7fa1ce532e780"
+  "svg": "ef66e731833efee1"
  },
  "1280 ?s=pib&desde=1995&hasta=2020&sh=gobierno": {
   "url": "?s=pib&desde=1995&hasta=2020&sh=gobierno",
-  "avisos": "El período cruza 2 quiebres: 4. Cambio de base (ene. 2004); 5. Metodología (ene. 2008 – oct. 2013). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Cambio de base (ene. 2004); 2. Metodología (ene. 2008 – oct. 2013). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "variación % interanual",
   "ficha": "/series/pib/?desde=1995&hasta=2020&sh=gobierno",
   "ancho": 1280,
-  "resumen": "8366e269d4c18eab",
+  "resumen": "901a9273e37602f4",
   "leyendas": "1ad1385ecb4a32c4",
   "cita": "9393fe10be49a54d",
   "tabla": "c97ac954a869e1ab",
-  "svg": "02ba0f86d9903cc8"
+  "svg": "4f234f20971d3238"
  },
  "1280 ?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1": {
   "url": "?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1",
@@ -231,7 +231,7 @@
   "leyendas": "e4f42de79b0b7633",
   "cita": "f661dd6b4b834234",
   "tabla": "36002e9a39d35000",
-  "svg": "3daeae5e48a42969"
+  "svg": "c24176fdf16bc803"
  },
  "1280 ?s=reservas&desde=1988&hasta=1991&sh=gobierno": {
   "url": "?s=reservas&desde=1988&hasta=1991&sh=gobierno",
@@ -244,7 +244,7 @@
   "leyendas": "336bdeb73375afc8",
   "cita": "36ea398cb7d10db6",
   "tabla": "2926c4885ad4ed41",
-  "svg": "a6893763c08d8742"
+  "svg": "951c0ec38e2bcd98"
  },
  "1280 ?desde=1970&ev=1": {
   "url": "?desde=1970&ev=1",
@@ -254,49 +254,49 @@
   "ficha": "/series/ipc/?desde=1970&ev=1",
   "ancho": 1280,
   "resumen": "aa53e11d30dd8995",
-  "leyendas": "a58f573998d3772a",
+  "leyendas": "3f6030fffdac5ebf",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "e189a0a0942c4ae5"
+  "svg": "a23a5866bfd8ac65"
  },
  "1280 ?s=resultado-fiscal&v=financiero&sh=regimen_cambiario": {
   "url": "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/?sh=regimen_cambiario",
   "ancho": 1280,
-  "resumen": "67d323df72804c33",
+  "resumen": "c3708b2dfc2de66b",
   "leyendas": "56b70aead2933220",
   "cita": "e896e0f0ade27b2c",
   "tabla": "89983a94994c7e26",
-  "svg": "d69e57dc59baa6e1"
+  "svg": "df808133d32c2f13"
  },
  "1280 ?s=reservas&sh=catedra": {
   "url": "?s=reservas&sh=catedra",
-  "avisos": "El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/?sh=catedra",
   "ancho": 1280,
-  "resumen": "518b9309c67b5dab",
+  "resumen": "3b67fa78aa1fb1b9",
   "leyendas": "0fa4bc62e049f0f2",
   "cita": "36ea398cb7d10db6",
   "tabla": "6d9ba3e3e74e106e",
-  "svg": "66b14b6010305575"
+  "svg": "a5da44b78d187f3c"
  },
  "1280 ?s=reservas&t=var_dic_dic&m=real&f=semanal&sh=papas&desde=83&mm=5": {
   "url": "?s=reservas",
-  "avisos": "La URL pedía una medida («real»), que esta serie no admite: se ignoró.La URL pedía una transformación («var_dic_dic»), que esta serie no admite: se ignoró.La URL pedía una frecuencia («semanal»), que esta serie no admite: se ignoró.La URL pedía una media móvil («5»), que esta serie no admite: se ignoró.La URL tiene el inicio mal escrito («83»; usá AAAA o AAAA-MM): se ignoró.La URL pedía un sombreado («papas»), que esta serie no admite: se ignoró.El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "La URL pedía una medida («real»), que esta serie no admite: se ignoró.La URL pedía una transformación («var_dic_dic»), que esta serie no admite: se ignoró.La URL pedía una frecuencia («semanal»), que esta serie no admite: se ignoró.La URL pedía una media móvil («5»), que esta serie no admite: se ignoró.La URL tiene el inicio mal escrito («83»; usá AAAA o AAAA-MM): se ignoró.La URL pedía un sombreado («papas»), que esta serie no admite: se ignoró.El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/",
   "ancho": 1280,
-  "resumen": "a7853882aa97f687",
+  "resumen": "b9f0d4c0e06cb7f5",
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "684cd543b6f82e29"
+  "svg": "e5e58c95b6d83da0"
  },
  "1280 ?s=int-pib&p=ARG%2CBRA": {
   "url": "?s=int-pib&p=ARG,BRA",
@@ -322,7 +322,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "ec346b05c63352e8",
-  "svg": "cc213b55d52c4f91"
+  "svg": "9d8a77759f7c1630"
  },
  "1280 ?s=ipc&v=no-existe": {
   "url": "",
@@ -335,7 +335,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "ec346b05c63352e8",
-  "svg": "cc213b55d52c4f91"
+  "svg": "9d8a77759f7c1630"
  },
  "1280 ?s=agregados": {
   "url": "?s=agregados",
@@ -348,7 +348,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "63f668a1d681cac3",
   "tabla": "a15a8394c21bae27",
-  "svg": "b36a3bf1b1e61b8d"
+  "svg": "a8c7b8a557a3ba11"
  },
  "1280 ?s=agregados&sh=gobierno&ev=1": {
   "url": "?s=agregados&sh=gobierno&ev=1",
@@ -358,10 +358,10 @@
   "ficha": "/series/agregados/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "e990823faa7f101c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "67d1d23dcbf56fa1",
   "tabla": "362a273a67ab79c6",
-  "svg": "381cb77ef2cb43ae"
+  "svg": "8c6d59e05057c277"
  },
  "1280 ?s=agregados&v=m2-pesos": {
   "url": "?s=agregados&v=m2-pesos",
@@ -374,7 +374,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "b2aa8c9acf7db471",
   "tabla": "f20f4a1138aeda3a",
-  "svg": "a9b52bb56d100287"
+  "svg": "f48d2f9b44d97ba4"
  },
  "1280 ?s=agregados&v=m2-pesos&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m2-pesos&sh=gobierno&ev=1",
@@ -384,10 +384,10 @@
   "ficha": "/series/agregados/m2-pesos/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "f3c475e8409f28fd",
-  "leyendas": "bcc6427da13cd9ac",
+  "leyendas": "fcef76bc8bd2a41a",
   "cita": "15e7cad3e307f4d7",
   "tabla": "b6261a1efb6df799",
-  "svg": "a66dbcd6adb87572"
+  "svg": "7a0a20701d463b56"
  },
  "1280 ?s=agregados&v=m2-privado": {
   "url": "?s=agregados&v=m2-privado",
@@ -410,10 +410,10 @@
   "ficha": "/series/agregados/m2-privado/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "0d83626d25efb0e6",
-  "leyendas": "a2ab7e397114c874",
+  "leyendas": "5a99ff80f81be1ff",
   "cita": "a07613bb56e08e3f",
   "tabla": "e62d34ab51d44b8e",
-  "svg": "c59ec6d80292f22d"
+  "svg": "30a6bbbf4db98338"
  },
  "1280 ?s=agregados&v=m2-total": {
   "url": "?s=agregados&v=m2-total",
@@ -426,7 +426,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "a9818f257ba1646d",
   "tabla": "081c55d66cae2d8e",
-  "svg": "a4b39b09913a8409"
+  "svg": "66ab9b34c56240d7"
  },
  "1280 ?s=agregados&v=m2-total&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m2-total&sh=gobierno&ev=1",
@@ -436,10 +436,10 @@
   "ficha": "/series/agregados/m2-total/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "ad129b368222fb21",
-  "leyendas": "bcc6427da13cd9ac",
+  "leyendas": "fcef76bc8bd2a41a",
   "cita": "12ae84588e2ad232",
   "tabla": "480e7ff9d95c2d92",
-  "svg": "6e4d353d1bd2227d"
+  "svg": "bb89483e78e16268"
  },
  "1280 ?s=agregados&v=m3-total": {
   "url": "?s=agregados&v=m3-total",
@@ -452,7 +452,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "0ba8e23479875dbf",
   "tabla": "2375a51fd9341127",
-  "svg": "9c3c6fdf293b9faa"
+  "svg": "b3bb7b7ae2bf0a33"
  },
  "1280 ?s=agregados&v=m3-total&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m3-total&sh=gobierno&ev=1",
@@ -462,10 +462,10 @@
   "ficha": "/series/agregados/m3-total/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "face2fbd41d78b5d",
-  "leyendas": "bcc6427da13cd9ac",
+  "leyendas": "fcef76bc8bd2a41a",
   "cita": "482e2ed2830c576d",
   "tabla": "5c6cbdf3c202db3e",
-  "svg": "ff9d1c7462f1fab6"
+  "svg": "3b9eb5ee307ffcb1"
  },
  "1280 ?s=base-monetaria": {
   "url": "?s=base-monetaria",
@@ -478,7 +478,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "edfb36318f09a77a",
   "tabla": "3ac57d2f7153d54f",
-  "svg": "e7280d02c52e521a"
+  "svg": "9c736ab3acd23c20"
  },
  "1280 ?s=base-monetaria&sh=gobierno&ev=1": {
   "url": "?s=base-monetaria&sh=gobierno&ev=1",
@@ -488,10 +488,10 @@
   "ficha": "/series/base-monetaria/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "a98e9adb0334015c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "2a7d98342e6fb428",
   "tabla": "0630ca6d94abda46",
-  "svg": "454b30d24df58c03"
+  "svg": "823600ab035679b1"
  },
  "1280 ?s=base-monetaria&v=promedio-mensual": {
   "url": "?s=base-monetaria&v=promedio-mensual",
@@ -514,10 +514,10 @@
   "ficha": "/series/base-monetaria/promedio-mensual/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "36be32905e503ce1",
-  "leyendas": "316009b00b41a601",
+  "leyendas": "8fb3b9fde49d4a56",
   "cita": "1d34800254a0c73b",
   "tabla": "eb0b04d7766df218",
-  "svg": "01eee44e36088a0a"
+  "svg": "c09a3e33c14aeac5"
  },
  "1280 ?s=cuenta-corriente": {
   "url": "?s=cuenta-corriente",
@@ -530,7 +530,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "2a484c5f17663f0b",
   "tabla": "a172a6ac106d7ead",
-  "svg": "6c8fb3d18e30eb55"
+  "svg": "884a15e53e72143b"
  },
  "1280 ?s=cuenta-corriente&sh=gobierno&ev=1": {
   "url": "?s=cuenta-corriente&sh=gobierno&ev=1",
@@ -540,10 +540,10 @@
   "ficha": "/series/cuenta-corriente/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "27fe36de08e5f1e0",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "2c22d200f8d8177f",
   "tabla": "c48b7bf527e9e161",
-  "svg": "77c5bbc903c541a4"
+  "svg": "c8c042fa9172c448"
  },
  "1280 ?s=cuenta-corriente&v=mbp5": {
   "url": "?s=cuenta-corriente&v=mbp5",
@@ -566,10 +566,10 @@
   "ficha": "/series/cuenta-corriente/mbp5/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "e2d566dee0d3c9b1",
-  "leyendas": "eca9699ad57ee4cb",
+  "leyendas": "377b47c2cdd90e47",
   "cita": "1acfe6b4a8891acd",
   "tabla": "2d91299b7a9f9c73",
-  "svg": "7b12a12499f10933"
+  "svg": "2e74a5b2a7676a27"
  },
  "1280 ?s=cuenta-corriente&v=mbp6": {
   "url": "?s=cuenta-corriente&v=mbp6",
@@ -592,10 +592,10 @@
   "ficha": "/series/cuenta-corriente/mbp6/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "59c6fa0e38e28d1c",
-  "leyendas": "280326ad7a88c6af",
+  "leyendas": "37d350a450c97a1b",
   "cita": "08ded59a3400fd1f",
   "tabla": "18bb2cf0c5ba6981",
-  "svg": "cd9a1e62b4f79c10"
+  "svg": "8ed7e81033dd1126"
  },
  "1280 ?s=desocupacion": {
   "url": "?s=desocupacion",
@@ -608,7 +608,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec6816a98d881367",
   "tabla": "6b4239a84e9e4e90",
-  "svg": "25091496fd29a577"
+  "svg": "82610ea994ca967e"
  },
  "1280 ?s=desocupacion&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&sh=gobierno&ev=1",
@@ -618,10 +618,10 @@
   "ficha": "/series/desocupacion/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "76cde63560bae972",
-  "leyendas": "bbc1f164adbdb3d6",
+  "leyendas": "e4c99d4d8e7451d1",
   "cita": "9aa4962516e7825f",
   "tabla": "9e88ea1f7d741e11",
-  "svg": "22a1be1ca9c5615a"
+  "svg": "3925ae6949e20dc0"
  },
  "1280 ?s=desocupacion&v=gba": {
   "url": "?s=desocupacion&v=gba",
@@ -634,7 +634,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "cd94e55e8b4dfe30",
   "tabla": "785f0bc77d7e7f77",
-  "svg": "e0808b73fccd5928"
+  "svg": "05bf5b9921337b0d"
  },
  "1280 ?s=desocupacion&v=gba&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&v=gba&sh=gobierno&ev=1",
@@ -644,10 +644,10 @@
   "ficha": "/series/desocupacion/gba/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "d537e7f3ab9e5b84",
-  "leyendas": "bbc1f164adbdb3d6",
+  "leyendas": "e4c99d4d8e7451d1",
   "cita": "da1df0f248844d12",
   "tabla": "d14639678b235212",
-  "svg": "35ae541ece532f71"
+  "svg": "fe268f13281ff91d"
  },
  "1280 ?s=deuda-externa": {
   "url": "?s=deuda-externa",
@@ -670,10 +670,10 @@
   "ficha": "/series/deuda-externa/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "6832ca5feedd040f",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "8e61affa2d0b4eb5",
   "tabla": "6100f0728ad71a42",
-  "svg": "a8087cd50e5cc7bc"
+  "svg": "29f0f2388958ae39"
  },
  "1280 ?s=deuda-externa&v=indec": {
   "url": "?s=deuda-externa&v=indec",
@@ -696,10 +696,10 @@
   "ficha": "/series/deuda-externa/indec/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "25605c71ed9888cc",
-  "leyendas": "74a782099255f7db",
+  "leyendas": "f1285a25c205d60f",
   "cita": "07f17dba9515f7ff",
   "tabla": "8d8d0e3c33f307e4",
-  "svg": "265714562e249772"
+  "svg": "d0ad71bfe6bfc51e"
  },
  "1280 ?s=deuda-externa&v=privada": {
   "url": "?s=deuda-externa&v=privada",
@@ -722,10 +722,10 @@
   "ficha": "/series/deuda-externa/privada/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "619f90af267c7623",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "6cc55cfbc9a76742",
   "tabla": "9126e29e5494e81e",
-  "svg": "1c7193c7f7741d14"
+  "svg": "5d9e9bcdb691d371"
  },
  "1280 ?s=deuda-externa&v=publica": {
   "url": "?s=deuda-externa&v=publica",
@@ -748,10 +748,10 @@
   "ficha": "/series/deuda-externa/publica/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "da2274f4a73dbe1c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "531594698f1dd574",
   "tabla": "13e649a802427eb7",
-  "svg": "feb07f9a7c1528c5"
+  "svg": "18331367749d9112"
  },
  "1280 ?s=deuda-publica": {
   "url": "?s=deuda-publica",
@@ -774,10 +774,10 @@
   "ficha": "/series/deuda-publica/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "da2274f4a73dbe1c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "53dda0fd4764ebce",
   "tabla": "13e649a802427eb7",
-  "svg": "feb07f9a7c1528c5"
+  "svg": "18331367749d9112"
  },
  "1280 ?s=exportaciones": {
   "url": "?s=exportaciones",
@@ -800,10 +800,10 @@
   "ficha": "/series/exportaciones/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "1573cd1bd3b1136a",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "c82635a2b4c69404",
   "tabla": "97fce8272dc0cef3",
-  "svg": "ef17cb68deb35065"
+  "svg": "8a6a175f73caffb9"
  },
  "1280 ?s=exportaciones&v=mensual": {
   "url": "?s=exportaciones&v=mensual",
@@ -826,10 +826,10 @@
   "ficha": "/series/exportaciones/mensual/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "1d5781803389f87b",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "7fe68a46d6992b92",
   "tabla": "732598dc2f21e187",
-  "svg": "73a7bc5c3793bc5a"
+  "svg": "27f954d8248eb79b"
  },
  "1280 ?s=fuga&sh=gobierno&ev=1": {
   "url": "?s=fuga&sh=gobierno&ev=1",
@@ -839,36 +839,36 @@
   "ficha": "/series/fuga/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "967ec377417a2a24",
-  "leyendas": "316009b00b41a601",
+  "leyendas": "8fb3b9fde49d4a56",
   "cita": "689288af6c940277",
   "tabla": "2bdc625349aa5bfa",
-  "svg": "25f1f63f34274d03"
+  "svg": "333ad4506e8c26c1"
  },
  "1280 ?s=fuga&v=activos-externos": {
   "url": "?s=fuga&v=activos-externos",
-  "avisos": "El período cruza un quiebre: 2. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
+  "avisos": "El período cruza un quiebre: 1. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
   "ultimo": "Último dato de la serie: 2024",
   "unidad": "millones de US$",
   "ficha": "/series/fuga/activos-externos/",
   "ancho": 1280,
-  "resumen": "9f869abd4530c48b",
+  "resumen": "f6eb909e6ca3f5be",
   "leyendas": "5e12f2faf414f048",
   "cita": "abb697802192aac1",
   "tabla": "e3e8cd92fc7a8056",
-  "svg": "5abd3a0dc08929d2"
+  "svg": "ba03c539706efc7e"
  },
  "1280 ?s=fuga&v=activos-externos&sh=gobierno&ev=1": {
   "url": "?s=fuga&v=activos-externos&sh=gobierno&ev=1",
-  "avisos": "El período cruza un quiebre: 2. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
+  "avisos": "El período cruza un quiebre: 1. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
   "ultimo": "Último dato de la serie: 2024",
   "unidad": "millones de US$",
   "ficha": "/series/fuga/activos-externos/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "1f1177848dcf140d",
-  "leyendas": "581881f4f646bd91",
+  "resumen": "4fcd71e8a8d9efa8",
+  "leyendas": "4674a1e5e4bc091b",
   "cita": "0bc66d54566a0571",
   "tabla": "770c3e55de5ba7af",
-  "svg": "5eb2a8450912b8fe"
+  "svg": "2f853e0d2a5f81f6"
  },
  "1280 ?s=importaciones": {
   "url": "?s=importaciones",
@@ -881,7 +881,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "8b61c4484213058a",
   "tabla": "4dd5285e88747bb5",
-  "svg": "8ac2cbe84bc08bbe"
+  "svg": "2f480d9d525fee48"
  },
  "1280 ?s=importaciones&sh=gobierno&ev=1": {
   "url": "?s=importaciones&sh=gobierno&ev=1",
@@ -891,10 +891,10 @@
   "ficha": "/series/importaciones/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "048aa4bc4db51f3e",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "e0f08ec72ab4383e",
   "tabla": "957c99bd99c7383b",
-  "svg": "bec0f8068e817021"
+  "svg": "8f2047c159933602"
  },
  "1280 ?s=importaciones&v=mensual": {
   "url": "?s=importaciones&v=mensual",
@@ -917,10 +917,10 @@
   "ficha": "/series/importaciones/mensual/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "9529fe8c917d2d21",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "d310e56dd2ac6f79",
   "tabla": "887f2ad7e1a02ab6",
-  "svg": "dc3c335f6caa8596"
+  "svg": "27452cd92ee97ed5"
  },
  "1280 ?s=int-pib": {
   "url": "?s=int-pib",
@@ -943,10 +943,10 @@
   "ficha": "/series/int-pib/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "7f6e7383f216f304",
-  "leyendas": "c814e4643646c20c",
+  "leyendas": "01eaaa4a834c5d27",
   "cita": "143698b270ffb8b6",
   "tabla": "70a1f94228f80faf",
-  "svg": "7e03ea47ec0a112d"
+  "svg": "934051096d458b25"
  },
  "1280 ?s=int-pib-per-capita": {
   "url": "?s=int-pib-per-capita",
@@ -969,10 +969,10 @@
   "ficha": "/series/int-pib-per-capita/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "993ef2397289d304",
-  "leyendas": "c814e4643646c20c",
+  "leyendas": "01eaaa4a834c5d27",
   "cita": "d1361e0c6ba436d6",
   "tabla": "cebc76a369184ddd",
-  "svg": "0b58f93bd354276d"
+  "svg": "97809bb73e86cff9"
  },
  "1280 ?s=inversion": {
   "url": "?s=inversion",
@@ -985,7 +985,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9926196f227d83b4",
   "tabla": "bc05f607c6af7b08",
-  "svg": "85fe223000ae6e2f"
+  "svg": "f009410cd13ffd38"
  },
  "1280 ?s=inversion&sh=gobierno&ev=1": {
   "url": "?s=inversion&sh=gobierno&ev=1",
@@ -995,10 +995,10 @@
   "ficha": "/series/inversion/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "60df4ac167d409c4",
-  "leyendas": "b4b4ced7a7fec4c7",
+  "leyendas": "069f39b9b73caca4",
   "cita": "13975790798dbadb",
   "tabla": "998ade880a77172e",
-  "svg": "12480bcf48e40fe1"
+  "svg": "db08260a6b112fcd"
  },
  "1280 ?s=inversion&v=base-1970": {
   "url": "?s=inversion&v=base-1970",
@@ -1024,7 +1024,7 @@
   "leyendas": "12731ec6b3019c94",
   "cita": "ee7081f46e56ab2d",
   "tabla": "20c2753edcf86623",
-  "svg": "1161293331f65cce"
+  "svg": "d86ed44247f224cf"
  },
  "1280 ?s=inversion&v=pct-pib-corrientes": {
   "url": "?s=inversion&v=pct-pib-corrientes",
@@ -1037,7 +1037,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "57ba71b4af7c0ede",
   "tabla": "d461b3fa55ea8a01",
-  "svg": "136d1965e3e27d9c"
+  "svg": "c989967346c84647"
  },
  "1280 ?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1": {
   "url": "?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1",
@@ -1047,10 +1047,10 @@
   "ficha": "/series/inversion/pct-pib-corrientes/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "f64294d9854d4771",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "6051ea0ed1e8476d",
   "tabla": "717491f39f2856b0",
-  "svg": "fd5b46223be57e73"
+  "svg": "fb4a62282b846585"
  },
  "1280 ?s=pib": {
   "url": "?s=pib",
@@ -1063,7 +1063,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "f6722b524cebaad4",
   "tabla": "12820c1bb3a59d60",
-  "svg": "72e25584f15e173e"
+  "svg": "31e57051f9370f7d"
  },
  "1280 ?s=pib&sh=gobierno&ev=1": {
   "url": "?s=pib&sh=gobierno&ev=1",
@@ -1073,88 +1073,88 @@
   "ficha": "/series/pib/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "4d516864353c0901",
-  "leyendas": "b8dcb586339992a4",
+  "leyendas": "3b3f1861ed489c36",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "61926d497b6cf82f"
+  "svg": "dc613292361efbef"
  },
  "1280 ?s=reservas": {
   "url": "?s=reservas",
-  "avisos": "El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/",
   "ancho": 1280,
-  "resumen": "a7853882aa97f687",
+  "resumen": "b9f0d4c0e06cb7f5",
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "684cd543b6f82e29"
+  "svg": "e5e58c95b6d83da0"
  },
  "1280 ?s=reservas&sh=gobierno&ev=1": {
   "url": "?s=reservas&sh=gobierno&ev=1",
-  "avisos": "El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "f81cbdd93147c03f",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "d53c024c7c8e6751",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "36ea398cb7d10db6",
   "tabla": "839ad4aa31c07116",
-  "svg": "a7fd1add6c13ab0a"
+  "svg": "ff2684b9e719063e"
  },
  "1280 ?s=resultado-fiscal": {
   "url": "?s=resultado-fiscal",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007); 2. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/",
   "ancho": 1280,
-  "resumen": "44325e1b4dcb3eb1",
+  "resumen": "52c1429d77dc6533",
   "leyendas": "5e12f2faf414f048",
   "cita": "35e7c48637329a04",
   "tabla": "a57582cf331e9bcf",
-  "svg": "4bb3a513c6ee915b"
+  "svg": "40c0cbb647a4c4a7"
  },
  "1280 ?s=resultado-fiscal&sh=gobierno&ev=1": {
   "url": "?s=resultado-fiscal&sh=gobierno&ev=1",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007); 2. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "a78871c5bfcc4999",
-  "leyendas": "2989ecc6339ea6a6",
+  "resumen": "53c8892041528846",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "88b2f68e5f11217b",
   "tabla": "5b1c34ac6c72d915",
-  "svg": "1a915fe765b6a3d7"
+  "svg": "b578eceaeca4901c"
  },
  "1280 ?s=resultado-fiscal&v=financiero": {
   "url": "?s=resultado-fiscal&v=financiero",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/",
   "ancho": 1280,
-  "resumen": "be21ae864957ac96",
+  "resumen": "9eb6d97bc2679efb",
   "leyendas": "5e12f2faf414f048",
   "cita": "8b3a8f5190eaa7ab",
   "tabla": "870c44acc0866b6c",
-  "svg": "8b4577cb21dd71f4"
+  "svg": "55785beed27e165d"
  },
  "1280 ?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1": {
   "url": "?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "646393291fa876f5",
-  "leyendas": "2989ecc6339ea6a6",
+  "resumen": "023806d058742268",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "6b1561b8072f35e1"
+  "svg": "d0712a94e8c9baee"
  },
  "1280 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -1177,10 +1177,10 @@
   "ficha": "/series/salario-real/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "d32f52a36a775a0d",
-  "leyendas": "b4b4ced7a7fec4c7",
+  "leyendas": "069f39b9b73caca4",
   "cita": "45c1c3b809bd3968",
   "tabla": "697ca0527f60a5f6",
-  "svg": "1338d7a77a482c74"
+  "svg": "f20c91d35bca2254"
  },
  "1280 ?s=salario-real&v=indice-salarios": {
   "url": "?s=salario-real&v=indice-salarios",
@@ -1203,10 +1203,10 @@
   "ficha": "/series/salario-real/indice-salarios/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "8ee3d6b5154b4bae",
-  "leyendas": "76a7dec323f68eab",
+  "leyendas": "53474d61a36004d1",
   "cita": "2d7a43dbc163ce5f",
   "tabla": "202563e8cce857a5",
-  "svg": "cdc41e6d9e4f2eaf"
+  "svg": "c573a50bfc706d68"
  },
  "1280 ?s=saldo-comercial": {
   "url": "?s=saldo-comercial",
@@ -1219,7 +1219,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "239329f03a6ade23",
   "tabla": "f0c9325c8a8565c5",
-  "svg": "03a2c88f9f99ccec"
+  "svg": "f06bd3e9d8cf1edc"
  },
  "1280 ?s=saldo-comercial&sh=gobierno&ev=1": {
   "url": "?s=saldo-comercial&sh=gobierno&ev=1",
@@ -1229,10 +1229,10 @@
   "ficha": "/series/saldo-comercial/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "8e6fe26fd2378dd9",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "bbc890ea55397c6e",
   "tabla": "f577d452e5149242",
-  "svg": "9f5eef8195e8b8b8"
+  "svg": "053c21c7e544d0da"
  },
  "1280 ?s=saldo-comercial&v=mensual": {
   "url": "?s=saldo-comercial&v=mensual",
@@ -1255,36 +1255,36 @@
   "ficha": "/series/saldo-comercial/mensual/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "8490d620c68e5d56",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "d98ab5976f9bdd30",
   "tabla": "f24f455ffb26a3a4",
-  "svg": "ad71e6589e693752"
+  "svg": "989ad318984abf32"
  },
  "1280 ?s=tasa-pasiva": {
   "url": "?s=tasa-pasiva",
-  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 3. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 2. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: abril de 2026 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "% nominal anual",
   "ficha": "/series/tasa-pasiva/",
   "ancho": 1280,
-  "resumen": "8e62b8d6e5f67b60",
+  "resumen": "7bb28763daa23196",
   "leyendas": "5e12f2faf414f048",
   "cita": "80d4b373efd9082e",
   "tabla": "9a45c2422d31861f",
-  "svg": "4ee29ec65e33d73a"
+  "svg": "6fd0e13a66bd4ab4"
  },
  "1280 ?s=tasa-pasiva&sh=gobierno&ev=1": {
   "url": "?s=tasa-pasiva&sh=gobierno&ev=1",
-  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 3. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 2. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: abril de 2026 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "% nominal anual",
   "ficha": "/series/tasa-pasiva/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "f9365fa923123a65",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "cc8340382d3c6aba",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "0804e1dae3f70d6d",
   "tabla": "519d76a4409e427c",
-  "svg": "03babf64420d8406"
+  "svg": "5d0580899f0fc0e4"
  },
  "1280 ?s=tasa-pasiva&v=badlar": {
   "url": "?s=tasa-pasiva&v=badlar",
@@ -1307,10 +1307,10 @@
   "ficha": "/series/tasa-pasiva/badlar/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "909e7d3c27af26fb",
-  "leyendas": "e87d1eca0547bdb7",
+  "leyendas": "da7c5fcbe04d4628",
   "cita": "46358b5cf62a2077",
   "tabla": "1c84a4e06051ca69",
-  "svg": "26da76266ea96578"
+  "svg": "bd2c46107823c7c6"
  },
  "1280 ?s=tc-oficial": {
   "url": "?s=tc-oficial",
@@ -1323,7 +1323,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "fc8076af82f17040",
   "tabla": "bbd94ccef8c0e46f",
-  "svg": "275c5b955397330d"
+  "svg": "34cffe811839be8f"
  },
  "1280 ?s=tc-oficial&sh=gobierno&ev=1": {
   "url": "?s=tc-oficial&sh=gobierno&ev=1",
@@ -1333,10 +1333,10 @@
   "ficha": "/series/tc-oficial/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "74566cce108e5baa",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "33a233bf161dc242",
   "tabla": "a8e5e44568356a0d",
-  "svg": "a6642925a66e1d30"
+  "svg": "074f8c6601741acd"
  },
  "1280 ?s=tc-oficial&v=moneda-de-epoca": {
   "url": "?s=tc-oficial&v=moneda-de-epoca",
@@ -1349,7 +1349,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "bc3b8a4b8cfc1945",
   "tabla": "f231958d2b180fc2",
-  "svg": "3436409e83b26c3f"
+  "svg": "39be34ea891dd57f"
  },
  "1280 ?s=tc-oficial&v=moneda-de-epoca&sh=gobierno&ev=1": {
   "url": "?s=tc-oficial&v=moneda-de-epoca&sh=gobierno&ev=1",
@@ -1359,62 +1359,62 @@
   "ficha": "/series/tc-oficial/moneda-de-epoca/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "cbff3b98172ee903",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "5add12680ecb2450",
   "tabla": "2c3139ebcc3d0f81",
-  "svg": "fca2461f6b3e99bf"
+  "svg": "a957c9210d4c3181"
  },
  "1280 ?s=tcr-bilateral": {
   "url": "?s=tcr-bilateral",
-  "avisos": "El período cruza 5 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Intervención (ene. 2007 – dic. 2015); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (ene. 2014 – ene. 2017); 6. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 5 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Intervención (ene. 2007 – dic. 2015); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (ene. 2014 – ene. 2017); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/",
   "ancho": 1280,
-  "resumen": "db391513e8f627e7",
+  "resumen": "9b821d2c23f12b8e",
   "leyendas": "5e12f2faf414f048",
   "cita": "6d572389013dd75d",
   "tabla": "789d77b38c5dd538",
-  "svg": "dc0f8f4199324e89"
+  "svg": "21083a46e029d993"
  },
  "1280 ?s=tcr-bilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&sh=gobierno&ev=1",
-  "avisos": "El período cruza 5 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Intervención (ene. 2007 – dic. 2015); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (ene. 2014 – ene. 2017); 6. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 5 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Intervención (ene. 2007 – dic. 2015); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (ene. 2014 – ene. 2017); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "08971b36ac158d78",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "7f5b1e0487af6ca5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "391159d79e30abb3",
   "tabla": "f5e5692cfd550f5e",
-  "svg": "c0941c03f786ce24"
+  "svg": "fefeecce4c613215"
  },
  "1280 ?s=tcr-bilateral&v=provincias": {
   "url": "?s=tcr-bilateral&v=provincias",
-  "avisos": "El período cruza 4 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Metodología (ene. 2007 – abr. 2016); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 4 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Metodología (ene. 2007 – abr. 2016); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/provincias/",
   "ancho": 1280,
-  "resumen": "34224ad49c0639c7",
+  "resumen": "9e5edbcd6172e853",
   "leyendas": "5e12f2faf414f048",
   "cita": "3c88452dbde3d0d0",
   "tabla": "c5c623586783b02a",
-  "svg": "b9f1bde8497b1f5b"
+  "svg": "712908e589a36646"
  },
  "1280 ?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1",
-  "avisos": "El período cruza 4 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Metodología (ene. 2007 – abr. 2016); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 4 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Metodología (ene. 2007 – abr. 2016); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/provincias/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "5637bd54e10bb2b8",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "bbefb6204cbce632",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "b209f0fea65e74cb",
   "tabla": "0b62c4c22e37074b",
-  "svg": "985033d33a3845c3"
+  "svg": "73648ea6cec69270"
  },
  "1280 ?s=tcr-multilateral": {
   "url": "?s=tcr-multilateral",
@@ -1427,7 +1427,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e56d5f0bc62a6681",
   "tabla": "62f7a955f76dc5e8",
-  "svg": "b1dceafd492d4a3d"
+  "svg": "2a1b009864f08121"
  },
  "1280 ?s=tcr-multilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&sh=gobierno&ev=1",
@@ -1437,36 +1437,36 @@
   "ficha": "/series/tcr-multilateral/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "709e71c048ffacd8",
-  "leyendas": "581881f4f646bd91",
+  "leyendas": "4674a1e5e4bc091b",
   "cita": "6308c9a2077d7486",
   "tabla": "7dddff3a362e54cd",
-  "svg": "9276a910722bf739"
+  "svg": "bd1f20514b32c21e"
  },
  "1280 ?s=tcr-multilateral&v=bruegel": {
   "url": "?s=tcr-multilateral&v=bruegel",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007 – dic. 2015); 3. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007 – dic. 2015); 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: septiembre de 2026",
   "unidad": "índice, diciembre de 2015 = 100 (inversa del REER de Bruegel)",
   "ficha": "/series/tcr-multilateral/bruegel/",
   "ancho": 1280,
-  "resumen": "2229fc05746bb934",
+  "resumen": "c3f9452a196fb1d7",
   "leyendas": "5e12f2faf414f048",
   "cita": "7dc3fa65804be828",
   "tabla": "8a2f6eaed0fccb32",
-  "svg": "1ea79253e3debab6"
+  "svg": "51fe432281c3c169"
  },
  "1280 ?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007 – dic. 2015); 3. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007 – dic. 2015); 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: septiembre de 2026",
   "unidad": "índice, diciembre de 2015 = 100 (inversa del REER de Bruegel)",
   "ficha": "/series/tcr-multilateral/bruegel/?sh=gobierno&ev=1",
   "ancho": 1280,
-  "resumen": "9e068fdd54f63415",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "a546c953657e8de0",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "2dc58bb146e5cbc1",
   "tabla": "e226a35113aa7355",
-  "svg": "446e6c9299781819"
+  "svg": "5ec8fcc4f04f8a08"
  },
  "1280 ?v=provincias": {
   "url": "?v=provincias",
@@ -1479,7 +1479,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "d54cc82f51516a81",
   "tabla": "bc83aadf61e498b7",
-  "svg": "c2105731ee50dbc2"
+  "svg": "e39507f896eac0fc"
  },
  "1280 ?v=provincias&sh=gobierno&ev=1": {
   "url": "?v=provincias&sh=gobierno&ev=1",
@@ -1489,10 +1489,10 @@
   "ficha": "/series/ipc/provincias/?sh=gobierno&ev=1",
   "ancho": 1280,
   "resumen": "543d71ac5910f6d0",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "fa959e1bb595f462",
   "tabla": "b44b009cf752ec27",
-  "svg": "96e866f8ea72783a"
+  "svg": "07901057bd9c5b44"
  },
  "1280 ?desde=1980&hasta=1982&sh=gobierno": {
   "url": "?desde=1980&hasta=1982&sh=gobierno",
@@ -1505,7 +1505,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "5a485d793d08a370",
   "tabla": "e7d89e074fbdaed1",
-  "svg": "c5b76af338d323cd"
+  "svg": "a66cbda059da7a67"
  },
  "1280 ?desde=2000&hasta=2002&sh=gobierno": {
   "url": "?desde=2000&hasta=2002&sh=gobierno",
@@ -1518,7 +1518,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "5a485d793d08a370",
   "tabla": "340e8f54a41697fc",
-  "svg": "d0c5c4866d0838a9"
+  "svg": "4487414ce90bbaf3"
  },
  "1280 ?desde=2022&sh=gobierno": {
   "url": "?desde=2022&sh=gobierno",
@@ -1531,59 +1531,59 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "5a485d793d08a370",
   "tabla": "d87f0bdd5cec3e3a",
-  "svg": "1a09bd5f9f21918d"
+  "svg": "62a98716a2041367"
  },
  "1280 ?s=desocupacion&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=desocupacion&desde=1980&hasta=1982&sh=gobierno",
-  "avisos": "El período cruza un quiebre: 2. Cobertura (may. 1974 – may. 2003). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Cobertura (may. 1974 – may. 2003). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "% de la población económicamente activa",
   "ficha": "/series/desocupacion/?desde=1980&hasta=1982&sh=gobierno",
   "ancho": 1280,
-  "resumen": "621e862183bcd9a9",
+  "resumen": "c266c729c4585199",
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9aa4962516e7825f",
   "tabla": "54a1735211611aa3",
-  "svg": "c5777cf64afcfb72"
+  "svg": "80bc19228020f7e4"
  },
  "1280 ?s=desocupacion&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=desocupacion&desde=2000&hasta=2002&sh=gobierno",
-  "avisos": "El período cruza 2 quiebres: 2. Cobertura (may. 1974 – may. 2003); 3. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Cobertura (may. 1974 – may. 2003); 2. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "% de la población económicamente activa",
   "ficha": "/series/desocupacion/?desde=2000&hasta=2002&sh=gobierno",
   "ancho": 1280,
-  "resumen": "44ab5314514624f6",
+  "resumen": "4f50d024bd09c940",
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9aa4962516e7825f",
   "tabla": "6c68a160383c5d55",
-  "svg": "31215ef3e36877a4"
+  "svg": "83f3cc2e43ebe816"
  },
  "1280 ?s=desocupacion&desde=2022&sh=gobierno": {
   "url": "?s=desocupacion&desde=2022&sh=gobierno",
-  "avisos": "El período cruza un quiebre: 3. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "% de la población económicamente activa",
   "ficha": "/series/desocupacion/?desde=2022&sh=gobierno",
   "ancho": 1280,
-  "resumen": "992414731fa5666c",
+  "resumen": "4c41ae7bd462b4dc",
   "leyendas": "5b2c01d731a24d73",
   "cita": "9aa4962516e7825f",
   "tabla": "7e441980751873fe",
-  "svg": "cffa2556af565c4a"
+  "svg": "1fe56ea81dc2937b"
  },
  "1280 ?s=pib&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=pib&desde=1980&hasta=1982&sh=gobierno",
-  "avisos": "El período cruza un quiebre: 2. Cambio de base (ene. 1980). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Cambio de base (ene. 1980). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "variación % interanual",
   "ficha": "/series/pib/?desde=1980&hasta=1982&sh=gobierno",
   "ancho": 1280,
-  "resumen": "348f2b474c89e3b2",
+  "resumen": "822a48aefd97264d",
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9393fe10be49a54d",
   "tabla": "3ae474bc6061803b",
-  "svg": "42f394fc72e18feb"
+  "svg": "4c8638e95592d1e3"
  },
  "1280 ?s=pib&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=pib&desde=2000&hasta=2002&sh=gobierno",
@@ -1596,7 +1596,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9393fe10be49a54d",
   "tabla": "b582f3d4df09228f",
-  "svg": "45323824b2d88dc7"
+  "svg": "14f5f5af15126163"
  },
  "1280 ?s=pib&desde=2022&sh=gobierno": {
   "url": "?s=pib&desde=2022&sh=gobierno",
@@ -1609,7 +1609,7 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "9393fe10be49a54d",
   "tabla": "05245fded24911e6",
-  "svg": "18357d384e511aba"
+  "svg": "24aa8d57392cd7e9"
  },
  "1280 ?s=reservas&desde=1970&hasta=1976&sh=regimen_cambiario": {
   "url": "?s=reservas&desde=1970&hasta=1976&sh=regimen_cambiario",
@@ -1622,7 +1622,7 @@
   "leyendas": "1c43a94d26d73404",
   "cita": "36ea398cb7d10db6",
   "tabla": "a89b8874edd20c42",
-  "svg": "a939271778b20ec4"
+  "svg": "6c0c8d8e3f02e8f4"
  },
  "1280 ?s=reservas&desde=1975&hasta=1977&sh=gobierno": {
   "url": "?s=reservas&desde=1975&hasta=1977&sh=gobierno",
@@ -1635,7 +1635,7 @@
   "leyendas": "eb2ed6aedee28860",
   "cita": "36ea398cb7d10db6",
   "tabla": "ac234afa33e743d9",
-  "svg": "5d6675e5403944ac"
+  "svg": "7feaea3f64c24b54"
  },
  "1280 ?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario": {
   "url": "?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario",
@@ -1648,7 +1648,7 @@
   "leyendas": "ace9a9d6d210720f",
   "cita": "36ea398cb7d10db6",
   "tabla": "c28f288c31a67101",
-  "svg": "e8b8a915c7ac58cc"
+  "svg": "e72fb657986bf7be"
  },
  "1280 ?s=reservas&desde=1982&hasta=1990&sh=gobierno": {
   "url": "?s=reservas&desde=1982&hasta=1990&sh=gobierno",
@@ -1661,7 +1661,7 @@
   "leyendas": "e69bba7fd057f531",
   "cita": "36ea398cb7d10db6",
   "tabla": "b420c368806332e7",
-  "svg": "6b6a1a3a19666096"
+  "svg": "fe9e185ef7ab6954"
  },
  "1280 ?s=reservas&desde=1988&hasta=1991&ev=1": {
   "url": "?s=reservas&desde=1988&hasta=1991&ev=1",
@@ -1674,7 +1674,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "f8c32cc97bb3f6ba",
-  "svg": "0ebe058594ce3e64"
+  "svg": "1429abb6d46a4feb"
  },
  "1280 ?s=reservas&desde=1998&hasta=2002&sh=ministro": {
   "url": "?s=reservas&desde=1998&hasta=2002&sh=ministro",
@@ -1687,7 +1687,7 @@
   "leyendas": "5b110fe9e2bda25e",
   "cita": "36ea398cb7d10db6",
   "tabla": "92d50de9683a11ca",
-  "svg": "9879372757e3f309"
+  "svg": "1c7f8b7c1273b2ad"
  },
  "1280 ?s=reservas&desde=2004&hasta=2008&sh=ministro": {
   "url": "?s=reservas&desde=2004&hasta=2008&sh=ministro",
@@ -1700,7 +1700,7 @@
   "leyendas": "c6c7208c34dde47b",
   "cita": "36ea398cb7d10db6",
   "tabla": "40b86bd507098b09",
-  "svg": "5edba594ff5f8b5d"
+  "svg": "fbab04054641214b"
  },
  "1280 ?s=reservas&desde=2014&hasta=2020&sh=catedra": {
   "url": "?s=reservas&desde=2014&hasta=2020&sh=catedra",
@@ -1713,20 +1713,20 @@
   "leyendas": "2ac4341c07f72cdf",
   "cita": "36ea398cb7d10db6",
   "tabla": "e3fc1abf593bf1d4",
-  "svg": "4db83341111c92ec"
+  "svg": "457ca11a1b4d3f35"
  },
  "1280 ?s=reservas&desde=2021&hasta=2024&sh=ministro": {
   "url": "?s=reservas&desde=2021&hasta=2024&sh=ministro",
-  "avisos": "El período cruza un quiebre: 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/?desde=2021&hasta=2024&sh=ministro",
   "ancho": 1280,
-  "resumen": "5fa78739e2620828",
+  "resumen": "b8617516adec7fd9",
   "leyendas": "a790e9d03b920394",
   "cita": "36ea398cb7d10db6",
   "tabla": "90ce743102e6e372",
-  "svg": "474987bb2a62c605"
+  "svg": "9c4b22ba9047d0e4"
  },
  "1280 ?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno": {
   "url": "?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno",
@@ -1756,16 +1756,16 @@
  },
  "1280 ?s=resultado-fiscal&desde=2006&hasta=2016&sh=gobierno": {
   "url": "?s=resultado-fiscal&desde=2006&hasta=2016&sh=gobierno",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007); 2. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/?desde=2006&hasta=2016&sh=gobierno",
   "ancho": 1280,
-  "resumen": "3d164962775fa862",
+  "resumen": "0d1131f8dd097acd",
   "leyendas": "bfd5135c47a07f6b",
   "cita": "88b2f68e5f11217b",
   "tabla": "349c7f0186e6c7ef",
-  "svg": "289b32067dc1dc6e"
+  "svg": "625f22f547aa74db"
  },
  "1280 ?s=tc-oficial&desde=1970&hasta=1972&sh=ministro": {
   "url": "?s=tc-oficial&desde=1970&hasta=1972&sh=ministro",
@@ -1778,7 +1778,7 @@
   "leyendas": "2fec3fd0178102d8",
   "cita": "33a233bf161dc242",
   "tabla": "b59a3c943aef6b11",
-  "svg": "4b2fd827004fb415"
+  "svg": "86da52c40407426b"
  },
  "1280 ?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario",
@@ -1791,7 +1791,7 @@
   "leyendas": "7e84f83d9d1ade24",
   "cita": "33a233bf161dc242",
   "tabla": "cecc0e57ee117e0c",
-  "svg": "7071e0bd0e121292"
+  "svg": "fdf4fd7d5e21bac9"
  },
  "1280 ?s=tc-oficial&desde=1981&hasta=1984&sh=ministro": {
   "url": "?s=tc-oficial&desde=1981&hasta=1984&sh=ministro",
@@ -1804,7 +1804,7 @@
   "leyendas": "ffbac1587cb7137c",
   "cita": "33a233bf161dc242",
   "tabla": "2f75171af39aa3aa",
-  "svg": "57c9f85138642efa"
+  "svg": "2091f242f55787da"
  },
  "1280 ?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario",
@@ -1817,7 +1817,7 @@
   "leyendas": "5d8e71a52ed8143d",
   "cita": "33a233bf161dc242",
   "tabla": "dd221cd6351b8308",
-  "svg": "b5f22e56b99260b7"
+  "svg": "bda6f2efc36b5460"
  },
  "1280 ?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario",
@@ -1830,7 +1830,7 @@
   "leyendas": "d84927be8c493a74",
   "cita": "33a233bf161dc242",
   "tabla": "c8f25284829429a3",
-  "svg": "0cf969c9e826e4b6"
+  "svg": "0a71f5d5549e4f0f"
  },
  "1280 ?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario",
@@ -1843,20 +1843,20 @@
   "leyendas": "75606c2804f18c54",
   "cita": "33a233bf161dc242",
   "tabla": "03c13a0a6a1304e4",
-  "svg": "590e747278549926"
+  "svg": "9cf9129e0656cac2"
  },
  "1280 ?s=tc-oficial&desde=2022&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2022&sh=regimen_cambiario",
-  "avisos": "El período cruza 2 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "pesos actuales por dólar (sin ajuste por inflación)",
   "ficha": "/series/tc-oficial/?desde=2022&sh=regimen_cambiario",
   "ancho": 1280,
-  "resumen": "74d6eddfa1402261",
+  "resumen": "286c9f9a59238be8",
   "leyendas": "a08c176b712236c6",
   "cita": "33a233bf161dc242",
   "tabla": "c1100f31b85bbbde",
-  "svg": "c630cd79f8ba8081"
+  "svg": "0ad499eea1879e6c"
  },
  "1280 ?s=tcr-multilateral&desde=1970&hasta=1973&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=1970&hasta=1973&sh=ministro",
@@ -1934,33 +1934,33 @@
   "leyendas": "f0fab764d09b4795",
   "cita": "6308c9a2077d7486",
   "tabla": "3bfdfd5ce7bdafe3",
-  "svg": "4402495a89fb31fa"
+  "svg": "dad8fec469c9c618"
  },
  "1280 ?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario",
-  "avisos": "El período cruza un quiebre: 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: diciembre de 2025 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "índice 17-12-2015 = 100",
   "ficha": "/series/tcr-multilateral/?desde=2001&hasta=2012&sh=regimen_cambiario",
   "ancho": 1280,
-  "resumen": "fa1b736ff3852bb4",
+  "resumen": "cf5f79b9c37b30db",
   "leyendas": "74e33a29892adacd",
   "cita": "6308c9a2077d7486",
   "tabla": "633ec2e8626cf765",
-  "svg": "9057c0d8f2036fa0"
+  "svg": "909730e7ae2093a9"
  },
  "1280 ?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro",
-  "avisos": "El período cruza un quiebre: 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: diciembre de 2025 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "índice 17-12-2015 = 100",
   "ficha": "/series/tcr-multilateral/?desde=2014&hasta=2017&sh=ministro",
   "ancho": 1280,
-  "resumen": "594defee0be23316",
+  "resumen": "2c82b44a1f32e33b",
   "leyendas": "c18d7ca679041728",
   "cita": "6308c9a2077d7486",
   "tabla": "f79fba38638bd38b",
-  "svg": "01c34e38805143d2"
+  "svg": "d9364a5aadb731d5"
  },
  "1280 ?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario",
@@ -1973,7 +1973,7 @@
   "leyendas": "0a1c4f0b8352d7e1",
   "cita": "6308c9a2077d7486",
   "tabla": "e328e75aa004521a",
-  "svg": "bd4ac5deeca4021d"
+  "svg": "2d51a56bc83c4c96"
  },
  "1280 ?t=var_mensual&desde=1969&hasta=1971&sh=ministro": {
   "url": "?t=var_mensual&desde=1969&hasta=1971&sh=ministro",
@@ -1986,7 +1986,7 @@
   "leyendas": "3a8bde8fbcdb373c",
   "cita": "f661dd6b4b834234",
   "tabla": "5393b9fb4cf01d76",
-  "svg": "8f945fe93a5080be"
+  "svg": "fad0d13fbc8d5410"
  },
  "1280 ?t=var_mensual&desde=1974&hasta=1977&sh=ministro": {
   "url": "?t=var_mensual&desde=1974&hasta=1977&sh=ministro",
@@ -1999,7 +1999,7 @@
   "leyendas": "2317edba0db0de1d",
   "cita": "f661dd6b4b834234",
   "tabla": "c3992b3c47321da3",
-  "svg": "2f972b3dab689982"
+  "svg": "1a644c31c61da291"
  },
  "1280 ?t=var_mensual&desde=1980&hasta=1982&sh=ministro": {
   "url": "?t=var_mensual&desde=1980&hasta=1982&sh=ministro",
@@ -2012,7 +2012,7 @@
   "leyendas": "1a3c0d148c61abd8",
   "cita": "f661dd6b4b834234",
   "tabla": "6e9025bf69b125fe",
-  "svg": "aae352246b24b8b2"
+  "svg": "19b82ba9e17a0da3"
  },
  "1280 ?t=var_mensual&desde=1984&hasta=1989&sh=plan": {
   "url": "?t=var_mensual&desde=1984&hasta=1989&sh=plan",
@@ -2038,7 +2038,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "b8524cd8337009a0",
   "tabla": "0a0e3da09139d2a4",
-  "svg": "e0bd996710aea810"
+  "svg": "5238468ef11c98d2"
  },
  "1280 ?t=var_mensual&desde=2000&hasta=2002&sh=ministro": {
   "url": "?t=var_mensual&desde=2000&hasta=2002&sh=ministro",
@@ -2051,7 +2051,7 @@
   "leyendas": "3deab13155c3b0a4",
   "cita": "f661dd6b4b834234",
   "tabla": "4fd0c210691930be",
-  "svg": "b7da3a4bc935e6ab"
+  "svg": "120085a9ec9fed3f"
  },
  "1280 ?t=var_mensual&desde=2007&hasta=2010&sh=ministro": {
   "url": "?t=var_mensual&desde=2007&hasta=2010&sh=ministro",
@@ -2064,20 +2064,20 @@
   "leyendas": "192978b90d51df08",
   "cita": "f661dd6b4b834234",
   "tabla": "13b2db1fc6c61af2",
-  "svg": "1c110b8e6d173d22"
+  "svg": "4eb1437ba3b7efb1"
  },
  "1280 ?t=var_mensual&desde=2017&hasta=2019&ev=1": {
   "url": "?t=var_mensual&desde=2017&hasta=2019&ev=1",
-  "avisos": "El período cruza un quiebre: 3. Cobertura (ene. 2014 – ene. 2017). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Cobertura (ene. 2014 – ene. 2017). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "variación % mensual",
   "ficha": "/series/ipc/?t=var_mensual&desde=2017&hasta=2019&ev=1",
   "ancho": 1280,
-  "resumen": "e1c517547b4f5975",
+  "resumen": "edf1733545419b82",
   "leyendas": "cab2480b35ed55b0",
   "cita": "b8524cd8337009a0",
   "tabla": "a7c91a3281520ad3",
-  "svg": "37d9781687875528"
+  "svg": "4cb10b389cf8aa13"
  },
  "1280 ?t=var_mensual&desde=2022&sh=ministro": {
   "url": "?t=var_mensual&desde=2022&sh=ministro",
@@ -2090,7 +2090,7 @@
   "leyendas": "a790e9d03b920394",
   "cita": "f661dd6b4b834234",
   "tabla": "0b3bfc21c8d9d4fb",
-  "svg": "6d6c5ef2b9deaa51"
+  "svg": "68698e968196c566"
  },
  "390 (sin parámetros)": {
   "url": "",
@@ -2103,7 +2103,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "ec346b05c63352e8",
-  "svg": "776a492150d90ea2"
+  "svg": "e0b8da636b96e1fa"
  },
  "390 ?t=var_mensual&desde=1985-06&hasta=1988-08&sh=plan&ev=1": {
   "url": "?t=var_mensual&desde=1985-06&hasta=1988-08&sh=plan&ev=1",
@@ -2116,7 +2116,7 @@
   "leyendas": "7c57a73e0fe100fa",
   "cita": "f661dd6b4b834234",
   "tabla": "23ec91f2fe736749",
-  "svg": "2037367159c58abf"
+  "svg": "b2169394ec499e35"
  },
  "390 ?s=pib&t=nivel&log=1&sh=gobierno": {
   "url": "?s=pib&t=nivel&log=1&sh=gobierno",
@@ -2129,20 +2129,20 @@
   "leyendas": "3983a37ed7f6e36e",
   "cita": "c0c73d82fa10e2e1",
   "tabla": "b7351ff56f79ca48",
-  "svg": "b33458a197133f77"
+  "svg": "1cce246fb11a17cf"
  },
  "390 ?s=resultado-fiscal&v=financiero&desde=1993&sh=mandato": {
   "url": "?s=resultado-fiscal&v=financiero&desde=1993&sh=mandato",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/?desde=1993&sh=mandato",
   "ancho": 390,
-  "resumen": "144f2cf40521d98a",
+  "resumen": "dfeab94a532c3683",
   "leyendas": "aa414aae003e6757",
   "cita": "e896e0f0ade27b2c",
   "tabla": "9f88c3810c899c6a",
-  "svg": "88940b6d9335d6ac"
+  "svg": "77c7a7856b0f424c"
  },
  "390 ?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011": {
   "url": "?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011",
@@ -2168,7 +2168,7 @@
   "leyendas": "4dcb90bede697a3a",
   "cita": "a1193aecdd22f7da",
   "tabla": "b7f3ed5d4b04b7e8",
-  "svg": "2fe4fada5efc994d"
+  "svg": "0c80812bac7704c7"
  },
  "390 ?s=salario-real&m=&mm=12": {
   "url": "?s=salario-real&m=&mm=12",
@@ -2185,16 +2185,16 @@
  },
  "390 ?s=reservas&f=anual&desde=1983&sh=ministro": {
   "url": "?s=reservas&f=anual&desde=1983&sh=ministro",
-  "avisos": "El período cruza un quiebre: 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza un quiebre: 1. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$ (fin de año)",
   "ficha": "/series/reservas/?f=anual&desde=1983&sh=ministro",
   "ancho": 390,
-  "resumen": "dd3b16c282fd1fc5",
+  "resumen": "cf0dd95a9da4ea35",
   "leyendas": "b2e90e8aef2e48c2",
   "cita": "529e5efa5cda1681",
   "tabla": "93d1536afab775ef",
-  "svg": "29fcd09f47a492be"
+  "svg": "585172ec2a7fef66"
  },
  "390 ?s=desocupacion&sh=catedra&ev=1": {
   "url": "?s=desocupacion&sh=catedra&ev=1",
@@ -2204,10 +2204,10 @@
   "ficha": "/series/desocupacion/?sh=catedra&ev=1",
   "ancho": 390,
   "resumen": "ce33f4fe19a94ad0",
-  "leyendas": "581c9d6223ae4f50",
+  "leyendas": "cc76637e025ad4da",
   "cita": "9aa4962516e7825f",
   "tabla": "bcc47cd9d9c7f6ff",
-  "svg": "a3c771f861e8004c"
+  "svg": "70ea48222dc20cfd"
  },
  "390 ?desde=1970&ev=cambiario,deuda": {
   "url": "?desde=1970&ev=cambiario,deuda",
@@ -2217,10 +2217,10 @@
   "ficha": "/series/ipc/?desde=1970&ev=cambiario,deuda",
   "ancho": 390,
   "resumen": "bc0218501ec24e32",
-  "leyendas": "fa1e5c8db13b3cff",
+  "leyendas": "5884f9bc7d2e8c02",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "63ea182fb3af9cb5"
+  "svg": "28426903f69af4cd"
  },
  "390 ?s=pib&sh=gobierno&ev=deuda,episodio": {
   "url": "?s=pib&sh=gobierno&ev=deuda,episodio",
@@ -2230,10 +2230,10 @@
   "ficha": "/series/pib/?sh=gobierno&ev=deuda,episodio",
   "ancho": 390,
   "resumen": "9e9551fe053fd2ed",
-  "leyendas": "8ed94e9523435705",
+  "leyendas": "b49a9288563139e8",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "ce47252e6b7f4da8"
+  "svg": "83f7507d584ad10e"
  },
  "390 ?t=var_mensual&desde=1988&hasta=1991&ev=episodio": {
   "url": "?t=var_mensual&desde=1988&hasta=1991&ev=episodio",
@@ -2272,7 +2272,7 @@
   "leyendas": "2f078a149651a4bd",
   "cita": "9393fe10be49a54d",
   "tabla": "716c4ee719341403",
-  "svg": "6798098621df9d26"
+  "svg": "dcf743626b8220da"
  },
  "390 ?s=fuga": {
   "url": "?s=fuga",
@@ -2295,23 +2295,23 @@
   "ficha": "/series/ipc/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "bc11fb059777bdd9",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "5a485d793d08a370",
   "tabla": "ddb9ad8c6dceca06",
-  "svg": "986742ddb191a194"
+  "svg": "6db4cc20d9bbb47f"
  },
  "390 ?s=pib&desde=1995&hasta=2020&sh=gobierno": {
   "url": "?s=pib&desde=1995&hasta=2020&sh=gobierno",
-  "avisos": "El período cruza 2 quiebres: 4. Cambio de base (ene. 2004); 5. Metodología (ene. 2008 – oct. 2013). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Cambio de base (ene. 2004); 2. Metodología (ene. 2008 – oct. 2013). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "variación % interanual",
   "ficha": "/series/pib/?desde=1995&hasta=2020&sh=gobierno",
   "ancho": 390,
-  "resumen": "8366e269d4c18eab",
+  "resumen": "901a9273e37602f4",
   "leyendas": "1ad1385ecb4a32c4",
   "cita": "9393fe10be49a54d",
   "tabla": "c97ac954a869e1ab",
-  "svg": "e80429c37c40dc37"
+  "svg": "db3fa4dfba910084"
  },
  "390 ?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1": {
   "url": "?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1",
@@ -2324,7 +2324,7 @@
   "leyendas": "e4f42de79b0b7633",
   "cita": "f661dd6b4b834234",
   "tabla": "36002e9a39d35000",
-  "svg": "fadc88947ff03013"
+  "svg": "4f8367091d4ae155"
  },
  "390 ?s=reservas&desde=1988&hasta=1991&sh=gobierno": {
   "url": "?s=reservas&desde=1988&hasta=1991&sh=gobierno",
@@ -2337,7 +2337,7 @@
   "leyendas": "336bdeb73375afc8",
   "cita": "36ea398cb7d10db6",
   "tabla": "2926c4885ad4ed41",
-  "svg": "674d19f5d4b1e602"
+  "svg": "9fac59414c58da7c"
  },
  "390 ?desde=1970&ev=1": {
   "url": "?desde=1970&ev=1",
@@ -2347,49 +2347,49 @@
   "ficha": "/series/ipc/?desde=1970&ev=1",
   "ancho": 390,
   "resumen": "aa53e11d30dd8995",
-  "leyendas": "a58f573998d3772a",
+  "leyendas": "3f6030fffdac5ebf",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "6c01e73b84de79ea"
+  "svg": "2c181f66d5a785bc"
  },
  "390 ?s=resultado-fiscal&v=financiero&sh=regimen_cambiario": {
   "url": "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/?sh=regimen_cambiario",
   "ancho": 390,
-  "resumen": "67d323df72804c33",
+  "resumen": "c3708b2dfc2de66b",
   "leyendas": "56b70aead2933220",
   "cita": "e896e0f0ade27b2c",
   "tabla": "89983a94994c7e26",
-  "svg": "88ba54e0586c9c55"
+  "svg": "f457a9b1af96e060"
  },
  "390 ?s=reservas&sh=catedra": {
   "url": "?s=reservas&sh=catedra",
-  "avisos": "El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/?sh=catedra",
   "ancho": 390,
-  "resumen": "518b9309c67b5dab",
+  "resumen": "3b67fa78aa1fb1b9",
   "leyendas": "0fa4bc62e049f0f2",
   "cita": "36ea398cb7d10db6",
   "tabla": "6d9ba3e3e74e106e",
-  "svg": "ad153d08b2f6c656"
+  "svg": "264054d04cff4f94"
  },
  "390 ?s=reservas&t=var_dic_dic&m=real&f=semanal&sh=papas&desde=83&mm=5": {
   "url": "?s=reservas",
-  "avisos": "La URL pedía una medida («real»), que esta serie no admite: se ignoró.La URL pedía una transformación («var_dic_dic»), que esta serie no admite: se ignoró.La URL pedía una frecuencia («semanal»), que esta serie no admite: se ignoró.La URL pedía una media móvil («5»), que esta serie no admite: se ignoró.La URL tiene el inicio mal escrito («83»; usá AAAA o AAAA-MM): se ignoró.La URL pedía un sombreado («papas»), que esta serie no admite: se ignoró.El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "La URL pedía una medida («real»), que esta serie no admite: se ignoró.La URL pedía una transformación («var_dic_dic»), que esta serie no admite: se ignoró.La URL pedía una frecuencia («semanal»), que esta serie no admite: se ignoró.La URL pedía una media móvil («5»), que esta serie no admite: se ignoró.La URL tiene el inicio mal escrito («83»; usá AAAA o AAAA-MM): se ignoró.La URL pedía un sombreado («papas»), que esta serie no admite: se ignoró.El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/",
   "ancho": 390,
-  "resumen": "a7853882aa97f687",
+  "resumen": "b9f0d4c0e06cb7f5",
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "e2f795b668bbf930"
+  "svg": "3bee552a5c6baa12"
  },
  "390 ?s=int-pib&p=ARG%2CBRA": {
   "url": "?s=int-pib&p=ARG,BRA",
@@ -2415,7 +2415,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "ec346b05c63352e8",
-  "svg": "776a492150d90ea2"
+  "svg": "e0b8da636b96e1fa"
  },
  "390 ?s=ipc&v=no-existe": {
   "url": "",
@@ -2428,7 +2428,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "ec346b05c63352e8",
-  "svg": "776a492150d90ea2"
+  "svg": "e0b8da636b96e1fa"
  },
  "390 ?s=agregados": {
   "url": "?s=agregados",
@@ -2441,7 +2441,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "63f668a1d681cac3",
   "tabla": "a15a8394c21bae27",
-  "svg": "f99650188e4ad62c"
+  "svg": "acaf904c8046fef7"
  },
  "390 ?s=agregados&sh=gobierno&ev=1": {
   "url": "?s=agregados&sh=gobierno&ev=1",
@@ -2451,10 +2451,10 @@
   "ficha": "/series/agregados/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "e990823faa7f101c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "67d1d23dcbf56fa1",
   "tabla": "362a273a67ab79c6",
-  "svg": "abbe285aaac7506a"
+  "svg": "377501ca9c978dfe"
  },
  "390 ?s=agregados&v=m2-pesos": {
   "url": "?s=agregados&v=m2-pesos",
@@ -2467,7 +2467,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "b2aa8c9acf7db471",
   "tabla": "f20f4a1138aeda3a",
-  "svg": "48d953f3d96f44b0"
+  "svg": "f67eeb337f479285"
  },
  "390 ?s=agregados&v=m2-pesos&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m2-pesos&sh=gobierno&ev=1",
@@ -2477,10 +2477,10 @@
   "ficha": "/series/agregados/m2-pesos/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "f3c475e8409f28fd",
-  "leyendas": "bcc6427da13cd9ac",
+  "leyendas": "fcef76bc8bd2a41a",
   "cita": "15e7cad3e307f4d7",
   "tabla": "b6261a1efb6df799",
-  "svg": "3dded0bbcbb30044"
+  "svg": "b6558c87eb36fd45"
  },
  "390 ?s=agregados&v=m2-privado": {
   "url": "?s=agregados&v=m2-privado",
@@ -2503,10 +2503,10 @@
   "ficha": "/series/agregados/m2-privado/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "0d83626d25efb0e6",
-  "leyendas": "a2ab7e397114c874",
+  "leyendas": "5a99ff80f81be1ff",
   "cita": "a07613bb56e08e3f",
   "tabla": "e62d34ab51d44b8e",
-  "svg": "61c57f0c022b8c62"
+  "svg": "d25cc8d4db2b2ee2"
  },
  "390 ?s=agregados&v=m2-total": {
   "url": "?s=agregados&v=m2-total",
@@ -2519,7 +2519,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "a9818f257ba1646d",
   "tabla": "081c55d66cae2d8e",
-  "svg": "7f7d1affa494ff42"
+  "svg": "127c95506730c8bf"
  },
  "390 ?s=agregados&v=m2-total&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m2-total&sh=gobierno&ev=1",
@@ -2529,10 +2529,10 @@
   "ficha": "/series/agregados/m2-total/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "ad129b368222fb21",
-  "leyendas": "bcc6427da13cd9ac",
+  "leyendas": "fcef76bc8bd2a41a",
   "cita": "12ae84588e2ad232",
   "tabla": "480e7ff9d95c2d92",
-  "svg": "87b5dc9285c1bcbe"
+  "svg": "ac25707bfa532160"
  },
  "390 ?s=agregados&v=m3-total": {
   "url": "?s=agregados&v=m3-total",
@@ -2545,7 +2545,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "0ba8e23479875dbf",
   "tabla": "2375a51fd9341127",
-  "svg": "bae57e0af9802272"
+  "svg": "293bb591113aea86"
  },
  "390 ?s=agregados&v=m3-total&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m3-total&sh=gobierno&ev=1",
@@ -2555,10 +2555,10 @@
   "ficha": "/series/agregados/m3-total/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "face2fbd41d78b5d",
-  "leyendas": "bcc6427da13cd9ac",
+  "leyendas": "fcef76bc8bd2a41a",
   "cita": "482e2ed2830c576d",
   "tabla": "5c6cbdf3c202db3e",
-  "svg": "66fee8d5be3312aa"
+  "svg": "699a59b6af433741"
  },
  "390 ?s=base-monetaria": {
   "url": "?s=base-monetaria",
@@ -2571,7 +2571,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "edfb36318f09a77a",
   "tabla": "3ac57d2f7153d54f",
-  "svg": "d10c3e70c8f2e4e5"
+  "svg": "5877318e09a052fd"
  },
  "390 ?s=base-monetaria&sh=gobierno&ev=1": {
   "url": "?s=base-monetaria&sh=gobierno&ev=1",
@@ -2581,10 +2581,10 @@
   "ficha": "/series/base-monetaria/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "a98e9adb0334015c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "2a7d98342e6fb428",
   "tabla": "0630ca6d94abda46",
-  "svg": "1731105dfeaf535a"
+  "svg": "decf1bc351e8873c"
  },
  "390 ?s=base-monetaria&v=promedio-mensual": {
   "url": "?s=base-monetaria&v=promedio-mensual",
@@ -2607,10 +2607,10 @@
   "ficha": "/series/base-monetaria/promedio-mensual/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "36be32905e503ce1",
-  "leyendas": "316009b00b41a601",
+  "leyendas": "8fb3b9fde49d4a56",
   "cita": "1d34800254a0c73b",
   "tabla": "eb0b04d7766df218",
-  "svg": "f101ef1718ae8270"
+  "svg": "5e5955eb21f948c1"
  },
  "390 ?s=cuenta-corriente": {
   "url": "?s=cuenta-corriente",
@@ -2623,7 +2623,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "2a484c5f17663f0b",
   "tabla": "a172a6ac106d7ead",
-  "svg": "d763e601d1b5882b"
+  "svg": "4898478a89d435b8"
  },
  "390 ?s=cuenta-corriente&sh=gobierno&ev=1": {
   "url": "?s=cuenta-corriente&sh=gobierno&ev=1",
@@ -2633,10 +2633,10 @@
   "ficha": "/series/cuenta-corriente/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "27fe36de08e5f1e0",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "2c22d200f8d8177f",
   "tabla": "c48b7bf527e9e161",
-  "svg": "3fad1e418d4f2c6a"
+  "svg": "5f08bc48a180f2d4"
  },
  "390 ?s=cuenta-corriente&v=mbp5": {
   "url": "?s=cuenta-corriente&v=mbp5",
@@ -2659,10 +2659,10 @@
   "ficha": "/series/cuenta-corriente/mbp5/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "e2d566dee0d3c9b1",
-  "leyendas": "eca9699ad57ee4cb",
+  "leyendas": "377b47c2cdd90e47",
   "cita": "1acfe6b4a8891acd",
   "tabla": "2d91299b7a9f9c73",
-  "svg": "107a15c2c7b16291"
+  "svg": "06c2fe5bcf837586"
  },
  "390 ?s=cuenta-corriente&v=mbp6": {
   "url": "?s=cuenta-corriente&v=mbp6",
@@ -2685,10 +2685,10 @@
   "ficha": "/series/cuenta-corriente/mbp6/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "59c6fa0e38e28d1c",
-  "leyendas": "280326ad7a88c6af",
+  "leyendas": "37d350a450c97a1b",
   "cita": "08ded59a3400fd1f",
   "tabla": "18bb2cf0c5ba6981",
-  "svg": "d62ee500c4d1a73d"
+  "svg": "cf215e8dd411db18"
  },
  "390 ?s=desocupacion": {
   "url": "?s=desocupacion",
@@ -2701,7 +2701,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec6816a98d881367",
   "tabla": "6b4239a84e9e4e90",
-  "svg": "8e8138da258d5d8b"
+  "svg": "d4fa547414b0edeb"
  },
  "390 ?s=desocupacion&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&sh=gobierno&ev=1",
@@ -2711,10 +2711,10 @@
   "ficha": "/series/desocupacion/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "76cde63560bae972",
-  "leyendas": "bbc1f164adbdb3d6",
+  "leyendas": "e4c99d4d8e7451d1",
   "cita": "9aa4962516e7825f",
   "tabla": "9e88ea1f7d741e11",
-  "svg": "9efe752726f84774"
+  "svg": "388d37c67b686c79"
  },
  "390 ?s=desocupacion&v=gba": {
   "url": "?s=desocupacion&v=gba",
@@ -2727,7 +2727,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "cd94e55e8b4dfe30",
   "tabla": "785f0bc77d7e7f77",
-  "svg": "e3c995c5ff8eb413"
+  "svg": "4e48cd0da4352ba8"
  },
  "390 ?s=desocupacion&v=gba&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&v=gba&sh=gobierno&ev=1",
@@ -2737,10 +2737,10 @@
   "ficha": "/series/desocupacion/gba/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "d537e7f3ab9e5b84",
-  "leyendas": "bbc1f164adbdb3d6",
+  "leyendas": "e4c99d4d8e7451d1",
   "cita": "da1df0f248844d12",
   "tabla": "d14639678b235212",
-  "svg": "9af5cefebd00959f"
+  "svg": "b3bd076175ae9eea"
  },
  "390 ?s=deuda-externa": {
   "url": "?s=deuda-externa",
@@ -2763,10 +2763,10 @@
   "ficha": "/series/deuda-externa/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "6832ca5feedd040f",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "8e61affa2d0b4eb5",
   "tabla": "6100f0728ad71a42",
-  "svg": "3c1a18b2e63e37a1"
+  "svg": "cb7a52a0e4d8cb28"
  },
  "390 ?s=deuda-externa&v=indec": {
   "url": "?s=deuda-externa&v=indec",
@@ -2789,10 +2789,10 @@
   "ficha": "/series/deuda-externa/indec/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "25605c71ed9888cc",
-  "leyendas": "74a782099255f7db",
+  "leyendas": "f1285a25c205d60f",
   "cita": "07f17dba9515f7ff",
   "tabla": "8d8d0e3c33f307e4",
-  "svg": "40940bb4ef4497c7"
+  "svg": "c42385510c1c4cc6"
  },
  "390 ?s=deuda-externa&v=privada": {
   "url": "?s=deuda-externa&v=privada",
@@ -2815,10 +2815,10 @@
   "ficha": "/series/deuda-externa/privada/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "619f90af267c7623",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "6cc55cfbc9a76742",
   "tabla": "9126e29e5494e81e",
-  "svg": "b2c8363536c7f1fa"
+  "svg": "062e7f9133dbcb2e"
  },
  "390 ?s=deuda-externa&v=publica": {
   "url": "?s=deuda-externa&v=publica",
@@ -2841,10 +2841,10 @@
   "ficha": "/series/deuda-externa/publica/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "da2274f4a73dbe1c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "531594698f1dd574",
   "tabla": "13e649a802427eb7",
-  "svg": "e5e0fe3bac5f66f4"
+  "svg": "883048b2d524e214"
  },
  "390 ?s=deuda-publica": {
   "url": "?s=deuda-publica",
@@ -2867,10 +2867,10 @@
   "ficha": "/series/deuda-publica/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "da2274f4a73dbe1c",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "53dda0fd4764ebce",
   "tabla": "13e649a802427eb7",
-  "svg": "e5e0fe3bac5f66f4"
+  "svg": "883048b2d524e214"
  },
  "390 ?s=exportaciones": {
   "url": "?s=exportaciones",
@@ -2893,10 +2893,10 @@
   "ficha": "/series/exportaciones/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "1573cd1bd3b1136a",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "c82635a2b4c69404",
   "tabla": "97fce8272dc0cef3",
-  "svg": "487ac2f5e1c52a95"
+  "svg": "f1aa95440bc0e237"
  },
  "390 ?s=exportaciones&v=mensual": {
   "url": "?s=exportaciones&v=mensual",
@@ -2919,10 +2919,10 @@
   "ficha": "/series/exportaciones/mensual/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "1d5781803389f87b",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "7fe68a46d6992b92",
   "tabla": "732598dc2f21e187",
-  "svg": "09cda8aa4537046a"
+  "svg": "25e1381922c5b798"
  },
  "390 ?s=fuga&sh=gobierno&ev=1": {
   "url": "?s=fuga&sh=gobierno&ev=1",
@@ -2932,36 +2932,36 @@
   "ficha": "/series/fuga/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "967ec377417a2a24",
-  "leyendas": "316009b00b41a601",
+  "leyendas": "8fb3b9fde49d4a56",
   "cita": "689288af6c940277",
   "tabla": "2bdc625349aa5bfa",
-  "svg": "945fad3a372eb062"
+  "svg": "5b45b3396aa68cae"
  },
  "390 ?s=fuga&v=activos-externos": {
   "url": "?s=fuga&v=activos-externos",
-  "avisos": "El período cruza un quiebre: 2. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
+  "avisos": "El período cruza un quiebre: 1. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
   "ultimo": "Último dato de la serie: 2024",
   "unidad": "millones de US$",
   "ficha": "/series/fuga/activos-externos/",
   "ancho": 390,
-  "resumen": "9f869abd4530c48b",
+  "resumen": "f6eb909e6ca3f5be",
   "leyendas": "5e12f2faf414f048",
   "cita": "abb697802192aac1",
   "tabla": "e3e8cd92fc7a8056",
-  "svg": "ff8d37064de2b859"
+  "svg": "be4b31b660c1cae4"
  },
  "390 ?s=fuga&v=activos-externos&sh=gobierno&ev=1": {
   "url": "?s=fuga&v=activos-externos&sh=gobierno&ev=1",
-  "avisos": "El período cruza un quiebre: 2. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
+  "avisos": "El período cruza un quiebre: 1. Metodología (2006). El detalle está en la ficha de la serie.2025: dato excluido hasta confirmarlo. La fuente publica 0 para 2025, un valor de relleno (el stock de 2024 es de 403.856 millones).",
   "ultimo": "Último dato de la serie: 2024",
   "unidad": "millones de US$",
   "ficha": "/series/fuga/activos-externos/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "1f1177848dcf140d",
-  "leyendas": "581881f4f646bd91",
+  "resumen": "4fcd71e8a8d9efa8",
+  "leyendas": "4674a1e5e4bc091b",
   "cita": "0bc66d54566a0571",
   "tabla": "770c3e55de5ba7af",
-  "svg": "8638b213b505464d"
+  "svg": "95086137a9a072b8"
  },
  "390 ?s=importaciones": {
   "url": "?s=importaciones",
@@ -2974,7 +2974,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "8b61c4484213058a",
   "tabla": "4dd5285e88747bb5",
-  "svg": "5b6458f8dae9fb84"
+  "svg": "2c9b03ed67dac1b1"
  },
  "390 ?s=importaciones&sh=gobierno&ev=1": {
   "url": "?s=importaciones&sh=gobierno&ev=1",
@@ -2984,10 +2984,10 @@
   "ficha": "/series/importaciones/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "048aa4bc4db51f3e",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "e0f08ec72ab4383e",
   "tabla": "957c99bd99c7383b",
-  "svg": "fa152ce08ae63bb7"
+  "svg": "0fb164ccc0609120"
  },
  "390 ?s=importaciones&v=mensual": {
   "url": "?s=importaciones&v=mensual",
@@ -3010,10 +3010,10 @@
   "ficha": "/series/importaciones/mensual/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "9529fe8c917d2d21",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "d310e56dd2ac6f79",
   "tabla": "887f2ad7e1a02ab6",
-  "svg": "50e0646dc71c4d90"
+  "svg": "f1964137e2b8f566"
  },
  "390 ?s=int-pib": {
   "url": "?s=int-pib",
@@ -3036,10 +3036,10 @@
   "ficha": "/series/int-pib/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "7f6e7383f216f304",
-  "leyendas": "c814e4643646c20c",
+  "leyendas": "01eaaa4a834c5d27",
   "cita": "143698b270ffb8b6",
   "tabla": "70a1f94228f80faf",
-  "svg": "50aa949ef6373543"
+  "svg": "9f9c19c314a906d1"
  },
  "390 ?s=int-pib-per-capita": {
   "url": "?s=int-pib-per-capita",
@@ -3062,10 +3062,10 @@
   "ficha": "/series/int-pib-per-capita/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "993ef2397289d304",
-  "leyendas": "c814e4643646c20c",
+  "leyendas": "01eaaa4a834c5d27",
   "cita": "d1361e0c6ba436d6",
   "tabla": "cebc76a369184ddd",
-  "svg": "d0e90637f88a85c8"
+  "svg": "6b1087110804e00e"
  },
  "390 ?s=inversion": {
   "url": "?s=inversion",
@@ -3078,7 +3078,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "9926196f227d83b4",
   "tabla": "bc05f607c6af7b08",
-  "svg": "4347292f7b8868fc"
+  "svg": "cd245602b7f29a42"
  },
  "390 ?s=inversion&sh=gobierno&ev=1": {
   "url": "?s=inversion&sh=gobierno&ev=1",
@@ -3088,10 +3088,10 @@
   "ficha": "/series/inversion/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "60df4ac167d409c4",
-  "leyendas": "b4b4ced7a7fec4c7",
+  "leyendas": "069f39b9b73caca4",
   "cita": "13975790798dbadb",
   "tabla": "998ade880a77172e",
-  "svg": "8697ec890a98223b"
+  "svg": "937c2be8e19226a1"
  },
  "390 ?s=inversion&v=base-1970": {
   "url": "?s=inversion&v=base-1970",
@@ -3117,7 +3117,7 @@
   "leyendas": "12731ec6b3019c94",
   "cita": "ee7081f46e56ab2d",
   "tabla": "20c2753edcf86623",
-  "svg": "01e0aa2977eb22e5"
+  "svg": "b04a4318ea0a776c"
  },
  "390 ?s=inversion&v=pct-pib-corrientes": {
   "url": "?s=inversion&v=pct-pib-corrientes",
@@ -3130,7 +3130,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "57ba71b4af7c0ede",
   "tabla": "d461b3fa55ea8a01",
-  "svg": "2e67b067c6b310ec"
+  "svg": "33f42d2fa97594cb"
  },
  "390 ?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1": {
   "url": "?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1",
@@ -3140,10 +3140,10 @@
   "ficha": "/series/inversion/pct-pib-corrientes/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "f64294d9854d4771",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "6051ea0ed1e8476d",
   "tabla": "717491f39f2856b0",
-  "svg": "aa154de5a0da72bb"
+  "svg": "deebdf8c618ca5d3"
  },
  "390 ?s=pib": {
   "url": "?s=pib",
@@ -3156,7 +3156,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "f6722b524cebaad4",
   "tabla": "12820c1bb3a59d60",
-  "svg": "81f740df295f0e71"
+  "svg": "9f7dbe3e22ed5d9a"
  },
  "390 ?s=pib&sh=gobierno&ev=1": {
   "url": "?s=pib&sh=gobierno&ev=1",
@@ -3166,88 +3166,88 @@
   "ficha": "/series/pib/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "4d516864353c0901",
-  "leyendas": "b8dcb586339992a4",
+  "leyendas": "3b3f1861ed489c36",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "07af030a238fdad3"
+  "svg": "037e44060d8bc21b"
  },
  "390 ?s=reservas": {
   "url": "?s=reservas",
-  "avisos": "El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/",
   "ancho": 390,
-  "resumen": "a7853882aa97f687",
+  "resumen": "b9f0d4c0e06cb7f5",
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "e2f795b668bbf930"
+  "svg": "3bee552a5c6baa12"
  },
  "390 ?s=reservas&sh=gobierno&ev=1": {
   "url": "?s=reservas&sh=gobierno&ev=1",
-  "avisos": "El período cruza 3 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026); 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
+  "avisos": "El período cruza 3 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026); 3. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.mar. 1979: dato excluido hasta confirmarlo. La fuente publica 675,8, entre 6.282,9 (febrero) y 7.270,3 (abril): parece un dígito de menos. Se excluye hasta confirmar el valor; no se corrige por cuenta propia.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "f81cbdd93147c03f",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "d53c024c7c8e6751",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "36ea398cb7d10db6",
   "tabla": "839ad4aa31c07116",
-  "svg": "4507b473f3162f6d"
+  "svg": "9c065fc1152e9da3"
  },
  "390 ?s=resultado-fiscal": {
   "url": "?s=resultado-fiscal",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007); 2. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/",
   "ancho": 390,
-  "resumen": "44325e1b4dcb3eb1",
+  "resumen": "52c1429d77dc6533",
   "leyendas": "5e12f2faf414f048",
   "cita": "35e7c48637329a04",
   "tabla": "a57582cf331e9bcf",
-  "svg": "ab495336cfa5af5e"
+  "svg": "3ab574884717c292"
  },
  "390 ?s=resultado-fiscal&sh=gobierno&ev=1": {
   "url": "?s=resultado-fiscal&sh=gobierno&ev=1",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007); 2. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "a78871c5bfcc4999",
-  "leyendas": "2989ecc6339ea6a6",
+  "resumen": "53c8892041528846",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "88b2f68e5f11217b",
   "tabla": "5b1c34ac6c72d915",
-  "svg": "4b7a5fdb39b6fc11"
+  "svg": "570adce9bf7c0393"
  },
  "390 ?s=resultado-fiscal&v=financiero": {
   "url": "?s=resultado-fiscal&v=financiero",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/",
   "ancho": 390,
-  "resumen": "be21ae864957ac96",
+  "resumen": "9eb6d97bc2679efb",
   "leyendas": "5e12f2faf414f048",
   "cita": "8b3a8f5190eaa7ab",
   "tabla": "870c44acc0866b6c",
-  "svg": "7c049c04de133c6c"
+  "svg": "60ece5047b37d68d"
  },
  "390 ?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1": {
   "url": "?s=resultado-fiscal&v=financiero&sh=gobierno&ev=1",
-  "avisos": "El período cruza 3 quiebres: 2. Metodología (ene. 1993 – dic. 2006); 3. Metodología (ene. 2007); 4. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
+  "avisos": "El período cruza 3 quiebres: 1. Metodología (ene. 1993 – dic. 2006); 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.Sin dato en los períodos incompletos (les faltan observaciones o mezclan frecuencias): 2026.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/financiero/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "646393291fa876f5",
-  "leyendas": "2989ecc6339ea6a6",
+  "resumen": "023806d058742268",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "a1202d58468d1ff4"
+  "svg": "5975e801c6502007"
  },
  "390 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -3270,10 +3270,10 @@
   "ficha": "/series/salario-real/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "d32f52a36a775a0d",
-  "leyendas": "b4b4ced7a7fec4c7",
+  "leyendas": "069f39b9b73caca4",
   "cita": "45c1c3b809bd3968",
   "tabla": "697ca0527f60a5f6",
-  "svg": "7403b0f47ce114f3"
+  "svg": "e43332cc6083d0f2"
  },
  "390 ?s=salario-real&v=indice-salarios": {
   "url": "?s=salario-real&v=indice-salarios",
@@ -3296,10 +3296,10 @@
   "ficha": "/series/salario-real/indice-salarios/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "8ee3d6b5154b4bae",
-  "leyendas": "76a7dec323f68eab",
+  "leyendas": "53474d61a36004d1",
   "cita": "2d7a43dbc163ce5f",
   "tabla": "202563e8cce857a5",
-  "svg": "872a8099f269f3fb"
+  "svg": "e1fc6a8fbc318b42"
  },
  "390 ?s=saldo-comercial": {
   "url": "?s=saldo-comercial",
@@ -3312,7 +3312,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "239329f03a6ade23",
   "tabla": "f0c9325c8a8565c5",
-  "svg": "88c8a942f96c9c41"
+  "svg": "d51afa09d6a85d06"
  },
  "390 ?s=saldo-comercial&sh=gobierno&ev=1": {
   "url": "?s=saldo-comercial&sh=gobierno&ev=1",
@@ -3322,10 +3322,10 @@
   "ficha": "/series/saldo-comercial/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "8e6fe26fd2378dd9",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "bbc890ea55397c6e",
   "tabla": "f577d452e5149242",
-  "svg": "729a9131e837f6ec"
+  "svg": "d167cf3904df183b"
  },
  "390 ?s=saldo-comercial&v=mensual": {
   "url": "?s=saldo-comercial&v=mensual",
@@ -3348,36 +3348,36 @@
   "ficha": "/series/saldo-comercial/mensual/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "8490d620c68e5d56",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "d98ab5976f9bdd30",
   "tabla": "f24f455ffb26a3a4",
-  "svg": "e213c16aec552581"
+  "svg": "e15d47283fac88c6"
  },
  "390 ?s=tasa-pasiva": {
   "url": "?s=tasa-pasiva",
-  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 3. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 2. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: abril de 2026 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "% nominal anual",
   "ficha": "/series/tasa-pasiva/",
   "ancho": 390,
-  "resumen": "8e62b8d6e5f67b60",
+  "resumen": "7bb28763daa23196",
   "leyendas": "5e12f2faf414f048",
   "cita": "80d4b373efd9082e",
   "tabla": "9a45c2422d31861f",
-  "svg": "7b538931ba84d9df"
+  "svg": "ac7c9be26c21d078"
  },
  "390 ?s=tasa-pasiva&sh=gobierno&ev=1": {
   "url": "?s=tasa-pasiva&sh=gobierno&ev=1",
-  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 3. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 1970 – may. 1977); 2. Cobertura (jul. 1982 – may. 1984). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: abril de 2026 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "% nominal anual",
   "ficha": "/series/tasa-pasiva/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "f9365fa923123a65",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "cc8340382d3c6aba",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "0804e1dae3f70d6d",
   "tabla": "519d76a4409e427c",
-  "svg": "304f24b0550d17b0"
+  "svg": "44b4258602bc9e65"
  },
  "390 ?s=tasa-pasiva&v=badlar": {
   "url": "?s=tasa-pasiva&v=badlar",
@@ -3400,10 +3400,10 @@
   "ficha": "/series/tasa-pasiva/badlar/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "909e7d3c27af26fb",
-  "leyendas": "e87d1eca0547bdb7",
+  "leyendas": "da7c5fcbe04d4628",
   "cita": "46358b5cf62a2077",
   "tabla": "1c84a4e06051ca69",
-  "svg": "b4a0f318a3bf9f2c"
+  "svg": "bd7407b58abb68c2"
  },
  "390 ?s=tc-oficial": {
   "url": "?s=tc-oficial",
@@ -3416,7 +3416,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "fc8076af82f17040",
   "tabla": "bbd94ccef8c0e46f",
-  "svg": "87bb47bdbe813754"
+  "svg": "33daf693e9bf0da8"
  },
  "390 ?s=tc-oficial&sh=gobierno&ev=1": {
   "url": "?s=tc-oficial&sh=gobierno&ev=1",
@@ -3426,10 +3426,10 @@
   "ficha": "/series/tc-oficial/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "74566cce108e5baa",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "33a233bf161dc242",
   "tabla": "a8e5e44568356a0d",
-  "svg": "3c37b7d18f57a07a"
+  "svg": "6bb0d8bce850a3fd"
  },
  "390 ?s=tc-oficial&v=moneda-de-epoca": {
   "url": "?s=tc-oficial&v=moneda-de-epoca",
@@ -3442,7 +3442,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "bc3b8a4b8cfc1945",
   "tabla": "f231958d2b180fc2",
-  "svg": "18df75abeabeef5f"
+  "svg": "f6ce3bb20836d2f5"
  },
  "390 ?s=tc-oficial&v=moneda-de-epoca&sh=gobierno&ev=1": {
   "url": "?s=tc-oficial&v=moneda-de-epoca&sh=gobierno&ev=1",
@@ -3452,62 +3452,62 @@
   "ficha": "/series/tc-oficial/moneda-de-epoca/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "cbff3b98172ee903",
-  "leyendas": "1410f20ab81b51f5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "5add12680ecb2450",
   "tabla": "2c3139ebcc3d0f81",
-  "svg": "6e7d329eece1ab32"
+  "svg": "cca1a8c636ceb080"
  },
  "390 ?s=tcr-bilateral": {
   "url": "?s=tcr-bilateral",
-  "avisos": "El período cruza 5 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Intervención (ene. 2007 – dic. 2015); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (ene. 2014 – ene. 2017); 6. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 5 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Intervención (ene. 2007 – dic. 2015); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (ene. 2014 – ene. 2017); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/",
   "ancho": 390,
-  "resumen": "db391513e8f627e7",
+  "resumen": "9b821d2c23f12b8e",
   "leyendas": "5e12f2faf414f048",
   "cita": "6d572389013dd75d",
   "tabla": "789d77b38c5dd538",
-  "svg": "782cd908b9051376"
+  "svg": "ab7438ce581bdeb0"
  },
  "390 ?s=tcr-bilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&sh=gobierno&ev=1",
-  "avisos": "El período cruza 5 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Intervención (ene. 2007 – dic. 2015); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (ene. 2014 – ene. 2017); 6. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 5 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Intervención (ene. 2007 – dic. 2015); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (ene. 2014 – ene. 2017); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "08971b36ac158d78",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "7f5b1e0487af6ca5",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "391159d79e30abb3",
   "tabla": "f5e5692cfd550f5e",
-  "svg": "5ae0bfbc79a78119"
+  "svg": "485c6670200f1801"
  },
  "390 ?s=tcr-bilateral&v=provincias": {
   "url": "?s=tcr-bilateral&v=provincias",
-  "avisos": "El período cruza 4 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Metodología (ene. 2007 – abr. 2016); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 4 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Metodología (ene. 2007 – abr. 2016); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/provincias/",
   "ancho": 390,
-  "resumen": "34224ad49c0639c7",
+  "resumen": "9e5edbcd6172e853",
   "leyendas": "5e12f2faf414f048",
   "cita": "3c88452dbde3d0d0",
   "tabla": "c5c623586783b02a",
-  "svg": "f9545ce93d5d85bb"
+  "svg": "518bb0ae4adeaaf9"
  },
  "390 ?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1",
-  "avisos": "El período cruza 4 quiebres: 2. Metodología (sep. 1971 – dic. 1989); 3. Metodología (ene. 2007 – abr. 2016); 4. Intervención (nov. 2015 – abr. 2016); 5. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 4 quiebres: 1. Metodología (sep. 1971 – dic. 1989); 2. Metodología (ene. 2007 – abr. 2016); 3. Intervención (nov. 2015 – abr. 2016); 4. Cobertura (oct. 2025). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "índice dic. 2015 = 100",
   "ficha": "/series/tcr-bilateral/provincias/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "5637bd54e10bb2b8",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "bbefb6204cbce632",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "b209f0fea65e74cb",
   "tabla": "0b62c4c22e37074b",
-  "svg": "6d04ee202e2cefd4"
+  "svg": "b2230a2353da3bba"
  },
  "390 ?s=tcr-multilateral": {
   "url": "?s=tcr-multilateral",
@@ -3520,7 +3520,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e56d5f0bc62a6681",
   "tabla": "62f7a955f76dc5e8",
-  "svg": "5d0bfc6531f90f72"
+  "svg": "760ec85e1e1a9d15"
  },
  "390 ?s=tcr-multilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&sh=gobierno&ev=1",
@@ -3530,36 +3530,36 @@
   "ficha": "/series/tcr-multilateral/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "709e71c048ffacd8",
-  "leyendas": "581881f4f646bd91",
+  "leyendas": "4674a1e5e4bc091b",
   "cita": "6308c9a2077d7486",
   "tabla": "7dddff3a362e54cd",
-  "svg": "cc179e61d0e6cbd6"
+  "svg": "35847399b49c82de"
  },
  "390 ?s=tcr-multilateral&v=bruegel": {
   "url": "?s=tcr-multilateral&v=bruegel",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007 – dic. 2015); 3. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007 – dic. 2015); 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: septiembre de 2026",
   "unidad": "índice, diciembre de 2015 = 100 (inversa del REER de Bruegel)",
   "ficha": "/series/tcr-multilateral/bruegel/",
   "ancho": 390,
-  "resumen": "2229fc05746bb934",
+  "resumen": "c3f9452a196fb1d7",
   "leyendas": "5e12f2faf414f048",
   "cita": "7dc3fa65804be828",
   "tabla": "8a2f6eaed0fccb32",
-  "svg": "718e59a1f7d4cfc8"
+  "svg": "a7301e75c37aadf7"
  },
  "390 ?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007 – dic. 2015); 3. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007 – dic. 2015); 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: septiembre de 2026",
   "unidad": "índice, diciembre de 2015 = 100 (inversa del REER de Bruegel)",
   "ficha": "/series/tcr-multilateral/bruegel/?sh=gobierno&ev=1",
   "ancho": 390,
-  "resumen": "9e068fdd54f63415",
-  "leyendas": "1410f20ab81b51f5",
+  "resumen": "a546c953657e8de0",
+  "leyendas": "1fa1bc5940b8824b",
   "cita": "2dc58bb146e5cbc1",
   "tabla": "e226a35113aa7355",
-  "svg": "a1c2d082cc9fda15"
+  "svg": "0e9f2bb0c8445679"
  },
  "390 ?v=provincias": {
   "url": "?v=provincias",
@@ -3572,7 +3572,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "d54cc82f51516a81",
   "tabla": "bc83aadf61e498b7",
-  "svg": "a3c01b7c54f470fa"
+  "svg": "085a9c935241ea5e"
  },
  "390 ?v=provincias&sh=gobierno&ev=1": {
   "url": "?v=provincias&sh=gobierno&ev=1",
@@ -3582,10 +3582,10 @@
   "ficha": "/series/ipc/provincias/?sh=gobierno&ev=1",
   "ancho": 390,
   "resumen": "543d71ac5910f6d0",
-  "leyendas": "2989ecc6339ea6a6",
+  "leyendas": "ec8a611e291b2b42",
   "cita": "fa959e1bb595f462",
   "tabla": "b44b009cf752ec27",
-  "svg": "d3130a0b49117fba"
+  "svg": "cb3d12097c0a59fb"
  },
  "390 ?desde=1980&hasta=1982&sh=gobierno": {
   "url": "?desde=1980&hasta=1982&sh=gobierno",
@@ -3598,7 +3598,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "5a485d793d08a370",
   "tabla": "e7d89e074fbdaed1",
-  "svg": "ec42fe5a02dba500"
+  "svg": "f05717fd45377967"
  },
  "390 ?desde=2000&hasta=2002&sh=gobierno": {
   "url": "?desde=2000&hasta=2002&sh=gobierno",
@@ -3611,7 +3611,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "5a485d793d08a370",
   "tabla": "340e8f54a41697fc",
-  "svg": "ebc0942433292696"
+  "svg": "07f76e44753ba91d"
  },
  "390 ?desde=2022&sh=gobierno": {
   "url": "?desde=2022&sh=gobierno",
@@ -3624,59 +3624,59 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "5a485d793d08a370",
   "tabla": "d87f0bdd5cec3e3a",
-  "svg": "41058c4b95554d35"
+  "svg": "11882d24c45d5e18"
  },
  "390 ?s=desocupacion&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=desocupacion&desde=1980&hasta=1982&sh=gobierno",
-  "avisos": "El período cruza un quiebre: 2. Cobertura (may. 1974 – may. 2003). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Cobertura (may. 1974 – may. 2003). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "% de la población económicamente activa",
   "ficha": "/series/desocupacion/?desde=1980&hasta=1982&sh=gobierno",
   "ancho": 390,
-  "resumen": "621e862183bcd9a9",
+  "resumen": "c266c729c4585199",
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9aa4962516e7825f",
   "tabla": "54a1735211611aa3",
-  "svg": "72c736a3b73508b1"
+  "svg": "a764a26294237e8a"
  },
  "390 ?s=desocupacion&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=desocupacion&desde=2000&hasta=2002&sh=gobierno",
-  "avisos": "El período cruza 2 quiebres: 2. Cobertura (may. 1974 – may. 2003); 3. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Cobertura (may. 1974 – may. 2003); 2. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "% de la población económicamente activa",
   "ficha": "/series/desocupacion/?desde=2000&hasta=2002&sh=gobierno",
   "ancho": 390,
-  "resumen": "44ab5314514624f6",
+  "resumen": "4f50d024bd09c940",
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9aa4962516e7825f",
   "tabla": "6c68a160383c5d55",
-  "svg": "16b0bc55209b912c"
+  "svg": "bd312c900b3ad85a"
  },
  "390 ?s=desocupacion&desde=2022&sh=gobierno": {
   "url": "?s=desocupacion&desde=2022&sh=gobierno",
-  "avisos": "El período cruza un quiebre: 3. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Metodología (desde may. 2002). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "% de la población económicamente activa",
   "ficha": "/series/desocupacion/?desde=2022&sh=gobierno",
   "ancho": 390,
-  "resumen": "992414731fa5666c",
+  "resumen": "4c41ae7bd462b4dc",
   "leyendas": "5b2c01d731a24d73",
   "cita": "9aa4962516e7825f",
   "tabla": "7e441980751873fe",
-  "svg": "6de3d91f1e94ff49"
+  "svg": "0d358c9879b8f55f"
  },
  "390 ?s=pib&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=pib&desde=1980&hasta=1982&sh=gobierno",
-  "avisos": "El período cruza un quiebre: 2. Cambio de base (ene. 1980). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Cambio de base (ene. 1980). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: 2.º trimestre de 2026",
   "unidad": "variación % interanual",
   "ficha": "/series/pib/?desde=1980&hasta=1982&sh=gobierno",
   "ancho": 390,
-  "resumen": "348f2b474c89e3b2",
+  "resumen": "822a48aefd97264d",
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9393fe10be49a54d",
   "tabla": "3ae474bc6061803b",
-  "svg": "41968b3aed74d0aa"
+  "svg": "af3bb056f3da544a"
  },
  "390 ?s=pib&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=pib&desde=2000&hasta=2002&sh=gobierno",
@@ -3689,7 +3689,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9393fe10be49a54d",
   "tabla": "b582f3d4df09228f",
-  "svg": "f84fb22217da231d"
+  "svg": "4852d8656f0e1b97"
  },
  "390 ?s=pib&desde=2022&sh=gobierno": {
   "url": "?s=pib&desde=2022&sh=gobierno",
@@ -3702,7 +3702,7 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "9393fe10be49a54d",
   "tabla": "05245fded24911e6",
-  "svg": "b25e27c16cc4bff4"
+  "svg": "d6efc47ebf126e06"
  },
  "390 ?s=reservas&desde=1970&hasta=1976&sh=regimen_cambiario": {
   "url": "?s=reservas&desde=1970&hasta=1976&sh=regimen_cambiario",
@@ -3715,7 +3715,7 @@
   "leyendas": "1c43a94d26d73404",
   "cita": "36ea398cb7d10db6",
   "tabla": "a89b8874edd20c42",
-  "svg": "c9a95154c461e7a7"
+  "svg": "bd88374d273b7e05"
  },
  "390 ?s=reservas&desde=1975&hasta=1977&sh=gobierno": {
   "url": "?s=reservas&desde=1975&hasta=1977&sh=gobierno",
@@ -3728,7 +3728,7 @@
   "leyendas": "eb2ed6aedee28860",
   "cita": "36ea398cb7d10db6",
   "tabla": "ac234afa33e743d9",
-  "svg": "4caba4e63dfcd71c"
+  "svg": "3c7ae4b0be741d93"
  },
  "390 ?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario": {
   "url": "?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario",
@@ -3741,7 +3741,7 @@
   "leyendas": "ace9a9d6d210720f",
   "cita": "36ea398cb7d10db6",
   "tabla": "c28f288c31a67101",
-  "svg": "200da2cdd2cbb615"
+  "svg": "2258907c1835dd4b"
  },
  "390 ?s=reservas&desde=1982&hasta=1990&sh=gobierno": {
   "url": "?s=reservas&desde=1982&hasta=1990&sh=gobierno",
@@ -3754,7 +3754,7 @@
   "leyendas": "e69bba7fd057f531",
   "cita": "36ea398cb7d10db6",
   "tabla": "b420c368806332e7",
-  "svg": "dd6213b516219821"
+  "svg": "d34f1f63c9e9ba6d"
  },
  "390 ?s=reservas&desde=1988&hasta=1991&ev=1": {
   "url": "?s=reservas&desde=1988&hasta=1991&ev=1",
@@ -3767,7 +3767,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "f8c32cc97bb3f6ba",
-  "svg": "c9e6feb56ba1a22c"
+  "svg": "02e22639ebdcd6a9"
  },
  "390 ?s=reservas&desde=1998&hasta=2002&sh=ministro": {
   "url": "?s=reservas&desde=1998&hasta=2002&sh=ministro",
@@ -3780,7 +3780,7 @@
   "leyendas": "5b110fe9e2bda25e",
   "cita": "36ea398cb7d10db6",
   "tabla": "92d50de9683a11ca",
-  "svg": "675c04f366089288"
+  "svg": "6c73b9cd84c92018"
  },
  "390 ?s=reservas&desde=2004&hasta=2008&sh=ministro": {
   "url": "?s=reservas&desde=2004&hasta=2008&sh=ministro",
@@ -3793,7 +3793,7 @@
   "leyendas": "c6c7208c34dde47b",
   "cita": "36ea398cb7d10db6",
   "tabla": "40b86bd507098b09",
-  "svg": "bf966b55a12c3851"
+  "svg": "8025501c235e59a1"
  },
  "390 ?s=reservas&desde=2014&hasta=2020&sh=catedra": {
   "url": "?s=reservas&desde=2014&hasta=2020&sh=catedra",
@@ -3806,20 +3806,20 @@
   "leyendas": "2ac4341c07f72cdf",
   "cita": "36ea398cb7d10db6",
   "tabla": "e3fc1abf593bf1d4",
-  "svg": "3965380c45a14b86"
+  "svg": "b326fec203cb6506"
  },
  "390 ?s=reservas&desde=2021&hasta=2024&sh=ministro": {
   "url": "?s=reservas&desde=2021&hasta=2024&sh=ministro",
-  "avisos": "El período cruza un quiebre: 4. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Metodología (desde ene. 2024). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "millones de US$",
   "ficha": "/series/reservas/?desde=2021&hasta=2024&sh=ministro",
   "ancho": 390,
-  "resumen": "5fa78739e2620828",
+  "resumen": "b8617516adec7fd9",
   "leyendas": "a790e9d03b920394",
   "cita": "36ea398cb7d10db6",
   "tabla": "90ce743102e6e372",
-  "svg": "ff3fed8c7a206007"
+  "svg": "3e1e7254e0e59374"
  },
  "390 ?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno": {
   "url": "?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno",
@@ -3849,16 +3849,16 @@
  },
  "390 ?s=resultado-fiscal&desde=2006&hasta=2016&sh=gobierno": {
   "url": "?s=resultado-fiscal&desde=2006&hasta=2016&sh=gobierno",
-  "avisos": "El período cruza 2 quiebres: 2. Metodología (ene. 2007); 3. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.",
+  "avisos": "El período cruza 2 quiebres: 1. Metodología (ene. 2007); 2. Metodología (ene. 2015). El detalle está en la ficha de la serie.Dividida por el PIB anual publicado en cada base («pib-nominal.cada-base-anual») del mismo período.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "% del PIB",
   "ficha": "/series/resultado-fiscal/?desde=2006&hasta=2016&sh=gobierno",
   "ancho": 390,
-  "resumen": "3d164962775fa862",
+  "resumen": "0d1131f8dd097acd",
   "leyendas": "bfd5135c47a07f6b",
   "cita": "88b2f68e5f11217b",
   "tabla": "349c7f0186e6c7ef",
-  "svg": "c73f6f969dbd6f1b"
+  "svg": "107276e6b412bad1"
  },
  "390 ?s=tc-oficial&desde=1970&hasta=1972&sh=ministro": {
   "url": "?s=tc-oficial&desde=1970&hasta=1972&sh=ministro",
@@ -3871,7 +3871,7 @@
   "leyendas": "2fec3fd0178102d8",
   "cita": "33a233bf161dc242",
   "tabla": "b59a3c943aef6b11",
-  "svg": "09d9aaab7223d50a"
+  "svg": "e84e9b57d8ee3d18"
  },
  "390 ?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1975&hasta=1977&sh=regimen_cambiario",
@@ -3884,7 +3884,7 @@
   "leyendas": "7e84f83d9d1ade24",
   "cita": "33a233bf161dc242",
   "tabla": "cecc0e57ee117e0c",
-  "svg": "c2399fc029b95865"
+  "svg": "146809c96ef6ccde"
  },
  "390 ?s=tc-oficial&desde=1981&hasta=1984&sh=ministro": {
   "url": "?s=tc-oficial&desde=1981&hasta=1984&sh=ministro",
@@ -3897,7 +3897,7 @@
   "leyendas": "ffbac1587cb7137c",
   "cita": "33a233bf161dc242",
   "tabla": "2f75171af39aa3aa",
-  "svg": "8dc5fff17ce52790"
+  "svg": "ea3cc160213b4442"
  },
  "390 ?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=1988&hasta=1990&sh=regimen_cambiario",
@@ -3910,7 +3910,7 @@
   "leyendas": "5d8e71a52ed8143d",
   "cita": "33a233bf161dc242",
   "tabla": "dd221cd6351b8308",
-  "svg": "c07a452b53440032"
+  "svg": "f5845fdb55cd8cdf"
  },
  "390 ?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2001&hasta=2003&sh=regimen_cambiario",
@@ -3923,7 +3923,7 @@
   "leyendas": "d84927be8c493a74",
   "cita": "33a233bf161dc242",
   "tabla": "c8f25284829429a3",
-  "svg": "e99d0c10b23900c0"
+  "svg": "918fe997a6e10c28"
  },
  "390 ?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario",
@@ -3936,20 +3936,20 @@
   "leyendas": "75606c2804f18c54",
   "cita": "33a233bf161dc242",
   "tabla": "03c13a0a6a1304e4",
-  "svg": "db15b77743efe72d"
+  "svg": "ee6ee45f0348ae0e"
  },
  "390 ?s=tc-oficial&desde=2022&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2022&sh=regimen_cambiario",
-  "avisos": "El período cruza 2 quiebres: 2. Cobertura (desde may. 2026); 3. Metodología (mar. 2026). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza 2 quiebres: 1. Cobertura (desde may. 2026); 2. Metodología (mar. 2026). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "pesos actuales por dólar (sin ajuste por inflación)",
   "ficha": "/series/tc-oficial/?desde=2022&sh=regimen_cambiario",
   "ancho": 390,
-  "resumen": "74d6eddfa1402261",
+  "resumen": "286c9f9a59238be8",
   "leyendas": "a08c176b712236c6",
   "cita": "33a233bf161dc242",
   "tabla": "c1100f31b85bbbde",
-  "svg": "20ab4139b5c637b9"
+  "svg": "e18f253ee08e7739"
  },
  "390 ?s=tcr-multilateral&desde=1970&hasta=1973&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=1970&hasta=1973&sh=ministro",
@@ -4027,33 +4027,33 @@
   "leyendas": "f0fab764d09b4795",
   "cita": "6308c9a2077d7486",
   "tabla": "3bfdfd5ce7bdafe3",
-  "svg": "e18fa8aacdb7b14a"
+  "svg": "09f45b19e96f3353"
  },
  "390 ?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario",
-  "avisos": "El período cruza un quiebre: 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: diciembre de 2025 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "índice 17-12-2015 = 100",
   "ficha": "/series/tcr-multilateral/?desde=2001&hasta=2012&sh=regimen_cambiario",
   "ancho": 390,
-  "resumen": "fa1b736ff3852bb4",
+  "resumen": "cf5f79b9c37b30db",
   "leyendas": "74e33a29892adacd",
   "cita": "6308c9a2077d7486",
   "tabla": "633ec2e8626cf765",
-  "svg": "2dc54a46434c8bb8"
+  "svg": "e42b2f916ae7c685"
  },
  "390 ?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro",
-  "avisos": "El período cruza un quiebre: 2. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Intervención (ene. 2007 – dic. 2015). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: diciembre de 2025 · con el calendario habitual de la fuente ya deberían estar los datos hasta septiembre de 2026: datos.gob.ar todavía no los cargó",
   "unidad": "índice 17-12-2015 = 100",
   "ficha": "/series/tcr-multilateral/?desde=2014&hasta=2017&sh=ministro",
   "ancho": 390,
-  "resumen": "594defee0be23316",
+  "resumen": "2c82b44a1f32e33b",
   "leyendas": "c18d7ca679041728",
   "cita": "6308c9a2077d7486",
   "tabla": "f79fba38638bd38b",
-  "svg": "25aede5314cb4d71"
+  "svg": "eaa3cc82ea42b2ff"
  },
  "390 ?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario",
@@ -4066,7 +4066,7 @@
   "leyendas": "0a1c4f0b8352d7e1",
   "cita": "6308c9a2077d7486",
   "tabla": "e328e75aa004521a",
-  "svg": "269b1bc429988635"
+  "svg": "433676716c2e558b"
  },
  "390 ?t=var_mensual&desde=1969&hasta=1971&sh=ministro": {
   "url": "?t=var_mensual&desde=1969&hasta=1971&sh=ministro",
@@ -4079,7 +4079,7 @@
   "leyendas": "3a8bde8fbcdb373c",
   "cita": "f661dd6b4b834234",
   "tabla": "5393b9fb4cf01d76",
-  "svg": "a95ea4723c70a331"
+  "svg": "e43faefbd9d5563c"
  },
  "390 ?t=var_mensual&desde=1974&hasta=1977&sh=ministro": {
   "url": "?t=var_mensual&desde=1974&hasta=1977&sh=ministro",
@@ -4092,7 +4092,7 @@
   "leyendas": "2317edba0db0de1d",
   "cita": "f661dd6b4b834234",
   "tabla": "c3992b3c47321da3",
-  "svg": "26475696110a01ec"
+  "svg": "d73123feadc4927d"
  },
  "390 ?t=var_mensual&desde=1980&hasta=1982&sh=ministro": {
   "url": "?t=var_mensual&desde=1980&hasta=1982&sh=ministro",
@@ -4105,7 +4105,7 @@
   "leyendas": "1a3c0d148c61abd8",
   "cita": "f661dd6b4b834234",
   "tabla": "6e9025bf69b125fe",
-  "svg": "ffe271b66a7c6f30"
+  "svg": "cb4f0d01f35c9135"
  },
  "390 ?t=var_mensual&desde=1984&hasta=1989&sh=plan": {
   "url": "?t=var_mensual&desde=1984&hasta=1989&sh=plan",
@@ -4131,7 +4131,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "b8524cd8337009a0",
   "tabla": "0a0e3da09139d2a4",
-  "svg": "e655ab445e33acf1"
+  "svg": "caef7ba72e074f2d"
  },
  "390 ?t=var_mensual&desde=2000&hasta=2002&sh=ministro": {
   "url": "?t=var_mensual&desde=2000&hasta=2002&sh=ministro",
@@ -4144,7 +4144,7 @@
   "leyendas": "3deab13155c3b0a4",
   "cita": "f661dd6b4b834234",
   "tabla": "4fd0c210691930be",
-  "svg": "cc9f7cb3c7c9395a"
+  "svg": "70d61fca1cfa34b1"
  },
  "390 ?t=var_mensual&desde=2007&hasta=2010&sh=ministro": {
   "url": "?t=var_mensual&desde=2007&hasta=2010&sh=ministro",
@@ -4157,20 +4157,20 @@
   "leyendas": "192978b90d51df08",
   "cita": "f661dd6b4b834234",
   "tabla": "13b2db1fc6c61af2",
-  "svg": "e0f4dfa66f990ff2"
+  "svg": "701d2eff998724ce"
  },
  "390 ?t=var_mensual&desde=2017&hasta=2019&ev=1": {
   "url": "?t=var_mensual&desde=2017&hasta=2019&ev=1",
-  "avisos": "El período cruza un quiebre: 3. Cobertura (ene. 2014 – ene. 2017). El detalle está en la ficha de la serie.",
+  "avisos": "El período cruza un quiebre: 1. Cobertura (ene. 2014 – ene. 2017). El detalle está en la ficha de la serie.",
   "ultimo": "Último dato de la serie: agosto de 2026 · con el calendario habitual de la fuente ya debería estar septiembre de 2026: datos.gob.ar todavía no lo cargó",
   "unidad": "variación % mensual",
   "ficha": "/series/ipc/?t=var_mensual&desde=2017&hasta=2019&ev=1",
   "ancho": 390,
-  "resumen": "e1c517547b4f5975",
+  "resumen": "edf1733545419b82",
   "leyendas": "cab2480b35ed55b0",
   "cita": "b8524cd8337009a0",
   "tabla": "a7c91a3281520ad3",
-  "svg": "c4b95c95709838fb"
+  "svg": "a2c5c39a735e8378"
  },
  "390 ?t=var_mensual&desde=2022&sh=ministro": {
   "url": "?t=var_mensual&desde=2022&sh=ministro",
@@ -4183,6 +4183,6 @@
   "leyendas": "a790e9d03b920394",
   "cita": "f661dd6b4b834234",
   "tabla": "0b3bfc21c8d9d4fb",
-  "svg": "0dad29efdd6f520d"
+  "svg": "cd283a52c136ec51"
  }
 }

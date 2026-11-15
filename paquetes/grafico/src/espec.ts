@@ -360,7 +360,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const inicioBarras = (cortos.length ? Math.max(...cortos.map((m) => m.y)) + 18 : 10 + arriba);
   const filasBarras = filasFranja(barras.map((r) => ({ a: r.a, b: r.b })));
   const barrasY = barras.map((r, k) => ({ ...r, y: inicioBarras + filasBarras[k] * 18 }));
-  const marcadores = [...cortos, ...barrasY.map((r) => ({ n: String(r.n), t: r.desde, y: r.y, texto: r.texto }))];
+  // El número de un quiebre largo va justo después del tope de inicio, 10 px más adelante (no encima del eje Y, si
+  // empieza en el borde).
+  const corrido = (i: number) => isoDia(i + (10 / Math.max(e.ancho - 75, 100)) * (fin - ini));
+  const marcadores = [...cortos, ...barrasY.map((r) => ({ n: String(r.n), t: corrido(r.a), y: r.y, texto: r.texto }))];
   const frecDe = (fecha: string) => e.resultado.frecuencias[e.resultado.datos.findIndex((d) => d[0] === fecha)] ?? frecUltima;
   const excluidos = e.resultado.excluidos.map((x) => ({
     t: fechaDeDibujo(referenciaDe(x.fecha, frecDe(x.fecha), e.ubicacion ?? { agregacion: "promedio" })),
@@ -451,10 +454,12 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       data: datosBarras, mark: { type: "rect", opacity: 0, color: tema.fondo, clip: true },
       encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip: tooltipQuiebre },
     });
-    capas.push({
-      data: datosBarras, mark: { type: "rule", strokeWidth: 1.5, clip: true },
-      encoding: { x: x("hasta"), y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
-    });
+    for (const extremo of ["desde", "hasta"]) {
+      capas.push({
+        data: datosBarras, mark: { type: "rule", strokeWidth: 1.5, clip: true },
+        encoding: { x: x(extremo), y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
+      });
+    }
   }
   if (reglas.length) {
     capas.push({
@@ -874,8 +879,8 @@ export interface GrupoEventos {
   texto: string;
 }
 
-/** Ancho (px) que ocupa la marca de un grupo: el círculo de una letra o el rectángulo de «I–J». */
-const anchoGrupo = (etiqueta: string, uno: boolean) => (uno ? 15 : etiqueta.length * 6.2 + 6);
+/** Ancho (px) que ocupa la marca de un grupo: el círculo de una letra o el rectángulo de «AB» o «I–J». */
+const anchoGrupo = (etiqueta: string) => (etiqueta.length === 1 ? 15 : etiqueta.length * 6.2 + 6);
 
 /**
  * Agrupa los eventos que quedarían pegados (sus marcas a menos de 2 px) en una sola marca, «I–J», con los nombres de
@@ -889,7 +894,7 @@ export function agruparEventos(eventos: Array<MarcaEvento & { dia?: string }>, i
   const centro = (g: MarcaEvento[]) => px(g.reduce((a, ev) => a + indiceDia(ev.fecha), 0) / g.length);
   for (let k = 1; k < grupos.length;) {
     const [a, b] = [grupos[k - 1], grupos[k]];
-    if (centro(b) - centro(a) < (anchoGrupo(etiqueta(a), a.length === 1) + anchoGrupo(etiqueta(b), b.length === 1)) / 2 + 2) {
+    if (centro(b) - centro(a) < (anchoGrupo(etiqueta(a)) + anchoGrupo(etiqueta(b))) / 2 + 2) {
       grupos = [...grupos.slice(0, k - 1), [...a, ...b], ...grupos.slice(k + 1)];
       k = Math.max(1, k - 1);
     } else k++;
@@ -897,10 +902,10 @@ export function agruparEventos(eventos: Array<MarcaEvento & { dia?: string }>, i
   return grupos.map((g) => {
     const e = etiqueta(g);
     // El camino del rectángulo, en las unidades de Vega para las formas (el lado del cuadrado de `size` es 2).
-    const m = (anchoGrupo(e, false) / 2 / 7.5).toFixed(2);
+    const m = (anchoGrupo(e) / 2 / 7.5).toFixed(2);
     return {
       etiqueta: e, t: isoDia(g.reduce((a, ev) => a + indiceDia(ev.fecha), 0) / g.length),
-      forma: g.length === 1 ? "circle" : `M-${m},-1H${m}V1H-${m}Z`,
+      forma: e.length === 1 ? "circle" : `M-${m},-1H${m}V1H-${m}Z`,
       texto: g.map((ev) => `${ev.letra}: ${ev.nombre} (${diaLegible(ev.fecha)})`).join(" · "),
     };
   });
