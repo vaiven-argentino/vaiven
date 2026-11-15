@@ -258,8 +258,9 @@ describe("cómo se identifican las series (N8, M4 y M6 de la 4e)", () => {
     const v = armar("?t=var_interanual&desde=2000&hasta=2010&s2=ipc&v2=provincias&t2=var_interanual&s3=reservas");
     expect(v.comparacion.disposicion.tipo).toBe("doble_eje");
     expect(new Set(nombres(v.especificacion))).toEqual(new Set(["Inflación minorista (IPC) · oficial", "Inflación minorista (IPC) · provincias", "Reservas internacionales"]));
-    // En el doble eje, los nombres van dentro del gráfico (alineados a la derecha), no en el margen del eje derecho.
-    expect(todas(v.especificacion).filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "pais").every((c) => c.mark!.align === "right")).toBe(true);
+    // En el doble eje, los nombres van después de los números del eje derecho, no encima de ellos.
+    const marcas = todas(v.especificacion).filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "pais");
+    expect(marcas.every((c) => c.mark!.align === "left" && (c.mark as { dx?: number }).dx! > 50)).toBe(true);
     valido(v.especificacion);
   });
 

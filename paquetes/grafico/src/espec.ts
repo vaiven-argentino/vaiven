@@ -105,8 +105,8 @@ export interface EntradaGrafico {
   tituloEjeY?: { texto: string; color: string };
   /** Con varias series: el nombre al final de la línea también cuando la línea va sola en su eje o panel (N8). */
   rotularSiempre?: boolean;
-  /** Doble eje: los nombres van dentro del gráfico, sobre el final de cada línea, para no pisar el eje derecho (N8). */
-  rotulosDentro?: boolean;
+  /** Doble eje: los nombres van a la derecha del eje derecho, después de sus números, para no pisarlo (N8). */
+  rotulosTrasEje?: boolean;
   /** Con la leyenda única: sin nombres al final de las líneas (N8). */
   sinRotulos?: boolean;
   /** La leyenda única (N8), arriba del gráfico: una entrada por serie, con su color y su trazo. */
@@ -159,6 +159,9 @@ export function ubicarLeyenda(entradas: EntradaLeyenda[], ancho: number): Array<
 /** Lo que ocupa la leyenda arriba del gráfico (para el margen superior). */
 export const altoLeyenda = (entradas: EntradaLeyenda[] | undefined, ancho: number) =>
   entradas?.length ? (Math.max(...ubicarLeyenda(entradas, ancho).map((u) => u.renglon)) + 1) * RENGLON_LEYENDA + 6 : 0;
+
+/** Lo que ocupan, más o menos, los números del eje derecho del doble eje («50.000»): ahí empiezan los nombres. */
+const ANCHO_NUMEROS_EJE_DERECHO = 52;
 
 /** Lo que se descuenta del ancho para la leyenda: el eje Y (y, en el doble eje, el derecho), más o menos. */
 const ANCHO_EJE_LEYENDA = 110;
@@ -510,7 +513,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   // Explorador con varios países: el nombre al final de cada línea, en su color (si hay lugar a la derecha).
   // Con varias series, todas llevan su nombre, también la que va sola en su eje o panel (N8); con la leyenda, ninguna.
   const rotulos = !e.sinRotulos && e.colores && (filasOtras.length || e.rotularSiempre) && e.ancho >= 520 ? rotulosFinales(e, filasLinea, filasOtras, colorDe) : [];
-  const fuera = !e.rotulosDentro;
+  const fuera = !e.rotulosTrasEje;
   if (rotulos.length) {
     // La separación mínima, en unidades del eje: 15 px sobre el dominio que se dibuja (con el 0 si el eje lo incluye).
     // Con 13 px, la caja de un rótulo de 11 px (unos 14 px de alto) se pisaba con la de al lado cuando el eje redondea
@@ -518,28 +521,14 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     const alto = tope ?? Math.max(...todas.map((f) => f.v));
     const bajo = piso ?? (cero ? Math.min(0, ...todas.map((f) => f.v)) : Math.min(...todas.map((f) => f.v)));
     const vy = separarRotulos(rotulos.map((r) => r.v), ((alto - bajo) || 1) * 15 / e.alto);
-    // Dentro del gráfico (doble eje), un nombre cuya línea termina en el quinto de arriba va debajo del final, para no
-    // chocar con los marcadores de los quiebres.
-    const umbral = bajo + (alto - bajo) * 0.8;
-    const valores = rotulos.map((r, k) => ({ ...r, vy: log ? r.v : vy[k], ...(!fuera && !log && r.v > umbral ? { abajo: true } : {}) }));
-    const encoding = { x: x("t"), y: { ...y, field: "vy" }, text: { field: "pais" } };
-    if (fuera) {
-      capas.push({
-        data: { values: valores },
-        mark: { type: "text", align: "left", baseline: "middle", dx: 5, fontSize: 11, fontWeight: 600 },
-        encoding: { ...encoding, color: { field: "color", type: "nominal", scale: null, legend: null } },
-      });
-    } else {
-      // En el doble eje, el margen derecho es del segundo eje: el nombre va dentro, sobre el final de la línea, con un
-      // borde del color del fondo para que se lea sobre la grilla y las otras líneas.
-      for (const abajo of [false, true]) {
-        const grupo = valores.filter((v) => !!(v as { abajo?: boolean }).abajo === abajo);
-        if (!grupo.length) continue;
-        const marca = { type: "text", align: "right", baseline: abajo ? "top" : "bottom", dx: -2, dy: abajo ? 7 : -6, fontSize: 11, fontWeight: 600 };
-        capas.push({ data: { values: grupo }, mark: { ...marca, stroke: tema.fondo, strokeWidth: 3, strokeJoin: "round" }, encoding });
-        capas.push({ data: { values: grupo }, mark: marca, encoding: { ...encoding, color: { field: "color", type: "nominal", scale: null, legend: null } } });
-      }
-    }
+    const valores = rotulos.map((r, k) => ({ ...r, vy: log ? r.v : vy[k] }));
+    // En el doble eje, el margen derecho es del segundo eje: los nombres van después de sus números (revisión visual de
+    // la 4e: dentro del gráfico pisaban las líneas y los marcadores de los quiebres).
+    capas.push({
+      data: { values: valores },
+      mark: { type: "text", align: "left", baseline: "middle", dx: fuera ? 5 : 5 + ANCHO_NUMEROS_EJE_DERECHO, fontSize: 11, fontWeight: 600 },
+      encoding: { x: x("t"), y: { ...y, field: "vy" }, text: { field: "pais" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
+    });
   }
   if (conLetras) {
     // Cada letra va sobre un cuadrado con el color del fondo, debajo del eje X (entre la línea del eje y los años), para

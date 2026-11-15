@@ -269,9 +269,9 @@ export function armarVista(v: EntradaVista): Vista {
     const eIzq = entradaPanel(izq, {
       prefijoDatos: "i_", alto: v.alto, sombreado, eventos, episodios, capasExtra: guia.capas(v.alto, "guia"), impreso: v.impreso,
       tituloEjeY: tituloUnidad(izq), ...(rangos ? { dominioY: rangos.izq } : {}),
-      ...(der ? { rotulosDentro: true } : {}), ...(leyendaUnica ? { leyenda: entradasLeyenda(der) } : {}),
+      ...(der ? { rotulosTrasEje: true } : {}), ...(leyendaUnica ? { leyenda: entradasLeyenda(der) } : {}),
     });
-    const eDer = der ? entradaPanel(der, { prefijoDatos: "d_", alto: v.alto, ejeDerecho: true, tituloEjeY: tituloUnidad(der), rotulosDentro: true, ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
+    const eDer = der ? entradaPanel(der, { prefijoDatos: "d_", alto: v.alto, ejeDerecho: true, tituloEjeY: tituloUnidad(der), rotulosTrasEje: true, ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
     if (!eIzq && !eDer) return vacio();
     // Si el eje izquierdo no tiene datos, el derecho va solo (con su eje a la derecha y su título).
     const sIzq = especificacion({ ...(eIzq ?? eDer!), descripcion });
@@ -292,7 +292,7 @@ export function armarVista(v: EntradaVista): Vista {
         title: impreso
           ? { ...impreso, subtitle: [...impreso.subtitle.slice(0, 1), AVISO_DOBLE_EJE, ...impreso.subtitle.slice(1)] }
           : { text: avisoEnRenglones(v.ancho), fontSize: 12, fontWeight: "normal", color: tema.secundario, anchor: "start", offset: 10 },
-        // Con `fit-x`, Vega ya deja lugar para los nombres al final de las líneas: el margen de la 4b los contaría dos veces.
+        // Con `fit-x`, Vega ya deja lugar para los nombres que van después del eje derecho: un margen los contaría dos veces.
         padding: v.impreso ? pad(sIzq) : { ...pad(sIzq), right: 6 },
         datasets: { ...datosDe(sIzq), ...datosDe(sDer), ...guia.datasets },
       },

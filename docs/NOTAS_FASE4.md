@@ -1520,7 +1520,7 @@ En la web dio lo mismo que en Desktop: el dominio propio en la CSP **carga**, `u
 - **La especificación, más chica:** los datos de cada línea van una sola vez, en `datasets` con nombre (antes, la línea y sus puntos llevaban cada uno las mismas filas). El resultado de las reservas completas baja de 181.856 a 94.292 caracteres; el SVG da igual en seis vistas de control.
 - **M10:** `x2` temporal en las capas de bandas.
 - **N8:**
-  - con varias series, todas llevan su nombre al final de la línea; en el doble eje, dentro del gráfico, sobre el final de la línea, sin pisar el eje derecho;
+  - con varias series, todas llevan su nombre al final de la línea; en el doble eje, después de los números del eje derecho, sin pisarlos;
   - el título de cada eje es solo la unidad, horizontal y arriba (arregla M2);
   - con `ley=1`, la leyenda única arriba (con «eje izq.»/«eje der.»), con el botón «Leyenda arriba» / «Nombres en las líneas» en el explorador.
 - **M4:** la segunda variante de una misma serie, con trazo discontinuo.
@@ -1570,11 +1570,36 @@ La referencia se volvió a guardar.
 - las descargas salen con el nombre de la vista, y el enlace funciona;
 - se envía el aviso al modelo.
 
+### Revisión visual (`revisor-visual`, 15/11/2026)
+
+Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, claro y oscuro). No hay errores de consola en el explorador ni en la ficha, ni desbordes en ninguna de esas 28 vistas.
+
+**Bien:**
+- los nombres en todas las series en los paneles;
+- las iniciales de los gobiernos y la franja de los interinos;
+- el trazo discontinuo;
+- la leyenda y su botón;
+- el aviso de escalas;
+- el tema de la interfaz;
+- la interfaz a 1280 px.
+
+**Corregido después de la revisión:**
+- En el doble eje, los nombres dentro del gráfico pisaban la línea discontinua, los marcadores de los quiebres y el final de las líneas. Ahora van después de los números del eje derecho, y la igualdad sigue en 8 de 8.
+- En la interfaz, una URL larga de las citas se salía a 390 px.
+- Los botones y las casillas de la interfaz eran chicos para el celular: ahora miden 36 px y 18 px.
+
+**Queda pendiente:**
+- **La interfaz en el celular** (problemas 1 y 3 de la revisión). La especificación del MCP mide 800 px, y a 390 se escala: en el doble eje, los títulos de los ejes y los nombres se pisan; en los paneles, el texto queda ilegible. La solución es que la herramienta acepte el ancho (un parámetro más) y que la interfaz lo pida según su contenedor, como hace el explorador: a menos de 520 px, el explorador pasa a paneles y saca los nombres. Es un cambio de la 7.2: decisión de Camilo.
+- **Unidad «pesos actuales»:** el texto alternativo del gráfico y la descripción de la serie siguen sin la aclaración. Cambiarlos mueve el resumen de todas las fichas de la 4b; queda para cuando se revise ese texto.
+- **Explorador a 390:** en los paneles no hay nombres al final de las líneas (como antes; las series se nombran en el subtítulo de cada panel).
+- **El eje logarítmico de la base monetaria** mezcla «10.000» con «10⁻²» (viene de la 4b).
+- «Pantalla completa» no aparece en el host de prueba porque el host no ofrece ese modo; en Claude aparece si lo ofrece.
+
 ### Diferencias con la SPEC (van a la v1.10, con el cierre de la 4e)
 
 - **4.1:** el aviso `c.escalas-distintas`.
 - **6.2:**
-  - los nombres al final de las líneas en todas las series y dentro del gráfico en el doble eje;
+  - los nombres al final de las líneas en todas las series y, en el doble eje, después de los números del eje derecho;
   - la leyenda única con `ley=1` y su botón;
   - el título de los ejes con solo la unidad;
   - el trazo discontinuo de la segunda variante;

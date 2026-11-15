@@ -92,7 +92,7 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 |---|---|---|
 | a | El gráfico aparece | Sin errores; los números con punto de miles («50.000»). |
 | b | La respuesta de Claude | **No dibuja su propio gráfico ni vuelve a pedir los datos** para graficar: comenta la disposición, las advertencias y las citas. Si lo hace, está **mal** (A1). |
-| c | Cómo se identifican las series | Cada línea con su nombre (dentro del gráfico en el doble eje, sin pisar el eje derecho); con «Leyenda arriba», la leyenda única. La variante «provincias», con trazo discontinuo. |
+| c | Cómo se identifican las series | Cada línea con su nombre (en el doble eje, después de los números del eje derecho, sin pisarlos); con «Leyenda arriba», la leyenda única. La variante «provincias», con trazo discontinuo. |
 | d | El título de los ejes y los paneles | Solo la unidad, horizontal y arriba; «millones de pesos actuales (sin ajuste por inflación)»; la escala logarítmica dicha en el subtítulo de la interfaz. |
 | e | El modo oscuro (pedido 4) | El gráfico entero pasa a oscuro, no solo el fondo de la interfaz. |
 | f | Los controles y el error | Cada cambio redibuja; el error se lee y no cambia el gráfico. |
