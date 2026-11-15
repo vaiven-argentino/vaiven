@@ -23,7 +23,7 @@
   "leyendas": "7c57a73e0fe100fa",
   "cita": "f661dd6b4b834234",
   "tabla": "23ec91f2fe736749",
-  "svg": "5ce6146005930101"
+  "svg": "07b2de8342fcbd7b"
  },
  "1280 ?s=pib&t=nivel&log=1&sh=gobierno": {
   "url": "?s=pib&t=nivel&log=1&sh=gobierno",
@@ -205,7 +205,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "5a485d793d08a370",
   "tabla": "ddb9ad8c6dceca06",
-  "svg": "ef66e731833efee1"
+  "svg": "65fd4d252419e0c4"
  },
  "1280 ?s=pib&desde=1995&hasta=2020&sh=gobierno": {
   "url": "?s=pib&desde=1995&hasta=2020&sh=gobierno",
@@ -543,7 +543,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2c22d200f8d8177f",
   "tabla": "c48b7bf527e9e161",
-  "svg": "c8c042fa9172c448"
+  "svg": "9817ee47f5bca2e5"
  },
  "1280 ?s=cuenta-corriente&v=mbp5": {
   "url": "?s=cuenta-corriente&v=mbp5",
@@ -673,7 +673,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "8e61affa2d0b4eb5",
   "tabla": "6100f0728ad71a42",
-  "svg": "29f0f2388958ae39"
+  "svg": "abf10bbe92d9837f"
  },
  "1280 ?s=deuda-externa&v=indec": {
   "url": "?s=deuda-externa&v=indec",
@@ -725,7 +725,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "6cc55cfbc9a76742",
   "tabla": "9126e29e5494e81e",
-  "svg": "5d9e9bcdb691d371"
+  "svg": "dd1271fc4af9feee"
  },
  "1280 ?s=deuda-externa&v=publica": {
   "url": "?s=deuda-externa&v=publica",
@@ -751,7 +751,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "531594698f1dd574",
   "tabla": "13e649a802427eb7",
-  "svg": "18331367749d9112"
+  "svg": "85eac20799fb9e5c"
  },
  "1280 ?s=deuda-publica": {
   "url": "?s=deuda-publica",
@@ -777,7 +777,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "53dda0fd4764ebce",
   "tabla": "13e649a802427eb7",
-  "svg": "18331367749d9112"
+  "svg": "85eac20799fb9e5c"
  },
  "1280 ?s=exportaciones": {
   "url": "?s=exportaciones",
@@ -803,7 +803,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "c82635a2b4c69404",
   "tabla": "97fce8272dc0cef3",
-  "svg": "8a6a175f73caffb9"
+  "svg": "99cf2b88fbc25872"
  },
  "1280 ?s=exportaciones&v=mensual": {
   "url": "?s=exportaciones&v=mensual",
@@ -868,7 +868,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "0bc66d54566a0571",
   "tabla": "770c3e55de5ba7af",
-  "svg": "2f853e0d2a5f81f6"
+  "svg": "f9c08adc84c106a9"
  },
  "1280 ?s=importaciones": {
   "url": "?s=importaciones",
@@ -894,7 +894,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "e0f08ec72ab4383e",
   "tabla": "957c99bd99c7383b",
-  "svg": "8f2047c159933602"
+  "svg": "d76e5194271051d2"
  },
  "1280 ?s=importaciones&v=mensual": {
   "url": "?s=importaciones&v=mensual",
@@ -1050,7 +1050,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "6051ea0ed1e8476d",
   "tabla": "717491f39f2856b0",
-  "svg": "fb4a62282b846585"
+  "svg": "bf783602ed1e075f"
  },
  "1280 ?s=pib": {
   "url": "?s=pib",
@@ -1128,7 +1128,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "88b2f68e5f11217b",
   "tabla": "5b1c34ac6c72d915",
-  "svg": "b578eceaeca4901c"
+  "svg": "c7fca9234d378ee7"
  },
  "1280 ?s=resultado-fiscal&v=financiero": {
   "url": "?s=resultado-fiscal&v=financiero",
@@ -1154,7 +1154,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "2e74f1b8874d6872"
+  "svg": "ad69044adc417c74"
  },
  "1280 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -1206,7 +1206,7 @@
   "leyendas": "53474d61a36004d1",
   "cita": "2d7a43dbc163ce5f",
   "tabla": "202563e8cce857a5",
-  "svg": "c573a50bfc706d68"
+  "svg": "2c5195c09ba1027c"
  },
  "1280 ?s=saldo-comercial": {
   "url": "?s=saldo-comercial",
@@ -1232,7 +1232,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "bbc890ea55397c6e",
   "tabla": "f577d452e5149242",
-  "svg": "053c21c7e544d0da"
+  "svg": "cd9359c72ce9bea1"
  },
  "1280 ?s=saldo-comercial&v=mensual": {
   "url": "?s=saldo-comercial&v=mensual",
@@ -1440,7 +1440,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "6308c9a2077d7486",
   "tabla": "7dddff3a362e54cd",
-  "svg": "bd1f20514b32c21e"
+  "svg": "38ac099044942b1b"
  },
  "1280 ?s=tcr-multilateral&v=bruegel": {
   "url": "?s=tcr-multilateral&v=bruegel",
@@ -1492,7 +1492,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "fa959e1bb595f462",
   "tabla": "b44b009cf752ec27",
-  "svg": "07901057bd9c5b44"
+  "svg": "5986d33d01ea5b59"
  },
  "1280 ?desde=1980&hasta=1982&sh=gobierno": {
   "url": "?desde=1980&hasta=1982&sh=gobierno",
@@ -2116,7 +2116,7 @@
   "leyendas": "7c57a73e0fe100fa",
   "cita": "f661dd6b4b834234",
   "tabla": "23ec91f2fe736749",
-  "svg": "b2169394ec499e35"
+  "svg": "de33a28c7c74013e"
  },
  "390 ?s=pib&t=nivel&log=1&sh=gobierno": {
   "url": "?s=pib&t=nivel&log=1&sh=gobierno",
@@ -2220,7 +2220,7 @@
   "leyendas": "5884f9bc7d2e8c02",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "28426903f69af4cd"
+  "svg": "5c7c74bd2101eea1"
  },
  "390 ?s=pib&sh=gobierno&ev=deuda,episodio": {
   "url": "?s=pib&sh=gobierno&ev=deuda,episodio",
@@ -2298,7 +2298,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "5a485d793d08a370",
   "tabla": "ddb9ad8c6dceca06",
-  "svg": "6db4cc20d9bbb47f"
+  "svg": "981b82329a0a792d"
  },
  "390 ?s=pib&desde=1995&hasta=2020&sh=gobierno": {
   "url": "?s=pib&desde=1995&hasta=2020&sh=gobierno",
@@ -2350,7 +2350,7 @@
   "leyendas": "3f6030fffdac5ebf",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "2c181f66d5a785bc"
+  "svg": "de1499d8fb1657f5"
  },
  "390 ?s=resultado-fiscal&v=financiero&sh=regimen_cambiario": {
   "url": "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario",
@@ -2454,7 +2454,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "67d1d23dcbf56fa1",
   "tabla": "362a273a67ab79c6",
-  "svg": "377501ca9c978dfe"
+  "svg": "2b63baf4920ac6c1"
  },
  "390 ?s=agregados&v=m2-pesos": {
   "url": "?s=agregados&v=m2-pesos",
@@ -2584,7 +2584,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2a7d98342e6fb428",
   "tabla": "0630ca6d94abda46",
-  "svg": "decf1bc351e8873c"
+  "svg": "cd042e43b06a5aa5"
  },
  "390 ?s=base-monetaria&v=promedio-mensual": {
   "url": "?s=base-monetaria&v=promedio-mensual",
@@ -2636,7 +2636,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2c22d200f8d8177f",
   "tabla": "c48b7bf527e9e161",
-  "svg": "5f08bc48a180f2d4"
+  "svg": "72c1f19820e4ef37"
  },
  "390 ?s=cuenta-corriente&v=mbp5": {
   "url": "?s=cuenta-corriente&v=mbp5",
@@ -2662,7 +2662,7 @@
   "leyendas": "377b47c2cdd90e47",
   "cita": "1acfe6b4a8891acd",
   "tabla": "2d91299b7a9f9c73",
-  "svg": "06c2fe5bcf837586"
+  "svg": "94bf2bd6c7fef6c5"
  },
  "390 ?s=cuenta-corriente&v=mbp6": {
   "url": "?s=cuenta-corriente&v=mbp6",
@@ -2766,7 +2766,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "8e61affa2d0b4eb5",
   "tabla": "6100f0728ad71a42",
-  "svg": "cb7a52a0e4d8cb28"
+  "svg": "b28d9e46a3f60dfb"
  },
  "390 ?s=deuda-externa&v=indec": {
   "url": "?s=deuda-externa&v=indec",
@@ -2792,7 +2792,7 @@
   "leyendas": "f1285a25c205d60f",
   "cita": "07f17dba9515f7ff",
   "tabla": "8d8d0e3c33f307e4",
-  "svg": "c42385510c1c4cc6"
+  "svg": "5c57bdad8e614998"
  },
  "390 ?s=deuda-externa&v=privada": {
   "url": "?s=deuda-externa&v=privada",
@@ -2818,7 +2818,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "6cc55cfbc9a76742",
   "tabla": "9126e29e5494e81e",
-  "svg": "062e7f9133dbcb2e"
+  "svg": "11fd4ff8e9b1d546"
  },
  "390 ?s=deuda-externa&v=publica": {
   "url": "?s=deuda-externa&v=publica",
@@ -2844,7 +2844,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "531594698f1dd574",
   "tabla": "13e649a802427eb7",
-  "svg": "883048b2d524e214"
+  "svg": "786237a001269661"
  },
  "390 ?s=deuda-publica": {
   "url": "?s=deuda-publica",
@@ -2870,7 +2870,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "53dda0fd4764ebce",
   "tabla": "13e649a802427eb7",
-  "svg": "883048b2d524e214"
+  "svg": "786237a001269661"
  },
  "390 ?s=exportaciones": {
   "url": "?s=exportaciones",
@@ -2896,7 +2896,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "c82635a2b4c69404",
   "tabla": "97fce8272dc0cef3",
-  "svg": "f1aa95440bc0e237"
+  "svg": "d161d489d0b49a23"
  },
  "390 ?s=exportaciones&v=mensual": {
   "url": "?s=exportaciones&v=mensual",
@@ -2961,7 +2961,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "0bc66d54566a0571",
   "tabla": "770c3e55de5ba7af",
-  "svg": "95086137a9a072b8"
+  "svg": "d6a01af0e01d8ff9"
  },
  "390 ?s=importaciones": {
   "url": "?s=importaciones",
@@ -2987,7 +2987,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "e0f08ec72ab4383e",
   "tabla": "957c99bd99c7383b",
-  "svg": "0fb164ccc0609120"
+  "svg": "7f814c9916129966"
  },
  "390 ?s=importaciones&v=mensual": {
   "url": "?s=importaciones&v=mensual",
@@ -3091,7 +3091,7 @@
   "leyendas": "069f39b9b73caca4",
   "cita": "13975790798dbadb",
   "tabla": "998ade880a77172e",
-  "svg": "937c2be8e19226a1"
+  "svg": "ed6dcbe6c70d8cf5"
  },
  "390 ?s=inversion&v=base-1970": {
   "url": "?s=inversion&v=base-1970",
@@ -3143,7 +3143,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "6051ea0ed1e8476d",
   "tabla": "717491f39f2856b0",
-  "svg": "deebdf8c618ca5d3"
+  "svg": "df7ebe47c49f16f1"
  },
  "390 ?s=pib": {
   "url": "?s=pib",
@@ -3169,7 +3169,7 @@
   "leyendas": "3b3f1861ed489c36",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "037e44060d8bc21b"
+  "svg": "5fb9ee6ece9461ef"
  },
  "390 ?s=reservas": {
   "url": "?s=reservas",
@@ -3195,7 +3195,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "36ea398cb7d10db6",
   "tabla": "839ad4aa31c07116",
-  "svg": "9c065fc1152e9da3"
+  "svg": "048b8fc4f9f11395"
  },
  "390 ?s=resultado-fiscal": {
   "url": "?s=resultado-fiscal",
@@ -3221,7 +3221,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "88b2f68e5f11217b",
   "tabla": "5b1c34ac6c72d915",
-  "svg": "570adce9bf7c0393"
+  "svg": "ae2e92aabb23dc9f"
  },
  "390 ?s=resultado-fiscal&v=financiero": {
   "url": "?s=resultado-fiscal&v=financiero",
@@ -3247,7 +3247,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "51885c15aaae5979"
+  "svg": "1d9cc1316e03cb49"
  },
  "390 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -3273,7 +3273,7 @@
   "leyendas": "069f39b9b73caca4",
   "cita": "45c1c3b809bd3968",
   "tabla": "697ca0527f60a5f6",
-  "svg": "e43332cc6083d0f2"
+  "svg": "c31b45405d4f6163"
  },
  "390 ?s=salario-real&v=indice-salarios": {
   "url": "?s=salario-real&v=indice-salarios",
@@ -3299,7 +3299,7 @@
   "leyendas": "53474d61a36004d1",
   "cita": "2d7a43dbc163ce5f",
   "tabla": "202563e8cce857a5",
-  "svg": "e1fc6a8fbc318b42"
+  "svg": "666faf34b5fecc89"
  },
  "390 ?s=saldo-comercial": {
   "url": "?s=saldo-comercial",
@@ -3325,7 +3325,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "bbc890ea55397c6e",
   "tabla": "f577d452e5149242",
-  "svg": "d167cf3904df183b"
+  "svg": "39a11ff514ff22d7"
  },
  "390 ?s=saldo-comercial&v=mensual": {
   "url": "?s=saldo-comercial&v=mensual",
@@ -3377,7 +3377,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "0804e1dae3f70d6d",
   "tabla": "519d76a4409e427c",
-  "svg": "44b4258602bc9e65"
+  "svg": "0371664411fd3f1f"
  },
  "390 ?s=tasa-pasiva&v=badlar": {
   "url": "?s=tasa-pasiva&v=badlar",
@@ -3429,7 +3429,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "33a233bf161dc242",
   "tabla": "a8e5e44568356a0d",
-  "svg": "6bb0d8bce850a3fd"
+  "svg": "0731553696231076"
  },
  "390 ?s=tc-oficial&v=moneda-de-epoca": {
   "url": "?s=tc-oficial&v=moneda-de-epoca",
@@ -3455,7 +3455,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "5add12680ecb2450",
   "tabla": "2c3139ebcc3d0f81",
-  "svg": "cca1a8c636ceb080"
+  "svg": "6e4cdca08796eece"
  },
  "390 ?s=tcr-bilateral": {
   "url": "?s=tcr-bilateral",
@@ -3481,7 +3481,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "391159d79e30abb3",
   "tabla": "f5e5692cfd550f5e",
-  "svg": "485c6670200f1801"
+  "svg": "9b999453a5b5892f"
  },
  "390 ?s=tcr-bilateral&v=provincias": {
   "url": "?s=tcr-bilateral&v=provincias",
@@ -3507,7 +3507,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "b209f0fea65e74cb",
   "tabla": "0b62c4c22e37074b",
-  "svg": "b2230a2353da3bba"
+  "svg": "fd9c9e8773f7af6d"
  },
  "390 ?s=tcr-multilateral": {
   "url": "?s=tcr-multilateral",
@@ -3533,7 +3533,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "6308c9a2077d7486",
   "tabla": "7dddff3a362e54cd",
-  "svg": "35847399b49c82de"
+  "svg": "cdaa15a2922aa9fa"
  },
  "390 ?s=tcr-multilateral&v=bruegel": {
   "url": "?s=tcr-multilateral&v=bruegel",
@@ -3559,7 +3559,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2dc58bb146e5cbc1",
   "tabla": "e226a35113aa7355",
-  "svg": "0e9f2bb0c8445679"
+  "svg": "28505c902d44e61e"
  },
  "390 ?v=provincias": {
   "url": "?v=provincias",
@@ -3585,7 +3585,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "fa959e1bb595f462",
   "tabla": "b44b009cf752ec27",
-  "svg": "cb3d12097c0a59fb"
+  "svg": "d3497e37bdda9eac"
  },
  "390 ?desde=1980&hasta=1982&sh=gobierno": {
   "url": "?desde=1980&hasta=1982&sh=gobierno",

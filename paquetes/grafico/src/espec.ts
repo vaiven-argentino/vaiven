@@ -902,12 +902,17 @@ export function agruparEventos(eventos: Array<MarcaEvento & { dia?: string }>, i
       k = Math.max(1, k - 1);
     } else k++;
   }
+  // Una marca no sale del área: pegada al borde, pisaría los números del eje Y (revisión visual de la sonda 3).
+  const dentro = (i: number, w: number) => {
+    const x = Math.min(Math.max(px(i), w / 2 + 2), area - w / 2 - 2);
+    return ini + (x / area) * (fin - ini);
+  };
   return grupos.map((g) => {
     const e = etiqueta(g);
     // El camino del rectángulo, en las unidades de Vega para las formas (el lado del cuadrado de `size` es 2).
     const m = (anchoGrupo(e) / 2 / 7.5).toFixed(2);
     return {
-      etiqueta: e, t: isoDia(g.reduce((a, ev) => a + indiceDia(ev.fecha), 0) / g.length),
+      etiqueta: e, t: isoDia(dentro(g.reduce((a, ev) => a + indiceDia(ev.fecha), 0) / g.length, anchoGrupo(e))),
       forma: e.length === 1 ? "circle" : `M-${m},-1H${m}V1H-${m}Z`,
       texto: g.map((ev) => `${ev.letra}: ${ev.nombre} (${diaLegible(ev.fecha)})`).join(" · "),
     };

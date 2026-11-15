@@ -1734,9 +1734,10 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
   - las letras, los grupos y los números de los quiebres, que no se pisan.
 - **Corregido:**
   - en un panel bajo (390 px, cuatro series), la reserva de arriba pasaba de la mitad del alto y `topeY` no reservaba nada: el pico del dólar de 2002 subía hasta las letras de los eventos. Ahora la reserva se limita al 45 % del alto;
-  - el número de un quiebre largo tapaba su tope de inicio: ahora va unos 13 px más adelante.
+  - el número de un quiebre largo tapaba su tope de inicio: ahora va unos 13 px más adelante;
+  - una marca de eventos pegada al borde («A–B» en 2002) tapaba el número de arriba del eje Y: las marcas no salen del área.
 
-  Por eso la referencia de la 4b se volvió a guardar (cambian 32 SVG, nada más).
+  Por eso la referencia de la 4b se volvió a guardar dos veces: con cada arreglo cambian solo SVG (32 y 50).
 - **Sin cambio:**
   - el 405 de la consola es del host de prueba;
   - los períodos sin rótulo en 390 px son los que no entran (el nombre, al pasar el cursor);
