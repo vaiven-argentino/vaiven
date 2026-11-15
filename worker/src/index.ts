@@ -1,4 +1,4 @@
-import { Repositorio, VERSION_SERVIDOR, fuenteAssets, manejarMcp, precalentar } from "@vaiven/mcp";
+import { Repositorio, SCRIPT_GRAFICO, VERSION_SERVIDOR, fuenteAssets, manejarMcp, precalentar } from "@vaiven/mcp";
 import paquete from "../package.json";
 import { dispararActualizacion } from "./disparador";
 
@@ -18,8 +18,10 @@ export default {
     if (url.pathname === "/salud") {
       // La fase sale de un solo lugar (`vaiven.fase` en package.json): se actualiza con cada despliegue de fase. La versión
       // es la del servidor MCP (`version` en mcp/package.json), la misma que responde en `initialize`: una sola fuente.
+      // `app` es el script de la interfaz del gráfico, con el hash de su contenido: cambia con cada versión de la interfaz
+      // y deja ver si una URL de versión ya tiene el código nuevo (la versión del servidor no cambia entre rondas).
       return Response.json(
-        { estado: "ok", version: VERSION_SERVIDOR, fase: paquete.vaiven.fase },
+        { estado: "ok", version: VERSION_SERVIDOR, fase: paquete.vaiven.fase, app: SCRIPT_GRAFICO },
         { headers: { "cache-control": "no-store" } },
       );
     }

@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 import { afterEach, describe, expect, it } from "vitest";
-import { EXTENSION_UI, MIME_APP, ORIGEN_PUBLICO, URI_GRAFICO } from "../src/app/recurso";
+import { EXTENSION_UI, MIME_APP, ORIGEN_PUBLICO, SCRIPT_GRAFICO, URI_GRAFICO } from "../src/app/recurso";
 import { manejarMcp, type OpcionesHttp } from "../src/http";
 import type { Repositorio } from "../src/datos";
 import { repoReal } from "./ayuda";
@@ -77,6 +77,13 @@ describe.each([
     // Que el modelo no rearme el gráfico si el cliente ya lo mostró, y que dé el enlace si no (hallazgo A1).
     expect(texto.especificacion).toMatch(/^Si tu cliente muestra la interfaz de Vaivén .* no lo vuelvas a dibujar .* compartí url_explorador\.$/);
   });
+});
+
+it("SCRIPT_GRAFICO (lo informa /salud) es el script que pide el recurso, y existe en el sitio", async () => {
+  const c = await conectar("legacy", repo);
+  const { contents } = await c.readResource({ uri: URI_GRAFICO });
+  expect((contents[0] as { text: string }).text).toContain(`/mcp-app/${SCRIPT_GRAFICO}"`);
+  expect(existsSync(join(import.meta.dirname, "..", "..", "web", "public", "mcp-app", SCRIPT_GRAFICO))).toBe(true);
 });
 
 it("declara la extensión io.modelcontextprotocol/ui", async () => {

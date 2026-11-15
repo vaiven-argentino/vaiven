@@ -2,7 +2,9 @@
 // dentro de Claude (mcp/app/). El HTML es mínimo y pide su script al dominio de Vaivén, declarado en la CSP; la variante
 // local por stdio lo lleva adentro. Un cliente sin la extensión no pide el recurso y sigue recibiendo el texto completo.
 import type { McpServer } from "@modelcontextprotocol/server";
-import { PARTES_HTML_GRAFICO } from "./html.generado";
+import { PARTES_HTML_GRAFICO, SCRIPT_GRAFICO } from "./html.generado";
+
+export { SCRIPT_GRAFICO };
 
 export const URI_GRAFICO = "ui://vaiven/grafico";
 export const MIME_APP = "text/html;profile=mcp-app";

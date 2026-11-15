@@ -26,9 +26,10 @@ async function escribirSiCambio(ruta, texto) {
   if (previo !== texto) await writeFile(ruta, texto);
 }
 
-const modulo = (nombre, descripcion, partes) => `// Generado por mcp/scripts/armar-app.mjs a partir de mcp/app/: no se edita a mano ni se versiona.\n`
+const modulo = (nombre, descripcion, partes, script) => `// Generado por mcp/scripts/armar-app.mjs a partir de mcp/app/: no se edita a mano ni se versiona.\n`
   + `/** ${descripcion} */\n`
-  + `export const ${nombre}: readonly string[] = ${JSON.stringify(partes)};\n`;
+  + `export const ${nombre}: readonly string[] = ${JSON.stringify(partes)};\n`
+  + (script ? `/** El script de la interfaz (con el hash de su contenido): lo informa /salud, para saber qué versión está arriba. */\nexport const SCRIPT_GRAFICO = ${JSON.stringify(script)};\n` : "");
 
 export async function armarApp({ silencioso = false } = {}) {
   const { build } = await import("esbuild");
@@ -48,7 +49,7 @@ export async function armarApp({ silencioso = false } = {}) {
   const html = plantilla.replace("__SCRIPT__", nombre);
   // En línea: un `</script` dentro del código cerraría la etiqueta antes de tiempo (en JS, `<\/` es lo mismo que `</`).
   const enLinea = plantilla.replace(etiqueta, () => `<script type="module">${codigo.replace(/<\/(script)/gi, "<\\/$1")}</script>`);
-  await escribirSiCambio(SALIDA, modulo("PARTES_HTML_GRAFICO", `El HTML de ui://vaiven/grafico, que pide ${nombre} al dominio de Vaivén (${html.length} caracteres).`, html.split("__ORIGEN__")));
+  await escribirSiCambio(SALIDA, modulo("PARTES_HTML_GRAFICO", `El HTML de ui://vaiven/grafico, que pide ${nombre} al dominio de Vaivén (${html.length} caracteres).`, html.split("__ORIGEN__"), nombre));
   await escribirSiCambio(SALIDA_EN_LINEA, modulo("PARTES_HTML_GRAFICO_EN_LINEA", `El HTML de ui://vaiven/grafico con el script adentro, para la variante local (${enLinea.length} caracteres).`, enLinea.split("__ORIGEN__")));
   if (!silencioso) {
     process.stderr.write(`ui://vaiven/grafico: HTML de ${html.length.toLocaleString("es-AR")} caracteres; script ${nombre}, ${codigo.length.toLocaleString("es-AR")} caracteres\n`);
