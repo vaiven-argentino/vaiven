@@ -24,7 +24,11 @@
   body { margin: 0; background: var(--fondo); color: var(--texto); font: 14px/1.5 var(--sans); }
   .app { padding: 10px 12px 12px; }
   .cabeza { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: flex-start; justify-content: space-between; }
-  h1 { font-size: 15px; margin: 0; line-height: 1.35; }
+  h1 { font-size: 17px; margin: 0; line-height: 1.3; }
+  .series { margin: 4px 0 0; font-size: 13px; }
+  .series li { margin: 1px 0; }
+  .series .trazo { display: inline-block; width: 22px; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
+  .series.una .trazo { display: none; }
   .secundario { color: var(--secundario); font-size: 12.5px; margin: 2px 0 0; }
   .acciones { display: flex; flex-wrap: wrap; gap: 6px; }
   button { font: inherit; font-size: 13px; min-height: 36px; padding: 4px 12px; border: 1px solid var(--borde); border-radius: 6px; background: transparent; color: var(--texto); cursor: pointer; }
@@ -59,6 +63,7 @@
     <div>
       <h1 id="titulo">Vaivén · gráfico</h1>
       <p class="secundario" id="subtitulo"></p>
+      <ul class="series" id="lista-series"></ul>
     </div>
     <div class="acciones">
       <button type="button" id="abrir" disabled>Abrir en el explorador</button>

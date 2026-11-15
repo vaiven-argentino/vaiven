@@ -140,6 +140,8 @@ export interface EntradaLeyenda {
   texto: string;
   color: string;
   discontinua?: boolean;
+  /** Va en su propio renglón (la leyenda del doble eje: una serie por renglón, con su eje; sonda 3 de la 4e). */
+  renglonPropio?: boolean;
 }
 
 /** Alto de un renglón de la leyenda única y aire entre la leyenda y el título de los ejes. */
@@ -150,7 +152,7 @@ export function ubicarLeyenda(entradas: EntradaLeyenda[], ancho: number): Array<
   let x = 0, renglon = 0;
   return entradas.map((en) => {
     const largo = 22 + en.texto.length * 5.8 + 16;
-    if (x > 0 && x + largo > ancho) { x = 0; renglon += 1; }
+    if (x > 0 && (en.renglonPropio || x + largo > ancho)) { x = 0; renglon += 1; }
     const salida = { ...en, x, renglon };
     x += largo;
     return salida;

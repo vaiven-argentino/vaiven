@@ -62,7 +62,7 @@ export function textoImagen(e: EntradaImagen): TextoImagen {
     // Una línea por serie: su variante, su transformación y sus fuentes.
     docs.forEach((d, k) => {
       const paises = paisesDe(k);
-      pie.push(`${k + 1}. ${d.nombre} · ${d.nombre_variante} · ${e.transformaciones[k] ? `${e.transformaciones[k]} (calculada por Vaivén)` : "como se publica"}${paises ? ` · países: ${paises.join(", ")}` : ""} · fuentes: ${[...new Set(d.fuentes.map((f) => f.organismo))].join("; ")}.`);
+      pie.push(`${u.identificacion[k]?.nombre ?? k + 1}: ${d.nombre} · ${d.nombre_variante} · ${e.transformaciones[k] ? `${e.transformaciones[k]} (calculada por Vaivén)` : "como se publica"}${paises ? ` · países: ${paises.join(", ")}` : ""} · fuentes: ${[...new Set(d.fuentes.map((f) => f.organismo))].join("; ")}.`);
     });
   }
   if (u.periodos.length && e.periodos) {

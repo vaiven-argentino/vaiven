@@ -10,7 +10,7 @@ import {
 import { dominioMeses, especificacion, type BandaEpisodio, type EntradaGrafico, type EntradaLeyenda, type MarcaEvento, type Tema } from "./espec";
 import { opcionesDe, serieVista, type Documento, type Estado, type EstadoVista } from "./estado";
 import { esVariacion, numerarQuiebres, resumen, type QuiebreNumerado } from "./ficha";
-import { fechaLegible, numero, unidadVisible } from "./formato";
+import { enumerar, fechaLegible, numero, unidadVisible } from "./formato";
 import {
   EPISODIO, bandasDe, columnaPeriodo, contextoDe, episodiosEnRango, eventosEnRango, nombreSombreadoEnFrase, periodosEnRango, textoLectura, tipoDe,
   type OpcionSombreado,
@@ -84,6 +84,12 @@ export interface Vista {
    * vale si todos los valores son positivos (N4 de la 4e: el MCP la informa, para que el modelo describa bien el gráfico).
    */
   escalas: Array<"lineal" | "log">;
+  /**
+   * Cómo se ve cada serie: su nombre corto (el de las etiquetas, la leyenda y los avisos), su color y su trazo (O1 y O5,
+   * sonda 3 de la 4e: la interfaz en Claude arma con esto su lista de series). En la internacional, el color es el
+   * secundario: sus países llevan los suyos.
+   */
+  identificacion: Array<{ nombre: string; color: string; discontinua: boolean }>;
   /** Con varias series, la guía común (tooltip y lector de teclado); con una, el lector usa los datos de la serie. */
   guia?: Guia;
   especificacion: Record<string, unknown>;
@@ -92,6 +98,9 @@ export interface Vista {
 type ConEmpalme = Documento & { empalme: EntradaGrafico["empalme"]; nombre?: string };
 const nombreEntidad = (doc: Documento, id: string) => (tienePais(doc) ? doc.entidades.find((e) => e.id === id)?.nombre : undefined) ?? id;
 const nombreDoc = (d: Documento) => (d as ConEmpalme).nombre ?? d.id;
+/** El nombre corto de la serie o de su variante (esquema 1.4); en un export anterior, el nombre. */
+const nombreCorto = (d: Documento) => (d as { nombre_corto?: string }).nombre_corto ?? nombreDoc(d);
+
 const conDatos = (r: Resultado) => r.datos.some((d) => d[1] !== null);
 /** La escala logarítmica solo se dibuja si todos los valores de las líneas son positivos. */
 const todosPositivos = (rs: Resultado[]) => rs.every((x) => x.datos.every((d) => d[1] === null || d[1] > 0));
@@ -185,6 +194,7 @@ export function armarVista(v: EntradaVista): Vista {
     const serie = serieVista(doc, e.p);
     return {
       ...comun, descripcion, descripcionesPaneles: [descripcion], escalas: [e.log && positivos ? "log" : "lineal"],
+      identificacion: [{ nombre: nombreCorto(doc), color: tienePais(doc) ? tema.secundario : tema.serie, discontinua: false }],
       especificacion: especificacion({
         resultado: r, tramos: serie.tramos, empalme: (doc as ConEmpalme).empalme, quiebres: quiebres[0], tema,
         esVariacion: esVariacion(e.t), log: e.log && positivos, alto: v.alto, ancho: v.ancho, descripcion,
@@ -198,30 +208,46 @@ export function armarVista(v: EntradaVista): Vista {
   const colores = estado.series.map((_, k) => v.colores?.[k] ?? k);
   const paleta = tema.paleta?.length ? tema.paleta : [tema.serie];
   const colorSerie = (k: number) => paleta[colores[k] % paleta.length];
-  // Dos variantes de la misma serie se distinguen por su variante («Inflación minorista (IPC) · provincias»).
-  const nombreSerie = (k: number) => (estado.series.some((e, j) => j !== k && e.s === estado.series[k].s)
-    ? `${nombreDoc(docs[k])} · ${estado.series[k].v}` : nombreDoc(docs[k]));
+  // Cada serie se nombra por su nombre corto, el mismo en las etiquetas, la leyenda, los títulos y los avisos («IPC
+  // oficial», «Reservas»; O1, sonda 3 de la 4e: antes, «1.», «2.»). Si dos coinciden, llevan su variante.
+  const nombreSerie = (k: number) => {
+    const corto = nombreCorto(docs[k]);
+    return docs.some((x, j) => j !== k && nombreCorto(x) === corto) ? `${corto} (${estado.series[k].v})` : corto;
+  };
   const d = c.disposicion;
   const dom = dominio ? dominioMeses(dominio) : undefined;
   // Cómo se identifican las series (N8 de la 4e): por defecto, el nombre al final de cada línea; con `ley=1`, una
-  // leyenda única arriba. El título de cada eje queda solo con la unidad, en el color de su serie si es una sola.
+  // leyenda única arriba. En el doble eje, siempre la leyenda, con una serie por renglón y su eje (H1, sonda 3: los
+  // nombres al final de las líneas se pisaban con los números del eje derecho).
   const leyendaUnica = !!estado.leyenda;
   const otraVariante = (k: number) => estado.series.slice(0, k).some((e) => e.s === estado.series[k].s);
   const mayuscula = (t: string) => `${t[0].toUpperCase()}${t.slice(1)}`;
-  const tituloUnidad = (p: Panel) => ({
-    texto: mayuscula(unidadVisible(p.unidad)), color: p.series.length === 1 && !p.internacional ? colorSerie(p.series[0]) : tema.secundario,
-  });
+  // El título de cada eje dice sus series y su unidad («Reservas · millones de US$»; O2, sonda 3), en el color de su
+  // serie si es una sola. Si no entra en su mitad del ancho (o en todo, con un solo eje), queda la unidad.
+  const tituloUnidad = (p: Panel, ejes = 1) => {
+    const unidad = unidadVisible(p.unidad);
+    const completo = mayuscula(`${enumerar(p.series.map(nombreSerie))} · ${unidad}`);
+    return {
+      texto: !p.internacional && completo.length * 6.2 <= (v.ancho - 100) / ejes ? completo : mayuscula(unidad),
+      color: p.series.length === 1 && !p.internacional ? colorSerie(p.series[0]) : tema.secundario,
+    };
+  };
   const entradasLeyenda = (der?: Panel): EntradaLeyenda[] => estado.series.map((_, k) => {
     const internacional = d.paneles.some((p) => p.internacional && p.series.includes(k));
     return {
-      texto: `${k + 1}. ${nombreSerie(k)}${der ? (der.series.includes(k) ? " (eje der.)" : " (eje izq.)") : ""}${internacional ? " (países: en las líneas)" : ""}`,
+      texto: `${nombreSerie(k)}${der ? (der.series.includes(k) ? " · eje derecho" : " · eje izquierdo") : ""}${internacional ? " (países: en las líneas)" : ""}`,
       color: internacional ? tema.secundario : colorSerie(k), ...(otraVariante(k) && !internacional ? { discontinua: true } : {}),
+      ...(der ? { renglonPropio: true } : {}),
     };
   });
-  const descripcionesPaneles = d.paneles.map((p) => descripcionPanel(p, c, quiebres, estado));
+  const descripcionesPaneles = d.paneles.map((p) => descripcionPanel(p, c, quiebres, estado, nombreSerie));
   const escalas = d.paneles.map((p): "lineal" | "log" =>
     (p.log && todosPositivos(p.series.flatMap((k) => c.series[k].entidades.map((id) => c.series[k].resultados[id]))) ? "log" : "lineal"));
-  const comunV = { ...comun, escalas };
+  const identificacion = estado.series.map((_, k) => {
+    const internacional = d.paneles.some((p) => p.internacional && p.series.includes(k));
+    return { nombre: nombreSerie(k), color: internacional ? tema.secundario : colorSerie(k), discontinua: !internacional && otraVariante(k) };
+  });
+  const comunV = { ...comun, escalas, identificacion };
   const descripcion = `${descripcionesPaneles.join(" ")}${textoSombra}`;
   const nombresGuia = d.tipo === "paneles" ? d.paneles.map((_, k) => `guia${k + 1}`) : ["guia"];
   const guia = guiaComun(c, docs, estado, contextos, tema, nombresGuia, dom, asignacion);
@@ -268,10 +294,10 @@ export function armarVista(v: EntradaVista): Vista {
     const rangos = d.tipo === "doble_eje" ? rangosAlineados(c, izq, der) : null;
     const eIzq = entradaPanel(izq, {
       prefijoDatos: "i_", alto: v.alto, sombreado, eventos, episodios, capasExtra: guia.capas(v.alto, "guia"), impreso: v.impreso,
-      tituloEjeY: tituloUnidad(izq), ...(rangos ? { dominioY: rangos.izq } : {}),
-      ...(der ? { rotulosTrasEje: true } : {}), ...(leyendaUnica ? { leyenda: entradasLeyenda(der) } : {}),
+      tituloEjeY: tituloUnidad(izq, der ? 2 : 1), ...(rangos ? { dominioY: rangos.izq } : {}),
+      ...(der ? { sinRotulos: true, rotularSiempre: false, leyenda: entradasLeyenda(der) } : leyendaUnica ? { leyenda: entradasLeyenda() } : {}),
     });
-    const eDer = der ? entradaPanel(der, { prefijoDatos: "d_", alto: v.alto, ejeDerecho: true, tituloEjeY: tituloUnidad(der), rotulosTrasEje: true, ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
+    const eDer = der ? entradaPanel(der, { prefijoDatos: "d_", alto: v.alto, ejeDerecho: true, tituloEjeY: tituloUnidad(der, 2), sinRotulos: true, rotularSiempre: false, ...(rangos ? { dominioY: rangos.der } : {}) }) : null;
     if (!eIzq && !eDer) return vacio();
     // Si el eje izquierdo no tiene datos, el derecho va solo (con su eje a la derecha y su título).
     const sIzq = especificacion({ ...(eIzq ?? eDer!), descripcion });
@@ -333,7 +359,7 @@ export function armarVista(v: EntradaVista): Vista {
         width: Math.max(160, (v.impreso ? 900 : v.ancho) - EJE_Y - derecha), height: alto, description: descripcionesPaneles[k], layer: s.layer,
         title: {
           text: mayuscula(unidadVisible(p.unidad)),
-          subtitle: p.internacional ? nombreSerie(p.series[0]) : p.series.map((x) => `${x + 1}. ${nombreSerie(x)}`).join(" · "),
+          subtitle: p.internacional ? nombreSerie(p.series[0]) : p.series.map(nombreSerie).join(" · "),
           anchor: "start", fontSize: 12.5, subtitleFontSize: 11.5, offset: 4,
         },
       })),
@@ -362,12 +388,12 @@ function rangosAlineados(c: Comparacion, izq: Panel, der: Panel): { izq: [number
   return r.alineados ? { izq: r.izq, der: r.der } : null;
 }
 
-/** El texto alternativo de un panel (SPEC 6.5): su unidad y el resumen de cada serie. */
-function descripcionPanel(p: Panel, c: Comparacion, quiebres: QuiebreNumerado[][], estado: EstadoVista): string {
+/** El texto alternativo de un panel (SPEC 6.5): su unidad y el resumen de cada serie, con su nombre corto. */
+function descripcionPanel(p: Panel, c: Comparacion, quiebres: QuiebreNumerado[][], estado: EstadoVista, nombre: (k: number) => string): string {
   const partes = p.series.map((k) => {
     const s = c.series[k];
     const r = s.resultados[s.entidades[0]];
-    return `Serie ${k + 1}: ${resumen(r, r.unidad, esVariacion(estado.series[k].t), quiebres[k])}`;
+    return `${nombre(k)}: ${resumen(r, r.unidad, esVariacion(estado.series[k].t), quiebres[k])}`;
   });
   return `${p.unidad[0].toUpperCase()}${p.unidad.slice(1)}. ${partes.join(" ")}`;
 }

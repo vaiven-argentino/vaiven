@@ -256,8 +256,11 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
     disposicion: { tipo: c.disposicion.tipo, paneles: c.disposicion.paneles.map((p, i) => ({ unidad: p.unidad, series: p.series.map((k) => k + 1), escala: vista.escalas[i] ?? "lineal" })) },
     series: preparadas.map((p, k) => {
       const r = respuestaSerie(p, c.series[k].entidades.map((e) => c.series[k].resultados[e]), { sinDatos: true });
+      // El nombre corto, el color y el trazo, como en el gráfico (O1 y O5, sonda 3 de la 4e).
+      const { nombre: nombre_corto, color, discontinua } = vista.identificacion[k];
       return {
-        numero: k + 1, id: r.id, nombre: r.nombre, nombre_variante: r.nombre_variante, unidad: r.unidad, transformacion: r.transformacion,
+        numero: k + 1, id: r.id, nombre: r.nombre, nombre_corto, nombre_variante: r.nombre_variante, color, trazo: discontinua ? "discontinuo" : "continuo",
+        unidad: r.unidad, transformacion: r.transformacion,
         ...(tienePais(p.doc) ? { paises: r.paises } : {}), ultimo_dato: r.ultimo_dato, advertencias: r.advertencias,
         // Los datos excluidos que se ven (la «×» del gráfico; H7, sonda 3 de la 4e).
         ...(r.excluidos.length ? { excluidos: r.excluidos } : {}), notas: r.notas, cita: r.cita,

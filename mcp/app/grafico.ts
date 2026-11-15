@@ -3,7 +3,7 @@
 // leyenda, paneles, tema), la vuelve a pedir con callServerTool. Las opciones salen de describir_serie y de
 // paquetes/grafico; el dibujo y la imagen, de web/src/graficos/vega.ts, como en la web.
 import { App, applyDocumentTheme, type McpUiHostContext } from "@modelcontextprotocol/ext-apps/app-with-deps";
-import { NOMBRE_TRANSFORMACION, unidadVisible } from "@vaiven/grafico/formato";
+import { NOMBRE_TRANSFORMACION, enumerar, unidadVisible } from "@vaiven/grafico/formato";
 import { OPCIONES_SOMBREADO, nombreSombreado } from "@vaiven/grafico/periodos";
 import { dibujarEn, imagenDe, type VistaGrafico } from "../../web/src/graficos/vega";
 
@@ -14,7 +14,8 @@ interface Respuesta {
   url_explorador: string;
   disposicion: { tipo: string; paneles: Array<{ unidad: string; series: number[]; escala: string }> };
   series: Array<{
-    numero: number; id: string; nombre: string; nombre_variante: string; unidad: string; transformacion?: string; cita: string;
+    numero: number; id: string; nombre: string; nombre_corto: string; nombre_variante: string; color: string; trazo: "continuo" | "discontinuo";
+    unidad: string; transformacion?: string; cita: string;
     advertencias?: Array<{ id: string; descripcion: string }>; excluidos?: Array<{ fecha: string; motivo: string; pais?: string }>;
   }>;
   advertencias_combinacion: Array<{ id: string; descripcion: string }>;
@@ -80,20 +81,50 @@ async function mostrar(r: Respuesta, avisar = true): Promise<void> {
   vista?.finalize();
   contenedor.replaceChildren();
   vista = await dibujarEn(contenedor, r.especificacion, { ast: true });
-  // Dos variantes de la misma serie se distinguen por su variante, como en el gráfico.
-  const nombres = r.series.map((s) => (r.series.filter((x) => x.nombre === s.nombre).length > 1 ? `${s.nombre} · ${s.nombre_variante}` : s.nombre));
-  $("titulo").textContent = nombres.join(" · ");
-  const paneles = r.disposicion.paneles;
-  const disposicion = r.disposicion.tipo === "doble_eje" ? "Doble eje" : r.disposicion.tipo === "paneles" ? `${paneles.length} paneles` : "Un gráfico";
-  // La escala logarítmica va con la unidad, en un solo paréntesis («(sin ajuste por inflación; escala logarítmica)»).
-  const conEscala = (u: string, log: boolean) => (!log ? u : u.endsWith(")") ? `${u.slice(0, -1)}; escala logarítmica)` : `${u} (escala logarítmica)`);
-  const unidades = paneles.map((p) => conEscala(unidadVisible(p.unidad), p.escala === "log")).join(" · ");
-  $("subtitulo").textContent = `${disposicion} · ${unidades}`;
+  cabecera(r);
   for (const id of ["abrir", "bajar-png", "bajar-svg"]) $<HTMLButtonElement>(id).disabled = false;
   listas(r);
   controles(r);
   estado("");
   if (avisar) void avisarAlModelo(r);
+}
+
+/**
+ * La cabecera (O5, sonda 3 de la 4e): el título con las variables, más grande; debajo, el período y la disposición; y,
+ * con varias series, una lista de una por renglón, con su trazo y su color, el nombre corto (el del gráfico), la
+ * variante, la unidad y su eje o su panel.
+ */
+function cabecera(r: Respuesta): void {
+  $("titulo").textContent = enumerar([...new Set(r.series.map((s) => s.nombre))]);
+  const paneles = r.disposicion.paneles;
+  const disposicion = r.disposicion.tipo === "doble_eje" ? "doble eje" : r.disposicion.tipo === "paneles" ? `${paneles.length} paneles` : "";
+  const periodo = typeof args.desde === "string" || typeof args.hasta === "string"
+    ? `${typeof args.desde === "string" ? args.desde : "Desde el inicio"}–${typeof args.hasta === "string" ? args.hasta : "hoy"}` : "Toda la serie";
+  const sombreado = typeof args.sombreado === "string" ? `sombreado: ${nombreSombreado(args.sombreado as never).toLowerCase()}` : "";
+  $("subtitulo").textContent = [periodo, disposicion, sombreado].filter(Boolean).join(" · ");
+  // La escala logarítmica va con la unidad, en un solo paréntesis («(sin ajuste por inflación; escala logarítmica)»).
+  const conEscala = (u: string, log: boolean) => (!log ? u : u.endsWith(")") ? `${u.slice(0, -1)}; escala logarítmica)` : `${u} (escala logarítmica)`);
+  const lugar = (numero: number) => {
+    const k = paneles.findIndex((p) => p.series.includes(numero));
+    if (r.disposicion.tipo === "doble_eje") return k === 0 ? "eje izquierdo" : "eje derecho";
+    return r.disposicion.tipo === "paneles" ? `panel ${k + 1}` : "";
+  };
+  const lista = $("lista-series");
+  lista.replaceChildren(...r.series.map((s) => {
+    const li = document.createElement("li");
+    const trazo = Object.assign(document.createElement("span"), { className: "trazo" });
+    trazo.style.borderTopColor = s.color;
+    trazo.style.borderTopStyle = s.trazo === "discontinuo" ? "dashed" : "solid";
+    const nombre = Object.assign(document.createElement("b"), { textContent: s.nombre_corto });
+    nombre.style.color = s.color;
+    const panel = paneles.find((p) => p.series.includes(s.numero));
+    const unidad = conEscala(unidadVisible(panel?.unidad ?? s.unidad), panel?.escala === "log");
+    const detalle = [s.nombre_variante, unidad, lugar(s.numero)].filter(Boolean).join(" · ");
+    li.append(trazo, nombre, Object.assign(document.createElement("span"), { className: "secundario", textContent: ` · ${detalle}` }));
+    return li;
+  }));
+  // Con una serie, la lista dice la variante y la unidad, sin trazo (el gráfico no necesita leyenda).
+  lista.classList.toggle("una", r.series.length === 1);
 }
 
 /** Las listas de debajo del gráfico: los quiebres numerados y los avisos, los eventos y las citas. */
@@ -105,7 +136,8 @@ function listas(r: Respuesta): void {
     return el;
   };
   const circulo = (n: number) => (n >= 1 && n <= 20 ? String.fromCodePoint(0x245f + n) : `(${n})`);
-  const prefijo = (numero: number) => (r.series.length > 1 ? `Serie ${numero}: ` : "");
+  // Cada serie, por su nombre corto, como en el gráfico (O1, sonda 3 de la 4e; antes, «Serie 1:»).
+  const prefijo = (numero: number) => (r.series.length > 1 ? `${r.series[numero - 1]?.nombre_corto ?? `Serie ${numero}`}: ` : "");
   const dibujados = new Set(r.quiebres.map((q) => q.id));
   const avisos = [
     // Los quiebres que se dibujan, con su número; las advertencias generales de cada serie, sin número (H2, sonda 3).
@@ -127,7 +159,7 @@ function listas(r: Respuesta): void {
   $("lista-eventos").replaceChildren(...eventos.map((e) => li(`${e.letra}.`, `${e.fecha.split("-").reverse().join("/")} · ${e.nombre}`)));
   $("cantidad-eventos").textContent = String(eventos.length);
   $("caja-eventos").hidden = !eventos.length;
-  $("citas").replaceChildren(...r.series.map((s) => li(r.series.length > 1 ? `${s.numero}.` : "", s.cita)));
+  $("citas").replaceChildren(...r.series.map((s) => li(r.series.length > 1 ? `${s.nombre_corto}:` : "", s.cita)));
   $("caja-citas").hidden = !r.series.length;
 }
 
@@ -157,7 +189,8 @@ function controles(r: Respuesta): void {
   sombreado.value = typeof args.sombreado === "string" ? args.sombreado : "";
   $<HTMLInputElement>("eventos").checked = args.eventos === true || Array.isArray(args.eventos);
   const varias = r.series.length > 1;
-  $("campo-leyenda").hidden = !varias;
+  // En el doble eje, la leyenda va siempre (H1): la casilla solo cambia el gráfico de un eje y los paneles.
+  $("campo-leyenda").hidden = !varias || r.disposicion.tipo === "doble_eje";
   $<HTMLInputElement>("leyenda").checked = args.leyenda === true;
   const dosUnidades = new Set(r.disposicion.paneles.map((p) => p.unidad)).size === 2 && r.disposicion.paneles.length === 2;
   $("campo-paneles").hidden = !dosUnidades;
@@ -169,7 +202,7 @@ function controles(r: Respuesta): void {
   const caja = $("transformaciones");
   caja.replaceChildren(...(args.series ?? []).map((s, k) => {
     const label = document.createElement("label");
-    label.textContent = r.series.length > 1 ? `${k + 1}. Transformación` : "Transformación";
+    label.textContent = r.series.length > 1 ? `Transformación de ${r.series[k]?.nombre_corto ?? `la serie ${k + 1}`}` : "Transformación";
     const select = document.createElement("select");
     select.dataset.serie = String(k);
     const actual = typeof s.transformacion === "string" ? s.transformacion : "";

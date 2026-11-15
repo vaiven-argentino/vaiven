@@ -9,7 +9,7 @@ import {
   type SerieExportada,
 } from "@vaiven/transformaciones";
 import {
-  AVISO_DOBLE_EJE, armarVista, bandasDe, categoriasEv, episodiosEnRango, especificacion, esVariacion, eventosEnRango,
+  AVISO_DOBLE_EJE, armarVista, bandasDe, categoriasEv, enumerar, episodiosEnRango, especificacion, esVariacion, eventosEnRango,
   lecturasGuia, nombreSombreadoEnFrase, numerarQuiebres, partirEnRenglones, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
   vistaDesdeUrl, urlDesdeVista, rotuloQueEntra, EPISODIO, type Documento, type IndiceSerie, type Tema,
 } from "../src/index";
@@ -246,7 +246,8 @@ describe("con varias series", () => {
   it("el texto alternativo tiene uno por panel", () => {
     const v = armar("?s=reservas&s2=ipc&s3=desocupacion&ejes=paneles");
     expect(v.descripcionesPaneles).toHaveLength(3);
-    expect(v.descripcionesPaneles[2]).toContain("Serie 3:");
+    // Cada serie, con su nombre corto (O1, sonda 3 de la 4e; antes, «Serie 3:»).
+    expect(v.descripcionesPaneles[2]).toContain("Desocupación:");
   });
 });
 
@@ -264,33 +265,54 @@ describe("cómo se identifican las series (N8, M4 y M6 de la 4e)", () => {
     .filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "pais")
     .flatMap((c) => (c.data?.values ?? []).map((v) => v.pais));
 
-  it("por defecto, cada serie lleva su nombre al final de la línea, también la que va sola en su eje", () => {
-    const v = armar("?t=var_interanual&desde=2000&hasta=2010&s2=ipc&v2=provincias&t2=var_interanual&s3=reservas");
-    expect(v.comparacion.disposicion.tipo).toBe("doble_eje");
-    expect(new Set(nombres(v.especificacion))).toEqual(new Set(["Inflación minorista (IPC) · oficial", "Inflación minorista (IPC) · provincias", "Reservas internacionales"]));
-    // En el doble eje, los nombres van después de los números del eje derecho, no encima de ellos.
-    const marcas = todas(v.especificacion).filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "pais");
-    expect(marcas.every((c) => c.mark!.align === "left" && (c.mark as { dx?: number }).dx! > 50)).toBe(true);
+  const leyenda = (spec: Record<string, unknown>) => todas(spec)
+    .filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "texto")
+    .flatMap((c) => (c.data?.values ?? []).map((x) => ({ texto: x.texto, renglon: x.renglon })));
+
+  it("en un solo eje, cada serie lleva su nombre corto al final de la línea (O1, sonda 3 de la 4e)", () => {
+    const v = armar("?s=ipc&t=var_interanual&s2=ipc&v2=provincias&t2=var_interanual&desde=2007&hasta=2015");
+    expect(v.comparacion.disposicion.tipo).toBe("unico");
+    expect(new Set(nombres(v.especificacion))).toEqual(new Set(["IPC oficial", "IPC provincias"]));
     valido(v.especificacion);
   });
 
-  it("el título de cada eje es solo la unidad, horizontal y arriba", () => {
-    const v = armar("?t=var_interanual&desde=2000&hasta=2005&s2=reservas");
-    const ejes = todas(v.especificacion).flatMap((c) => {
+  it("en el doble eje, una leyenda con una serie por renglón y su eje, y ningún nombre al final de las líneas (H1)", () => {
+    const v = armar("?t=var_interanual&desde=2000&hasta=2010&s2=ipc&v2=provincias&t2=var_interanual&s3=reservas");
+    expect(v.comparacion.disposicion.tipo).toBe("doble_eje");
+    expect(nombres(v.especificacion)).toEqual([]);
+    expect(leyenda(v.especificacion)).toEqual([
+      { texto: "IPC oficial · eje izquierdo", renglon: 0 }, { texto: "IPC provincias · eje izquierdo", renglon: 1 }, { texto: "Reservas · eje derecho", renglon: 2 },
+    ]);
+    valido(v.especificacion);
+  });
+
+  it("el título de cada eje dice su serie y su unidad, horizontal y arriba (O2); si no entra, solo la unidad", () => {
+    const titulos = (url: string, ancho = 800) => todas(armar(url, ancho).especificacion).flatMap((c) => {
       const y = (c.encoding as { y?: { title?: string; axis?: { titleAngle?: number } } } | undefined)?.y;
       return y?.title ? [{ titulo: y.title, angulo: y.axis?.titleAngle }] : [];
     });
-    expect(ejes).toEqual(expect.arrayContaining([{ titulo: "Variación % interanual", angulo: 0 }, { titulo: "Millones de US$", angulo: 0 }]));
+    expect(titulos("?t=var_interanual&desde=2000&hasta=2005&s2=reservas")).toEqual(expect.arrayContaining([
+      { titulo: "IPC oficial · variación % interanual", angulo: 0 }, { titulo: "Reservas · millones de US$", angulo: 0 },
+    ]));
+    expect(titulos("?t=var_interanual&desde=2000&hasta=2010&s2=ipc&v2=provincias&t2=var_interanual&s3=reservas")).toEqual(expect.arrayContaining([
+      { titulo: "IPC oficial e IPC provincias · variación % interanual", angulo: 0 },
+    ]));
+    expect(titulos("?t=var_interanual&desde=2000&hasta=2005&s2=reservas&ejes=doble", 420)).toEqual(expect.arrayContaining([
+      { titulo: "Variación % interanual", angulo: 0 },
+    ]));
   });
 
-  it("con ley=1, una leyenda única arriba (con el lado del eje) y ningún nombre al final de las líneas", () => {
-    const v = armar("?t=var_interanual&desde=2000&hasta=2010&s2=reservas&ley=1");
-    expect(v.comparacion.disposicion.tipo).toBe("doble_eje");
+  it("con ley=1 en un solo eje, una leyenda única arriba y ningún nombre al final de las líneas", () => {
+    const v = armar("?s=ipc&t=var_interanual&s2=ipc&v2=provincias&t2=var_interanual&desde=2007&hasta=2015&ley=1");
     expect(nombres(v.especificacion)).toEqual([]);
-    const textos = todas(v.especificacion).filter((c) => c.mark?.type === "text" && (c.encoding as { text?: { field?: string } })?.text?.field === "texto")
-      .flatMap((c) => (c.data?.values ?? []).map((x) => x.texto));
-    expect(textos).toEqual(["1. Inflación minorista (IPC) (eje izq.)", "2. Reservas internacionales (eje der.)"]);
+    expect(leyenda(v.especificacion).map((x) => x.texto)).toEqual(["IPC oficial", "IPC provincias"]);
     valido(v.especificacion);
+  });
+
+  it("enumerar: «y», o «e» antes de «i»", () => {
+    expect(enumerar(["IPC oficial", "IPC provincias"])).toBe("IPC oficial e IPC provincias");
+    expect(enumerar(["Reservas", "Base monetaria", "Dólar oficial"])).toBe("Reservas, Base monetaria y Dólar oficial");
+    expect(enumerar(["Reservas"])).toBe("Reservas");
   });
 
   it("ley=1 va y vuelve por la URL, solo con varias series", () => {

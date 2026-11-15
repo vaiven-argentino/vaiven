@@ -123,3 +123,10 @@ export const NOMBRE_ESTADO: Record<string, string> = {
   pendiente_licencia: "Sin datos · pendiente de licencia",
   pendiente: "En preparación",
 };
+
+/** «A», «A y B», «A, B y C», con «e» antes de «i» o «hi» («IPC oficial e IPC provincias»; sonda 3 de la 4e). */
+export function enumerar(nombres: string[]): string {
+  if (nombres.length <= 1) return nombres[0] ?? "";
+  const ultimo = nombres[nombres.length - 1];
+  return `${nombres.slice(0, -1).join(", ")} ${/^h?i(?![aeouáéó])/i.test(ultimo) ? "e" : "y"} ${ultimo}`;
+}

@@ -472,7 +472,8 @@ function iniciar(): void {
     // Con varias series, los avisos de la combinación (4.1) y los de cada serie, con su número.
     if (varias()) lineas.push(...ultimo.vista.avisos.map((a) => a.descripcion));
     ultimo.comparacion.series.forEach((s, k) => {
-      const prefijo = varias() ? `Serie ${k + 1}: ` : "";
+      // Cada serie, por su nombre corto, como en el gráfico (O1, sonda 3 de la 4e).
+      const prefijo = varias() ? `${ultimo!.vista.identificacion[k]?.nombre ?? `Serie ${k + 1}`}: ` : "";
       const resultados = s.entidades.map((id) => s.resultados[id]);
       const ids = new Set(resultados.flatMap((x) => x.advertencias.map((a) => a.id)));
       const cruzados = ultimo!.vista.quiebres[k].filter((q) => ids.has(q.advertencia.id) && q.forma !== "general");

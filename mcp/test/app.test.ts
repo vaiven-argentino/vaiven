@@ -133,6 +133,12 @@ describe("especificacion_grafico en la 4e: parámetros y campos nuevos, y el top
       advertencias_combinacion: Array<{ id: string }>; especificacion: { title?: unknown };
     };
     expect(doble.advertencias_combinacion.map((a) => a.id)).toContain("c.doble-eje");
+    // Cada serie, con el nombre, el color y el trazo del gráfico (O1 y O5): la interfaz arma con eso su lista.
+    const dos = (await llamar({ series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "ipc", variante: "provincias", transformacion: "var_interanual" }], desde: "2007", hasta: "2015" })).structuredContent as {
+      series: Array<{ nombre_corto: string; color: string; trazo: string }>;
+    };
+    expect(dos.series.map((x) => [x.nombre_corto, x.trazo])).toEqual([["IPC oficial", "continuo"], ["IPC provincias", "discontinuo"]]);
+    expect(dos.series.every((x) => /^#[0-9a-f]{6}$/i.test(x.color))).toBe(true);
     expect(doble.especificacion.title).toBeUndefined();
   });
   it("leyenda: true pone la leyenda única y la URL del explorador lleva ley=1", async () => {

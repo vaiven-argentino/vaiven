@@ -83,6 +83,8 @@ interface MetaDocumento {
   serie: string;
   codigo: string;
   nombre: string;
+  /** Desde la 1.4: el nombre en los gráficos de varias series (sonda 3 de la 4e). */
+  nombre_corto?: string;
   variante: string;
   nombre_variante: string;
   es_variante_por_defecto: boolean;
