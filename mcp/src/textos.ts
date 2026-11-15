@@ -104,11 +104,13 @@ export const DESCRIPCION = {
     "obtener_serie (una serie) o comparar_series (varias). Cada serie lleva sus parámetros como en obtener_serie " +
     "(salvo `base_real`); `desde` y `hasta` valen para todas. Cada serie va en su frecuencia. Con dos unidades " +
     "distintas, el gráfico va en doble eje (o en paneles, con `ejes: paneles`); con tres o cuatro unidades, o con una " +
-    "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios. " +
+    "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios: " +
+    "usalos solo si el usuario los pide (o si los pidió para el gráfico anterior del mismo tema), porque agrandan la respuesta. " +
     "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico. " +
     "En los clientes que muestran interfaces de MCP Apps (como Claude), el gráfico aparece solo, interactivo, en la " +
     "conversación: no lo vuelvas a dibujar ni pidas los datos para graficarlo. Si el usuario pide más series de las que " +
-    "entran (4), usá la variante por defecto de cada una y decí cuáles quedaron afuera.",
+    "entran (4), usá la variante por defecto de cada una (en el IPC, la oficial), aunque en un gráfico anterior hayas " +
+    "usado otra, y decí cuáles quedaron afuera.",
 } as const;
 
 export const TITULO = {
