@@ -1,6 +1,7 @@
 id: int-pib
 codigo: INT-01
 nombre: Crecimiento del PIB, países seleccionados
+nombre_corto: Crecimiento del PIB
 bloque: Contexto internacional
 prioridad: B
 definicion: Variación anual del PIB real (en dólares constantes), por país y agregado, según el Banco Mundial.

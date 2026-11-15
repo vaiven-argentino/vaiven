@@ -1,6 +1,7 @@
 id: cuenta-corriente
 codigo: EXT-04
 nombre: Cuenta corriente
+nombre_corto: Cuenta corriente
 bloque: Sector externo
 prioridad: A
 definicion: >-
@@ -30,6 +31,7 @@ variantes:
     advertencias: [q.cuenta-corriente.fuente-1992, q.cuenta-corriente.mbp6-2006]
   - id: mbp5
     nombre: INDEC, quinto manual (MBP5), anual 1992–2016
+    nombre_corto: Cuenta corriente (MBP5)
     estado: publicada
     empalme: yuxtaponer
     metodo: Balance de pagos del INDEC según el quinto manual del FMI (MBP5), sin cambios. Se discontinuó en 2016.
@@ -37,6 +39,7 @@ variantes:
       - {fuente: f.indec.bp-mbp5-cuenta-corriente, desde: 1992}
   - id: mbp6
     nombre: INDEC, sexto manual (MBP6), trimestral desde 2006
+    nombre_corto: Cuenta corriente (MBP6)
     estado: publicada
     frecuencia: trimestral
     empalme: yuxtaponer

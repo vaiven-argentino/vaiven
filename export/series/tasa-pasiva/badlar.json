@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "tasa-pasiva.badlar",
   "serie": "tasa-pasiva",
   "codigo": "MON-03",
   "nombre": "Tasa de interés pasiva",
+  "nombre_corto": "Tasa BADLAR",
   "variante": "badlar",
   "nombre_variante": "BADLAR, bancos privados (desde 1999)",
   "es_variante_por_defecto": false,
@@ -54,8 +55,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tasa de interés pasiva, variante «badlar». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/tasa-pasiva/badlar/",
-  "version_datos": "2026-11-13T21:23:46Z",
+  "cita": "Vaivén (2026). Tasa de interés pasiva, variante «badlar». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/tasa-pasiva/badlar/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1999-01", 10.9554583],

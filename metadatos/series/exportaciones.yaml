@@ -1,6 +1,7 @@
 id: exportaciones
 codigo: EXT-01
 nombre: Exportaciones
+nombre_corto: Exportaciones
 bloque: Sector externo
 prioridad: A
 definicion: Exportaciones de bienes FOB, según el Intercambio Comercial Argentino del INDEC.

@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "cuenta-corriente.larga",
   "serie": "cuenta-corriente",
   "codigo": "EXT-04",
   "nombre": "Cuenta corriente",
+  "nombre_corto": "Cuenta corriente",
   "variante": "larga",
   "nombre_variante": "Serie larga, anual (BCRA, MBP5 y MBP6)",
   "es_variante_por_defecto": true,
@@ -131,8 +132,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Cuenta corriente, variante «larga». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/cuenta-corriente/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "cita": "Vaivén (2026). Cuenta corriente, variante «larga». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/cuenta-corriente/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", -159.0],

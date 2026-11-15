@@ -1,6 +1,7 @@
 id: reservas
 codigo: EXT-06
 nombre: Reservas internacionales
+nombre_corto: Reservas
 bloque: Sector externo
 prioridad: A
 definicion: Stock de reservas internacionales brutas del BCRA, saldo de fin de mes.

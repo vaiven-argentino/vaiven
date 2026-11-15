@@ -1,6 +1,7 @@
 id: base-monetaria
 codigo: MON-01
 nombre: Base monetaria
+nombre_corto: Base monetaria
 bloque: Monetario
 prioridad: A
 definicion: >-
@@ -30,6 +31,7 @@ variantes:
       var_excepciones: [1982-07]
   - id: promedio-mensual
     nombre: Promedio mensual (desde 2003)
+    nombre_corto: Base monetaria (promedio)
     estado: publicada
     agregacion: promedio
     empalme: yuxtaponer

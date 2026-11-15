@@ -1,6 +1,7 @@
 id: ipc
 codigo: PRE-01
 nombre: Inflación minorista (IPC)
+nombre_corto: IPC
 bloque: Precios
 prioridad: A
 definicion: Índice de precios al consumidor, nivel general.
@@ -17,6 +18,7 @@ vista_inicial: {transformacion: var_interanual, desde: '1993'}
 variantes:
   - id: oficial
     nombre: Oficial INDEC, sin corregir
+    nombre_corto: IPC oficial
     estado: publicada
     empalme: encadenar_tasas
     metodo: >-
@@ -40,6 +42,7 @@ variantes:
          tolerancia: 0.01, excepciones: [2004-05, 2004-06]}
   - id: provincias
     nombre: Provincias (San Luis y Ciudad de Buenos Aires) en 2007–2016
+    nombre_corto: IPC provincias
     estado: publicada
     empalme: encadenar_tasas
     metodo: >-

@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "tcr-multilateral.bcra",
   "serie": "tcr-multilateral",
   "codigo": "CAM-03",
   "nombre": "Tipo de cambio real multilateral",
+  "nombre_corto": "TCR multilateral",
   "variante": "bcra",
   "nombre_variante": "BCRA (desde 1991)",
   "es_variante_por_defecto": true,
@@ -103,8 +104,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-11-11. https://vaiven.argentino.workers.dev/series/tcr-multilateral/",
-  "version_datos": "2026-11-11T22:35:39Z",
+  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bcra». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/tcr-multilateral/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1991-01", 109.1230511],

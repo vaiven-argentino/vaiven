@@ -1,6 +1,7 @@
 id: tc-oficial
 codigo: CAM-01
 nombre: Tipo de cambio nominal oficial
+nombre_corto: Dólar oficial
 bloque: Cambiario
 prioridad: A
 definicion: Pesos por dólar estadounidense, valor de fin de mes, según la serie histórica del BCRA.
@@ -33,6 +34,7 @@ variantes:
     advertencias: [q.tc.mercados-desdoblados, q.tc.tramo-diario, q.tc.marzo-2026]
   - id: moneda-de-epoca
     nombre: En la moneda de cada época
+    nombre_corto: Dólar oficial (moneda de época)
     estado: publicada
     nota: >-
       Cada valor en el signo monetario vigente, como se publicó. Sirve para leer una cifra de su época; para

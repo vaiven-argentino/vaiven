@@ -1,6 +1,7 @@
 id: deuda-externa
 codigo: EXT-07
 nombre: Deuda externa total
+nombre_corto: Deuda externa
 bloque: Sector externo
 prioridad: A
 definicion: >-
@@ -28,6 +29,7 @@ variantes:
     advertencias: [q.deuda-externa.criterios]
   - id: publica
     nombre: Banco Mundial, pública y con garantía pública, de largo plazo (1970–2024)
+    nombre_corto: Deuda externa pública
     estado: publicada
     empalme: yuxtaponer
     escala: 0.000001
@@ -39,6 +41,7 @@ variantes:
     advertencias: [q.deuda-externa.criterios, q.deuda-externa.componentes-bm]
   - id: privada
     nombre: Banco Mundial, privada no garantizada, de largo plazo (1970–2024)
+    nombre_corto: Deuda externa privada
     estado: publicada
     empalme: yuxtaponer
     escala: 0.000001
@@ -76,6 +79,7 @@ variantes:
     advertencias: [q.deuda-externa.criterios, q.deuda-externa.derivada-1991]
   - id: indec
     nombre: INDEC, deuda externa bruta, trimestral (desde 2006)
+    nombre_corto: Deuda externa (INDEC)
     estado: publicada
     frecuencia: trimestral
     empalme: yuxtaponer

@@ -1,6 +1,7 @@
 id: tcr-bilateral
 codigo: CAM-04
 nombre: Tipo de cambio real bilateral con EE.UU.
+nombre_corto: TCR bilateral
 bloque: Cambiario
 prioridad: A
 definicion: >-
@@ -37,6 +38,7 @@ variantes:
     advertencias: [q.tcr-bilateral.fin-de-mes, q.tc.mercados-desdoblados, q.ipc.2007-2015, q.ipc.emergencia-2016, q.ipc.cobertura, q.ipc-eeuu.octubre-2025]
   - id: provincias
     nombre: Con el IPC de provincias en 2007–2016
+    nombre_corto: TCR bilateral (IPC provincias)
     estado: publicada
     empalme: derivar
     operacion: tcr

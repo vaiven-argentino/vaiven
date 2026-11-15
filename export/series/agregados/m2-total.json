@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "agregados.m2-total",
   "serie": "agregados",
   "codigo": "MON-02",
   "nombre": "Agregados monetarios M1, M2 y M3",
+  "nombre_corto": "M2 total",
   "variante": "m2-total",
   "nombre_variante": "M2 total, con depósitos en dólares (1970–2021)",
   "es_variante_por_defecto": false,
@@ -122,8 +123,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m2-total». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/agregados/m2-total/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m2-total». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/agregados/m2-total/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 2.0835e-07],

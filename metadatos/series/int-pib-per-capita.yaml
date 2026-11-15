@@ -1,6 +1,7 @@
 id: int-pib-per-capita
 codigo: INT-02
 nombre: Crecimiento del PIB per cápita, países seleccionados
+nombre_corto: PIB per cápita
 bloque: Contexto internacional
 prioridad: B
 definicion: Variación anual del PIB real per cápita (en dólares constantes), por país y agregado, según el Banco Mundial.

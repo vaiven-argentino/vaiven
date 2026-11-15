@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "base-monetaria.promedio-mensual",
   "serie": "base-monetaria",
   "codigo": "MON-01",
   "nombre": "Base monetaria",
+  "nombre_corto": "Base monetaria (promedio)",
   "variante": "promedio-mensual",
   "nombre_variante": "Promedio mensual (desde 2003)",
   "es_variante_por_defecto": false,
@@ -122,8 +123,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Base monetaria, variante «promedio-mensual». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/base-monetaria/promedio-mensual/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Base monetaria, variante «promedio-mensual». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/base-monetaria/promedio-mensual/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["2003-01", 37409.12161],

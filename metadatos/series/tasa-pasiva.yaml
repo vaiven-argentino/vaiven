@@ -1,6 +1,7 @@
 id: tasa-pasiva
 codigo: MON-03
 nombre: Tasa de interés pasiva
+nombre_corto: Tasa pasiva
 bloque: Monetario
 prioridad: A
 definicion: Tasa de interés por depósitos en moneda nacional, en porcentaje nominal anual (promedio mensual).
@@ -13,6 +14,7 @@ variante_por_defecto: plazo-fijo
 variantes:
   - id: plazo-fijo
     nombre: Plazo fijo de 30 a 59 días (desde 1970)
+    nombre_corto: Tasa de plazo fijo
     estado: publicada
     empalme: yuxtaponer
     metodo: >-
@@ -31,6 +33,7 @@ variantes:
         - {desde: 1990-01, hasta: 1990-03}
   - id: badlar
     nombre: BADLAR, bancos privados (desde 1999)
+    nombre_corto: Tasa BADLAR
     estado: publicada
     empalme: yuxtaponer
     metodo: >-

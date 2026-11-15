@@ -1,6 +1,7 @@
 id: resultado-fiscal
 codigo: FIS-01
 nombre: Resultado primario y financiero
+nombre_corto: Resultado fiscal
 bloque: Fiscal
 prioridad: A
 definicion: >-
@@ -20,6 +21,7 @@ unidades_medida: {real: 'millones de pesos de {base}', en_dolares: millones de U
 variantes:
   - id: primario
     nombre: Resultado primario, base caja (desde 1993)
+    nombre_corto: Resultado primario
     estado: publicada
     empalme: yuxtaponer
     metodo: >-
@@ -33,6 +35,7 @@ variantes:
     advertencias: [q.fiscal.cobertura-spn, q.fiscal.metodologia-2007, q.fiscal.metodologia-2015]
   - id: financiero
     nombre: Resultado financiero, base caja (desde 1993)
+    nombre_corto: Resultado financiero
     estado: publicada
     empalme: yuxtaponer
     metodo: >-

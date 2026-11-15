@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "tcr-multilateral.bruegel",
   "serie": "tcr-multilateral",
   "codigo": "CAM-03",
   "nombre": "Tipo de cambio real multilateral",
+  "nombre_corto": "TCR multilateral (Bruegel)",
   "variante": "bruegel",
   "nombre_variante": "Bruegel, 51 socios (desde 1970), sin empalmar",
   "es_variante_por_defecto": false,
@@ -77,8 +78,8 @@
     }
   ],
   "licencia": "other-at",
-  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bruegel». Versión de datos 2026-11-11. https://vaiven.argentino.workers.dev/series/tcr-multilateral/bruegel/",
-  "version_datos": "2026-11-11T22:35:39Z",
+  "cita": "Vaivén (2026). Tipo de cambio real multilateral, variante «bruegel». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/tcr-multilateral/bruegel/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 52.76583529],

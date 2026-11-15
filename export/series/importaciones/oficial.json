@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "importaciones.oficial",
   "serie": "importaciones",
   "codigo": "EXT-02",
   "nombre": "Importaciones",
+  "nombre_corto": "Importaciones",
   "variante": "oficial",
   "nombre_variante": "Oficial, anual (BCRA hasta 1991 e INDEC desde 1992)",
   "es_variante_por_defecto": true,
@@ -111,8 +112,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Importaciones, variante «oficial». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/importaciones/",
-  "version_datos": "2026-11-07T07:25:59Z",
+  "cita": "Vaivén (2026). Importaciones, variante «oficial». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/importaciones/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970", 1560.0],

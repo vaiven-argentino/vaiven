@@ -1,6 +1,7 @@
 id: agregados
 codigo: MON-02
 nombre: Agregados monetarios M1, M2 y M3
+nombre_corto: Agregados monetarios
 bloque: Monetario
 prioridad: A
 definicion: >-
@@ -19,6 +20,7 @@ unidades_medida: {real: 'millones de pesos de {base}', en_dolares: millones de U
 variantes:
   - id: m1
     nombre: M1 en pesos (desde 1970)
+    nombre_corto: M1
     estado: publicada
     empalme: yuxtaponer
     metodo: >-
@@ -32,6 +34,7 @@ variantes:
       var_excepciones: [1982-07]
   - id: m2-pesos
     nombre: M2 en pesos (1970–2021)
+    nombre_corto: M2 en pesos
     estado: publicada
     empalme: yuxtaponer
     escala: 0.001
@@ -46,6 +49,7 @@ variantes:
       - {a: f.bcra.m2-pesos-panorama, b: f.bcra.m2-historica, desde: 1970-02, hasta: 2019-07, en: tasas, tolerancia: 0.5}
   - id: m2-total
     nombre: M2 total, con depósitos en dólares (1970–2021)
+    nombre_corto: M2 total
     estado: publicada
     empalme: yuxtaponer
     escala: 0.001
@@ -57,6 +61,7 @@ variantes:
     advertencias: [q.agregados.panorama-2021]
   - id: m3-total
     nombre: M3 total, con depósitos en dólares (1970–2021)
+    nombre_corto: M3 total
     estado: publicada
     empalme: yuxtaponer
     escala: 0.001
@@ -68,6 +73,7 @@ variantes:
     advertencias: [q.agregados.panorama-2021]
   - id: m2-privado
     nombre: M2 privado, promedio mensual (desde 2009)
+    nombre_corto: M2 privado
     estado: publicada
     agregacion: promedio
     empalme: yuxtaponer

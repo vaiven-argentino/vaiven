@@ -1,6 +1,7 @@
 id: saldo-comercial
 codigo: EXT-03
 nombre: Saldo comercial
+nombre_corto: Saldo comercial
 bloque: Sector externo
 prioridad: A
 definicion: Exportaciones menos importaciones de bienes, en millones de dólares corrientes. Un valor negativo es un déficit.

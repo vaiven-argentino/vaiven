@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "pib-nominal.cada-base-trimestral",
   "serie": "pib-nominal",
   "codigo": "AUX-01",
   "nombre": "PIB nominal en pesos",
+  "nombre_corto": "PIB nominal en pesos",
   "variante": "cada-base-trimestral",
   "nombre_variante": "Trimestral (desde 1993), publicado en cada base",
   "es_variante_por_defecto": false,
@@ -64,8 +65,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). PIB nominal en pesos, variante «cada-base-trimestral». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/pib-nominal/cada-base-trimestral/",
-  "version_datos": "2026-11-07T07:38:15Z",
+  "cita": "Vaivén (2026). PIB nominal en pesos, variante «cada-base-trimestral». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/pib-nominal/cada-base-trimestral/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 53156.72353],

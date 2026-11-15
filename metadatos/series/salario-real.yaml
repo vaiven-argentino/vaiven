@@ -1,6 +1,7 @@
 id: salario-real
 codigo: TRA-03
 nombre: Salario real
+nombre_corto: Salario real
 bloque: Trabajo e ingresos
 prioridad: A
 definicion: >-
@@ -17,6 +18,7 @@ vista_inicial: {transformacion: nivel, medida: real}
 variantes:
   - id: ripte
     nombre: RIPTE, trabajadores estables registrados (desde 1994)
+    nombre_corto: Salario real (RIPTE)
     estado: publicada
     empalme: yuxtaponer
     metodo: >-
@@ -33,6 +35,7 @@ variantes:
     unidades_medida: {real: 'pesos de {base}', en_dolares: US$}
   - id: indice-salarios
     nombre: Índice de salarios del INDEC, sector privado registrado (desde 2001)
+    nombre_corto: Salario real (INDEC)
     estado: publicada
     unidad: índice oct. 2016 = 100
     empalme: encadenar_tasas

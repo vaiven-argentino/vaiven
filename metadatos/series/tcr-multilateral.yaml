@@ -1,6 +1,7 @@
 id: tcr-multilateral
 codigo: CAM-03
 nombre: Tipo de cambio real multilateral
+nombre_corto: TCR multilateral
 bloque: Cambiario
 prioridad: A
 definicion: >-
@@ -33,6 +34,7 @@ variantes:
     advertencias: [q.tcr.base-1997, q.tcr.ipc-2007-2015, q.tcr.tramo-diario]
   - id: bruegel
     nombre: Bruegel, 51 socios (desde 1970), sin empalmar
+    nombre_corto: TCR multilateral (Bruegel)
     estado: publicada
     unidad: índice, diciembre de 2015 = 100 (inversa del REER de Bruegel)
     empalme: yuxtaponer

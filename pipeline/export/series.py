@@ -10,7 +10,7 @@ import pandas as pd
 from pipeline.comun import etiqueta_fecha, redondear
 
 URL_SITIO = "https://vaiven.argentino.workers.dev"
-VERSION_ESQUEMA = "1.3"
+VERSION_ESQUEMA = "1.4"
 
 
 def url_ficha(serie_meta: dict, variante: dict) -> str:
@@ -91,6 +91,9 @@ def documento(serie_meta: dict, variante: dict, serie: pd.Series, fuentes: dict,
         "serie": serie_meta["id"],
         "codigo": serie_meta["codigo"],
         "nombre": serie_meta["nombre"],
+        # Esquema 1.4: el nombre en los gráficos de varias series (el de la variante, si declara uno; sonda 3 de la 4e).
+        # Las auxiliares, que no se grafican junto a otras, usan el nombre.
+        "nombre_corto": variante.get("nombre_corto", serie_meta.get("nombre_corto", serie_meta["nombre"])),
         "variante": variante["id"],
         "nombre_variante": variante["nombre"],
         "es_variante_por_defecto": variante["id"] == serie_meta["variante_por_defecto"],

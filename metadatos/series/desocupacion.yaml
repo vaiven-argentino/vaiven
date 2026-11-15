@@ -1,6 +1,7 @@
 id: desocupacion
 codigo: TRA-01
 nombre: Tasa de desocupación
+nombre_corto: Desocupación
 bloque: Trabajo e ingresos
 prioridad: A
 definicion: Personas desocupadas como porcentaje de la población económicamente activa, según la EPH del INDEC.
@@ -25,6 +26,7 @@ variantes:
     advertencias: [q.desocupacion.eph-2003, q.desocupacion.aglomerados, q.desocupacion.planes-2002, q.desocupacion.emergencia-2016]
   - id: gba
     nombre: Gran Buenos Aires, sin empalmar
+    nombre_corto: Desocupación GBA
     estado: publicada
     empalme: yuxtaponer
     escala: 100

@@ -1,6 +1,7 @@
 id: deuda-publica
 codigo: FIS-04
 nombre: Deuda pública externa (Banco Mundial)
+nombre_corto: Deuda pública externa
 bloque: Fiscal
 prioridad: A
 definicion: >-

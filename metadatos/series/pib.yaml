@@ -1,6 +1,7 @@
 id: pib
 codigo: ACT-01
 nombre: PIB real
+nombre_corto: PIB real
 bloque: Actividad
 prioridad: A
 definicion: >-

@@ -1,9 +1,10 @@
 {
-  "esquema": "1.3",
+  "esquema": "1.4",
   "id": "resultado-fiscal.primario",
   "serie": "resultado-fiscal",
   "codigo": "FIS-01",
   "nombre": "Resultado primario y financiero",
+  "nombre_corto": "Resultado primario",
   "variante": "primario",
   "nombre_variante": "Resultado primario, base caja (desde 1993)",
   "es_variante_por_defecto": true,
@@ -166,8 +167,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Resultado primario y financiero, variante «primario». Versión de datos 2026-11-13. https://vaiven.argentino.workers.dev/series/resultado-fiscal/",
-  "version_datos": "2026-11-13T21:23:46Z",
+  "cita": "Vaivén (2026). Resultado primario y financiero, variante «primario». Versión de datos 2026-11-15. https://vaiven.argentino.workers.dev/series/resultado-fiscal/",
+  "version_datos": "2026-11-15T03:35:15Z",
   "desactualizada_desde": null,
   "datos": [
     ["1993-01", 643.5],

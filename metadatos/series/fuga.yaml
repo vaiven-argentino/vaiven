@@ -1,6 +1,7 @@
 id: fuga
 codigo: EXT-08
 nombre: Fuga de capitales
+nombre_corto: Fuga de capitales
 bloque: Sector externo
 prioridad: A
 definicion: >-
@@ -17,6 +18,7 @@ variante_por_defecto: fae
 variantes:
   - id: fae
     nombre: Formación de activos externos, balance cambiario (desde 2003)
+    nombre_corto: Fuga (FAE)
     estado: publicada
     empalme: yuxtaponer
     escala: -1
@@ -30,6 +32,7 @@ variantes:
     advertencias: [q.fuga.mediciones]
   - id: activos-externos
     nombre: Stock de activos externos del sector privado (desde 1991)
+    nombre_corto: Activos externos privados
     estado: publicada
     tipo: stock
     agregacion: fin_de_periodo

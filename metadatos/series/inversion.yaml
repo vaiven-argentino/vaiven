@@ -1,6 +1,7 @@
 id: inversion
 codigo: ACT-03
 nombre: Inversión bruta interna fija
+nombre_corto: Inversión
 bloque: Actividad
 prioridad: A
 definicion: >-
@@ -43,6 +44,7 @@ variantes:
     advertencias: [q.inversion.hueco-1991-1992]
   - id: pct-pib-corrientes
     nombre: En % del PIB, a precios corrientes (desde 1993)
+    nombre_corto: Inversión (% del PIB)
     estado: publicada
     unidad: '% del PIB'
     empalme: derivar

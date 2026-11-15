@@ -1,6 +1,7 @@
 id: importaciones
 codigo: EXT-02
 nombre: Importaciones
+nombre_corto: Importaciones
 bloque: Sector externo
 prioridad: A
 definicion: >-
