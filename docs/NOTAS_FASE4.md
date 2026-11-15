@@ -1589,7 +1589,7 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
 - Los botones y las casillas de la interfaz eran chicos para el celular: ahora miden 36 px y 18 px.
 
 **Queda pendiente:**
-- **La interfaz en el celular** (problemas 1 y 3 de la revisión). La especificación del MCP mide 800 px, y a 390 se escala: en el doble eje, los títulos de los ejes y los nombres se pisan; en los paneles, el texto queda ilegible. La solución es que la herramienta acepte el ancho (un parámetro más) y que la interfaz lo pida según su contenedor, como hace el explorador: a menos de 520 px, el explorador pasa a paneles y saca los nombres. Es un cambio de la 7.2: decisión de Camilo.
+- ~~**La interfaz en el celular**~~: resuelto el 15/11/2026 (ver «Ancho de la interfaz y umbral de M5», más abajo).
 - **Unidad «pesos actuales»:** el texto alternativo del gráfico y la descripción de la serie siguen sin la aclaración. Cambiarlos mueve el resumen de todas las fichas de la 4b; queda para cuando se revise ese texto.
 - **Explorador a 390:** en los paneles no hay nombres al final de las líneas (como antes; las series se nombran en el subtítulo de cada panel).
 - **El eje logarítmico de la base monetaria** mezcla «10.000» con «10⁻²» (viene de la 4b).
@@ -1597,7 +1597,7 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
 
 ### Diferencias con la SPEC (van a la v1.10, con el cierre de la 4e)
 
-- **4.1:** el aviso `c.escalas-distintas`.
+- **4.1:** el aviso `c.escalas-distintas` (umbral: 5 veces).
 - **6.2:**
   - los nombres al final de las líneas en todas las series y, en el doble eje, después de los números del eje derecho;
   - la leyenda única con `ley=1` y su botón;
@@ -1605,7 +1605,7 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
   - el trazo discontinuo de la segunda variante;
   - las iniciales y las franjas finas del sombreado;
   - la unidad en pesos actuales aclarada.
-- **7.2:** los parámetros `tema`, `imagen` y `leyenda`, y los campos `escala`, `quiebres` y `nombre_archivo`.
+- **7.2:** los parámetros `tema`, `imagen`, `leyenda` y `ancho`, `ejes: doble`, y los campos `escala`, `quiebres` y `nombre_archivo`.
 - **7.3:** el tope de 140.000 caracteres, además de las 1.000 observaciones.
 - **7.4:**
   - el HTML mínimo con el script desde el dominio propio (confirmado en Claude web y Desktop);
@@ -1616,11 +1616,36 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
 
 ### Pendientes
 
-- **M5, el umbral:** con 10 veces, el aviso no salta en el caso del informe (inflación y dólar interanuales, 2000–2020-09), donde la relación es de unas 5,4 veces; sí salta con la hiperinflación. Decidir si se baja a 5.
-- **El ancho en el celular:** los paneles tienen 800 px fijos y en 390 px la interfaz los escala (el texto queda chico). Se podría pedir un ancho a la herramienta (otro parámetro).
 - **`probador-mcp`:** el MCP local de esta sesión corre el código de cuando arrancó, así que no se pudo probar el código nuevo. Va en una sesión nueva, con las preguntas 19 a 24 y una de leyenda.
 - **La franja de los interinos** se ve bastante marcada, sobre todo en oscuro; se puede aclarar.
 - **Antes del merge:**
   - quitar el commit TEMPORAL de `preview_urls` y el host `prueba-4e`;
   - traer `main` y regenerar el export sin red (CLAUDE.md), cuidando el `desactualizada_desde` del tipo de cambio real bilateral.
 - **La prueba de Camilo** en Claude web y en Desktop, con la sección 4 nueva de `PRUEBA_MANUAL.md`, en la URL de versión.
+
+### Ancho de la interfaz y umbral de M5 (15/11/2026)
+
+**Decisiones de Camilo:**
+
+| Tema | Decisión |
+|---|---|
+| El ancho en el celular | `especificacion_grafico` acepta `ancho` y la interfaz lo pide según su espacio. |
+| M5 | El umbral baja de 10 a **5** veces, y el aviso sigue siendo solo texto: dos series de la misma unidad van siempre en el mismo eje o panel, así que «Ver en paneles» no las separa. |
+
+**Qué se hizo:**
+- **`ancho`** (de 320 a 1.200 px; por defecto, 800), con la regla del explorador fuera del escritorio (`tamanoDe`, en `comparar.ts`):
+  - con menos de 600 px, la vista angosta: dos unidades van en paneles;
+  - el alto es de 260 px con menos de 520 de ancho y de 360 con menos de 600; si no, 400.
+- **`ejes`** acepta además `doble`, el doble eje pedido en lo angosto, como `ejes=doble` en la URL.
+- **La interfaz**:
+  - mide su ancho y, si difiere en más de 40 px del de la vista, la vuelve a pedir: en el mismo pedido que corrige el tema, y también al cambiar el ancho;
+  - en lo angosto, la casilla «En paneles» pasa a ser «Doble eje».
+- **M5:** `FACTOR_ESCALAS = 5`. El caso de la prueba en Claude web (inflación y dólar interanuales, 2000–2020-09: el dólar se mueve 307 puntos y la inflación 59, 5,2 veces) ahora avisa; la hiperinflación contra el PIB (745 veces), también.
+
+**Verificación:**
+- la igualdad con el explorador también a 390 px (las 8 vistas, con el alto de 260 y la vista angosta) y en el navegador (8 de 8);
+- en el host local, a 390 px el doble eje pasa a dos paneles y el texto se lee, sin desbordes, en claro y en oscuro.
+
+**Para la SPEC v1.10:**
+- 7.2: el parámetro `ancho` y `ejes: doble` en `especificacion_grafico`;
+- 4.1: el umbral de 5 del aviso de escalas.

@@ -12,7 +12,7 @@ import {
 } from "@vaiven/grafico";
 import type { DocumentoEventos, DocumentoPeriodos, InsumosCargados, SerieExportada } from "@vaiven/transformaciones";
 import { describe, expect, it } from "vitest";
-import { ALTO_MCP, ANCHO_MCP, especificacionGrafico, type ArgsEspecificacion } from "../src/herramientas/comparar";
+import { ALTO_MCP, ANCHO_MCP, especificacionGrafico, tamanoDe, type ArgsEspecificacion } from "../src/herramientas/comparar";
 import { EXPORT, repoReal } from "./ayuda";
 
 const repo = repoReal();
@@ -26,7 +26,7 @@ const PERIODOS = leer<DocumentoPeriodos>("periodos.json");
 const EVENTOS = leer<DocumentoEventos>("eventos.json");
 
 /** Lo que hace el explorador con una URL: leerla, bajar los JSON y sus insumos, y armar la vista. */
-function explorador(url: string, ancho: number, alto: number, tema: Tema = TEMA_CLARO, impreso?: { titulo: string; subtitulo: string; pie: string[] }) {
+function explorador(url: string, ancho: number, alto: number, tema: Tema = TEMA_CLARO, impreso?: { titulo: string; subtitulo: string; pie: string[] }, angosto = false) {
   const q = new URLSearchParams(new URL(url).search);
   const { pedidas, avisos } = seriesDeUrl(q, indice);
   const docs = pedidas.map((p) => leer<Documento>(`series/${p.serie.id}/${p.variante}.json`));
@@ -42,7 +42,7 @@ function explorador(url: string, ancho: number, alto: number, tema: Tema = TEMA_
       }
     }
   }
-  return armarVista({ estado: r.estado, docs: r.docs, insumos: { series, ...(signos ? { signos } : {}) }, periodos: PERIODOS, eventos: EVENTOS, tema, ancho, alto, ...(impreso ? { impreso } : {}) });
+  return armarVista({ estado: r.estado, docs: r.docs, insumos: { series, ...(signos ? { signos } : {}) }, periodos: PERIODOS, eventos: EVENTOS, tema, ancho, alto, angosto, ...(impreso ? { impreso } : {}) });
 }
 
 /** «Descargar PNG» del explorador (web/src/graficos/explorador.ts, `imagen`): el texto sale de la vista de la pantalla. */
@@ -85,5 +85,25 @@ describe("con tema e imagen, también la del explorador (4e)", () => {
     // La URL de la vista va entera al final del pie.
     const titulo = r.especificacion.title as { subtitle: string[] };
     expect(titulo.subtitle.at(-1)).toBe(r.url_explorador);
+  });
+});
+
+describe("con el ancho del celular, la vista del explorador en el celular (4e)", () => {
+  it("el tamaño sigue la regla del explorador fuera del escritorio", () => {
+    expect(tamanoDe(390)).toEqual({ ancho: 390, alto: 260, angosto: true });
+    expect(tamanoDe(560)).toEqual({ ancho: 560, alto: 360, angosto: true });
+    expect(tamanoDe()).toEqual({ ancho: ANCHO_MCP, alto: ALTO_MCP, angosto: false });
+  });
+  it.each(VISTAS)("%s, a 390 px", async (_, args) => {
+    const r = await especificacionGrafico(repo, { ...args, ancho: 390 });
+    // Con `ejes: doble` (lo que escribe el celular), el explorador lee la misma vista de la URL.
+    expect(r.especificacion).toEqual(explorador(r.url_explorador, 390, 260, TEMA_CLARO, undefined, true).especificacion);
+  });
+  it("dos unidades a 390 px van en paneles, salvo con ejes: doble", async () => {
+    const base = { series: [{ id: "ipc", transformacion: "var_interanual" as const }, { id: "reservas" }], desde: "2000", hasta: "2010" };
+    expect((await especificacionGrafico(repo, { ...base, ancho: 390 })).disposicion.tipo).toBe("paneles");
+    const doble = await especificacionGrafico(repo, { ...base, ancho: 390, ejes: "doble" });
+    expect(doble.disposicion.tipo).toBe("doble_eje");
+    expect(doble.url_explorador).toMatch(/ejes=doble/);
   });
 });

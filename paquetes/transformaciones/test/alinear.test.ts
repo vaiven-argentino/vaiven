@@ -226,13 +226,18 @@ describe("ajustes tras la prueba del MCP", () => {
 
 describe("escalas muy distintas en un mismo eje o panel (M5, 4e)", () => {
   const variacion = { transformacion: "var_interanual" as const };
-  it("avisa si el rango de una serie es más de 10 veces el de otra de la misma unidad", () => {
+  it("avisa en el caso de la prueba en Claude web: el dólar interanual aplasta a la inflación (5,2 veces)", () => {
+    const TC = doc<SerieExportada>("tc-oficial/pesos-actuales.json");
+    const c = comparar({ series: [{ documento: IPC, opciones: variacion }, { documento: TC, opciones: variacion }], desde: "2000", hasta: "2020-09" });
+    expect(c.advertencias.find((a) => a.id === "c.escalas-distintas")).toMatchObject({ series: [2, 1] });
+  });
+  it("avisa si el rango de una serie es más de 5 veces el de otra de la misma unidad", () => {
     // La hiperinflación (1989–1990) contra el crecimiento del PIB: el mismo eje, «variación % interanual».
     const c = comparar({ series: [{ documento: IPC, opciones: variacion }, { documento: PIB, opciones: variacion }], desde: "1985", hasta: "2000" });
     expect(c.disposicion.tipo).toBe("unico");
     const aviso = c.advertencias.find((a) => a.id === "c.escalas-distintas");
     expect(aviso).toMatchObject({ series: [1, 2] });
-    expect(aviso!.descripcion).toMatch(/la serie 1 varía más de 10 veces lo que varía la serie 2, que queda casi plana/);
+    expect(aviso!.descripcion).toMatch(/la serie 1 varía más de 5 veces lo que varía la serie 2, que queda casi plana/);
   });
   it("no avisa con rangos parecidos", () => {
     const c = comparar({ series: [{ documento: IPC, opciones: variacion }, { documento: PIB, opciones: variacion }], desde: "2005", hasta: "2010" });

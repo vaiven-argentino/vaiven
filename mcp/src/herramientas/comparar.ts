@@ -30,13 +30,27 @@ export interface ArgsEspecificacion {
   hasta?: string;
   sombreado?: Exclude<Sombreado, "">;
   eventos?: boolean | string[];
-  ejes?: "auto" | "paneles";
+  ejes?: "auto" | "paneles" | "doble";
+  /**
+   * El ancho del gráfico, en píxeles (por defecto, 800). Lo pide la interfaz en Claude según su espacio: con menos de
+   * 600, la vista es la del explorador en el celular (dos unidades en paneles, salvo con `ejes: doble`, y menos alto).
+   */
+  ancho?: number;
   /** Con varias series, la leyenda única arriba en lugar de los nombres al final de las líneas (N8, 4e). */
   leyenda?: boolean;
   /** Los colores del modo claro (por defecto) o del oscuro, los mismos del explorador (M7, 4e). */
   tema?: "claro" | "oscuro";
   /** La imagen para descargar: 900 px, con título y pie (fuentes, licencia y URL), como la del explorador (A3, 4e). */
   imagen?: boolean;
+}
+
+/**
+ * El tamaño de la vista para un ancho pedido, con la regla del explorador fuera del escritorio (web/src/graficos/
+ * explorador.ts): angosta con menos de 600 px (`ANGOSTO`), y 260 px de alto con menos de 520 o 360 con menos de 600.
+ */
+export function tamanoDe(ancho = ANCHO_MCP): { ancho: number; alto: number; angosto: boolean } {
+  const angosto = ancho < 600;
+  return { ancho, alto: angosto ? (ancho < 520 ? 260 : 360) : ALTO_MCP, angosto };
 }
 
 /** Tamaño del gráfico del MCP (el explorador usa el de la pantalla; lo demás es igual, SPEC 10). */
@@ -180,7 +194,7 @@ function estadoDe(args: ArgsEspecificacion, preparadas: SeriePreparada[], catego
       log: logInicial(serieVista(doc, paises), t, m), p: paises, sh: args.sombreado ?? "", ev,
     };
   });
-  return { series, ejes: args.ejes === "paneles" ? "paneles" : "", ...(args.leyenda && series.length > 1 ? { leyenda: true as const } : {}) };
+  return { series, ejes: args.ejes === "paneles" || args.ejes === "doble" ? args.ejes : "", ...(args.leyenda && series.length > 1 ? { leyenda: true as const } : {}) };
 }
 
 /** Los quiebres marcados en el gráfico (los que no son generales y caen en lo que se ve), con su número. */
@@ -210,7 +224,7 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
     throw new ErrorHerramienta(`El explorador no puede mostrar exactamente esta vista: ${[...a1, ...leida.avisos].join(" ") || "algún parámetro no tiene equivalente en la URL"}. Pedí los datos con comparar_series.`);
   }
   const insumos: InsumosCargados = { series: Object.assign({}, ...preparadas.map((p) => p.insumos.series ?? {})), ...(preparadas.find((p) => p.insumos.signos) ? { signos: preparadas.find((p) => p.insumos.signos)!.insumos.signos } : {}) };
-  const entrada = { estado, docs, insumos, periodos, eventos, tema: args.tema === "oscuro" ? TEMA_OSCURO : TEMA_CLARO, ancho: ANCHO_MCP, alto: ALTO_MCP };
+  const entrada = { estado, docs, insumos, periodos, eventos, tema: args.tema === "oscuro" ? TEMA_OSCURO : TEMA_CLARO, ...tamanoDe(args.ancho) };
   const urlExplorador = `${URL_EXPLORADOR}${url}`;
   let vista;
   try {

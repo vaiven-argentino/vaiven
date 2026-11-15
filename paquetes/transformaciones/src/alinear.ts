@@ -212,11 +212,11 @@ export function disposicion(unidades: string[], internacional: number | null, lo
   return { disposicion: { tipo, paneles }, advertencias };
 }
 
-/** Cuántas veces el rango de una serie tiene que superar el de otra del mismo eje o panel para avisar (M5 de la 4e). */
-export const FACTOR_ESCALAS = 10;
+/** Cuántas veces el rango de una serie tiene que superar el de otra del mismo eje o panel para avisar (M5 de la 4e; 5, decidido con Camilo el 15/11/2026: el dólar interanual de 2000–2020 contra la inflación da 5,2). */
+export const FACTOR_ESCALAS = 5;
 
 /**
- * Dos series de la misma unidad comparten eje o panel (SPEC 4.1), y si el rango de una es más de 10 veces el de otra,
+ * Dos series de la misma unidad comparten eje o panel (SPEC 4.1), y si el rango de una es más de 5 veces el de otra,
  * la de menor rango queda casi plana (el dólar interanual de 2002 contra la inflación, o la hiperinflación contra todo).
  * La disposición no cambia: un aviso lo dice y sugiere cómo leerla (M5, decidido con Camilo el 14/11/2026).
  */

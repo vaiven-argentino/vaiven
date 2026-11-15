@@ -32,6 +32,20 @@ let tema: "claro" | "oscuro" = matchMedia("(prefers-color-scheme: dark)").matche
 let pidiendo = false;
 /** El tema con que el modelo pidió la vista (casi siempre ninguno: claro). */
 let temaPedido: unknown;
+/** El ancho con que se armó la vista que se ve (el del modelo, 800 si no lo dijo). */
+let anchoUsado = 800;
+/** Diferencia de ancho a partir de la cual se vuelve a pedir la vista. */
+const TOLERANCIA_ANCHO = 40;
+
+/**
+ * El ancho que tiene la interfaz para el gráfico (el del contenedor o, si todavía no se midió, el del host), dentro de lo
+ * que acepta la herramienta. Con menos de 600 px, la vista es la del explorador en el celular (SPEC 7.4, 4e).
+ */
+function anchoDisponible(): number {
+  const dims = app.getHostContext()?.containerDimensions as { width?: number; maxWidth?: number } | undefined;
+  const medido = contenedor.clientWidth || dims?.width || dims?.maxWidth || 800;
+  return Math.max(320, Math.min(1200, Math.round(medido)));
+}
 
 function estado(texto: string, error = false): void {
   estadoTexto.textContent = texto;
@@ -67,7 +81,9 @@ async function mostrar(r: Respuesta, avisar = true): Promise<void> {
   $("titulo").textContent = nombres.join(" · ");
   const paneles = r.disposicion.paneles;
   const disposicion = r.disposicion.tipo === "doble_eje" ? "Doble eje" : r.disposicion.tipo === "paneles" ? `${paneles.length} paneles` : "Un gráfico";
-  const unidades = paneles.map((p) => `${unidadVisible(p.unidad)}${p.escala === "log" ? " (escala logarítmica)" : ""}`).join(" · ");
+  // La escala logarítmica va con la unidad, en un solo paréntesis («(sin ajuste por inflación; escala logarítmica)»).
+  const conEscala = (u: string, log: boolean) => (!log ? u : u.endsWith(")") ? `${u.slice(0, -1)}; escala logarítmica)` : `${u} (escala logarítmica)`);
+  const unidades = paneles.map((p) => conEscala(unidadVisible(p.unidad), p.escala === "log")).join(" · ");
   $("subtitulo").textContent = `${disposicion} · ${unidades}`;
   for (const id of ["abrir", "bajar-png", "bajar-svg"]) $<HTMLButtonElement>(id).disabled = false;
   listas(r);
@@ -130,7 +146,10 @@ function controles(r: Respuesta): void {
   $<HTMLInputElement>("leyenda").checked = args.leyenda === true;
   const dosUnidades = new Set(r.disposicion.paneles.map((p) => p.unidad)).size === 2 && r.disposicion.paneles.length === 2;
   $("campo-paneles").hidden = !dosUnidades;
-  $<HTMLInputElement>("paneles").checked = args.ejes === "paneles";
+  // Como en el explorador: en lo angosto, dos unidades van en paneles y el doble eje hay que pedirlo (`ejes: doble`).
+  const angosta = anchoUsado < 600;
+  $("texto-paneles").textContent = angosta ? "Doble eje" : "En paneles";
+  $<HTMLInputElement>("paneles").checked = args.ejes === (angosta ? "doble" : "paneles");
   // Una lista de transformaciones por serie, con las que admite su variante.
   const caja = $("transformaciones");
   caja.replaceChildren(...(args.series ?? []).map((s, k) => {
@@ -166,7 +185,7 @@ function argsDeControles(): Args {
   else delete nuevo.eventos;
   if ($<HTMLInputElement>("leyenda").checked) nuevo.leyenda = true;
   else delete nuevo.leyenda;
-  if ($<HTMLInputElement>("paneles").checked) nuevo.ejes = "paneles";
+  if ($<HTMLInputElement>("paneles").checked) nuevo.ejes = anchoUsado < 600 ? "doble" : "paneles";
   else delete nuevo.ejes;
   for (const select of $("transformaciones").querySelectorAll<HTMLSelectElement>("select")) {
     const s = nuevo.series![Number(select.dataset.serie)];
@@ -182,13 +201,15 @@ async function pedir(nuevo: Args, motivo = "Actualizando el gráfico…"): Promi
   pidiendo = true;
   estado(motivo);
   try {
-    const r = (await app.callServerTool({ name: "especificacion_grafico", arguments: { ...nuevo, tema } })) as Resultado;
+    const ancho = anchoDisponible();
+    const r = (await app.callServerTool({ name: "especificacion_grafico", arguments: { ...nuevo, tema, ancho } })) as Resultado;
     if (r.isError || !r.structuredContent) {
       estado(textoDe(r) || "La herramienta no devolvió el gráfico.", true);
       if (ultima) controles(ultima);
       return false;
     }
     args = nuevo;
+    anchoUsado = ancho;
     await mostrar(r.structuredContent);
     return true;
   } catch (e) {
@@ -217,7 +238,7 @@ async function bajar(formato: "png" | "svg"): Promise<void> {
   estado("Preparando la imagen…");
   try {
     // La imagen de 900 px, con título y pie (fuentes, licencia y enlace): la misma que baja el explorador (A3).
-    const r = (await app.callServerTool({ name: "especificacion_grafico", arguments: { ...args, tema, imagen: true } })) as Resultado;
+    const r = (await app.callServerTool({ name: "especificacion_grafico", arguments: { ...args, tema, ancho: anchoUsado, imagen: true } })) as Resultado;
     if (r.isError || !r.structuredContent) return estado(textoDe(r) || "No se pudo armar la imagen.", true);
     const imagen = await imagenDe(r.structuredContent.especificacion, formato, { ast: true });
     const nombre = `${r.structuredContent.nombre_archivo}.${formato}`;
@@ -260,7 +281,10 @@ app.addEventListener("toolinput", (p) => {
   args = { ...(p.arguments as Args) };
   // El tema lo elige la interfaz (el de Claude): no se arrastra el del pedido.
   temaPedido = args.tema;
+  // El ancho también: es el del espacio de la interfaz.
+  anchoUsado = typeof args.ancho === "number" ? args.ancho : 800;
   delete args.tema;
+  delete args.ancho;
   delete args.imagen;
 });
 app.addEventListener("toolresult", (p) => {
@@ -269,10 +293,14 @@ app.addEventListener("toolresult", (p) => {
     estado(textoDe(r) || "La herramienta no devolvió el gráfico.", true);
     return;
   }
-  // El modelo pide la vista en claro: si Claude está en modo oscuro, se vuelve a pedir con los colores oscuros.
-  if ((temaPedido === "oscuro" ? "oscuro" : "claro") !== tema) {
-    // El aviso al modelo va con la vista que queda (la del tema de Claude), no con la intermedia.
-    void mostrar(r.structuredContent, false).then(() => pedir(args, tema === "oscuro" ? "Pasando el gráfico a modo oscuro…" : "Pasando el gráfico a modo claro…"));
+  // El modelo pide la vista en claro y a 800 px: si Claude está en modo oscuro o la interfaz tiene otro ancho (el
+  // celular), se vuelve a pedir, en un solo pedido, con los colores y el ancho que corresponden.
+  const otroTema = (temaPedido === "oscuro" ? "oscuro" : "claro") !== tema;
+  const otroAncho = Math.abs(anchoDisponible() - anchoUsado) > TOLERANCIA_ANCHO;
+  if (otroTema || otroAncho) {
+    // El aviso al modelo va con la vista que queda, no con la intermedia.
+    const motivo = otroTema ? (tema === "oscuro" ? "Pasando el gráfico a modo oscuro…" : "Pasando el gráfico a modo claro…") : "Ajustando el gráfico al ancho…";
+    void mostrar(r.structuredContent, false).then(() => pedir(args, motivo));
   } else {
     void mostrar(r.structuredContent);
   }
@@ -284,6 +312,15 @@ app.addEventListener("hostcontextchanged", (p) => {
     if (ultima) void pedir(args, nuevo === "oscuro" ? "Pasando el gráfico a modo oscuro…" : "Pasando el gráfico a modo claro…");
   }
 });
+
+// Si cambia el ancho de la interfaz (se gira el celular, se agranda la ventana), se vuelve a pedir la vista.
+let esperaAncho: ReturnType<typeof setTimeout> | undefined;
+new ResizeObserver(() => {
+  clearTimeout(esperaAncho);
+  esperaAncho = setTimeout(() => {
+    if (ultima && !pidiendo && Math.abs(anchoDisponible() - anchoUsado) > TOLERANCIA_ANCHO) void pedir(args, "Ajustando el gráfico al ancho…");
+  }, 500);
+}).observe(contenedor);
 
 try {
   await app.connect();

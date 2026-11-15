@@ -98,6 +98,7 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 | f | Los controles y el error | Cada cambio redibuja; el error se lee y no cambia el gráfico. |
 | g | Las descargas | El archivo tiene título, pie y el nombre de la vista. |
 | h | El alto | Sin barra de desplazamiento interna con los desplegables cerrados (M9). |
+| j | En el celular (o con la ventana de Claude angosta) | El gráfico se vuelve a armar para ese ancho: el doble eje pasa a paneles (la casilla dice «Doble eje» para pedirlo) y el texto se lee. Al girar el celular, se rearma. |
 | i | La consola | Sin «Refused to load» ni «Refused to execute». |
 
 **Avisos de la consola que se pueden ignorar** (no son de Vaivén):

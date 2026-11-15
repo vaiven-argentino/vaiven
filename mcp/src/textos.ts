@@ -198,6 +198,12 @@ export const PARAMETRO = {
     "categorías (por ejemplo, [\"cambiario\", \"deuda\"]; \"episodio\" para los episodios).",
   ejes:
     "auto (por defecto): con dos unidades, doble eje · paneles: un panel por unidad, también con dos unidades.",
+  ejesGrafico:
+    "auto (por defecto): con dos unidades, doble eje (en anchos de menos de 600 px, paneles) · paneles: un panel por " +
+    "unidad, también con dos unidades · doble: doble eje también en anchos de menos de 600 px.",
+  ancho:
+    "Ancho del gráfico en píxeles, de 320 a 1.200 (por defecto, 800). Con menos de 600, la vista del celular, como en el " +
+    "explorador. Lo pide la interfaz del gráfico según su espacio; no hace falta pedirlo.",
   leyenda:
     "Con varias series, true pone una leyenda única arriba del gráfico en lugar del nombre al final de cada línea. Lo usa " +
     "sobre todo la interfaz del gráfico; no hace falta pedirlo.",
