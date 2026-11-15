@@ -4,7 +4,7 @@
 //
 // Además de las páginas, corre siempre los casos fijos (CASOS_FIJOS): vistas del explorador y de la ficha con parámetros
 // que ya dieron problemas, cada una con sus anchos y su alto de ventana. Para cada vista informa también dónde empieza el
-// gráfico (`topGrafico`), el alto de la página (`altoPagina`) y cómo se marcan los eventos (`eventos`: letras o rayitas).
+// gráfico (`topGrafico`), el alto de la página (`altoPagina`) y cómo se marcan los eventos (`eventos`: «letras»; desde la sonda 3 de la 4e no hay rayitas).
 //
 // Uso: node web/scripts/revision-visual.mjs --base http://localhost:8787 --salida <carpeta>
 //        [--paginas /,/series/ipc/] (se separan con una coma seguida de «/»: las URL pueden llevar comas) [--anchos 390,1280] [--modos claro,oscuro] [--sin-casos 1]
@@ -59,7 +59,7 @@ const CASOS_FIJOS = [
   { ruta: "/explorador/?s=reservas&desde=1988&hasta=1991&sh=gobierno" }, // saldo en julio de 1989
   { ruta: "/explorador/", anchos: [1280], alto: 800, pantalla: true }, // el gráfico, sin desplazar
   { ruta: "/periodos/", anchos: [390] },
-  { ruta: "/explorador/?desde=1970&ev=1" }, // 1970–hoy con todos los eventos: rayitas
+  { ruta: "/explorador/?desde=1970&ev=1" }, // 1970–hoy con todos los eventos: letras agrupadas
   // Varias series (4c/4d, PR B): doble eje (paneles en 390 px), el mismo par en paneles y con el doble eje pedido en el
   // celular, cuatro series con sombreado y eventos, una internacional en su panel y la franja de los planes en paneles.
   { ruta: "/explorador/?desde=1995&hasta=2010&sh=gobierno&s2=reservas" },

@@ -6,7 +6,7 @@ import {
   type Agregacion, type ContextoUbicacion, type DocumentoEventos, type DocumentoPeriodos, type Opciones, type Periodo,
   type Resultado, type TipoPeriodo, type Ubicacion,
 } from "@vaiven/transformaciones";
-import type { BandaEpisodio, BandaPeriodo, MarcaEvento, ModoEventos } from "./espec";
+import type { BandaEpisodio, BandaPeriodo, MarcaEvento } from "./espec";
 import { fechaLegible } from "./formato";
 
 /** Opciones de sombreado (el valor va en el parámetro `sh` de la URL). */
@@ -191,11 +191,11 @@ const diaCorto = (d: string) => { const [a, m, dd] = d.split("-"); return `${Num
  * Lo que dice el lector del gráfico de un dato (revisión externa de la 4b, 9.4): fecha y valor; con sombreado, la
  * banda donde se dibuja (o las superpuestas) con sus fechas, y el reparto si cruza un cambio; el episodio y la fase en
  * que cae el día de referencia; y los eventos marcados cuya fecha cae dentro de la observación (con su letra, si el
- * gráfico las muestra).
+ * gráfico las muestra; desde la sonda 3 de la 4e, siempre).
  */
 export function textoLectura(d: {
   fecha: string; frecuencia: string; valor: string; contexto: ContextoUbicacion;
-  columna?: string; ubicacion?: Ubicacion; episodios?: BandaEpisodio[]; eventos?: MarcaEvento[]; modo?: ModoEventos;
+  columna?: string; ubicacion?: Ubicacion; episodios?: BandaEpisodio[]; eventos?: MarcaEvento[];
 }): string {
   const partes = [`${fechaLegible(d.fecha, d.frecuencia)}: ${d.valor}`];
   const u = d.ubicacion;
@@ -214,8 +214,7 @@ export function textoLectura(d: {
   const { desde, hasta } = diasDe(d.fecha, d.frecuencia);
   const eventos = (d.eventos ?? []).filter((e) => e.fecha >= desde && e.fecha <= hasta);
   if (eventos.length) {
-    const letra = d.modo !== "rayitas";
-    partes.push(`${eventos.length === 1 ? "evento" : "eventos"}: ${eventos.map((e) => `${letra ? `${e.letra}. ` : ""}${e.nombre} (${diaCorto(e.fecha)})`).join("; ")}`);
+    partes.push(`${eventos.length === 1 ? "evento" : "eventos"}: ${eventos.map((e) => `${e.letra}. ${e.nombre} (${diaCorto(e.fecha)})`).join("; ")}`);
   }
   return partes.join(" · ");
 }

@@ -7,7 +7,7 @@ import {
   type AdvertenciaCombinacion, type Alineada, type Comparacion, type ContextoUbicacion, type DocumentoEventos,
   type DocumentoPeriodos, type InsumosCargados, type Panel, type Periodo, type Resultado, type TipoPeriodo, type Ubicacion,
 } from "@vaiven/transformaciones";
-import { dominioMeses, especificacion, modoEventosDe, type BandaEpisodio, type EntradaGrafico, type EntradaLeyenda, type MarcaEvento, type ModoEventos, type Tema } from "./espec";
+import { dominioMeses, especificacion, type BandaEpisodio, type EntradaGrafico, type EntradaLeyenda, type MarcaEvento, type Tema } from "./espec";
 import { opcionesDe, serieVista, type Documento, type Estado, type EstadoVista } from "./estado";
 import { esVariacion, numerarQuiebres, resumen, type QuiebreNumerado } from "./ficha";
 import { fechaLegible, numero, unidadVisible } from "./formato";
@@ -302,15 +302,13 @@ export function armarVista(v: EntradaVista): Vista {
   // ── Paneles ──
   const n = d.paneles.length;
   const alto = Math.max(ALTO_MINIMO_PANEL, Math.floor((v.alto - SEPARACION_PANELES * (n - 1)) / n));
-  const letras = dominio ? modoEventosDe(dominio, eventos, v.ancho) === "letras" : false;
   const specs = d.paneles.map((p, k) => {
     const ultimo = k === n - 1;
-    // El sombreado cruza todos los paneles (los rótulos de las bandas, solo en el primero); la franja de los planes va
-    // arriba del primero y la de los episodios, debajo del último. Las reglas de los eventos cruzan todos los paneles;
-    // las letras o las rayitas van en el último, debajo de su eje.
+    // La cinta de los períodos y la franja de los episodios van debajo del último panel; la franja de los planes, arriba
+    // del primero. Las reglas de los eventos cruzan todos los paneles y las letras van arriba del primero (sonda 3).
     const e = entradaPanel(p, {
-      prefijoDatos: `p${k + 1}_`, alto, sombreado: sombreado && (!sombreado.franja || k === 0) ? sombreado : undefined, sinRotulosSombreado: k > 0,
-      eventos: ultimo || letras ? eventos : [], sinLetrasEventos: !ultimo, episodios: ultimo ? episodios : [], sinEjeX: !ultimo,
+      prefijoDatos: `p${k + 1}_`, alto, sombreado: sombreado && (sombreado.franja ? k === 0 : ultimo) ? sombreado : undefined,
+      eventos, sinLetrasEventos: k > 0, episodios: ultimo ? episodios : [], sinEjeX: !ultimo,
       capasExtra: guia.capas(alto, nombresGuia[k]),
       // La leyenda única va arriba del primer panel, entre su título y el área del gráfico (Vega sube el título).
       ...(leyendaUnica && k === 0 ? { leyenda: entradasLeyenda(), leyendaEncima: 6 } : {}),
@@ -469,7 +467,7 @@ export function filasGuia(c: Comparacion, docs: Documento[], estado: EstadoVista
  * Lo que dice el lector de teclado en cada fecha de la guía común (SPEC 6.2): la fecha, el valor de cada serie y, como
  * con una serie, el período con sus fechas y el reparto, el episodio y los eventos marcados dentro de la observación.
  */
-export function lecturasGuia(g: Guia, d: { sh: OpcionSombreado | ""; episodios?: BandaEpisodio[]; eventos?: MarcaEvento[]; modo?: ModoEventos }):
+export function lecturasGuia(g: Guia, d: { sh: OpcionSombreado | ""; episodios?: BandaEpisodio[]; eventos?: MarcaEvento[] }):
   Array<{ t: string; texto: string }> {
   return g.filas.flatMap((fila, k) => {
     const valores = g.campos.filter((x) => fila[x.campo] !== "—");
@@ -480,7 +478,7 @@ export function lecturasGuia(g: Guia, d: { sh: OpcionSombreado | ""; episodios?:
       texto: textoLectura({
         fecha: g.origen[k].f, frecuencia: g.origen[k].frec, valor: valores.map((x) => `${x.titulo}, ${fila[x.campo]}`).join("; "),
         contexto: g.contexto, ...(u && d.sh ? { columna: columnaPeriodo(d.sh), ubicacion: u } : {}),
-        episodios: d.episodios, eventos: d.eventos, modo: d.modo,
+        episodios: d.episodios, eventos: d.eventos,
       }),
     }];
   });

@@ -9,7 +9,7 @@ import type { DocumentoSerie } from "../lib/export";
 import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, unidadVisible } from "../lib/formato";
-import { diaLegible, especificacion, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
+import { diaLegible, especificacion, type BandaEpisodio, type MarcaEvento } from "./espec";
 import {
   ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, bandasDe, columnaPeriodo, columnasDe, contextoDe,
   episodiosEnRango, escribirEv, esSombreado, eventosEnRango, leerEv, periodosEnRango, textoLectura, textoSombreado, tipoDe,
@@ -327,20 +327,14 @@ function iniciar(): void {
     return ultimo ? avisoFiltroEventos(ultimo.eventos.length, ultimo.totalEventos, evElegido(), nombresCategorias) : "";
   }
 
-  /** Cómo se marcan los eventos en el gráfico de la pantalla: con letras o, si no hay lugar, con rayitas (SPEC 6.2). */
-  const modoActual = (): ModoEventos => (ultimo ? modoEventosDe(ultimo.r, ultimo.eventos, contenedor.clientWidth || 600) : "letras");
-
-  /** La lista de los eventos marcados, siempre completa: con su letra o, con rayitas, con la fecha. */
+  /** La lista de los eventos marcados, siempre completa, con su letra (en el gráfico, arriba; sonda 3 de la 4e). */
   function listaEventos(): void {
     const lista = $("lista-eventos");
     if (!ultimo || !lista) return;
-    const rayitas = modoActual() === "rayitas";
-    lista.classList.toggle("con-fechas", rayitas);
     lista.replaceChildren(...ultimo.eventos.map((e) => {
       const li = document.createElement("li");
       const fecha = Object.assign(document.createElement("span"), { className: "rango", textContent: diaLegible(e.fecha) });
-      if (rayitas) li.append(fecha, ` · ${e.nombre}`);
-      else li.append(`${e.nombre} `, fecha);
+      li.append(`${e.nombre} `, fecha);
       return li;
     }));
   }
@@ -433,12 +427,11 @@ function iniciar(): void {
     const ctx = contexto(o);
     const us = periodos.length && sh ? ubicacionesDe(periodos, sh, r, ctx) : [];
     const variacion = esVariacion(o.transformacion ?? "nivel");
-    const modo = modoActual();
     return r.datos.flatMap(([f, v], k) => {
       if (v === null) return [];
       const texto = textoLectura({
         fecha: f, frecuencia: r.frecuencias[k], valor: numero(v, variacion), contexto: ctx,
-        ...(us[k] && sh ? { columna: columnaPeriodo(sh), ubicacion: us[k] } : {}), episodios, eventos, modo,
+        ...(us[k] && sh ? { columna: columnaPeriodo(sh), ubicacion: us[k] } : {}), episodios, eventos,
       });
       return [{ t: fechaDeDibujo(referenciaDe(f, r.frecuencias[k], ctx)), texto }];
     });
@@ -460,7 +453,7 @@ function iniciar(): void {
       vista?.finalize();
       vista = await dibujarEn(contenedor, spec);
       contenedor.dataset.listo = "1";
-      contenedor.dataset.eventos = ultimo.eventos.length ? modoActual() : "";
+      contenedor.dataset.eventos = ultimo.eventos.length ? "letras" : "";
       listaEventos();
       lector?.actualizar(lecturas(), vista);
     } catch (err) {
@@ -477,8 +470,7 @@ function iniciar(): void {
     const lineasMarcas = [
       ...(periodos.length && registroPeriodos ? [`Sombreado: ${cSombreado?.selectedOptions[0]?.textContent?.toLowerCase()}${sombreado() === "catedra" ? ` (${ACLARACION_ETAPAS})` : ""}. Cada dato, en el período vigente a mitad de su intervalo (los saldos en nivel, el último día). Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`] : []),
       ...(episodios.length ? [`Episodios: ${episodios.map((e) => e.nombre).join("; ")}.`] : []),
-      // En la imagen (900 px) los eventos pueden ir con letras aunque en la pantalla vayan como rayitas.
-      ...(eventos.length ? [`Eventos: ${eventos.map((e) => (modoEventosDe(r, eventos, 900) === "letras" ? `${e.letra}. ${e.nombre}` : `${diaLegible(e.fecha)}, ${e.nombre}`)).join("; ")}.`] : []),
+      ...(eventos.length ? [`Eventos: ${eventos.map((e) => `${e.letra}. ${e.nombre}`).join("; ")}.`] : []),
     ];
     const spec = especificacion({
       nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
@@ -605,8 +597,8 @@ function iniciar(): void {
   let anchoPrevio = contenedor.clientWidth;
   new ResizeObserver(() => {
     const ancho = contenedor.clientWidth;
-    // Se redibuja al cruzar los 520 px y con cambios grandes, porque el modo de los eventos (letras o rayitas) depende
-    // del ancho.
+    // Se redibuja al cruzar los 520 px y con cambios grandes: los rótulos, las iniciales de la cinta de los períodos y
+    // los grupos de eventos dependen del ancho.
     if ((ancho < 520) !== (anchoPrevio < 520) || Math.abs(ancho - anchoPrevio) > 80) void dibujar();
     anchoPrevio = ancho;
   }).observe(contenedor);

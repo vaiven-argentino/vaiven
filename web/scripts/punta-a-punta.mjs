@@ -50,9 +50,10 @@ const VISTAS_EXPLORADOR = [
   { url: "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario", sombreado: true },
   { url: "?s=int-pib&p=ARG,BRA,CHL,URY,USA,WLD&t=indice_desde_tasas&base=2001&desde=2001&hasta=2011", paises: 6 },
   { url: "?s=reservas&sh=catedra", sombreado: true },
-  // Filtro y densidad de eventos (revisión externa de la 4b, 9.4): 1970–hoy con todos los eventos va en rayitas, con la
-  // lista completa; con un filtro, solo esas categorías y el aviso de cuántos quedan afuera.
-  { url: "?desde=1970&ev=1", eventos: eventosDesde(1970), rayitas: true },
+  // Filtro y densidad de eventos (revisión externa de la 4b, 9.4): 1970–hoy con todos los eventos, con las letras pegadas
+  // agrupadas arriba («I–J», sonda 3 de la 4e) y la lista completa; con un filtro, solo esas categorías y el aviso de
+  // cuántos quedan afuera.
+  { url: "?desde=1970&ev=1", eventos: eventosDesde(1970), agrupados: true },
   { url: "?desde=1970&ev=cambiario,deuda", eventos: eventosDesde(1970, ["cambiario", "deuda"]), filtro: ["cambiario", "deuda"] },
   // Varias series (4c/4d): doble eje (o paneles en 390 px), cuatro paneles con sombreado y eventos, y una internacional.
   { url: "?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1&s2=tc-oficial&t2=var_mensual", sombreado: true, eventos: true },
@@ -80,9 +81,10 @@ async function explorador(pagina, ancho) {
       const n = await pagina.$$eval("#x-lista-eventos li", (ls) => ls.length);
       ok(n === v.eventos, `${id}: la lista tiene ${n} eventos y se esperaban ${v.eventos}`);
     }
-    if (v.rayitas) {
-      ok(await pagina.$eval("#x-grafico", (g) => g.dataset.eventos) === "rayitas", `${id}: los eventos no pasan a rayitas`);
-      ok(await pagina.$eval("#x-lista-eventos", (l) => l.classList.contains("con-fechas")), `${id}: la lista no lleva las fechas`);
+    if (v.agrupados) {
+      // Desde la sonda 3 de la 4e, los eventos pegados se agrupan arriba («I–J») en lugar de pasar a rayitas.
+      ok(await pagina.$eval("#x-grafico", (g) => g.dataset.eventos) === "letras", `${id}: los eventos no van con letras`);
+      ok(await pagina.$eval("#x-grafico", (g) => /[A-Z]+–[A-Z]+/.test(g.textContent ?? "")), `${id}: no hay eventos agrupados`);
     }
     if (v.filtro) {
       const marcadas = await pagina.$$eval("#x-categorias input:checked", (is) => is.map((i) => i.dataset.categoria));

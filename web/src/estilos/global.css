@@ -33,6 +33,9 @@
   --periodo-b: #E6DECD;
   --periodo-facto: #D8CDB5;
   --periodo-franja: #D8CDB5;
+  /* Los gobiernos de facto en la cinta de los períodos, debajo del eje (sonda 3 de la 4e): el más oscuro, con el texto
+     encima (7:1 o más). La cinta alterna --periodo-b y --periodo-facto. */
+  --periodo-cinta-facto: #C9B995;
 
   --sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -48,7 +51,7 @@
     --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
     --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
     --graf-6: #EFE9DE; --graf-7: #D55E00; --graf-8: #B9A3E3;
-    --periodo-a: #231F18; --periodo-b: #2D2820; --periodo-facto: #3B342A; --periodo-franja: #3B342A;
+    --periodo-a: #231F18; --periodo-b: #2D2820; --periodo-facto: #3B342A; --periodo-franja: #3B342A; --periodo-cinta-facto: #54493A;
     color-scheme: dark;
   }
 }
@@ -58,7 +61,7 @@
   --banda: #332C23; --borde: #857B6C; --linea: #3A332A;
   --graf-1: #56B4E9; --graf-2: #E69F00; --graf-3: #4CC9A0; --graf-4: #E9A6CB; --graf-5: #F0E442;
   --graf-6: #EFE9DE; --graf-7: #D55E00; --graf-8: #B9A3E3;
-  --periodo-a: #231F18; --periodo-b: #2D2820; --periodo-facto: #3B342A; --periodo-franja: #3B342A;
+  --periodo-a: #231F18; --periodo-b: #2D2820; --periodo-facto: #3B342A; --periodo-franja: #3B342A; --periodo-cinta-facto: #54493A;
   color-scheme: dark;
 }
 

@@ -26,7 +26,7 @@ describe("desocupación: frecuencia mixta y tramos sin empalmar", () => {
   const doc = leer("desocupacion", "total-urbano");
   const f = filas({ resultado: transformar(doc), tramos: doc.tramos, empalme: doc.empalme, esVariacion: false });
   // Cada dato se dibuja en el punto medio de su observación (en las semestrales, el mes de la onda).
-  const segmentoDe = (fecha: string) => f.find((x) => x.t === fechaDeDibujo(referenciaDe(fecha, fecha < "2003-06" ? "semestral" : "trimestral", { agregacion: "promedio" })))!.segmento;
+  const segmentoDe = (fecha: string) => f.find((x) => x.t === fechaDeDibujo(referenciaDe(fecha, fecha < "2003-06" ? "semestral" : "trimestral", { agregacion: "promedio" })).replace(":00.000Z", "Z"))!.segmento;
 
   it("corta la línea en el cambio de encuesta (2003-05 → 2003-07)", () => {
     expect(segmentoDe("2003-05")).not.toBe(segmentoDe("2003-07"));
@@ -69,7 +69,8 @@ describe("reservas: dato excluido", () => {
     // Las reservas son un saldo a fin de período: el dato (y su «×») va el último día del mes.
     expect(marca.data.values[0].t).toBe("1979-03-31T12:00:00.000Z");
     const f = filas({ resultado: transformar(doc), tramos: doc.tramos, empalme: doc.empalme, esVariacion: false, ubicacion: { agregacion: doc.agregacion } });
-    const feb = f.find((x) => x.t === "1979-02-28T12:00:00.000Z")!, abr = f.find((x) => x.t === "1979-04-30T12:00:00.000Z")!;
+    // La línea lleva la fecha en ISO corto (sonda 3 de la 4e).
+    const feb = f.find((x) => x.t === "1979-02-28T12:00Z")!, abr = f.find((x) => x.t === "1979-04-30T12:00Z")!;
     expect(feb.segmento).not.toBe(abr.segmento);
   });
   it("el quiebre que cubre toda la serie no se dibuja", () => {

@@ -2,7 +2,6 @@
 // nombre del archivo. Se mudó del explorador (web/src/graficos/explorador.ts) en la 4e, para que el MCP dé la misma
 // imagen con `imagen: true` (A3 de la prueba en Claude) sin una segunda implementación.
 import { tienePais, type DocumentoPeriodos } from "@vaiven/transformaciones";
-import { diaLegible, modoEventosDe } from "./espec";
 import type { Documento, Estado, EstadoVista } from "./estado";
 import { diaDeVersion, unidadVisible } from "./formato";
 import { ACLARACION_ETAPAS, nombreSombreadoEnFrase, type OpcionSombreado } from "./periodos";
@@ -72,9 +71,7 @@ export function textoImagen(e: EntradaImagen): TextoImagen {
   }
   if (u.episodios.length) pie.push(`Episodios: ${u.episodios.map((x) => x.nombre).join("; ")}.`);
   if (u.eventos.length) {
-    // En la imagen (900 px) los eventos pueden ir con letras aunque en la pantalla vayan como rayitas.
-    const letras = modoEventosDe(varias && u.dominio ? u.dominio : r, u.eventos, ANCHO_IMAGEN) === "letras";
-    pie.push(`Eventos: ${u.eventos.map((x) => (letras ? `${x.letra}. ${x.nombre}` : `${diaLegible(x.fecha)}, ${x.nombre}`)).join("; ")}.`);
+    pie.push(`Eventos: ${u.eventos.map((x) => `${x.letra}. ${x.nombre}`).join("; ")}.`);
   }
   const version = docs.map((d) => d.version_datos).sort().at(-1)!;
   const fuentes = docs.flatMap((d) => d.fuentes);

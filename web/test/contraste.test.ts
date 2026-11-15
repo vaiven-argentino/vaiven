@@ -48,5 +48,10 @@ describe("contraste del sombreado contra el fondo", () => {
       expect(c("periodo-b")).toBeGreaterThan(c("periodo-a") + 0.08);
       expect(c("periodo-facto")).toBeGreaterThan(c("periodo-b") + 0.15);
     });
+    it(`modo ${modo}: en la cinta de los períodos, los de facto se distinguen y el nombre se lee (7:1 o más)`, () => {
+      const c = (token: string) => contraste(t[token], t.fondo);
+      expect(c("periodo-cinta-facto")).toBeGreaterThan(c("periodo-facto") + 0.3);
+      for (const tono of ["periodo-b", "periodo-facto", "periodo-cinta-facto"]) expect(contraste(t.texto, t[tono])).toBeGreaterThanOrEqual(7);
+    });
   }
 });

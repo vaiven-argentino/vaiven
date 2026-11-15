@@ -17,7 +17,7 @@ import {
 import { esVariacion, rangoQuiebre, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_MEDIDA, NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, textoAtraso, ultimoDato, unidadVisible } from "../lib/formato";
 import { bajar, bajarTexto, cargarInsumos, dibujarEn, exportarImagen, leerDatos, tema, type Cargados, type VistaGrafico } from "./comun";
-import { diaLegible, modoEventosDe, type BandaEpisodio, type MarcaEvento, type ModoEventos } from "./espec";
+import { diaLegible, type BandaEpisodio, type MarcaEvento } from "./espec";
 import {
   ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, columnasDe, contextoDe, textoConfianza, textoLectura,
   tipoDe, ubicacionesDe, type ColumnasPeriodo,
@@ -454,20 +454,14 @@ function iniciar(): void {
     return ultimo && estado.ev.length ? avisoFiltroEventos(ultimo.eventos.length, ultimo.totalEventos, estado.ev, pagina.categorias) : "";
   }
 
-  /** Cómo se marcan los eventos en el gráfico de la pantalla: con letras o, si no hay lugar, con rayitas. */
-  const modoActual = (): ModoEventos => (ultimo ? modoEventosDe(varias() && ultimo.vista.dominio ? ultimo.vista.dominio : ultimo.r, ultimo.eventos, contenedor.clientWidth || 600) : "letras");
-
-  /** La lista de los eventos marcados, siempre completa: con su letra o, con rayitas, con la fecha. */
+  /** La lista de los eventos marcados, siempre completa, con su letra (en el gráfico, arriba; sonda 3 de la 4e). */
   function listaEventos(): void {
     if (!ultimo) return;
-    const rayitas = modoActual() === "rayitas";
     const lista = $("x-lista-eventos");
-    lista.classList.toggle("con-fechas", rayitas);
     lista.replaceChildren(...ultimo.eventos.map((e) => {
       const li = document.createElement("li");
       const fecha = Object.assign(document.createElement("span"), { className: "rango", textContent: diaLegible(e.fecha) });
-      if (rayitas) li.append(fecha, ` · ${e.nombre}`);
-      else li.append(`${e.nombre} `, fecha);
+      li.append(`${e.nombre} `, fecha);
       return li;
     }));
   }
@@ -614,17 +608,16 @@ function iniciar(): void {
     // Con varias series, la guía común: las fechas de la serie de frecuencia más alta y el valor de cada serie.
     if (varias()) {
       const g = ultimo.vista.guia;
-      return g ? lecturasGuia(g, { sh: estado.sh, episodios: ultimo.episodios, eventos: ultimo.eventos, modo: modoActual() }) : [];
+      return g ? lecturasGuia(g, { sh: estado.sh, episodios: ultimo.episodios, eventos: ultimo.eventos }) : [];
     }
     const { r, periodos, contexto, episodios, eventos } = ultimo;
     const us = periodos.length && estado.sh ? ubicacionesDe(periodos, estado.sh, r, contexto) : [];
     const variacion = esVariacion(estado.t);
-    const modo = modoActual();
     return r.datos.flatMap(([f, v], k) => {
       if (v === null) return [];
       const texto = textoLectura({
         fecha: f, frecuencia: r.frecuencias[k], valor: numero(v, variacion), contexto,
-        ...(us[k] ? { columna: columnaPeriodo(estado.sh), ubicacion: us[k] } : {}), episodios, eventos, modo,
+        ...(us[k] ? { columna: columnaPeriodo(estado.sh), ubicacion: us[k] } : {}), episodios, eventos,
       });
       return [{ t: fechaDeDibujo(referenciaDe(f, r.frecuencias[k], contexto)), texto }];
     });
@@ -655,7 +648,7 @@ function iniciar(): void {
       (contenedor as HTMLElement & { especificacion?: unknown }).especificacion = spec;
       vista = await dibujarEn(contenedor, spec);
       contenedor.dataset.listo = "1";
-      contenedor.dataset.eventos = ultimo.eventos.length ? modoActual() : "";
+      contenedor.dataset.eventos = ultimo.eventos.length ? "letras" : "";
       listaEventos();
       lector.actualizar(lecturas(), vista);
     } catch (err) {

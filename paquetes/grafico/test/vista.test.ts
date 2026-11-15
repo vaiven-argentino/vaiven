@@ -145,12 +145,18 @@ describe("con varias series", () => {
     expect(armarVista(doble).comparacion.disposicion.tipo).toBe("doble_eje");
   });
 
-  it("tres unidades con sombreado y eventos: el sombreado en todos los paneles, la franja de episodios y las letras abajo", () => {
+  it("tres unidades con sombreado y eventos: la cinta y los episodios debajo del último panel, las letras arriba del primero", () => {
     const v = armar("?t=var_mensual&desde=1988&hasta=1991&sh=gobierno&ev=1&s2=reservas&s3=tc-oficial&t3=var_mensual&v3=moneda-de-epoca&pa3=1&s4=pib");
     expect(v.comparacion.disposicion.tipo).toBe("paneles");
-    const spec = v.especificacion as { vconcat: Array<{ layer: Array<{ mark: { type: string }; encoding?: { color?: unknown } }> }> };
-    const conBandas = spec.vconcat.map((p) => p.layer.some((c) => c.mark.type === "rect" && c.encoding?.color));
-    expect(conBandas.every(Boolean)).toBe(true);
+    const spec = v.especificacion as { vconcat: Array<{ layer: Array<{ mark: { type: string }; encoding?: { color?: unknown }; data?: { name?: string } }> }>; datasets: Record<string, unknown[]> };
+    // La cinta de los gobiernos, solo en el último panel (sonda 3 de la 4e).
+    const conCinta = spec.vconcat.map((p) => p.layer.some((c) => c.mark.type === "rect" && c.encoding?.color));
+    expect(conCinta).toEqual([false, false, true]);
+    // Las letras de los eventos, solo en el primero; las reglas, en todos, con los eventos una sola vez.
+    const conLetras = spec.vconcat.map((p) => p.layer.some((c) => c.data?.name?.endsWith("letras")));
+    expect(conLetras).toEqual([true, false, false]);
+    expect(spec.vconcat.every((p) => p.layer.some((c) => c.data?.name === "eventos"))).toBe(true);
+    expect(Object.keys(spec.datasets).filter((k) => k.endsWith("eventos"))).toEqual(["eventos"]);
     expect(v.periodos.length).toBeGreaterThan(0);
     expect(v.episodios.length).toBe(1);
     expect(v.descripcionesPaneles.length).toBe(spec.vconcat.length);
