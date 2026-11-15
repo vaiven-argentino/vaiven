@@ -13,10 +13,14 @@ interface Respuesta {
   especificacion: Record<string, unknown>;
   url_explorador: string;
   disposicion: { tipo: string; paneles: Array<{ unidad: string; series: number[]; escala: string }> };
-  series: Array<{ numero: number; id: string; nombre: string; nombre_variante: string; unidad: string; transformacion?: string; cita: string; advertencias?: unknown[] }>;
+  series: Array<{
+    numero: number; id: string; nombre: string; nombre_variante: string; unidad: string; transformacion?: string; cita: string;
+    advertencias?: Array<{ id: string; descripcion: string }>; excluidos?: Array<{ fecha: string; motivo: string; pais?: string }>;
+  }>;
   advertencias_combinacion: Array<{ id: string; descripcion: string }>;
   eventos?: Array<{ letra: string; fecha: string; nombre: string }>;
-  quiebres: Array<{ numero: number; serie: number; descripcion: string; desde: string | null; hasta: string | null }>;
+  episodios?: Array<{ nombre: string; desde: string; hasta: string | null }>;
+  quiebres: Array<{ numero: number; serie: number; id: string; descripcion: string; desde: string | null; hasta: string | null }>;
   nombre_archivo: string;
   n_observaciones: number;
 }
@@ -101,13 +105,24 @@ function listas(r: Respuesta): void {
     return el;
   };
   const circulo = (n: number) => (n >= 1 && n <= 20 ? String.fromCodePoint(0x245f + n) : `(${n})`);
+  const prefijo = (numero: number) => (r.series.length > 1 ? `Serie ${numero}: ` : "");
+  const dibujados = new Set(r.quiebres.map((q) => q.id));
   const avisos = [
-    ...r.quiebres.map((q) => li(circulo(q.numero), `${r.series.length > 1 ? `Serie ${q.serie}: ` : ""}${q.descripcion}`)),
+    // Los quiebres que se dibujan, con su número; las advertencias generales de cada serie, sin número (H2, sonda 3).
+    ...r.quiebres.map((q) => li(circulo(q.numero), `${prefijo(q.serie)}${q.descripcion}`)),
+    ...r.series.flatMap((s) => (s.advertencias ?? []).filter((a) => !dibujados.has(a.id)).map((a) => li("", `${prefijo(s.numero)}${a.descripcion}`))),
     ...r.advertencias_combinacion.map((a) => li("", a.descripcion)),
+    // Las otras marcas del gráfico (H7): la «×» de un dato excluido y la línea punteada de un episodio, debajo del eje.
+    ...r.series.flatMap((s) => (s.excluidos ?? []).map((x) => li("×", `${prefijo(s.numero)}${x.fecha.split("-").reverse().join("/")}${x.pais ? ` (${x.pais})` : ""}: dato excluido. ${x.motivo}`))),
+    ...(r.episodios ?? []).map((e) => li("┄", `Episodio, en la línea punteada debajo del eje: ${e.nombre}.`)),
   ];
   $("avisos").replaceChildren(...avisos);
   $("cantidad-avisos").textContent = String(avisos.length);
   $("caja-avisos").hidden = !avisos.length;
+  // Qué remite a qué: los números en círculo, a «Advertencias»; las letras, a «Eventos» (O3, sonda 3 de la 4e).
+  const remisiones = [...(r.quiebres.length ? ["los números en círculo, a «Advertencias»"] : []), ...(r.eventos?.length ? ["las letras, a «Eventos»"] : [])];
+  $("nota-simbolos").textContent = remisiones.length ? `En el gráfico, ${remisiones.join("; ")}. Pasá el cursor para ver el texto.` : "";
+  $("nota-simbolos").hidden = !remisiones.length;
   const eventos = r.eventos ?? [];
   $("lista-eventos").replaceChildren(...eventos.map((e) => li(`${e.letra}.`, `${e.fecha.split("-").reverse().join("/")} · ${e.nombre}`)));
   $("cantidad-eventos").textContent = String(eventos.length);

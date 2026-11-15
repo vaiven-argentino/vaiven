@@ -64,7 +64,8 @@ describe.each([
     const r = await c.callTool({ name: "especificacion_grafico", arguments: { series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "2000", hasta: "2010" } });
     expect(r.isError).toBeFalsy();
     const texto = JSON.parse((r.content as Array<{ text: string }>)[0].text) as Record<string, unknown>;
-    expect(texto.url_explorador).toBe("https://vaiven.argentino.workers.dev/explorador/?desde=2000&hasta=2010&s2=reservas");
+    // La transformación va escrita aunque sea la de la vista inicial (H8, sonda 3 de la 4e).
+    expect(texto.url_explorador).toBe("https://vaiven.argentino.workers.dev/explorador/?t=var_interanual&desde=2000&hasta=2010&s2=reservas");
     expect(texto.disposicion).toMatchObject({ tipo: "doble_eje" });
     const series = texto.series as Array<{ cita: unknown; advertencias: unknown }>;
     expect(series).toHaveLength(2);
@@ -114,8 +115,25 @@ describe("especificacion_grafico en la 4e: parámetros y campos nuevos, y el top
     expect(sc.disposicion.paneles.map((p) => p.escala)).toEqual(["lineal", "log"]);
     // La intervención del INDEC (2007–2015) es uno de los quiebres marcados en la inflación.
     expect(sc.quiebres.some((q) => q.serie === 1 && /INDEC/i.test(q.descripcion))).toBe(true);
-    expect(sc.quiebres.map((q) => q.numero)).toEqual([...sc.quiebres.map((q) => q.numero)].sort((a, b) => a - b));
+    // Corridos desde 1, solo los que se dibujan (H2, sonda 3 de la 4e).
+    expect(sc.quiebres.map((q) => q.numero)).toEqual(sc.quiebres.map((_, k) => k + 1));
     expect(sc.nombre_archivo).toBe("vaiven_ipc_y_base-monetaria_2000_2015");
+  });
+  it("sonda 3: la advertencia general va sin número, y la respuesta trae el aviso del doble eje, la «×» y los episodios", async () => {
+    // Reservas: la advertencia general («Son reservas brutas…») no se dibuja, así que el primer quiebre es el 1.
+    const res = (await llamar({ series: [{ id: "reservas" }], desde: "1975", hasta: "1992", eventos: ["episodio"] })).structuredContent as {
+      quiebres: Array<{ numero: number; id: string }>; series: Array<{ advertencias: Array<{ id: string }>; excluidos?: Array<{ fecha: string; motivo: string }> }>;
+      episodios?: Array<{ nombre: string }>;
+    };
+    expect(res.quiebres.map((q) => q.id)).not.toContain("q.reservas.brutas");
+    expect(res.series[0].advertencias.map((a) => a.id)).toContain("q.reservas.brutas");
+    expect(res.series[0].excluidos?.map((x) => x.fecha)).toContain("1979-03");
+    expect(res.episodios?.map((e) => e.nombre)).toEqual(["Hiperinflación de 1989–1990"]);
+    const doble = (await llamar({ series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "2000", hasta: "2010" })).structuredContent as {
+      advertencias_combinacion: Array<{ id: string }>; especificacion: { title?: unknown };
+    };
+    expect(doble.advertencias_combinacion.map((a) => a.id)).toContain("c.doble-eje");
+    expect(doble.especificacion.title).toBeUndefined();
   });
   it("leyenda: true pone la leyenda única y la URL del explorador lleva ley=1", async () => {
     const r = await llamar({ series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "2000", hasta: "2010", leyenda: true });

@@ -64,7 +64,12 @@ function especificacion4b(url: string, ancho: number, alto: number) {
   const periodos = estado.sh ? periodosEnRango(PERIODOS, estado.sh, r) : [];
   const eventos = estado.ev.length ? eventosEnRango(EVENTOS, r, estado.ev) : [];
   const episodios = estado.ev.includes(EPISODIO) ? episodiosEnRango(PERIODOS, r) : [];
-  const quiebres = numerarQuiebres({ ...serie, advertencias: doc.advertencias });
+  // Desde la sonda 3 de la 4e, la vista numera corrido solo los quiebres que dibuja (la ficha sigue numerando los de su
+  // lista «Quiebres»).
+  const ids = new Set([r, ...otras.map((x) => x.resultado)].flatMap((x) => x.advertencias.map((a) => a.id)));
+  let n = 0;
+  const quiebres = numerarQuiebres({ ...serie, advertencias: doc.advertencias })
+    .map((q) => ({ ...q, n: q.forma !== "general" && ids.has(q.advertencia.id) ? ++n : 0 }));
   const positivos = r.datos.every((d) => d[1] === null || d[1] > 0) && otras.every((x) => x.resultado.datos.every((d) => d[1] === null || d[1] > 0));
   let t = resumen(r, r.unidad, esVariacion(estado.t), quiebres);
   if (periodos.length) {
@@ -111,11 +116,13 @@ describe("con varias series", () => {
     valido(v.especificacion);
   });
 
-  it("dos unidades: doble eje con el aviso fijo, el eje derecho y los ceros alineados", () => {
+  it("dos unidades: doble eje con el aviso fijo entre las advertencias, el eje derecho y los ceros alineados", () => {
     const v = armar("?t=var_interanual&desde=2000&hasta=2005&s2=reservas");
     expect(v.comparacion.disposicion.tipo).toBe("doble_eje");
-    const spec = v.especificacion as { layer: Array<{ layer: Array<Record<string, unknown>> }>; resolve: unknown; title: { text: string } };
-    expect((spec.title.text as unknown as string[]).join(" ")).toBe(AVISO_DOBLE_EJE);
+    const spec = v.especificacion as { layer: Array<{ layer: Array<Record<string, unknown>> }>; resolve: unknown; title?: unknown };
+    // El aviso ya no va como título del gráfico (O4, sonda 3 de la 4e): va con las advertencias de la combinación.
+    expect(spec.title).toBeUndefined();
+    expect(v.avisos).toContainEqual({ id: "c.doble-eje", descripcion: AVISO_DOBLE_EJE });
     expect(spec.resolve).toEqual({ scale: { y: "independent" }, axis: { y: "independent" } });
     expect(spec.layer).toHaveLength(2);
     const y = (capas: Array<Record<string, unknown>>) => (lineas(capas)[0].encoding as { y: { scale: { domain?: number[] }; axis: { orient?: string } } }).y;
@@ -224,14 +231,11 @@ describe("con varias series", () => {
     }
   });
 
-  it("en un gráfico angosto, el aviso del doble eje va en renglones que entran en el ancho", () => {
-    const base = { ...vistaDe("?desde=1995&hasta=2010&s2=reservas&ejes=doble"), periodos: PERIODOS, eventos: EVENTOS, tema: TEMA, alto: 300, angosto: true };
-    const titulo = (ancho: number) => (armarVista({ ...base, ancho }).especificacion as { title: { text: string[] } }).title.text;
-    expect(titulo(800)).toHaveLength(2);
-    const angosto = titulo(358);
-    expect(angosto.length).toBeGreaterThan(2);
-    expect(angosto.every((l) => l.length * 6.4 <= 358 - 16)).toBe(true);
-    expect(angosto.join(" ")).toBe(AVISO_DOBLE_EJE);
+  it("en la imagen exportada, el aviso del doble eje sigue en el subtítulo (la imagen no tiene la lista)", () => {
+    const base = { ...vistaDe("?desde=1995&hasta=2010&s2=reservas"), periodos: PERIODOS, eventos: EVENTOS, tema: TEMA, alto: 400, ancho: 900 };
+    const impreso = { titulo: "Comparación", subtitulo: "Varias unidades", pie: ["Fuente"] };
+    const titulo = (armarVista({ ...base, impreso }).especificacion as { title: { subtitle: string[] } }).title;
+    expect(titulo.subtitle).toContain(AVISO_DOBLE_EJE);
   });
 
   it("partirEnRenglones corta por palabras sin pasarse del largo", () => {

@@ -52,7 +52,7 @@ describe("especificacion_grafico", () => {
   it("dos unidades: doble eje, con el enlace al explorador", async () => {
     const r = await especificacionGrafico(repo, { series: [{ id: "ipc", transformacion: "var_interanual" }, { id: "reservas" }], desde: "2000", hasta: "2005" });
     expect(r.disposicion).toEqual({ tipo: "doble_eje", paneles: [{ unidad: "variación % interanual", series: [1], escala: "lineal" }, { unidad: "millones de US$", series: [2], escala: "lineal" }] });
-    expect(r.url_explorador).toBe("https://vaiven.argentino.workers.dev/explorador/?desde=2000&hasta=2005&s2=reservas");
+    expect(r.url_explorador).toBe("https://vaiven.argentino.workers.dev/explorador/?t=var_interanual&desde=2000&hasta=2005&s2=reservas");
     expect(r.especificacion).toHaveProperty("layer");
     expect(r.series.map((s) => s.cita.length > 0)).toEqual([true, true]);
   });

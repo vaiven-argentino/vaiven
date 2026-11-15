@@ -55,6 +55,8 @@ export interface QuiebreNumerado {
   advertencia: Advertencia;
   /** «general» si cubre toda la serie (no se dibuja); «banda» si tiene rango; «regla» si es un punto o sigue abierto. */
   forma: "general" | "banda" | "regla";
+  /** Con varias series: el color de la serie del quiebre (la barra de un quiebre largo va en ese color; O3, sonda 3). */
+  color?: string;
 }
 
 /** Numera los quiebres de la variante en el orden del export; el gráfico y la lista usan los mismos números. */

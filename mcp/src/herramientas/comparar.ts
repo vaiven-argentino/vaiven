@@ -197,16 +197,16 @@ function estadoDe(args: ArgsEspecificacion, preparadas: SeriePreparada[], catego
   return { series, ejes: args.ejes === "paneles" || args.ejes === "doble" ? args.ejes : "", ...(args.leyenda && series.length > 1 ? { leyenda: true as const } : {}) };
 }
 
-/** Los quiebres marcados en el gráfico (los que no son generales y caen en lo que se ve), con su número. */
+/**
+ * Los quiebres marcados en el gráfico (los que no son generales y caen en lo que se ve), con su número: la vista los
+ * numera corrido, solo los que dibuja (H2, sonda 3 de la 4e). Las advertencias generales de cada serie van en
+ * `series[].advertencias`, sin número.
+ */
 function quiebresVisibles(vista: ReturnType<typeof armarVista>) {
-  return vista.quiebres.flatMap((lista, k) => {
-    const s = vista.comparacion.series[k];
-    const ids = new Set(s.entidades.flatMap((e) => s.resultados[e].advertencias.map((a) => a.id)));
-    return lista.filter((q) => q.forma !== "general" && ids.has(q.advertencia.id)).map((q) => ({
-      numero: q.n, serie: k + 1, tipo: q.advertencia.tipo, desde: q.advertencia.desde ?? null, hasta: q.advertencia.hasta ?? null,
-      descripcion: q.advertencia.descripcion,
-    }));
-  });
+  return vista.quiebres.flatMap((lista, k) => lista.filter((q) => q.n > 0).map((q) => ({
+    numero: q.n, serie: k + 1, id: q.advertencia.id, tipo: q.advertencia.tipo, desde: q.advertencia.desde ?? null, hasta: q.advertencia.hasta ?? null,
+    descripcion: q.advertencia.descripcion,
+  })));
 }
 
 export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecificacion) {
@@ -216,7 +216,9 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
   const estado = estadoDe(args, preparadas, categorias);
   const docs = preparadas.map((p) => p.doc as unknown as Documento);
   // La URL del explorador, y la vista que el explorador leería de ella: tienen que coincidir con lo pedido.
-  const url = urlDesdeVista(estado, docs, indice, categorias);
+  // El enlace dice siempre la transformación de cada serie (salvo el nivel), aunque sea la de la vista inicial: así el
+  // modelo no da por hecho que la serie va en nivel (H8, sonda 3 de la 4e). El explorador lo lee igual.
+  const url = urlDesdeVista(estado, docs, indice, categorias, { transformacionSiempre: true });
   const q = new URLSearchParams(url);
   const { pedidas, avisos: a1 } = seriesDeUrl(q, indice);
   const leida = vistaDesdeUrl(q, pedidas, docs, categorias);
@@ -256,12 +258,16 @@ export async function especificacionGrafico(repo: Repositorio, args: ArgsEspecif
       const r = respuestaSerie(p, c.series[k].entidades.map((e) => c.series[k].resultados[e]), { sinDatos: true });
       return {
         numero: k + 1, id: r.id, nombre: r.nombre, nombre_variante: r.nombre_variante, unidad: r.unidad, transformacion: r.transformacion,
-        ...(tienePais(p.doc) ? { paises: r.paises } : {}), ultimo_dato: r.ultimo_dato, advertencias: r.advertencias, notas: r.notas, cita: r.cita,
+        ...(tienePais(p.doc) ? { paises: r.paises } : {}), ultimo_dato: r.ultimo_dato, advertencias: r.advertencias,
+        // Los datos excluidos que se ven (la «×» del gráfico; H7, sonda 3 de la 4e).
+        ...(r.excluidos.length ? { excluidos: r.excluidos } : {}), notas: r.notas, cita: r.cita,
       };
     }),
     advertencias_combinacion: avisos(vista.avisos),
     ...(vista.periodos.length ? { sombreado: { tipo: args.sombreado, periodos: vista.periodos.length } } : {}),
     ...(vista.eventos.length ? { eventos: vista.eventos.map((e) => ({ letra: e.letra, fecha: e.fecha, nombre: e.nombre })) } : {}),
+    // Los episodios marcados debajo del eje (la línea punteada con topes; H7).
+    ...(vista.episodios.length ? { episodios: vista.episodios.map((e) => ({ nombre: e.nombre, desde: e.desde, hasta: e.hasta })) } : {}),
     // Los quiebres que se marcan en el gráfico con ①②③ (M1), como la caja de avisos del explorador.
     quiebres: quiebresVisibles(vista),
     // El nombre del archivo de la imagen y de las descargas, como en el explorador (A3).

@@ -243,6 +243,13 @@ function tramoDe(indice: number, tramos: Tramo[]): number {
   return tramos.findIndex((t) => indiceMes(t.desde) <= indice && (t.hasta === "hoy" || indice <= indiceFin(t.hasta)));
 }
 
+/** El texto de un quiebre para el tooltip de su número y su barra: «1. La intervención del INDEC… (2007-01 – 2015-12)». */
+function textoQuiebre(q: QuiebreNumerado): string {
+  const a = q.advertencia;
+  const rango = a.desde && a.hasta ? (a.desde === a.hasta ? fechaCorta(a.desde) : `${fechaCorta(a.desde)}–${fechaCorta(a.hasta)}`) : a.desde ? `desde ${fechaCorta(a.desde)}` : a.hasta ? `hasta ${fechaCorta(a.hasta)}` : "";
+  return `${q.n}. ${a.descripcion}${rango ? ` (${rango})` : ""}`;
+}
+
 export function nombreTramo(t: Tramo): string {
   return `${fechaCorta(t.desde)}–${t.hasta === "hoy" ? "hoy" : fechaCorta(t.hasta)} (${t.frecuencia})`;
 }
@@ -330,21 +337,28 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const rangos = visibles.filter((q) => q.forma === "banda").map((q) => {
     const a = Math.max(indiceMes(q.advertencia.desde!), ini);
     const b = Math.min(indiceFin(q.advertencia.hasta!) + 1, fin);
-    return { n: q.n, a, b, desde: iso(a), hasta: iso(b), medio: (a + b) / 2, largo: largo(a, b) };
+    return { n: q.n, a, b, desde: iso(a), hasta: iso(b), medio: (a + b) / 2, largo: largo(a, b), color: q.color ?? tema.secundario, texto: textoQuiebre(q) };
   });
   const bandas = rangos.filter((r) => !r.largo);
   const barras = rangos.filter((r) => r.largo);
   const reglas = visibles.filter((q) => q.forma === "regla").map((q) => {
     const i = Math.min(Math.max(indiceMes(q.advertencia.desde ?? q.advertencia.hasta!), ini), fin);
-    return { n: q.n, desde: iso(i), medio: i };
+    return { n: q.n, desde: iso(i), medio: i, texto: textoQuiebre(q) };
   });
   // Los eventos marcados en lo que se ve. Sus letras van arriba del área, en el primer panel (O6, sonda 3 de la 4e).
   const eventos = (e.eventos ?? []).filter((ev) => indiceDia(ev.fecha) >= ini && indiceDia(ev.fecha) <= fin)
     .sort((a, b) => a.fecha.localeCompare(b.fecha)).map((ev) => ({ ...ev, dia: diaLegible(ev.fecha) }));
   const conLetras = eventos.length > 0 && !e.sinLetrasEventos;
   const arriba = sombra.arriba + (conLetras ? ALTO_LETRAS : 0);
-  const marcadores = ubicarMarcadores([...rangos, ...reglas].map((q) => ({ n: q.n, i: q.medio })), ini, fin, e.ancho)
+  // Los números de los quiebres cortos y de las reglas van en filas arriba del área; debajo, cada quiebre largo en su
+  // renglón, con su número al principio y la barra en el color de su serie (O3, sonda 3 de la 4e: dos quiebres de
+  // series distintas iban en una sola barra, con los números apilados).
+  const cortos = ubicarMarcadores([...bandas, ...reglas].map((q) => ({ n: q.n, i: q.medio, texto: q.texto })), ini, fin, e.ancho)
     .map((m) => ({ ...m, y: m.y + arriba }));
+  const inicioBarras = (cortos.length ? Math.max(...cortos.map((m) => m.y)) + 18 : 10 + arriba);
+  const filasBarras = filasFranja(barras.map((r) => ({ a: r.a, b: r.b })));
+  const barrasY = barras.map((r, k) => ({ ...r, y: inicioBarras + filasBarras[k] * 18 }));
+  const marcadores = [...cortos, ...barrasY.map((r) => ({ n: String(r.n), t: r.desde, y: r.y, texto: r.texto }))];
   const frecDe = (fecha: string) => e.resultado.frecuencias[e.resultado.datos.findIndex((d) => d[0] === fecha)] ?? frecUltima;
   const excluidos = e.resultado.excluidos.map((x) => ({
     t: fechaDeDibujo(referenciaDe(x.fecha, frecDe(x.fecha), e.ubicacion ?? { agregacion: "promedio" })),
@@ -363,7 +377,7 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
   const log = e.log && positivos;
   const minimo = Math.min(...todas.map((f) => Math.abs(f.v)).filter((v) => v > 0));
   const cero = e.esVariacion || todas.every((f) => f.v >= 0);
-  const tope = topeY(todas.map((f) => f.v), reservaSuperior(marcadores, barras.length > 0, arriba), e.alto, log, cero);
+  const tope = topeY(todas.map((f) => f.v), reservaSuperior(marcadores, false, arriba), e.alto, log, cero);
   // Con valores negativos, un margen abajo para que el mínimo no quede pegado al eje.
   const negativos = !log && todas.some((f) => f.v < 0);
   const minY = Math.min(...todas.map((f) => f.v));
@@ -423,15 +437,21 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     });
   }
   if (barras.length) {
-    // Línea punteada con topes en los extremos: se lee como anotación y no se confunde con la serie.
+    // Línea punteada con topes en los extremos, en el color de su serie: se lee como anotación y no se confunde con la
+    // serie. La descripción, al pasar el cursor (también por una franja invisible más ancha).
+    const tooltipQuiebre = [{ field: "texto", title: "Quiebre" }];
+    const datosBarras = compartir("quiebres", barrasY.map(({ desde, hasta, y, color, texto }) => ({ desde, hasta, y, y1: y - 5, y2: y + 5, color, texto })));
     capas.push({
-      data: { values: barras }, mark: { type: "rule", color: tema.secundario, strokeWidth: 1.5, strokeDash: [2, 3], clip: true },
-      encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { value: 24 + arriba } },
+      data: datosBarras, mark: { type: "rule", strokeWidth: 1.5, strokeDash: [2, 3], clip: true },
+      encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { field: "y", type: "quantitative", scale: null }, color: { field: "color", type: "nominal", scale: null, legend: null }, tooltip: tooltipQuiebre },
     });
     capas.push({
-      data: { values: barras.flatMap((b) => [{ t: b.desde }, { t: b.hasta }]) },
-      mark: { type: "rule", color: tema.secundario, strokeWidth: 1.5, clip: true },
-      encoding: { x: x("t"), y: { value: 19 + arriba }, y2: { value: 29 + arriba } },
+      data: datosBarras, mark: { type: "rect", opacity: 0, color: tema.fondo, clip: true },
+      encoding: { x: x("desde"), x2: { field: "hasta", type: "temporal" }, y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, tooltip: tooltipQuiebre },
+    });
+    capas.push({
+      data: datosBarras, mark: { type: "rule", strokeWidth: 1.5, clip: true },
+      encoding: { x: x("hasta"), y: { field: "y1", type: "quantitative", scale: null }, y2: { field: "y2" }, color: { field: "color", type: "nominal", scale: null, legend: null } },
     });
   }
   if (reglas.length) {
@@ -510,14 +530,16 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
     capas.push({ data: datosLinea, mark: { type: "point", opacity: 0, size: 60 }, encoding: { x: x("t"), y, tooltip } });
   }
   if (marcadores.length) {
+    const datosMarcadores = compartir("marcadores", marcadores);
+    const tooltipQuiebre = [{ field: "texto", title: "Quiebre" }];
     capas.push({
-      data: { values: marcadores },
+      data: datosMarcadores,
       mark: { type: "point", shape: "circle", size: 230, filled: true, color: tema.fondo, stroke: tema.secundario, strokeWidth: 1, opacity: 1 },
-      encoding: { x: x("t"), y: { field: "y", type: "quantitative", scale: null } },
+      encoding: { x: x("t"), y: { field: "y", type: "quantitative", scale: null }, tooltip: tooltipQuiebre },
     });
     capas.push({
-      data: { values: marcadores }, mark: { type: "text", color: tema.texto, fontSize: 10.5, fontWeight: 600, baseline: "middle" },
-      encoding: { x: x("t"), y: { field: "y", type: "quantitative", scale: null }, text: { field: "n" } },
+      data: datosMarcadores, mark: { type: "text", color: tema.texto, fontSize: 10.5, fontWeight: 600, baseline: "middle" },
+      encoding: { x: x("t"), y: { field: "y", type: "quantitative", scale: null }, text: { field: "n" }, tooltip: tooltipQuiebre },
     });
   }
   // Explorador con varios países: el nombre al final de cada línea, en su color (si hay lugar a la derecha).
@@ -644,7 +666,7 @@ export function topeY(valores: number[], reserva: number, alto: number, log: boo
  * Números de los quiebres arriba del gráfico. Si dos quedan a menos de 20 px, el segundo baja una fila, para que no
  * se pisen (por ejemplo, los quiebres de 2015 y 2016 del IPC).
  */
-export function ubicarMarcadores(marcas: Array<{ n: number; i: number }>, ini: number, fin: number, ancho: number) {
+export function ubicarMarcadores<T extends { n: number; i: number }>(marcas: T[], ini: number, fin: number, ancho: number) {
   const px = (i: number) => ((i - ini) / Math.max(fin - ini, 1)) * ancho;
   const filas: number[] = [];
   return [...marcas].sort((a, b) => a.i - b.i).map((m) => {
@@ -652,7 +674,8 @@ export function ubicarMarcadores(marcas: Array<{ n: number; i: number }>, ini: n
     let fila = filas.findIndex((ultimo) => x - ultimo >= 20);
     if (fila === -1) fila = filas.length;
     filas[fila] = x;
-    return { n: String(m.n), t: iso(Math.round(m.i)), y: 10 + fila * 18 };
+    const { n, i, ...resto } = m;
+    return { ...resto, n: String(n), t: iso(Math.round(i)), y: 10 + fila * 18 };
   });
 }
 

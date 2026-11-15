@@ -178,8 +178,18 @@ export function estadoDesdeUrl(q: URLSearchParams, s: string, v: string, doc: Do
   return { estado: e, avisos };
 }
 
-/** La URL canónica de un estado: solo lo que difiere de la vista inicial, siempre en el mismo orden. */
-export function urlDesdeEstado(e: Estado, doc: Documento, indice: IndiceSerie[], categorias: readonly string[]): string {
+/** Opciones de la URL (H8, sonda 3 de la 4e). */
+export interface OpcionesUrl {
+  transformacionSiempre?: boolean;
+}
+
+/**
+ * La URL canónica de un estado: solo lo que difiere de la vista inicial, siempre en el mismo orden. Con
+ * `transformacionSiempre`, la transformación va aunque sea la de la vista inicial (si no es el nivel): así la escribe el
+ * enlace del MCP, para que quien lo lea no tenga que saber cuál es la de cada serie (H8, sonda 3 de la 4e). El explorador
+ * lo lee igual.
+ */
+export function urlDesdeEstado(e: Estado, doc: Documento, indice: IndiceSerie[], categorias: readonly string[], opciones: OpcionesUrl = {}): string {
   const def = porDefecto(e.s, e.v, doc);
   const q = new URLSearchParams();
   if (e.s !== SERIE_INICIAL) q.set("s", e.s);
@@ -190,7 +200,7 @@ export function urlDesdeEstado(e: Estado, doc: Documento, indice: IndiceSerie[],
   if (e.m !== def.m) q.set("m", e.m);
   if (e.m === "real" && e.d) q.set("d", e.d);
   if (e.m === "pct_pib" && e.pib) q.set("pib", e.pib);
-  if (e.t !== def.t) q.set("t", e.t);
+  if (e.t !== def.t || (opciones.transformacionSiempre && e.t !== "nivel")) q.set("t", e.t);
   const fDef = e.m === def.m ? def.f : "";
   if (e.f !== fDef) q.set("f", e.f || "original");
   if (e.mm) q.set("mm", String(e.mm));
@@ -343,13 +353,13 @@ export function vistaDesdeUrl(q: URLSearchParams, pedidas: SeriePedida[], docs: 
  * sufijo y en el mismo orden (`s` siempre, lo demás solo si difiere de la vista inicial de esa serie); al final, `ejes` y
  * `ley`.
  */
-export function urlDesdeVista(v: EstadoVista, docs: Documento[], indice: IndiceSerie[], categorias: readonly string[]): string {
+export function urlDesdeVista(v: EstadoVista, docs: Documento[], indice: IndiceSerie[], categorias: readonly string[], opciones: OpcionesUrl = {}): string {
   const [primera, ...resto] = v.series;
-  let texto = urlDesdeEstado(primera, docs[0], indice, categorias).replace(/^\?/, "");
+  let texto = urlDesdeEstado(primera, docs[0], indice, categorias, opciones).replace(/^\?/, "");
   const extra = new URLSearchParams();
   resto.forEach((e, k) => {
     const n = k + 2;
-    const q = new URLSearchParams(urlDesdeEstado({ ...e, desde: porDefecto(e.s, e.v, docs[k + 1]).desde, hasta: "", sh: "", ev: [] }, docs[k + 1], indice, categorias));
+    const q = new URLSearchParams(urlDesdeEstado({ ...e, desde: porDefecto(e.s, e.v, docs[k + 1]).desde, hasta: "", sh: "", ev: [] }, docs[k + 1], indice, categorias, opciones));
     extra.set(`s${n}`, e.s);
     for (const p of PARAMETROS_SERIE) {
       if (p === "s") continue;

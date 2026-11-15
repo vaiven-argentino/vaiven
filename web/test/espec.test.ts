@@ -8,6 +8,7 @@ import type { DocumentoSerie } from "../src/lib/export";
 
 type Doc = DocumentoSerie & SerieExportada;
 import { numerarQuiebres } from "../src/lib/ficha";
+import { conDatos } from "./datos-compartidos";
 
 const leer = (s: string, v: string): Doc =>
   JSON.parse(readFileSync(join(import.meta.dirname, "..", "..", "export", "series", s, `${v}.json`), "utf-8"));
@@ -19,7 +20,7 @@ function capas(doc: Doc, opciones = {}) {
     resultado, tramos: doc.tramos, empalme: doc.empalme, quiebres: numerarQuiebres(doc), tema, esVariacion: false,
     log: false, alto: 300, ancho: 800, descripcion: "prueba", ubicacion: { agregacion: doc.agregacion },
   }) as { layer: Array<{ mark: { type: string; text?: string }; data: { values: Array<Record<string, unknown>> } }> };
-  return spec.layer;
+  return conDatos(spec).layer;
 }
 
 describe("desocupación: frecuencia mixta y tramos sin empalmar", () => {
@@ -158,7 +159,7 @@ describe("quiebres de un solo país (segunda revisión de la 4a, 3.2)", () => {
       tema, esVariacion: true, log: false, alto: 300, ancho: 800, descripcion: "prueba",
       otras: otros.map((e) => ({ nombre: e, resultado: transformar(serieDeEntidad(doc, e), { desde: "2000" }) })),
     }) as { layer: Array<{ mark: { type: string; text?: string }; data?: { values: Array<Record<string, unknown>> } }> };
-    return spec.layer.filter((c) => c.mark.type === "text" && !c.mark.text).flatMap((c) => c.data?.values.map((v) => Number(v.n)) ?? []);
+    return conDatos(spec).layer.filter((c) => c.mark.type === "text" && !c.mark.text).flatMap((c) => c.data?.values.map((v) => Number(v.n)) ?? []);
   };
   it("con la Argentina y Brasil no se marca el quiebre de Venezuela", () => {
     expect(venezuela.advertencia.entidades).toEqual(["VEN"]);

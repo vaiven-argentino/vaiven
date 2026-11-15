@@ -18,8 +18,6 @@ import {
 
 /** Aviso fijo del doble eje (SPEC 4.1). */
 export const AVISO_DOBLE_EJE = "Las escalas de los dos ejes son independientes: que las líneas se crucen o se acerquen no indica una relación entre las series.";
-/** El aviso en dos líneas, para que entre en el ancho del gráfico. */
-const AVISO_DOBLE_EJE_LINEAS = ["Las escalas de los dos ejes son independientes: que las líneas se crucen o se acerquen", "no indica una relación entre las series."];
 
 /** Parte un texto en renglones de hasta `largo` caracteres, por palabras. */
 export function partirEnRenglones(texto: string, largo: number): string[] {
@@ -33,8 +31,6 @@ export function partirEnRenglones(texto: string, largo: number): string[] {
   return renglones;
 }
 
-/** El aviso del doble eje en renglones que entran en el ancho (a 12 px, unos 6,4 px por carácter). */
-const avisoEnRenglones = (ancho: number) => (ancho >= 600 ? AVISO_DOBLE_EJE_LINEAS : partirEnRenglones(AVISO_DOBLE_EJE, Math.max(30, Math.floor((ancho - 16) / 6.4))));
 /** Alto mínimo de cada panel (SPEC 6.2). */
 export const ALTO_MINIMO_PANEL = 180;
 const SEPARACION_PANELES = 16;
@@ -162,12 +158,15 @@ export function armarVista(v: EntradaVista): Vista {
   const eventos = primera.ev.length && v.eventos && dominio ? eventosEnRango(v.eventos, dominio, primera.ev) : [];
   const totalEventos = primera.ev.length && v.eventos && dominio ? eventosEnRango(v.eventos, dominio).length : 0;
   const episodios = primera.ev.includes(EPISODIO) && v.periodos && dominio ? episodiosEnRango(v.periodos, dominio) : [];
+  // Los quiebres se numeran corrido entre todas las series, solo los que se dibujan (los que caen en lo que se ve y no
+  // cubren toda la serie): antes iban salteados («①④», o «②③④» con el ① general sin dibujar; H2, sonda 3 de la 4e).
+  // Los demás quedan con n = 0 (las advertencias generales van en la lista, sin número).
   let base = 0;
   const quiebres = estado.series.map((e, k) => {
-    const lista = numerarQuiebres({ ...serieVista(docs[k], e.p), advertencias: docs[k].advertencias });
-    const renumerada = lista.map((q) => ({ ...q, n: q.n + base }));
-    base += lista.length;
-    return renumerada;
+    const s = c.series[k];
+    const ids = new Set(s.entidades.flatMap((id) => s.resultados[id].advertencias.map((a) => a.id)));
+    return numerarQuiebres({ ...serieVista(docs[k], e.p), advertencias: docs[k].advertencias })
+      .map((q) => (q.forma !== "general" && ids.has(q.advertencia.id) ? { ...q, n: ++base } : { ...q, n: 0 }));
   });
   const contextos = estado.series.map((e, k) => contextoDe(serieVista(docs[k], e.p).agregacion, opcionesSinPeriodo(e, docs[k])));
   const bandas = bandasDe(periodos);
@@ -240,7 +239,8 @@ export function armarVista(v: EntradaVista): Vista {
     const serieP = serieVista(docs[principal.k], estado.series[principal.k].p);
     return {
       resultado: principal.r, tramos: serieP.tramos, empalme: (docs[principal.k] as ConEmpalme).empalme,
-      quiebres: panel.series.flatMap((k) => quiebres[k]),
+      // Cada quiebre, con el color de su serie (su barra va en ese color; O3, sonda 3 de la 4e).
+      quiebres: panel.series.flatMap((k) => quiebres[k].map((q) => (panel.internacional ? q : { ...q, color: colorSerie(k) }))),
       // En el panel de la internacional, la paleta de 8 de sus países; si no, el color de cada serie.
       tema: { ...tema, paleta: panel.internacional ? paleta : ordenadas.map((l) => colorSerie(l.k)) },
       esVariacion: esVariacion(estado.series[principal.k].t), log: panel.log && positivos, alto: v.alto, ancho: v.ancho, descripcion: "",
@@ -282,16 +282,16 @@ export function armarVista(v: EntradaVista): Vista {
     const sDer = especificacion({ ...eDer, descripcion });
     const impreso = sIzq.title as { text: string; subtitle: string[] } | undefined;
     const pad = (s: Record<string, unknown>) => s.padding as { top: number; right: number; bottom: number; left: number };
+    // El aviso fijo del doble eje va con las advertencias de la combinación (O4, sonda 3 de la 4e: arriba del gráfico
+    // ocupaba el lugar del título) y, en la imagen exportada, que no tiene la lista, en el subtítulo.
+    const { title: _sinTitulo, ...sinTitulo } = sIzq;
     return {
-      ...comunV, descripcion, descripcionesPaneles, guia: guia.datos,
+      ...comunV, descripcion, descripcionesPaneles, guia: guia.datos, avisos: [...comunV.avisos, { id: "c.doble-eje", descripcion: AVISO_DOBLE_EJE }],
       especificacion: {
-        ...sIzq,
+        ...sinTitulo,
         layer: [{ layer: sIzq.layer }, { layer: sDer.layer }],
         resolve: { scale: { y: "independent" }, axis: { y: "independent" } },
-        // El aviso fijo va en el gráfico (también en la imagen exportada).
-        title: impreso
-          ? { ...impreso, subtitle: [...impreso.subtitle.slice(0, 1), AVISO_DOBLE_EJE, ...impreso.subtitle.slice(1)] }
-          : { text: avisoEnRenglones(v.ancho), fontSize: 12, fontWeight: "normal", color: tema.secundario, anchor: "start", offset: 10 },
+        ...(impreso ? { title: { ...impreso, subtitle: [...impreso.subtitle.slice(0, 1), AVISO_DOBLE_EJE, ...impreso.subtitle.slice(1)] } } : {}),
         // Con `fit-x`, Vega ya deja lugar para los nombres que van después del eje derecho: un margen los contaría dos veces.
         padding: v.impreso ? pad(sIzq) : { ...pad(sIzq), right: 6 },
         datasets: { ...datosDe(sIzq), ...datosDe(sDer), ...guia.datasets },
