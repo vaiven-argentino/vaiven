@@ -98,7 +98,7 @@
   ],
   "cobertura": {
     "desde": "1970-01",
-    "hasta": "2026-04"
+    "hasta": "2026-09"
   },
   "advertencias": [
     {
@@ -122,8 +122,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m1». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/agregados/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Agregados monetarios M1, M2 y M3, variante «m1». Versión de datos 2026-11-16. https://vaiven.argentino.workers.dev/series/agregados/",
+  "version_datos": "2026-11-16T21:23:47Z",
   "desactualizada_desde": null,
   "datos": [
     ["1970-01", 1.4225e-07],
@@ -799,8 +799,13 @@
     ["2025-11", 52779609.0],
     ["2025-12", 61945836.0],
     ["2026-01", 51480615.0],
-    ["2026-02", 52467312.0],
-    ["2026-03", 56599240.0],
-    ["2026-04", 52833567.0]
+    ["2026-02", 55221955.0],
+    ["2026-03", 54181839.0],
+    ["2026-04", 54945035.0],
+    ["2026-05", 55322105.0],
+    ["2026-06", 58951692.0],
+    ["2026-07", 60034065.0],
+    ["2026-08", 62056050.0],
+    ["2026-09", 62022377.0]
   ]
 }

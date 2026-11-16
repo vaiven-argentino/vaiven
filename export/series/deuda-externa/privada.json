@@ -106,8 +106,8 @@
   ],
   "licencia": "CC-BY-4.0",
   "cita": "Vaivén (2026). Deuda externa total, variante «privada». Versión de datos 2026-11-16. https://vaiven.argentino.workers.dev/series/deuda-externa/privada/",
-  "version_datos": "2026-11-16T02:22:19Z",
-  "desactualizada_desde": "2026-11-16",
+  "version_datos": "2026-11-16T21:23:47Z",
+  "desactualizada_desde": null,
   "datos": [
     ["1970", 3291.0],
     ["1971", 3410.0],

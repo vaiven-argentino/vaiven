@@ -67,7 +67,7 @@
   ],
   "cobertura": {
     "desde": "1994-07",
-    "hasta": "2026-07"
+    "hasta": "2026-09"
   },
   "advertencias": [
     {
@@ -103,8 +103,8 @@
     }
   ],
   "licencia": "CC-BY-4.0",
-  "cita": "Vaivén (2026). Salario real, variante «ripte». Versión de datos 2026-11-07. https://vaiven.argentino.workers.dev/series/salario-real/",
-  "version_datos": "2026-11-07T07:43:45Z",
+  "cita": "Vaivén (2026). Salario real, variante «ripte». Versión de datos 2026-11-16. https://vaiven.argentino.workers.dev/series/salario-real/",
+  "version_datos": "2026-11-16T21:23:47Z",
   "desactualizada_desde": null,
   "datos": [
     ["1994-07", 874.87],
@@ -491,6 +491,7 @@
     ["2026-04", 1837609.35],
     ["2026-05", 1849727.96],
     ["2026-06", 1915878.76],
-    ["2026-07", 1946028.12]
+    ["2026-07", 1946028.12],
+    ["2026-09", 2022244.09]
   ]
 }

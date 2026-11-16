@@ -1,5 +1,30 @@
 [
   {
+    "version_datos": "2026-11-16T21:23:47Z",
+    "variante": "agregados.m1",
+    "umbral_pct": 0.5,
+    "cambios": [
+      {
+        "fecha": "2026-02",
+        "anterior": 52467312.0,
+        "nuevo": 55221955.0,
+        "variacion_pct": 5.250208
+      },
+      {
+        "fecha": "2026-03",
+        "anterior": 56599240.0,
+        "nuevo": 54181839.0,
+        "variacion_pct": -4.271084
+      },
+      {
+        "fecha": "2026-04",
+        "anterior": 52833567.0,
+        "nuevo": 54945035.0,
+        "variacion_pct": 3.996452
+      }
+    ]
+  },
+  {
     "version_datos": "2026-11-13T21:23:46Z",
     "variante": "saldo-comercial.mensual",
     "umbral_pct": 1,
