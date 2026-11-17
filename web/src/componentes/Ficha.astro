@@ -596,4 +596,7 @@ const manuales = doc.fuentes.filter((f) => f.descarga === "manual" && f.version)
     font-family: var(--sans); font-size: 0.85rem; box-shadow: none; padding: 6px 10px;
   }
   #vg-tooltip-element.custom-theme td.key { color: var(--secundario); }
+  /* Un evento por renglón y sin cortar (S1, sonda 5 de la 4e): vega-tooltip limita el valor a 200 px con elipsis. El ancho
+     no pasa del de la ventana: si el cartel no entra, vega-tooltip no lo muestra (en 390 px). */
+  #vg-tooltip-element.custom-theme td.value { white-space: pre-line; max-width: min(420px, calc(100vw - 110px)); overflow: visible; text-overflow: clip; }
 </style>

@@ -10,6 +10,7 @@ import {
 import { RESERVA, dominioMeses, especificacion, type BandaEpisodio, type EntradaGrafico, type EntradaLeyenda, type MarcaEvento, type Tema } from "./espec";
 import { opcionesDe, serieVista, type Documento, type Estado, type EstadoVista } from "./estado";
 import { esVariacion, numerarQuiebres, picoQueComprime, resumen, type QuiebreNumerado } from "./ficha";
+import { TEMA_CLARO } from "./tema";
 import { enumerar, fechaLegible, numero, unidadVisible } from "./formato";
 import {
   EPISODIO, bandasDe, columnaPeriodo, contextoDe, episodiosEnRango, eventosEnRango, nombreSombreadoEnFrase, periodosEnRango, textoLectura, tipoDe,
@@ -168,7 +169,10 @@ function dominioDe(c: Comparacion): Resultado | null {
  */
 export function armarVista(v: EntradaVista): Vista {
   const c = v.comparacion ?? compararVista(v);
-  const { estado, docs, tema } = v;
+  const { estado, docs } = v;
+  // La imagen exportada sale siempre en claro, aunque la página o Claude estén en oscuro: es la que se imprime o se pega
+  // en un documento (S6, sonda 5 de la 4e).
+  const tema = v.impreso ? TEMA_CLARO : v.tema;
   const [primera] = estado.series;
   const dominio = dominioDe(c);
   const sh = primera.sh as OpcionSombreado | "";
@@ -388,6 +392,14 @@ export function armarVista(v: EntradaVista): Vista {
   }).filter((x): x is NonNullable<typeof x> => x !== null);
   if (!specs.length) return vacio();
   const derecha = Math.max(...specs.map(({ s }) => (s.padding as { right: number }).right));
+  // Todos los ejes Y con el ancho del número más largo de los paneles: así las áreas y los títulos de los paneles quedan
+  // alineados contra el borde (S2, sonda 5 de la 4e: «40» y «50.000» corrían los títulos).
+  const anchoEjes = Math.max(...specs.map(({ p }) => {
+    const vs = p.series.flatMap((k) => Object.values(c.series[k].resultados).flatMap((r) => r.datos.map((d) => d[1]).filter((x): x is number => x !== null)));
+    const mayor = vs.length ? Math.max(...vs.map((x) => Math.abs(x))) : 0;
+    const negativo = vs.some((x) => x < 0);
+    return (Math.round(mayor * 1.15).toLocaleString("es-AR").length + (negativo ? 1 : 0)) * 7 + 10;
+  }));
   const ultimaEsp = specs[specs.length - 1].s;
   const impreso = v.impreso ? especificacion({ ...entradaPanel(specs[0].p, { alto })!, descripcion, impreso: v.impreso }).title : undefined;
   return {
@@ -411,7 +423,7 @@ export function armarVista(v: EntradaVista): Vista {
       resolve: { scale: { x: "shared" } },
       datasets: Object.assign({}, ...specs.map(({ s }) => datosDe(s)), guia.datasets),
       // La configuración es la del último panel: lleva el eje de fechas (y el espacio para las letras de los eventos).
-      config: ultimaEsp.config,
+      config: { ...(ultimaEsp.config as Record<string, unknown>), axisY: { minExtent: anchoEjes } },
     },
   };
 }

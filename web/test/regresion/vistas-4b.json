@@ -23,7 +23,7 @@
   "leyendas": "7c57a73e0fe100fa",
   "cita": "f661dd6b4b834234",
   "tabla": "23ec91f2fe736749",
-  "svg": "8dc6117fcc1ec519"
+  "svg": "139a0a2348e97185"
  },
  "1280 ?s=pib&t=nivel&log=1&sh=gobierno": {
   "url": "?s=pib&t=nivel&log=1&sh=gobierno",
@@ -62,7 +62,7 @@
   "leyendas": "21d28b33b00a5edb",
   "cita": "0574c465178c083e",
   "tabla": "523379b925f9acbb",
-  "svg": "3b2dfb4ab05c98af"
+  "svg": "4aa7e0566f8dd2fe"
  },
  "1280 ?s=tc-oficial&v=moneda-de-epoca&pa=1&t=var_interanual&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&v=moneda-de-epoca&pa=1&t=var_interanual&sh=regimen_cambiario",
@@ -88,7 +88,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "379cefebb8a60961",
   "tabla": "815bbb34ab7302a4",
-  "svg": "7609fb4a99add75e"
+  "svg": "543222a84154cc4d"
  },
  "1280 ?s=reservas&f=anual&desde=1983&sh=ministro": {
   "url": "?s=reservas&f=anual&desde=1983&sh=ministro",
@@ -101,7 +101,7 @@
   "leyendas": "b2e90e8aef2e48c2",
   "cita": "529e5efa5cda1681",
   "tabla": "93d1536afab775ef",
-  "svg": "0072917e06e00519"
+  "svg": "45c03b28948ab3c0"
  },
  "1280 ?s=desocupacion&sh=catedra&ev=1": {
   "url": "?s=desocupacion&sh=catedra&ev=1",
@@ -114,7 +114,7 @@
   "leyendas": "cc76637e025ad4da",
   "cita": "9aa4962516e7825f",
   "tabla": "bcc47cd9d9c7f6ff",
-  "svg": "5eb24d9635481efd"
+  "svg": "995c79a412296610"
  },
  "1280 ?desde=1970&ev=cambiario,deuda": {
   "url": "?desde=1970&ev=cambiario,deuda",
@@ -127,7 +127,7 @@
   "leyendas": "5884f9bc7d2e8c02",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "3b1315b11a228a7f"
+  "svg": "a88bbf748bff77ab"
  },
  "1280 ?s=pib&sh=gobierno&ev=deuda,episodio": {
   "url": "?s=pib&sh=gobierno&ev=deuda,episodio",
@@ -140,7 +140,7 @@
   "leyendas": "b49a9288563139e8",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "120f054dbad6b741"
+  "svg": "9c9291125fa6da98"
  },
  "1280 ?t=var_mensual&desde=1988&hasta=1991&ev=episodio": {
   "url": "?t=var_mensual&desde=1988&hasta=1991&ev=episodio",
@@ -153,7 +153,7 @@
   "leyendas": "4efb55c7074f16f5",
   "cita": "b8524cd8337009a0",
   "tabla": "4d8410836bb422bd",
-  "svg": "11d133beae64440e"
+  "svg": "a3f8aac169c056a0"
  },
  "1280 ?t=var_interanual&desde=2000&hasta=2004": {
   "url": "?desde=2000&hasta=2004",
@@ -205,7 +205,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "5a485d793d08a370",
   "tabla": "ddb9ad8c6dceca06",
-  "svg": "553da07e1d371fce"
+  "svg": "5b2a962037e3e094"
  },
  "1280 ?s=pib&desde=1995&hasta=2020&sh=gobierno": {
   "url": "?s=pib&desde=1995&hasta=2020&sh=gobierno",
@@ -231,7 +231,7 @@
   "leyendas": "e4f42de79b0b7633",
   "cita": "f661dd6b4b834234",
   "tabla": "36002e9a39d35000",
-  "svg": "ce11f49000791fca"
+  "svg": "31720a2adc7240f4"
  },
  "1280 ?s=reservas&desde=1988&hasta=1991&sh=gobierno": {
   "url": "?s=reservas&desde=1988&hasta=1991&sh=gobierno",
@@ -244,7 +244,7 @@
   "leyendas": "336bdeb73375afc8",
   "cita": "36ea398cb7d10db6",
   "tabla": "2926c4885ad4ed41",
-  "svg": "951c0ec38e2bcd98"
+  "svg": "edb20e5e04a8f0b2"
  },
  "1280 ?desde=1970&ev=1": {
   "url": "?desde=1970&ev=1",
@@ -257,7 +257,7 @@
   "leyendas": "3f6030fffdac5ebf",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "44f59a5e9dda852a"
+  "svg": "c0b1d578099e2f12"
  },
  "1280 ?s=resultado-fiscal&v=financiero&sh=regimen_cambiario": {
   "url": "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario",
@@ -283,7 +283,7 @@
   "leyendas": "0fa4bc62e049f0f2",
   "cita": "36ea398cb7d10db6",
   "tabla": "6d9ba3e3e74e106e",
-  "svg": "a5da44b78d187f3c"
+  "svg": "210ede7f9a9f3a37"
  },
  "1280 ?s=reservas&t=var_dic_dic&m=real&f=semanal&sh=papas&desde=83&mm=5": {
   "url": "?s=reservas",
@@ -296,7 +296,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "e5e58c95b6d83da0"
+  "svg": "44b79d54cb141b0f"
  },
  "1280 ?s=int-pib&p=ARG%2CBRA": {
   "url": "?s=int-pib&p=ARG,BRA",
@@ -361,7 +361,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "67d1d23dcbf56fa1",
   "tabla": "362a273a67ab79c6",
-  "svg": "af7612dc1a11531d"
+  "svg": "7aea6c8af1427ff4"
  },
  "1280 ?s=agregados&v=m2-pesos": {
   "url": "?s=agregados&v=m2-pesos",
@@ -387,7 +387,7 @@
   "leyendas": "fcef76bc8bd2a41a",
   "cita": "15e7cad3e307f4d7",
   "tabla": "b6261a1efb6df799",
-  "svg": "c6a11d86a2e6fd95"
+  "svg": "277a1a20118e518a"
  },
  "1280 ?s=agregados&v=m2-privado": {
   "url": "?s=agregados&v=m2-privado",
@@ -400,7 +400,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "6f1114d079d2f2f4",
   "tabla": "9faf77dc52380d4e",
-  "svg": "c083a12799d67f85"
+  "svg": "246b06c7c67e60c7"
  },
  "1280 ?s=agregados&v=m2-privado&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m2-privado&sh=gobierno&ev=1",
@@ -413,7 +413,7 @@
   "leyendas": "5a99ff80f81be1ff",
   "cita": "a07613bb56e08e3f",
   "tabla": "e62d34ab51d44b8e",
-  "svg": "a55b7bd76b2bfd5a"
+  "svg": "8eb1214e248c9a0f"
  },
  "1280 ?s=agregados&v=m2-total": {
   "url": "?s=agregados&v=m2-total",
@@ -439,7 +439,7 @@
   "leyendas": "fcef76bc8bd2a41a",
   "cita": "12ae84588e2ad232",
   "tabla": "480e7ff9d95c2d92",
-  "svg": "f7ee7a4a801d2703"
+  "svg": "f08cd3539f622890"
  },
  "1280 ?s=agregados&v=m3-total": {
   "url": "?s=agregados&v=m3-total",
@@ -465,7 +465,7 @@
   "leyendas": "fcef76bc8bd2a41a",
   "cita": "482e2ed2830c576d",
   "tabla": "5c6cbdf3c202db3e",
-  "svg": "58e1fc23dc20236b"
+  "svg": "54c8b7f1d1f059d7"
  },
  "1280 ?s=base-monetaria": {
   "url": "?s=base-monetaria",
@@ -491,7 +491,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2a7d98342e6fb428",
   "tabla": "0630ca6d94abda46",
-  "svg": "a89a6fb00dc34c80"
+  "svg": "9bc23c82b263f5d1"
  },
  "1280 ?s=base-monetaria&v=promedio-mensual": {
   "url": "?s=base-monetaria&v=promedio-mensual",
@@ -504,7 +504,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "c1659247829075f8",
   "tabla": "f2cd0e44946f6bf8",
-  "svg": "15e3eb036ce07711"
+  "svg": "6404d84e26cb4dd0"
  },
  "1280 ?s=base-monetaria&v=promedio-mensual&sh=gobierno&ev=1": {
   "url": "?s=base-monetaria&v=promedio-mensual&sh=gobierno&ev=1",
@@ -517,7 +517,7 @@
   "leyendas": "8fb3b9fde49d4a56",
   "cita": "1d34800254a0c73b",
   "tabla": "eb0b04d7766df218",
-  "svg": "8604b5ef444051e0"
+  "svg": "abda4b670ce84ee7"
  },
  "1280 ?s=cuenta-corriente": {
   "url": "?s=cuenta-corriente",
@@ -543,7 +543,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2c22d200f8d8177f",
   "tabla": "c48b7bf527e9e161",
-  "svg": "200a2807c2277a87"
+  "svg": "c700324d40da5865"
  },
  "1280 ?s=cuenta-corriente&v=mbp5": {
   "url": "?s=cuenta-corriente&v=mbp5",
@@ -569,7 +569,7 @@
   "leyendas": "377b47c2cdd90e47",
   "cita": "1acfe6b4a8891acd",
   "tabla": "2d91299b7a9f9c73",
-  "svg": "60c98780dc5c6ace"
+  "svg": "e51f8b08b7e03552"
  },
  "1280 ?s=cuenta-corriente&v=mbp6": {
   "url": "?s=cuenta-corriente&v=mbp6",
@@ -595,7 +595,7 @@
   "leyendas": "37d350a450c97a1b",
   "cita": "08ded59a3400fd1f",
   "tabla": "18bb2cf0c5ba6981",
-  "svg": "57abc50b1c1bb68a"
+  "svg": "c29008b20211f4a5"
  },
  "1280 ?s=desocupacion": {
   "url": "?s=desocupacion",
@@ -608,7 +608,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec6816a98d881367",
   "tabla": "6b4239a84e9e4e90",
-  "svg": "8049a6662b0eab38"
+  "svg": "49f53421afb1312c"
  },
  "1280 ?s=desocupacion&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&sh=gobierno&ev=1",
@@ -621,7 +621,7 @@
   "leyendas": "e4c99d4d8e7451d1",
   "cita": "9aa4962516e7825f",
   "tabla": "9e88ea1f7d741e11",
-  "svg": "60f5f8a25fd21a8a"
+  "svg": "264a813443385979"
  },
  "1280 ?s=desocupacion&v=gba": {
   "url": "?s=desocupacion&v=gba",
@@ -634,7 +634,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "cd94e55e8b4dfe30",
   "tabla": "785f0bc77d7e7f77",
-  "svg": "05bf5b9921337b0d"
+  "svg": "ab80d0dc14b0f59e"
  },
  "1280 ?s=desocupacion&v=gba&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&v=gba&sh=gobierno&ev=1",
@@ -647,7 +647,7 @@
   "leyendas": "e4c99d4d8e7451d1",
   "cita": "da1df0f248844d12",
   "tabla": "d14639678b235212",
-  "svg": "1ac1240d6a04f7af"
+  "svg": "633a9f62af1b3981"
  },
  "1280 ?s=deuda-externa": {
   "url": "?s=deuda-externa",
@@ -660,7 +660,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "0d89a7232ce76720",
   "tabla": "eb90255b0abcf833",
-  "svg": "febe9e9771027175"
+  "svg": "a0f21856253d3e7a"
  },
  "1280 ?s=deuda-externa&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&sh=gobierno&ev=1",
@@ -673,7 +673,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "8e61affa2d0b4eb5",
   "tabla": "6100f0728ad71a42",
-  "svg": "c5f1d6504b63bc0f"
+  "svg": "54ab4f27d86e949b"
  },
  "1280 ?s=deuda-externa&v=indec": {
   "url": "?s=deuda-externa&v=indec",
@@ -686,7 +686,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "cd5c5536b4aaeeb8",
   "tabla": "59bba0b03d69c1b4",
-  "svg": "c61172643bcbfaf3"
+  "svg": "4d79a7eadcb228f5"
  },
  "1280 ?s=deuda-externa&v=indec&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&v=indec&sh=gobierno&ev=1",
@@ -699,7 +699,7 @@
   "leyendas": "f1285a25c205d60f",
   "cita": "07f17dba9515f7ff",
   "tabla": "8d8d0e3c33f307e4",
-  "svg": "f1da3a0a8ddffc21"
+  "svg": "d16d9e24112f072e"
  },
  "1280 ?s=deuda-externa&v=privada": {
   "url": "?s=deuda-externa&v=privada",
@@ -712,7 +712,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "73632d2432e8b3eb",
   "tabla": "0fc92fe991ea1206",
-  "svg": "1a3b63b228c5611d"
+  "svg": "30ab970e1fdd5607"
  },
  "1280 ?s=deuda-externa&v=privada&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&v=privada&sh=gobierno&ev=1",
@@ -725,7 +725,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "6cc55cfbc9a76742",
   "tabla": "9126e29e5494e81e",
-  "svg": "a6b62ec28bece336"
+  "svg": "bc3e35a8914ae190"
  },
  "1280 ?s=deuda-externa&v=publica": {
   "url": "?s=deuda-externa&v=publica",
@@ -738,7 +738,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "fb4d93ccbc2d0297",
   "tabla": "5eb895e09ecb2d14",
-  "svg": "1e372e34ec0735ec"
+  "svg": "cf0fa90c32760790"
  },
  "1280 ?s=deuda-externa&v=publica&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&v=publica&sh=gobierno&ev=1",
@@ -751,7 +751,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "531594698f1dd574",
   "tabla": "13e649a802427eb7",
-  "svg": "ee08520ef121e085"
+  "svg": "2e2621dbde076dc8"
  },
  "1280 ?s=deuda-publica": {
   "url": "?s=deuda-publica",
@@ -764,7 +764,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec35b1f234f64648",
   "tabla": "5eb895e09ecb2d14",
-  "svg": "1e372e34ec0735ec"
+  "svg": "cf0fa90c32760790"
  },
  "1280 ?s=deuda-publica&sh=gobierno&ev=1": {
   "url": "?s=deuda-publica&sh=gobierno&ev=1",
@@ -777,7 +777,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "53dda0fd4764ebce",
   "tabla": "13e649a802427eb7",
-  "svg": "ee08520ef121e085"
+  "svg": "2e2621dbde076dc8"
  },
  "1280 ?s=exportaciones": {
   "url": "?s=exportaciones",
@@ -790,7 +790,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "3a94c31798b81cb4",
   "tabla": "2260eee42dbfaf76",
-  "svg": "d325707c69c9400a"
+  "svg": "f950585353950018"
  },
  "1280 ?s=exportaciones&sh=gobierno&ev=1": {
   "url": "?s=exportaciones&sh=gobierno&ev=1",
@@ -803,7 +803,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "c82635a2b4c69404",
   "tabla": "97fce8272dc0cef3",
-  "svg": "feb4a45f1e1fd217"
+  "svg": "e89e2f6d643cb1fe"
  },
  "1280 ?s=exportaciones&v=mensual": {
   "url": "?s=exportaciones&v=mensual",
@@ -816,7 +816,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "38b48d70fe25c870",
   "tabla": "bc4302f90d9abaa9",
-  "svg": "fbb8449e7134f20b"
+  "svg": "4fa145246d1f1c3d"
  },
  "1280 ?s=exportaciones&v=mensual&sh=gobierno&ev=1": {
   "url": "?s=exportaciones&v=mensual&sh=gobierno&ev=1",
@@ -829,7 +829,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "7fe68a46d6992b92",
   "tabla": "732598dc2f21e187",
-  "svg": "22c491b045cc6c8b"
+  "svg": "72472b483e3f0965"
  },
  "1280 ?s=fuga&sh=gobierno&ev=1": {
   "url": "?s=fuga&sh=gobierno&ev=1",
@@ -842,7 +842,7 @@
   "leyendas": "8fb3b9fde49d4a56",
   "cita": "689288af6c940277",
   "tabla": "2bdc625349aa5bfa",
-  "svg": "2156534ad6699331"
+  "svg": "3462cf218f01a7e9"
  },
  "1280 ?s=fuga&v=activos-externos": {
   "url": "?s=fuga&v=activos-externos",
@@ -855,7 +855,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "abb697802192aac1",
   "tabla": "e3e8cd92fc7a8056",
-  "svg": "ba03c539706efc7e"
+  "svg": "1b000863198bbf64"
  },
  "1280 ?s=fuga&v=activos-externos&sh=gobierno&ev=1": {
   "url": "?s=fuga&v=activos-externos&sh=gobierno&ev=1",
@@ -868,7 +868,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "0bc66d54566a0571",
   "tabla": "770c3e55de5ba7af",
-  "svg": "72f27b346c1f7186"
+  "svg": "fa64508a6023a387"
  },
  "1280 ?s=importaciones": {
   "url": "?s=importaciones",
@@ -881,7 +881,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "8b61c4484213058a",
   "tabla": "4dd5285e88747bb5",
-  "svg": "2f480d9d525fee48"
+  "svg": "538e6ae07e8da583"
  },
  "1280 ?s=importaciones&sh=gobierno&ev=1": {
   "url": "?s=importaciones&sh=gobierno&ev=1",
@@ -894,7 +894,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "e0f08ec72ab4383e",
   "tabla": "957c99bd99c7383b",
-  "svg": "426b48d3e8dd3e4b"
+  "svg": "3901e578cec1d441"
  },
  "1280 ?s=importaciones&v=mensual": {
   "url": "?s=importaciones&v=mensual",
@@ -907,7 +907,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "4a1039784e416d7e",
   "tabla": "01cad2278f02ffb4",
-  "svg": "82b214e21f4642d5"
+  "svg": "0bda4a7b229196b5"
  },
  "1280 ?s=importaciones&v=mensual&sh=gobierno&ev=1": {
   "url": "?s=importaciones&v=mensual&sh=gobierno&ev=1",
@@ -920,7 +920,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "d310e56dd2ac6f79",
   "tabla": "887f2ad7e1a02ab6",
-  "svg": "5d1d312e27c1a1fa"
+  "svg": "01d29c0a58371f37"
  },
  "1280 ?s=int-pib": {
   "url": "?s=int-pib",
@@ -946,7 +946,7 @@
   "leyendas": "01eaaa4a834c5d27",
   "cita": "143698b270ffb8b6",
   "tabla": "70a1f94228f80faf",
-  "svg": "f58a02aed334376c"
+  "svg": "e602b7fa100f52be"
  },
  "1280 ?s=int-pib-per-capita": {
   "url": "?s=int-pib-per-capita",
@@ -972,7 +972,7 @@
   "leyendas": "01eaaa4a834c5d27",
   "cita": "d1361e0c6ba436d6",
   "tabla": "cebc76a369184ddd",
-  "svg": "3bf13fda0b535662"
+  "svg": "7e6767ab25ab7581"
  },
  "1280 ?s=inversion": {
   "url": "?s=inversion",
@@ -998,7 +998,7 @@
   "leyendas": "069f39b9b73caca4",
   "cita": "13975790798dbadb",
   "tabla": "998ade880a77172e",
-  "svg": "d1e25c8586090a4d"
+  "svg": "2304151dab2af0cf"
  },
  "1280 ?s=inversion&v=base-1970": {
   "url": "?s=inversion&v=base-1970",
@@ -1024,7 +1024,7 @@
   "leyendas": "12731ec6b3019c94",
   "cita": "ee7081f46e56ab2d",
   "tabla": "20c2753edcf86623",
-  "svg": "afcd5f2a91ecac56"
+  "svg": "b39f6604843e41f7"
  },
  "1280 ?s=inversion&v=pct-pib-corrientes": {
   "url": "?s=inversion&v=pct-pib-corrientes",
@@ -1037,7 +1037,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "57ba71b4af7c0ede",
   "tabla": "d461b3fa55ea8a01",
-  "svg": "c989967346c84647"
+  "svg": "034a4924a2d1236e"
  },
  "1280 ?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1": {
   "url": "?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1",
@@ -1050,7 +1050,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "6051ea0ed1e8476d",
   "tabla": "717491f39f2856b0",
-  "svg": "1b93ba2c63be94ad"
+  "svg": "77e3cdc8c5c142da"
  },
  "1280 ?s=pib": {
   "url": "?s=pib",
@@ -1076,7 +1076,7 @@
   "leyendas": "3b3f1861ed489c36",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "a77771540adb4022"
+  "svg": "645ff09978648a2d"
  },
  "1280 ?s=reservas": {
   "url": "?s=reservas",
@@ -1089,7 +1089,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "e5e58c95b6d83da0"
+  "svg": "44b79d54cb141b0f"
  },
  "1280 ?s=reservas&sh=gobierno&ev=1": {
   "url": "?s=reservas&sh=gobierno&ev=1",
@@ -1102,7 +1102,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "36ea398cb7d10db6",
   "tabla": "839ad4aa31c07116",
-  "svg": "8b99babf8eda5c89"
+  "svg": "2e5f5c152688d3f5"
  },
  "1280 ?s=resultado-fiscal": {
   "url": "?s=resultado-fiscal",
@@ -1128,7 +1128,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "88b2f68e5f11217b",
   "tabla": "5b1c34ac6c72d915",
-  "svg": "af4ff4c0594c5520"
+  "svg": "b82121fd85c9463a"
  },
  "1280 ?s=resultado-fiscal&v=financiero": {
   "url": "?s=resultado-fiscal&v=financiero",
@@ -1154,7 +1154,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "4f3ac642ed46ef02"
+  "svg": "dd8de5dd19beba92"
  },
  "1280 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -1167,7 +1167,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "44fb125bffc40d23",
   "tabla": "c196af67e8e0a23a",
-  "svg": "e18edbd5af672afb"
+  "svg": "d2ff2002c2292e3c"
  },
  "1280 ?s=salario-real&sh=gobierno&ev=1": {
   "url": "?s=salario-real&sh=gobierno&ev=1",
@@ -1180,7 +1180,7 @@
   "leyendas": "069f39b9b73caca4",
   "cita": "45c1c3b809bd3968",
   "tabla": "697ca0527f60a5f6",
-  "svg": "246cc53352a685f7"
+  "svg": "c8721d7b324d177a"
  },
  "1280 ?s=salario-real&v=indice-salarios": {
   "url": "?s=salario-real&v=indice-salarios",
@@ -1193,7 +1193,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "76aa4dea57f28eb2",
   "tabla": "97492386af424781",
-  "svg": "065b0437c90b08a3"
+  "svg": "96dc6554b749908f"
  },
  "1280 ?s=salario-real&v=indice-salarios&sh=gobierno&ev=1": {
   "url": "?s=salario-real&v=indice-salarios&sh=gobierno&ev=1",
@@ -1206,7 +1206,7 @@
   "leyendas": "53474d61a36004d1",
   "cita": "2d7a43dbc163ce5f",
   "tabla": "202563e8cce857a5",
-  "svg": "fe2e4e8a2aec0e02"
+  "svg": "ee3d65473480fd94"
  },
  "1280 ?s=saldo-comercial": {
   "url": "?s=saldo-comercial",
@@ -1232,7 +1232,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "bbc890ea55397c6e",
   "tabla": "f577d452e5149242",
-  "svg": "df5e92ad8a602222"
+  "svg": "568447b5209490ca"
  },
  "1280 ?s=saldo-comercial&v=mensual": {
   "url": "?s=saldo-comercial&v=mensual",
@@ -1258,7 +1258,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "d98ab5976f9bdd30",
   "tabla": "f24f455ffb26a3a4",
-  "svg": "7629bc6f485719ab"
+  "svg": "498123718f66df96"
  },
  "1280 ?s=tasa-pasiva": {
   "url": "?s=tasa-pasiva",
@@ -1271,7 +1271,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "80d4b373efd9082e",
   "tabla": "9a45c2422d31861f",
-  "svg": "6fd0e13a66bd4ab4"
+  "svg": "a0f993d909892e26"
  },
  "1280 ?s=tasa-pasiva&sh=gobierno&ev=1": {
   "url": "?s=tasa-pasiva&sh=gobierno&ev=1",
@@ -1284,7 +1284,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "0804e1dae3f70d6d",
   "tabla": "519d76a4409e427c",
-  "svg": "487e013864a5dfe4"
+  "svg": "6197d875ae380421"
  },
  "1280 ?s=tasa-pasiva&v=badlar": {
   "url": "?s=tasa-pasiva&v=badlar",
@@ -1297,7 +1297,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "d11665f21f215c89",
   "tabla": "39dcd84e4069a115",
-  "svg": "8727eea4860fb792"
+  "svg": "971b25d0a3fb9960"
  },
  "1280 ?s=tasa-pasiva&v=badlar&sh=gobierno&ev=1": {
   "url": "?s=tasa-pasiva&v=badlar&sh=gobierno&ev=1",
@@ -1310,7 +1310,7 @@
   "leyendas": "da7c5fcbe04d4628",
   "cita": "46358b5cf62a2077",
   "tabla": "1c84a4e06051ca69",
-  "svg": "8daae788522d7fa5"
+  "svg": "208f03739eb937ad"
  },
  "1280 ?s=tc-oficial": {
   "url": "?s=tc-oficial",
@@ -1336,7 +1336,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "33a233bf161dc242",
   "tabla": "a8e5e44568356a0d",
-  "svg": "d38edc6f1a071b6b"
+  "svg": "9474cd24bca11533"
  },
  "1280 ?s=tc-oficial&v=moneda-de-epoca": {
   "url": "?s=tc-oficial&v=moneda-de-epoca",
@@ -1362,7 +1362,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "5add12680ecb2450",
   "tabla": "2c3139ebcc3d0f81",
-  "svg": "e467e1ac5de63208"
+  "svg": "dcb998e55c6f8d0c"
  },
  "1280 ?s=tcr-bilateral": {
   "url": "?s=tcr-bilateral",
@@ -1375,7 +1375,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "6d572389013dd75d",
   "tabla": "789d77b38c5dd538",
-  "svg": "21083a46e029d993"
+  "svg": "e5405ee33a83f2f7"
  },
  "1280 ?s=tcr-bilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&sh=gobierno&ev=1",
@@ -1388,7 +1388,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "391159d79e30abb3",
   "tabla": "f5e5692cfd550f5e",
-  "svg": "b7047b673a4c5a42"
+  "svg": "71774aa7af0dd04f"
  },
  "1280 ?s=tcr-bilateral&v=provincias": {
   "url": "?s=tcr-bilateral&v=provincias",
@@ -1401,7 +1401,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "3c88452dbde3d0d0",
   "tabla": "c5c623586783b02a",
-  "svg": "712908e589a36646"
+  "svg": "5b1e7732f1e818a7"
  },
  "1280 ?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1",
@@ -1414,7 +1414,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "b209f0fea65e74cb",
   "tabla": "0b62c4c22e37074b",
-  "svg": "a78d16d715534fec"
+  "svg": "31eaa153dfcca021"
  },
  "1280 ?s=tcr-multilateral": {
   "url": "?s=tcr-multilateral",
@@ -1427,7 +1427,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e56d5f0bc62a6681",
   "tabla": "62f7a955f76dc5e8",
-  "svg": "2a1b009864f08121"
+  "svg": "cc30a752171ff40e"
  },
  "1280 ?s=tcr-multilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&sh=gobierno&ev=1",
@@ -1440,7 +1440,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "6308c9a2077d7486",
   "tabla": "7dddff3a362e54cd",
-  "svg": "e80d6e21222e64b1"
+  "svg": "93b08bd11c43cbf9"
  },
  "1280 ?s=tcr-multilateral&v=bruegel": {
   "url": "?s=tcr-multilateral&v=bruegel",
@@ -1453,7 +1453,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "7dc3fa65804be828",
   "tabla": "8a2f6eaed0fccb32",
-  "svg": "51fe432281c3c169"
+  "svg": "3cde338dec712d75"
  },
  "1280 ?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1",
@@ -1466,7 +1466,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2dc58bb146e5cbc1",
   "tabla": "e226a35113aa7355",
-  "svg": "8bd7cf3c225f4364"
+  "svg": "e7d84c20b97a397f"
  },
  "1280 ?v=provincias": {
   "url": "?v=provincias",
@@ -1492,7 +1492,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "fa959e1bb595f462",
   "tabla": "b44b009cf752ec27",
-  "svg": "d8025563d44f21cc"
+  "svg": "5acdfd0500c84c95"
  },
  "1280 ?desde=1980&hasta=1982&sh=gobierno": {
   "url": "?desde=1980&hasta=1982&sh=gobierno",
@@ -1505,7 +1505,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "5a485d793d08a370",
   "tabla": "e7d89e074fbdaed1",
-  "svg": "a66cbda059da7a67"
+  "svg": "e1bb1f8d0feec1cc"
  },
  "1280 ?desde=2000&hasta=2002&sh=gobierno": {
   "url": "?desde=2000&hasta=2002&sh=gobierno",
@@ -1531,7 +1531,7 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "5a485d793d08a370",
   "tabla": "d87f0bdd5cec3e3a",
-  "svg": "62a98716a2041367"
+  "svg": "1611789ea17c362c"
  },
  "1280 ?s=desocupacion&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=desocupacion&desde=1980&hasta=1982&sh=gobierno",
@@ -1544,7 +1544,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9aa4962516e7825f",
   "tabla": "54a1735211611aa3",
-  "svg": "5352fc1ca0af56b2"
+  "svg": "e119fb5f8d4ee0ac"
  },
  "1280 ?s=desocupacion&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=desocupacion&desde=2000&hasta=2002&sh=gobierno",
@@ -1557,7 +1557,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9aa4962516e7825f",
   "tabla": "6c68a160383c5d55",
-  "svg": "f3514d7dc47039e6"
+  "svg": "b3b4d896e962a203"
  },
  "1280 ?s=desocupacion&desde=2022&sh=gobierno": {
   "url": "?s=desocupacion&desde=2022&sh=gobierno",
@@ -1570,7 +1570,7 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "9aa4962516e7825f",
   "tabla": "7e441980751873fe",
-  "svg": "1fe56ea81dc2937b"
+  "svg": "4daa59998c4bb951"
  },
  "1280 ?s=pib&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=pib&desde=1980&hasta=1982&sh=gobierno",
@@ -1596,7 +1596,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9393fe10be49a54d",
   "tabla": "b582f3d4df09228f",
-  "svg": "14f5f5af15126163"
+  "svg": "0c61280cdef15633"
  },
  "1280 ?s=pib&desde=2022&sh=gobierno": {
   "url": "?s=pib&desde=2022&sh=gobierno",
@@ -1622,7 +1622,7 @@
   "leyendas": "1c43a94d26d73404",
   "cita": "36ea398cb7d10db6",
   "tabla": "a89b8874edd20c42",
-  "svg": "6c0c8d8e3f02e8f4"
+  "svg": "43f0755754dc5b26"
  },
  "1280 ?s=reservas&desde=1975&hasta=1977&sh=gobierno": {
   "url": "?s=reservas&desde=1975&hasta=1977&sh=gobierno",
@@ -1635,7 +1635,7 @@
   "leyendas": "eb2ed6aedee28860",
   "cita": "36ea398cb7d10db6",
   "tabla": "ac234afa33e743d9",
-  "svg": "7feaea3f64c24b54"
+  "svg": "ccddf41db7c07f7a"
  },
  "1280 ?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario": {
   "url": "?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario",
@@ -1648,7 +1648,7 @@
   "leyendas": "ace9a9d6d210720f",
   "cita": "36ea398cb7d10db6",
   "tabla": "c28f288c31a67101",
-  "svg": "e72fb657986bf7be"
+  "svg": "be07f4e33f41065e"
  },
  "1280 ?s=reservas&desde=1982&hasta=1990&sh=gobierno": {
   "url": "?s=reservas&desde=1982&hasta=1990&sh=gobierno",
@@ -1661,7 +1661,7 @@
   "leyendas": "e69bba7fd057f531",
   "cita": "36ea398cb7d10db6",
   "tabla": "b420c368806332e7",
-  "svg": "fe9e185ef7ab6954"
+  "svg": "d09ee91746479ab9"
  },
  "1280 ?s=reservas&desde=1988&hasta=1991&ev=1": {
   "url": "?s=reservas&desde=1988&hasta=1991&ev=1",
@@ -1674,7 +1674,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "f8c32cc97bb3f6ba",
-  "svg": "c0101fe2bda90e97"
+  "svg": "33cddf13668c739b"
  },
  "1280 ?s=reservas&desde=1998&hasta=2002&sh=ministro": {
   "url": "?s=reservas&desde=1998&hasta=2002&sh=ministro",
@@ -1687,7 +1687,7 @@
   "leyendas": "5b110fe9e2bda25e",
   "cita": "36ea398cb7d10db6",
   "tabla": "92d50de9683a11ca",
-  "svg": "1c7f8b7c1273b2ad"
+  "svg": "98d4865a56557bbf"
  },
  "1280 ?s=reservas&desde=2004&hasta=2008&sh=ministro": {
   "url": "?s=reservas&desde=2004&hasta=2008&sh=ministro",
@@ -1700,7 +1700,7 @@
   "leyendas": "c6c7208c34dde47b",
   "cita": "36ea398cb7d10db6",
   "tabla": "40b86bd507098b09",
-  "svg": "fbab04054641214b"
+  "svg": "4550cc90a8c9639e"
  },
  "1280 ?s=reservas&desde=2014&hasta=2020&sh=catedra": {
   "url": "?s=reservas&desde=2014&hasta=2020&sh=catedra",
@@ -1713,7 +1713,7 @@
   "leyendas": "2ac4341c07f72cdf",
   "cita": "36ea398cb7d10db6",
   "tabla": "e3fc1abf593bf1d4",
-  "svg": "457ca11a1b4d3f35"
+  "svg": "e8fea36bba6b75b6"
  },
  "1280 ?s=reservas&desde=2021&hasta=2024&sh=ministro": {
   "url": "?s=reservas&desde=2021&hasta=2024&sh=ministro",
@@ -1726,7 +1726,7 @@
   "leyendas": "a790e9d03b920394",
   "cita": "36ea398cb7d10db6",
   "tabla": "90ce743102e6e372",
-  "svg": "9c4b22ba9047d0e4"
+  "svg": "6231f1b05531c717"
  },
  "1280 ?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno": {
   "url": "?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno",
@@ -1791,7 +1791,7 @@
   "leyendas": "7e84f83d9d1ade24",
   "cita": "33a233bf161dc242",
   "tabla": "cecc0e57ee117e0c",
-  "svg": "21ab43b2b298547d"
+  "svg": "4ae49cd3610743e7"
  },
  "1280 ?s=tc-oficial&desde=1981&hasta=1984&sh=ministro": {
   "url": "?s=tc-oficial&desde=1981&hasta=1984&sh=ministro",
@@ -1830,7 +1830,7 @@
   "leyendas": "d84927be8c493a74",
   "cita": "33a233bf161dc242",
   "tabla": "c8f25284829429a3",
-  "svg": "86c271c2b2d2de31"
+  "svg": "e83f513d8eb68bd2"
  },
  "1280 ?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario",
@@ -1843,7 +1843,7 @@
   "leyendas": "75606c2804f18c54",
   "cita": "33a233bf161dc242",
   "tabla": "03c13a0a6a1304e4",
-  "svg": "15c9815b9e100b7e"
+  "svg": "0846d53de97cc3f9"
  },
  "1280 ?s=tc-oficial&desde=2022&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2022&sh=regimen_cambiario",
@@ -1934,7 +1934,7 @@
   "leyendas": "f0fab764d09b4795",
   "cita": "6308c9a2077d7486",
   "tabla": "3bfdfd5ce7bdafe3",
-  "svg": "dad8fec469c9c618"
+  "svg": "1d44fc7d8b99ed61"
  },
  "1280 ?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario",
@@ -1947,7 +1947,7 @@
   "leyendas": "74e33a29892adacd",
   "cita": "6308c9a2077d7486",
   "tabla": "633ec2e8626cf765",
-  "svg": "f925e06ffe8d0fdb"
+  "svg": "0fee9f2ad62ae2df"
  },
  "1280 ?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro",
@@ -1960,7 +1960,7 @@
   "leyendas": "c18d7ca679041728",
   "cita": "6308c9a2077d7486",
   "tabla": "f79fba38638bd38b",
-  "svg": "b49ff3eaec362991"
+  "svg": "da3f5b6d98b0aca8"
  },
  "1280 ?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario",
@@ -1973,7 +1973,7 @@
   "leyendas": "0a1c4f0b8352d7e1",
   "cita": "6308c9a2077d7486",
   "tabla": "e328e75aa004521a",
-  "svg": "2d51a56bc83c4c96"
+  "svg": "d71efa7d0e2fbdeb"
  },
  "1280 ?t=var_mensual&desde=1969&hasta=1971&sh=ministro": {
   "url": "?t=var_mensual&desde=1969&hasta=1971&sh=ministro",
@@ -2012,7 +2012,7 @@
   "leyendas": "1a3c0d148c61abd8",
   "cita": "f661dd6b4b834234",
   "tabla": "6e9025bf69b125fe",
-  "svg": "19b82ba9e17a0da3"
+  "svg": "46ca530217a31ecc"
  },
  "1280 ?t=var_mensual&desde=1984&hasta=1989&sh=plan": {
   "url": "?t=var_mensual&desde=1984&hasta=1989&sh=plan",
@@ -2025,7 +2025,7 @@
   "leyendas": "26f1edadee4ae8ae",
   "cita": "f661dd6b4b834234",
   "tabla": "ccf640017d1a7e89",
-  "svg": "5d97d55b5dbd789d"
+  "svg": "1bd9a165bca1af2d"
  },
  "1280 ?t=var_mensual&desde=1989&hasta=1991&ev=1": {
   "url": "?t=var_mensual&desde=1989&hasta=1991&ev=1",
@@ -2038,7 +2038,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "b8524cd8337009a0",
   "tabla": "0a0e3da09139d2a4",
-  "svg": "6b17b64734ff2309"
+  "svg": "90e66c95d6949d1c"
  },
  "1280 ?t=var_mensual&desde=2000&hasta=2002&sh=ministro": {
   "url": "?t=var_mensual&desde=2000&hasta=2002&sh=ministro",
@@ -2064,7 +2064,7 @@
   "leyendas": "192978b90d51df08",
   "cita": "f661dd6b4b834234",
   "tabla": "13b2db1fc6c61af2",
-  "svg": "4aa7440bd1e07781"
+  "svg": "fc8676c922d3c1d9"
  },
  "1280 ?t=var_mensual&desde=2017&hasta=2019&ev=1": {
   "url": "?t=var_mensual&desde=2017&hasta=2019&ev=1",
@@ -2077,7 +2077,7 @@
   "leyendas": "cab2480b35ed55b0",
   "cita": "b8524cd8337009a0",
   "tabla": "a7c91a3281520ad3",
-  "svg": "b0e9bd916ec488f9"
+  "svg": "584e1e256f7e0973"
  },
  "1280 ?t=var_mensual&desde=2022&sh=ministro": {
   "url": "?t=var_mensual&desde=2022&sh=ministro",
@@ -2090,7 +2090,7 @@
   "leyendas": "a790e9d03b920394",
   "cita": "f661dd6b4b834234",
   "tabla": "0b3bfc21c8d9d4fb",
-  "svg": "68698e968196c566"
+  "svg": "7d62f75599830cd1"
  },
  "390 (sin parámetros)": {
   "url": "",
@@ -2116,7 +2116,7 @@
   "leyendas": "7c57a73e0fe100fa",
   "cita": "f661dd6b4b834234",
   "tabla": "23ec91f2fe736749",
-  "svg": "2d1668fe0c50a135"
+  "svg": "ba3ca35862f1ea8e"
  },
  "390 ?s=pib&t=nivel&log=1&sh=gobierno": {
   "url": "?s=pib&t=nivel&log=1&sh=gobierno",
@@ -2155,7 +2155,7 @@
   "leyendas": "21d28b33b00a5edb",
   "cita": "0574c465178c083e",
   "tabla": "523379b925f9acbb",
-  "svg": "ca138a6525941d51"
+  "svg": "25fd01f0cbfc0b38"
  },
  "390 ?s=tc-oficial&v=moneda-de-epoca&pa=1&t=var_interanual&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&v=moneda-de-epoca&pa=1&t=var_interanual&sh=regimen_cambiario",
@@ -2181,7 +2181,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "379cefebb8a60961",
   "tabla": "815bbb34ab7302a4",
-  "svg": "1314cc131fb6f5be"
+  "svg": "39a231b560ca35e8"
  },
  "390 ?s=reservas&f=anual&desde=1983&sh=ministro": {
   "url": "?s=reservas&f=anual&desde=1983&sh=ministro",
@@ -2194,7 +2194,7 @@
   "leyendas": "b2e90e8aef2e48c2",
   "cita": "529e5efa5cda1681",
   "tabla": "93d1536afab775ef",
-  "svg": "585172ec2a7fef66"
+  "svg": "7101e81495cd2d1e"
  },
  "390 ?s=desocupacion&sh=catedra&ev=1": {
   "url": "?s=desocupacion&sh=catedra&ev=1",
@@ -2207,7 +2207,7 @@
   "leyendas": "cc76637e025ad4da",
   "cita": "9aa4962516e7825f",
   "tabla": "bcc47cd9d9c7f6ff",
-  "svg": "88be6c517aee2731"
+  "svg": "850aea0a61855a98"
  },
  "390 ?desde=1970&ev=cambiario,deuda": {
   "url": "?desde=1970&ev=cambiario,deuda",
@@ -2220,7 +2220,7 @@
   "leyendas": "5884f9bc7d2e8c02",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "f0e7a2fb6d529f37"
+  "svg": "5b1eff604287449c"
  },
  "390 ?s=pib&sh=gobierno&ev=deuda,episodio": {
   "url": "?s=pib&sh=gobierno&ev=deuda,episodio",
@@ -2233,7 +2233,7 @@
   "leyendas": "b49a9288563139e8",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "af722559b1962426"
+  "svg": "d95000707ab5a1d9"
  },
  "390 ?t=var_mensual&desde=1988&hasta=1991&ev=episodio": {
   "url": "?t=var_mensual&desde=1988&hasta=1991&ev=episodio",
@@ -2246,7 +2246,7 @@
   "leyendas": "4efb55c7074f16f5",
   "cita": "b8524cd8337009a0",
   "tabla": "4d8410836bb422bd",
-  "svg": "61d3d744719340b7"
+  "svg": "2a82895dc20c37a2"
  },
  "390 ?t=var_interanual&desde=2000&hasta=2004": {
   "url": "?desde=2000&hasta=2004",
@@ -2298,7 +2298,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "5a485d793d08a370",
   "tabla": "ddb9ad8c6dceca06",
-  "svg": "417e0c04058c203c"
+  "svg": "c84b306af3d8fc35"
  },
  "390 ?s=pib&desde=1995&hasta=2020&sh=gobierno": {
   "url": "?s=pib&desde=1995&hasta=2020&sh=gobierno",
@@ -2324,7 +2324,7 @@
   "leyendas": "e4f42de79b0b7633",
   "cita": "f661dd6b4b834234",
   "tabla": "36002e9a39d35000",
-  "svg": "e619dd5b5dd30e0d"
+  "svg": "0572146839b5d9c5"
  },
  "390 ?s=reservas&desde=1988&hasta=1991&sh=gobierno": {
   "url": "?s=reservas&desde=1988&hasta=1991&sh=gobierno",
@@ -2337,7 +2337,7 @@
   "leyendas": "336bdeb73375afc8",
   "cita": "36ea398cb7d10db6",
   "tabla": "2926c4885ad4ed41",
-  "svg": "9fac59414c58da7c"
+  "svg": "6c6716cacb9d6a83"
  },
  "390 ?desde=1970&ev=1": {
   "url": "?desde=1970&ev=1",
@@ -2350,7 +2350,7 @@
   "leyendas": "3f6030fffdac5ebf",
   "cita": "9fdaaaa37ddf3c87",
   "tabla": "247a24f0fa46d498",
-  "svg": "4780d3873331f941"
+  "svg": "0ad8244faa2e162e"
  },
  "390 ?s=resultado-fiscal&v=financiero&sh=regimen_cambiario": {
   "url": "?s=resultado-fiscal&v=financiero&sh=regimen_cambiario",
@@ -2376,7 +2376,7 @@
   "leyendas": "0fa4bc62e049f0f2",
   "cita": "36ea398cb7d10db6",
   "tabla": "6d9ba3e3e74e106e",
-  "svg": "264054d04cff4f94"
+  "svg": "2632cdb8b886c6eb"
  },
  "390 ?s=reservas&t=var_dic_dic&m=real&f=semanal&sh=papas&desde=83&mm=5": {
   "url": "?s=reservas",
@@ -2389,7 +2389,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "3bee552a5c6baa12"
+  "svg": "735dadb88c524501"
  },
  "390 ?s=int-pib&p=ARG%2CBRA": {
   "url": "?s=int-pib&p=ARG,BRA",
@@ -2454,7 +2454,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "67d1d23dcbf56fa1",
   "tabla": "362a273a67ab79c6",
-  "svg": "4569085f2d1d4c01"
+  "svg": "5addf48ee67b9bd5"
  },
  "390 ?s=agregados&v=m2-pesos": {
   "url": "?s=agregados&v=m2-pesos",
@@ -2480,7 +2480,7 @@
   "leyendas": "fcef76bc8bd2a41a",
   "cita": "15e7cad3e307f4d7",
   "tabla": "b6261a1efb6df799",
-  "svg": "96dc279c38046de5"
+  "svg": "459f30d772e31fff"
  },
  "390 ?s=agregados&v=m2-privado": {
   "url": "?s=agregados&v=m2-privado",
@@ -2493,7 +2493,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "6f1114d079d2f2f4",
   "tabla": "9faf77dc52380d4e",
-  "svg": "33636b188254694f"
+  "svg": "6b9ff36e4255629b"
  },
  "390 ?s=agregados&v=m2-privado&sh=gobierno&ev=1": {
   "url": "?s=agregados&v=m2-privado&sh=gobierno&ev=1",
@@ -2506,7 +2506,7 @@
   "leyendas": "5a99ff80f81be1ff",
   "cita": "a07613bb56e08e3f",
   "tabla": "e62d34ab51d44b8e",
-  "svg": "17559b25e2d38345"
+  "svg": "1839eba5b220fd41"
  },
  "390 ?s=agregados&v=m2-total": {
   "url": "?s=agregados&v=m2-total",
@@ -2532,7 +2532,7 @@
   "leyendas": "fcef76bc8bd2a41a",
   "cita": "12ae84588e2ad232",
   "tabla": "480e7ff9d95c2d92",
-  "svg": "b7e663df0680a6b2"
+  "svg": "f1d4bd08251814ba"
  },
  "390 ?s=agregados&v=m3-total": {
   "url": "?s=agregados&v=m3-total",
@@ -2558,7 +2558,7 @@
   "leyendas": "fcef76bc8bd2a41a",
   "cita": "482e2ed2830c576d",
   "tabla": "5c6cbdf3c202db3e",
-  "svg": "4f175e4e5e0b6036"
+  "svg": "9675407516a2d783"
  },
  "390 ?s=base-monetaria": {
   "url": "?s=base-monetaria",
@@ -2584,7 +2584,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2a7d98342e6fb428",
   "tabla": "0630ca6d94abda46",
-  "svg": "0899238bc0c82ecc"
+  "svg": "c1f68b2eae0084ac"
  },
  "390 ?s=base-monetaria&v=promedio-mensual": {
   "url": "?s=base-monetaria&v=promedio-mensual",
@@ -2597,7 +2597,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "c1659247829075f8",
   "tabla": "f2cd0e44946f6bf8",
-  "svg": "d801c4bfce608ef6"
+  "svg": "e5c650555c8be3af"
  },
  "390 ?s=base-monetaria&v=promedio-mensual&sh=gobierno&ev=1": {
   "url": "?s=base-monetaria&v=promedio-mensual&sh=gobierno&ev=1",
@@ -2610,7 +2610,7 @@
   "leyendas": "8fb3b9fde49d4a56",
   "cita": "1d34800254a0c73b",
   "tabla": "eb0b04d7766df218",
-  "svg": "c88ce33e191ea971"
+  "svg": "422180befcfcf113"
  },
  "390 ?s=cuenta-corriente": {
   "url": "?s=cuenta-corriente",
@@ -2636,7 +2636,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2c22d200f8d8177f",
   "tabla": "c48b7bf527e9e161",
-  "svg": "cc36a2a61e5c68fa"
+  "svg": "157db6795bb02c71"
  },
  "390 ?s=cuenta-corriente&v=mbp5": {
   "url": "?s=cuenta-corriente&v=mbp5",
@@ -2662,7 +2662,7 @@
   "leyendas": "377b47c2cdd90e47",
   "cita": "1acfe6b4a8891acd",
   "tabla": "2d91299b7a9f9c73",
-  "svg": "be64de3e7cd1e197"
+  "svg": "277656a6988a5fc9"
  },
  "390 ?s=cuenta-corriente&v=mbp6": {
   "url": "?s=cuenta-corriente&v=mbp6",
@@ -2688,7 +2688,7 @@
   "leyendas": "37d350a450c97a1b",
   "cita": "08ded59a3400fd1f",
   "tabla": "18bb2cf0c5ba6981",
-  "svg": "c88909f768278ec4"
+  "svg": "7bcbe9c768d78028"
  },
  "390 ?s=desocupacion": {
   "url": "?s=desocupacion",
@@ -2701,7 +2701,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec6816a98d881367",
   "tabla": "6b4239a84e9e4e90",
-  "svg": "9421efcb35477aa9"
+  "svg": "4f90c57b23a3bf5f"
  },
  "390 ?s=desocupacion&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&sh=gobierno&ev=1",
@@ -2714,7 +2714,7 @@
   "leyendas": "e4c99d4d8e7451d1",
   "cita": "9aa4962516e7825f",
   "tabla": "9e88ea1f7d741e11",
-  "svg": "e263b9c391ca5ad3"
+  "svg": "497d40d8285355e9"
  },
  "390 ?s=desocupacion&v=gba": {
   "url": "?s=desocupacion&v=gba",
@@ -2727,7 +2727,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "cd94e55e8b4dfe30",
   "tabla": "785f0bc77d7e7f77",
-  "svg": "4e48cd0da4352ba8"
+  "svg": "7447bfc110c23969"
  },
  "390 ?s=desocupacion&v=gba&sh=gobierno&ev=1": {
   "url": "?s=desocupacion&v=gba&sh=gobierno&ev=1",
@@ -2740,7 +2740,7 @@
   "leyendas": "e4c99d4d8e7451d1",
   "cita": "da1df0f248844d12",
   "tabla": "d14639678b235212",
-  "svg": "efc8c7bae68435aa"
+  "svg": "ae82dd8fe0e34a10"
  },
  "390 ?s=deuda-externa": {
   "url": "?s=deuda-externa",
@@ -2753,7 +2753,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "0d89a7232ce76720",
   "tabla": "eb90255b0abcf833",
-  "svg": "5d8a6382587f7400"
+  "svg": "593c38ee04aa8d77"
  },
  "390 ?s=deuda-externa&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&sh=gobierno&ev=1",
@@ -2766,7 +2766,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "8e61affa2d0b4eb5",
   "tabla": "6100f0728ad71a42",
-  "svg": "72dd5b66ab060e01"
+  "svg": "03ffcf57e712afc5"
  },
  "390 ?s=deuda-externa&v=indec": {
   "url": "?s=deuda-externa&v=indec",
@@ -2779,7 +2779,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "cd5c5536b4aaeeb8",
   "tabla": "59bba0b03d69c1b4",
-  "svg": "1ffedd6f3501f4f1"
+  "svg": "d904d54d7d872937"
  },
  "390 ?s=deuda-externa&v=indec&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&v=indec&sh=gobierno&ev=1",
@@ -2792,7 +2792,7 @@
   "leyendas": "f1285a25c205d60f",
   "cita": "07f17dba9515f7ff",
   "tabla": "8d8d0e3c33f307e4",
-  "svg": "01d90566a61c17a0"
+  "svg": "0ef09f1456221a66"
  },
  "390 ?s=deuda-externa&v=privada": {
   "url": "?s=deuda-externa&v=privada",
@@ -2805,7 +2805,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "73632d2432e8b3eb",
   "tabla": "0fc92fe991ea1206",
-  "svg": "f13977e0f3e9b388"
+  "svg": "3b75af85be85fe67"
  },
  "390 ?s=deuda-externa&v=privada&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&v=privada&sh=gobierno&ev=1",
@@ -2818,7 +2818,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "6cc55cfbc9a76742",
   "tabla": "9126e29e5494e81e",
-  "svg": "4b656d41ac553754"
+  "svg": "812e8530683e4847"
  },
  "390 ?s=deuda-externa&v=publica": {
   "url": "?s=deuda-externa&v=publica",
@@ -2831,7 +2831,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "fb4d93ccbc2d0297",
   "tabla": "5eb895e09ecb2d14",
-  "svg": "3ff373c8217c2b9b"
+  "svg": "c4d01bb79b6ca0a9"
  },
  "390 ?s=deuda-externa&v=publica&sh=gobierno&ev=1": {
   "url": "?s=deuda-externa&v=publica&sh=gobierno&ev=1",
@@ -2844,7 +2844,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "531594698f1dd574",
   "tabla": "13e649a802427eb7",
-  "svg": "9f9886379907c7b0"
+  "svg": "dffb7ef33db6a4b5"
  },
  "390 ?s=deuda-publica": {
   "url": "?s=deuda-publica",
@@ -2857,7 +2857,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "ec35b1f234f64648",
   "tabla": "5eb895e09ecb2d14",
-  "svg": "3ff373c8217c2b9b"
+  "svg": "c4d01bb79b6ca0a9"
  },
  "390 ?s=deuda-publica&sh=gobierno&ev=1": {
   "url": "?s=deuda-publica&sh=gobierno&ev=1",
@@ -2870,7 +2870,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "53dda0fd4764ebce",
   "tabla": "13e649a802427eb7",
-  "svg": "9f9886379907c7b0"
+  "svg": "dffb7ef33db6a4b5"
  },
  "390 ?s=exportaciones": {
   "url": "?s=exportaciones",
@@ -2883,7 +2883,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "3a94c31798b81cb4",
   "tabla": "2260eee42dbfaf76",
-  "svg": "068a597a05345f2d"
+  "svg": "c53739fbfa88f823"
  },
  "390 ?s=exportaciones&sh=gobierno&ev=1": {
   "url": "?s=exportaciones&sh=gobierno&ev=1",
@@ -2896,7 +2896,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "c82635a2b4c69404",
   "tabla": "97fce8272dc0cef3",
-  "svg": "1579fbb4f5dbd311"
+  "svg": "c4313c702df15706"
  },
  "390 ?s=exportaciones&v=mensual": {
   "url": "?s=exportaciones&v=mensual",
@@ -2909,7 +2909,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "38b48d70fe25c870",
   "tabla": "bc4302f90d9abaa9",
-  "svg": "8df0e1dcf9462e12"
+  "svg": "b0592134b7f228a9"
  },
  "390 ?s=exportaciones&v=mensual&sh=gobierno&ev=1": {
   "url": "?s=exportaciones&v=mensual&sh=gobierno&ev=1",
@@ -2922,7 +2922,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "7fe68a46d6992b92",
   "tabla": "732598dc2f21e187",
-  "svg": "3d41d3408542b40c"
+  "svg": "f15e64071cb0f2c2"
  },
  "390 ?s=fuga&sh=gobierno&ev=1": {
   "url": "?s=fuga&sh=gobierno&ev=1",
@@ -2935,7 +2935,7 @@
   "leyendas": "8fb3b9fde49d4a56",
   "cita": "689288af6c940277",
   "tabla": "2bdc625349aa5bfa",
-  "svg": "293d2e9504ae3b46"
+  "svg": "9223c0d7fe4584ed"
  },
  "390 ?s=fuga&v=activos-externos": {
   "url": "?s=fuga&v=activos-externos",
@@ -2948,7 +2948,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "abb697802192aac1",
   "tabla": "e3e8cd92fc7a8056",
-  "svg": "be4b31b660c1cae4"
+  "svg": "a74de3db06c2b046"
  },
  "390 ?s=fuga&v=activos-externos&sh=gobierno&ev=1": {
   "url": "?s=fuga&v=activos-externos&sh=gobierno&ev=1",
@@ -2961,7 +2961,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "0bc66d54566a0571",
   "tabla": "770c3e55de5ba7af",
-  "svg": "dcc0608dc680ec24"
+  "svg": "bd19a0dbe7eb8c86"
  },
  "390 ?s=importaciones": {
   "url": "?s=importaciones",
@@ -2974,7 +2974,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "8b61c4484213058a",
   "tabla": "4dd5285e88747bb5",
-  "svg": "2c9b03ed67dac1b1"
+  "svg": "5ae750d60851055d"
  },
  "390 ?s=importaciones&sh=gobierno&ev=1": {
   "url": "?s=importaciones&sh=gobierno&ev=1",
@@ -2987,7 +2987,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "e0f08ec72ab4383e",
   "tabla": "957c99bd99c7383b",
-  "svg": "746532f7c5fa7825"
+  "svg": "7e119a4aabf01248"
  },
  "390 ?s=importaciones&v=mensual": {
   "url": "?s=importaciones&v=mensual",
@@ -3000,7 +3000,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "4a1039784e416d7e",
   "tabla": "01cad2278f02ffb4",
-  "svg": "4ec1cefffab8dd7e"
+  "svg": "1948ee244c7fc7f1"
  },
  "390 ?s=importaciones&v=mensual&sh=gobierno&ev=1": {
   "url": "?s=importaciones&v=mensual&sh=gobierno&ev=1",
@@ -3013,7 +3013,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "d310e56dd2ac6f79",
   "tabla": "887f2ad7e1a02ab6",
-  "svg": "2176c9c649373160"
+  "svg": "9378ffb5b81872e7"
  },
  "390 ?s=int-pib": {
   "url": "?s=int-pib",
@@ -3039,7 +3039,7 @@
   "leyendas": "01eaaa4a834c5d27",
   "cita": "143698b270ffb8b6",
   "tabla": "70a1f94228f80faf",
-  "svg": "07d8b5f62c8602e5"
+  "svg": "b6c6f90229910e39"
  },
  "390 ?s=int-pib-per-capita": {
   "url": "?s=int-pib-per-capita",
@@ -3065,7 +3065,7 @@
   "leyendas": "01eaaa4a834c5d27",
   "cita": "d1361e0c6ba436d6",
   "tabla": "cebc76a369184ddd",
-  "svg": "681a74f183a71ea9"
+  "svg": "04eb39bbba93d636"
  },
  "390 ?s=inversion": {
   "url": "?s=inversion",
@@ -3091,7 +3091,7 @@
   "leyendas": "069f39b9b73caca4",
   "cita": "13975790798dbadb",
   "tabla": "998ade880a77172e",
-  "svg": "b99900a2ddfca7b3"
+  "svg": "3e37cc5b135cc3f9"
  },
  "390 ?s=inversion&v=base-1970": {
   "url": "?s=inversion&v=base-1970",
@@ -3117,7 +3117,7 @@
   "leyendas": "12731ec6b3019c94",
   "cita": "ee7081f46e56ab2d",
   "tabla": "20c2753edcf86623",
-  "svg": "55633f9058d8499b"
+  "svg": "a9b2eff64138ff9e"
  },
  "390 ?s=inversion&v=pct-pib-corrientes": {
   "url": "?s=inversion&v=pct-pib-corrientes",
@@ -3130,7 +3130,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "57ba71b4af7c0ede",
   "tabla": "d461b3fa55ea8a01",
-  "svg": "33f42d2fa97594cb"
+  "svg": "40eaf77a8a6c193c"
  },
  "390 ?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1": {
   "url": "?s=inversion&v=pct-pib-corrientes&sh=gobierno&ev=1",
@@ -3143,7 +3143,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "6051ea0ed1e8476d",
   "tabla": "717491f39f2856b0",
-  "svg": "782139647adc60a4"
+  "svg": "35ae8f22207d0630"
  },
  "390 ?s=pib": {
   "url": "?s=pib",
@@ -3169,7 +3169,7 @@
   "leyendas": "3b3f1861ed489c36",
   "cita": "9393fe10be49a54d",
   "tabla": "49a4010c73623117",
-  "svg": "3839908c155d8dbe"
+  "svg": "b675da0e0a7bc93f"
  },
  "390 ?s=reservas": {
   "url": "?s=reservas",
@@ -3182,7 +3182,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "61849eb4151644d0",
-  "svg": "3bee552a5c6baa12"
+  "svg": "735dadb88c524501"
  },
  "390 ?s=reservas&sh=gobierno&ev=1": {
   "url": "?s=reservas&sh=gobierno&ev=1",
@@ -3195,7 +3195,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "36ea398cb7d10db6",
   "tabla": "839ad4aa31c07116",
-  "svg": "602e04377494f9e1"
+  "svg": "773cd6ffed897b1b"
  },
  "390 ?s=resultado-fiscal": {
   "url": "?s=resultado-fiscal",
@@ -3221,7 +3221,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "88b2f68e5f11217b",
   "tabla": "5b1c34ac6c72d915",
-  "svg": "9611081496673e46"
+  "svg": "0a9bae2020a467be"
  },
  "390 ?s=resultado-fiscal&v=financiero": {
   "url": "?s=resultado-fiscal&v=financiero",
@@ -3247,7 +3247,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "e896e0f0ade27b2c",
   "tabla": "5e664951ee95bca7",
-  "svg": "1948177685856210"
+  "svg": "ac813d5918ebd68f"
  },
  "390 ?s=salario-real": {
   "url": "?s=salario-real",
@@ -3260,7 +3260,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "44fb125bffc40d23",
   "tabla": "c196af67e8e0a23a",
-  "svg": "73541c17670b9528"
+  "svg": "8a774f02f6b68038"
  },
  "390 ?s=salario-real&sh=gobierno&ev=1": {
   "url": "?s=salario-real&sh=gobierno&ev=1",
@@ -3273,7 +3273,7 @@
   "leyendas": "069f39b9b73caca4",
   "cita": "45c1c3b809bd3968",
   "tabla": "697ca0527f60a5f6",
-  "svg": "b289a53a228dfbe4"
+  "svg": "91edd52be87c35df"
  },
  "390 ?s=salario-real&v=indice-salarios": {
   "url": "?s=salario-real&v=indice-salarios",
@@ -3286,7 +3286,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "76aa4dea57f28eb2",
   "tabla": "97492386af424781",
-  "svg": "956bfc8a5166ab64"
+  "svg": "7b7d9f787f2fb8b5"
  },
  "390 ?s=salario-real&v=indice-salarios&sh=gobierno&ev=1": {
   "url": "?s=salario-real&v=indice-salarios&sh=gobierno&ev=1",
@@ -3299,7 +3299,7 @@
   "leyendas": "53474d61a36004d1",
   "cita": "2d7a43dbc163ce5f",
   "tabla": "202563e8cce857a5",
-  "svg": "2d0c8f2e7134251b"
+  "svg": "7d07c2bbd465f2a5"
  },
  "390 ?s=saldo-comercial": {
   "url": "?s=saldo-comercial",
@@ -3325,7 +3325,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "bbc890ea55397c6e",
   "tabla": "f577d452e5149242",
-  "svg": "be44b8f7af44efe8"
+  "svg": "db1e8d85dcdd03ab"
  },
  "390 ?s=saldo-comercial&v=mensual": {
   "url": "?s=saldo-comercial&v=mensual",
@@ -3351,7 +3351,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "d98ab5976f9bdd30",
   "tabla": "f24f455ffb26a3a4",
-  "svg": "3ad41dd1070d3b14"
+  "svg": "b904d5bc12c1f544"
  },
  "390 ?s=tasa-pasiva": {
   "url": "?s=tasa-pasiva",
@@ -3364,7 +3364,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "80d4b373efd9082e",
   "tabla": "9a45c2422d31861f",
-  "svg": "ac7c9be26c21d078"
+  "svg": "a68e26ab7cf5c0ab"
  },
  "390 ?s=tasa-pasiva&sh=gobierno&ev=1": {
   "url": "?s=tasa-pasiva&sh=gobierno&ev=1",
@@ -3377,7 +3377,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "0804e1dae3f70d6d",
   "tabla": "519d76a4409e427c",
-  "svg": "48fd39d055e9c9a6"
+  "svg": "2328e853f9293962"
  },
  "390 ?s=tasa-pasiva&v=badlar": {
   "url": "?s=tasa-pasiva&v=badlar",
@@ -3390,7 +3390,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "d11665f21f215c89",
   "tabla": "39dcd84e4069a115",
-  "svg": "fc00fe405d5a350d"
+  "svg": "965b613e3eb500ea"
  },
  "390 ?s=tasa-pasiva&v=badlar&sh=gobierno&ev=1": {
   "url": "?s=tasa-pasiva&v=badlar&sh=gobierno&ev=1",
@@ -3403,7 +3403,7 @@
   "leyendas": "da7c5fcbe04d4628",
   "cita": "46358b5cf62a2077",
   "tabla": "1c84a4e06051ca69",
-  "svg": "cb31ce4eb8b77a04"
+  "svg": "a484d1461ab231cd"
  },
  "390 ?s=tc-oficial": {
   "url": "?s=tc-oficial",
@@ -3429,7 +3429,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "33a233bf161dc242",
   "tabla": "a8e5e44568356a0d",
-  "svg": "e2f4b4cc1d0977e3"
+  "svg": "ab386b39534041e6"
  },
  "390 ?s=tc-oficial&v=moneda-de-epoca": {
   "url": "?s=tc-oficial&v=moneda-de-epoca",
@@ -3455,7 +3455,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "5add12680ecb2450",
   "tabla": "2c3139ebcc3d0f81",
-  "svg": "b0ae49d3ce4df273"
+  "svg": "411f0dce1b8bc263"
  },
  "390 ?s=tcr-bilateral": {
   "url": "?s=tcr-bilateral",
@@ -3468,7 +3468,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "6d572389013dd75d",
   "tabla": "789d77b38c5dd538",
-  "svg": "ab7438ce581bdeb0"
+  "svg": "394f5a9dea564349"
  },
  "390 ?s=tcr-bilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&sh=gobierno&ev=1",
@@ -3481,7 +3481,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "391159d79e30abb3",
   "tabla": "f5e5692cfd550f5e",
-  "svg": "8accf42bbcfa8fbe"
+  "svg": "0c4116c681fb327d"
  },
  "390 ?s=tcr-bilateral&v=provincias": {
   "url": "?s=tcr-bilateral&v=provincias",
@@ -3494,7 +3494,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "3c88452dbde3d0d0",
   "tabla": "c5c623586783b02a",
-  "svg": "518bb0ae4adeaaf9"
+  "svg": "6ff8f62a07c2e829"
  },
  "390 ?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1": {
   "url": "?s=tcr-bilateral&v=provincias&sh=gobierno&ev=1",
@@ -3507,7 +3507,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "b209f0fea65e74cb",
   "tabla": "0b62c4c22e37074b",
-  "svg": "809cc7b386cd2d0d"
+  "svg": "2915aaa027d41f0f"
  },
  "390 ?s=tcr-multilateral": {
   "url": "?s=tcr-multilateral",
@@ -3520,7 +3520,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "e56d5f0bc62a6681",
   "tabla": "62f7a955f76dc5e8",
-  "svg": "760ec85e1e1a9d15"
+  "svg": "dd6520d67533be24"
  },
  "390 ?s=tcr-multilateral&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&sh=gobierno&ev=1",
@@ -3533,7 +3533,7 @@
   "leyendas": "4674a1e5e4bc091b",
   "cita": "6308c9a2077d7486",
   "tabla": "7dddff3a362e54cd",
-  "svg": "690c3de241961f95"
+  "svg": "b0f6d5c16b02f424"
  },
  "390 ?s=tcr-multilateral&v=bruegel": {
   "url": "?s=tcr-multilateral&v=bruegel",
@@ -3546,7 +3546,7 @@
   "leyendas": "5e12f2faf414f048",
   "cita": "7dc3fa65804be828",
   "tabla": "8a2f6eaed0fccb32",
-  "svg": "a7301e75c37aadf7"
+  "svg": "aca39d92de828b22"
  },
  "390 ?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1": {
   "url": "?s=tcr-multilateral&v=bruegel&sh=gobierno&ev=1",
@@ -3559,7 +3559,7 @@
   "leyendas": "1fa1bc5940b8824b",
   "cita": "2dc58bb146e5cbc1",
   "tabla": "e226a35113aa7355",
-  "svg": "dc4cce1b62aa2825"
+  "svg": "d311ef70550715db"
  },
  "390 ?v=provincias": {
   "url": "?v=provincias",
@@ -3585,7 +3585,7 @@
   "leyendas": "ec8a611e291b2b42",
   "cita": "fa959e1bb595f462",
   "tabla": "b44b009cf752ec27",
-  "svg": "28fcc7899d27f601"
+  "svg": "a635061ccca835fa"
  },
  "390 ?desde=1980&hasta=1982&sh=gobierno": {
   "url": "?desde=1980&hasta=1982&sh=gobierno",
@@ -3598,7 +3598,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "5a485d793d08a370",
   "tabla": "e7d89e074fbdaed1",
-  "svg": "f05717fd45377967"
+  "svg": "1e1b8bbb048090bc"
  },
  "390 ?desde=2000&hasta=2002&sh=gobierno": {
   "url": "?desde=2000&hasta=2002&sh=gobierno",
@@ -3624,7 +3624,7 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "5a485d793d08a370",
   "tabla": "d87f0bdd5cec3e3a",
-  "svg": "11882d24c45d5e18"
+  "svg": "7c7139df7ee91ca7"
  },
  "390 ?s=desocupacion&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=desocupacion&desde=1980&hasta=1982&sh=gobierno",
@@ -3637,7 +3637,7 @@
   "leyendas": "3aa3d422c2ea33f7",
   "cita": "9aa4962516e7825f",
   "tabla": "54a1735211611aa3",
-  "svg": "5e7623dce555a202"
+  "svg": "2fe07f7c32a4ca84"
  },
  "390 ?s=desocupacion&desde=2000&hasta=2002&sh=gobierno": {
   "url": "?s=desocupacion&desde=2000&hasta=2002&sh=gobierno",
@@ -3650,7 +3650,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9aa4962516e7825f",
   "tabla": "6c68a160383c5d55",
-  "svg": "1da12a773c63ebbc"
+  "svg": "f8ed4d94bfd66430"
  },
  "390 ?s=desocupacion&desde=2022&sh=gobierno": {
   "url": "?s=desocupacion&desde=2022&sh=gobierno",
@@ -3663,7 +3663,7 @@
   "leyendas": "5b2c01d731a24d73",
   "cita": "9aa4962516e7825f",
   "tabla": "7e441980751873fe",
-  "svg": "0d358c9879b8f55f"
+  "svg": "90fcbcb7be1399e9"
  },
  "390 ?s=pib&desde=1980&hasta=1982&sh=gobierno": {
   "url": "?s=pib&desde=1980&hasta=1982&sh=gobierno",
@@ -3689,7 +3689,7 @@
   "leyendas": "17a5bf85a3fa28f1",
   "cita": "9393fe10be49a54d",
   "tabla": "b582f3d4df09228f",
-  "svg": "4852d8656f0e1b97"
+  "svg": "1321d4330627a520"
  },
  "390 ?s=pib&desde=2022&sh=gobierno": {
   "url": "?s=pib&desde=2022&sh=gobierno",
@@ -3715,7 +3715,7 @@
   "leyendas": "1c43a94d26d73404",
   "cita": "36ea398cb7d10db6",
   "tabla": "a89b8874edd20c42",
-  "svg": "bd88374d273b7e05"
+  "svg": "3b3e34b50bfd88c4"
  },
  "390 ?s=reservas&desde=1975&hasta=1977&sh=gobierno": {
   "url": "?s=reservas&desde=1975&hasta=1977&sh=gobierno",
@@ -3728,7 +3728,7 @@
   "leyendas": "eb2ed6aedee28860",
   "cita": "36ea398cb7d10db6",
   "tabla": "ac234afa33e743d9",
-  "svg": "3c7ae4b0be741d93"
+  "svg": "c9089028d233b9b4"
  },
  "390 ?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario": {
   "url": "?s=reservas&desde=1980&hasta=1982&sh=regimen_cambiario",
@@ -3741,7 +3741,7 @@
   "leyendas": "ace9a9d6d210720f",
   "cita": "36ea398cb7d10db6",
   "tabla": "c28f288c31a67101",
-  "svg": "2258907c1835dd4b"
+  "svg": "e91146b95bbd295b"
  },
  "390 ?s=reservas&desde=1982&hasta=1990&sh=gobierno": {
   "url": "?s=reservas&desde=1982&hasta=1990&sh=gobierno",
@@ -3754,7 +3754,7 @@
   "leyendas": "e69bba7fd057f531",
   "cita": "36ea398cb7d10db6",
   "tabla": "b420c368806332e7",
-  "svg": "d34f1f63c9e9ba6d"
+  "svg": "aba2872ff58363b2"
  },
  "390 ?s=reservas&desde=1988&hasta=1991&ev=1": {
   "url": "?s=reservas&desde=1988&hasta=1991&ev=1",
@@ -3767,7 +3767,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "e4b0ebfdd6693cf6",
   "tabla": "f8c32cc97bb3f6ba",
-  "svg": "456472c1d56e984f"
+  "svg": "7bacfeb4d9661a5c"
  },
  "390 ?s=reservas&desde=1998&hasta=2002&sh=ministro": {
   "url": "?s=reservas&desde=1998&hasta=2002&sh=ministro",
@@ -3780,7 +3780,7 @@
   "leyendas": "5b110fe9e2bda25e",
   "cita": "36ea398cb7d10db6",
   "tabla": "92d50de9683a11ca",
-  "svg": "6c73b9cd84c92018"
+  "svg": "7e645d373d3e6849"
  },
  "390 ?s=reservas&desde=2004&hasta=2008&sh=ministro": {
   "url": "?s=reservas&desde=2004&hasta=2008&sh=ministro",
@@ -3793,7 +3793,7 @@
   "leyendas": "c6c7208c34dde47b",
   "cita": "36ea398cb7d10db6",
   "tabla": "40b86bd507098b09",
-  "svg": "8025501c235e59a1"
+  "svg": "e40cd7260cd7041a"
  },
  "390 ?s=reservas&desde=2014&hasta=2020&sh=catedra": {
   "url": "?s=reservas&desde=2014&hasta=2020&sh=catedra",
@@ -3806,7 +3806,7 @@
   "leyendas": "2ac4341c07f72cdf",
   "cita": "36ea398cb7d10db6",
   "tabla": "e3fc1abf593bf1d4",
-  "svg": "b326fec203cb6506"
+  "svg": "39ffe6197f3ea521"
  },
  "390 ?s=reservas&desde=2021&hasta=2024&sh=ministro": {
   "url": "?s=reservas&desde=2021&hasta=2024&sh=ministro",
@@ -3819,7 +3819,7 @@
   "leyendas": "a790e9d03b920394",
   "cita": "36ea398cb7d10db6",
   "tabla": "90ce743102e6e372",
-  "svg": "3e1e7254e0e59374"
+  "svg": "05d9a78578d93a41"
  },
  "390 ?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno": {
   "url": "?s=resultado-fiscal&desde=1970&hasta=1974&sh=gobierno",
@@ -3884,7 +3884,7 @@
   "leyendas": "7e84f83d9d1ade24",
   "cita": "33a233bf161dc242",
   "tabla": "cecc0e57ee117e0c",
-  "svg": "4c97356f422f5123"
+  "svg": "ae65b98f7ca3bae7"
  },
  "390 ?s=tc-oficial&desde=1981&hasta=1984&sh=ministro": {
   "url": "?s=tc-oficial&desde=1981&hasta=1984&sh=ministro",
@@ -3923,7 +3923,7 @@
   "leyendas": "d84927be8c493a74",
   "cita": "33a233bf161dc242",
   "tabla": "c8f25284829429a3",
-  "svg": "e9bd185956183c34"
+  "svg": "66138d3b03e95955"
  },
  "390 ?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2014&hasta=2019&sh=regimen_cambiario",
@@ -3936,7 +3936,7 @@
   "leyendas": "75606c2804f18c54",
   "cita": "33a233bf161dc242",
   "tabla": "03c13a0a6a1304e4",
-  "svg": "c4a7c1588748e226"
+  "svg": "c61be8f71e2e4f28"
  },
  "390 ?s=tc-oficial&desde=2022&sh=regimen_cambiario": {
   "url": "?s=tc-oficial&desde=2022&sh=regimen_cambiario",
@@ -4027,7 +4027,7 @@
   "leyendas": "f0fab764d09b4795",
   "cita": "6308c9a2077d7486",
   "tabla": "3bfdfd5ce7bdafe3",
-  "svg": "09f45b19e96f3353"
+  "svg": "a2da8f65d800ba7b"
  },
  "390 ?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2001&hasta=2012&sh=regimen_cambiario",
@@ -4040,7 +4040,7 @@
   "leyendas": "74e33a29892adacd",
   "cita": "6308c9a2077d7486",
   "tabla": "633ec2e8626cf765",
-  "svg": "6deb1e2c82e8a06e"
+  "svg": "b758a4febf23aea9"
  },
  "390 ?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro": {
   "url": "?s=tcr-multilateral&desde=2014&hasta=2017&sh=ministro",
@@ -4053,7 +4053,7 @@
   "leyendas": "c18d7ca679041728",
   "cita": "6308c9a2077d7486",
   "tabla": "f79fba38638bd38b",
-  "svg": "7528f702b59b6c5c"
+  "svg": "d75fcde29d928df1"
  },
  "390 ?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario": {
   "url": "?s=tcr-multilateral&desde=2018&hasta=2024&sh=regimen_cambiario",
@@ -4066,7 +4066,7 @@
   "leyendas": "0a1c4f0b8352d7e1",
   "cita": "6308c9a2077d7486",
   "tabla": "e328e75aa004521a",
-  "svg": "433676716c2e558b"
+  "svg": "bb2f6eb19c16dd95"
  },
  "390 ?t=var_mensual&desde=1969&hasta=1971&sh=ministro": {
   "url": "?t=var_mensual&desde=1969&hasta=1971&sh=ministro",
@@ -4105,7 +4105,7 @@
   "leyendas": "1a3c0d148c61abd8",
   "cita": "f661dd6b4b834234",
   "tabla": "6e9025bf69b125fe",
-  "svg": "cb4f0d01f35c9135"
+  "svg": "da6a7d77c2aacce9"
  },
  "390 ?t=var_mensual&desde=1984&hasta=1989&sh=plan": {
   "url": "?t=var_mensual&desde=1984&hasta=1989&sh=plan",
@@ -4118,7 +4118,7 @@
   "leyendas": "26f1edadee4ae8ae",
   "cita": "f661dd6b4b834234",
   "tabla": "ccf640017d1a7e89",
-  "svg": "0b9e11c889b5eff6"
+  "svg": "1e7e7ec2e64808d5"
  },
  "390 ?t=var_mensual&desde=1989&hasta=1991&ev=1": {
   "url": "?t=var_mensual&desde=1989&hasta=1991&ev=1",
@@ -4131,7 +4131,7 @@
   "leyendas": "3bbcbef59101f733",
   "cita": "b8524cd8337009a0",
   "tabla": "0a0e3da09139d2a4",
-  "svg": "d492df558f77ffa0"
+  "svg": "12fa624102a6657f"
  },
  "390 ?t=var_mensual&desde=2000&hasta=2002&sh=ministro": {
   "url": "?t=var_mensual&desde=2000&hasta=2002&sh=ministro",
@@ -4157,7 +4157,7 @@
   "leyendas": "192978b90d51df08",
   "cita": "f661dd6b4b834234",
   "tabla": "13b2db1fc6c61af2",
-  "svg": "56efa18188e7d09d"
+  "svg": "59f0249d6fa4669d"
  },
  "390 ?t=var_mensual&desde=2017&hasta=2019&ev=1": {
   "url": "?t=var_mensual&desde=2017&hasta=2019&ev=1",
@@ -4170,7 +4170,7 @@
   "leyendas": "cab2480b35ed55b0",
   "cita": "b8524cd8337009a0",
   "tabla": "a7c91a3281520ad3",
-  "svg": "b88fe97f7e4acd1c"
+  "svg": "8adafaa1f764d2e3"
  },
  "390 ?t=var_mensual&desde=2022&sh=ministro": {
   "url": "?t=var_mensual&desde=2022&sh=ministro",
@@ -4183,6 +4183,6 @@
   "leyendas": "a790e9d03b920394",
   "cita": "f661dd6b4b834234",
   "tabla": "0b3bfc21c8d9d4fb",
-  "svg": "cd283a52c136ec51"
+  "svg": "188f9cea7d5f6434"
  }
 }

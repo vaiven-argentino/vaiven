@@ -657,9 +657,10 @@ export function especificacion(e: EntradaGrafico): Record<string, unknown> {
       view: { stroke: null },
       axis: {
         labelColor: tema.secundario, titleColor: tema.secundario, gridColor: tema.linea, domainColor: tema.borde,
-        tickColor: tema.borde, labelFontSize: 12, labelFont: tema.fuente, labelOverlap: true, labelFlush: true,
+        tickColor: tema.borde, labelFontSize: 12, labelFont: tema.fuente, labelOverlap: true,
       },
-      axisX: { grid: false, labelPadding: 6 + debajo, ...marcasX(meses, e.ancho < 520 ? 5 : 10) },
+      // `labelFlush` solo en el eje de fechas: en el Y subía el rótulo del 0 por encima de su línea (S6, sonda 5).
+      axisX: { grid: false, labelFlush: true, labelPadding: 6 + debajo, ...marcasX(meses, e.ancho < 520 ? 5 : 10) },
       legend: { labelColor: tema.texto, titleColor: tema.secundario, labelFontSize: 12, titleFontSize: 12, labelFont: tema.fuente, labelLimit: 320 },
       title: { color: tema.texto, subtitleColor: tema.secundario, anchor: "start", fontSize: 17, subtitleFontSize: 12, font: tema.fuente, subtitleFont: tema.fuente },
       text: { font: tema.fuente },
@@ -965,7 +966,9 @@ export function agruparEventos(eventos: Array<MarcaEvento & { dia?: string }>, i
     return {
       etiqueta: e, t: isoDia(dentro(g.reduce((a, ev) => a + indiceDia(ev.fecha), 0) / g.length, anchoGrupo(e))),
       forma: e.length === 1 ? "circle" : `M-${m},-1H${m}V1H-${m}Z`,
-      texto: g.map((ev) => `${ev.letra}: ${ev.nombre} (${diaLegible(ev.fecha)})`).join(" · "),
+      // Un evento por renglón, con la letra y la fecha antes del nombre (S1, sonda 5 de la 4e): el cartel los muestra
+      // con `white-space: pre-line`.
+      texto: g.map((ev) => `${ev.letra} · ${diaLegible(ev.fecha)} · ${ev.nombre}`).join("\n"),
     };
   });
 }

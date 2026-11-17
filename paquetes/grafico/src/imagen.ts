@@ -3,7 +3,8 @@
 // imagen con `imagen: true` (A3 de la prueba en Claude) sin una segunda implementación.
 import { tienePais, type DocumentoPeriodos } from "@vaiven/transformaciones";
 import type { Documento, Estado, EstadoVista } from "./estado";
-import { diaDeVersion, unidadVisible } from "./formato";
+import { rangoQuiebre } from "./ficha";
+import { NOMBRE_TIPO_QUIEBRE, diaDeVersion, enumerar, fechaCorta, unidadVisible } from "./formato";
 import { ACLARACION_ETAPAS, nombreSombreadoEnFrase, type OpcionSombreado } from "./periodos";
 import { partirEnRenglones, type Vista } from "./vista";
 
@@ -69,6 +70,13 @@ export function textoImagen(e: EntradaImagen): TextoImagen {
     const nombre = nombreSombreadoEnFrase(e0.sh as OpcionSombreado, e.periodos.tipos);
     pie.push(`Sombreado: ${nombre}${e0.sh === "catedra" ? ` (${ACLARACION_ETAPAS})` : ""}. Cada dato, en el período vigente a mitad de su intervalo (los saldos en nivel, el último día). Fuente: Vaivén, períodos, versión ${diaDeVersion(e.periodos.version_datos)}.`);
   }
+  // Las marcas del gráfico, explicadas (S6, sonda 5 de la 4e: la imagen circula sola, sin las listas de la interfaz):
+  // los quiebres con su número y los datos excluidos («×»).
+  const quiebres = u.quiebres.flatMap((lista, k) => lista.filter((q) => q.n > 0).map((q) =>
+    `${q.n}. ${varias ? `${u.identificacion[k]?.nombre ?? k + 1}, ` : ""}${(NOMBRE_TIPO_QUIEBRE[q.advertencia.tipo] ?? q.advertencia.tipo).toLowerCase()} (${rangoQuiebre(q.advertencia)})`));
+  if (quiebres.length) pie.push(`Quiebres (números en círculo): ${quiebres.join("; ")}. El detalle, en la ficha de cada serie.`);
+  const excluidos = u.comparacion.series.flatMap((s) => s.entidades.flatMap((id) => s.resultados[id].excluidos.map((x) => fechaCorta(x.fecha))));
+  if (excluidos.length) pie.push(`×: dato excluido hasta confirmarlo (${[...new Set(excluidos)].join(", ")}).`);
   if (u.episodios.length) pie.push(`Episodios: ${u.episodios.map((x) => x.nombre).join("; ")}.`);
   if (u.eventos.length) {
     pie.push(`Eventos: ${u.eventos.map((x) => `${x.letra}. ${x.nombre}`).join("; ")}.`);
@@ -82,8 +90,10 @@ export function textoImagen(e: EntradaImagen): TextoImagen {
   const d = u.comparacion.disposicion;
   const unidades = [...new Set(d.paneles.map((p) => p.unidad))];
   return {
-    titulo: varias ? `Comparación: ${docs.map((x) => x.nombre).join(" · ")}` : `${docs[0].nombre} · ${docs[0].nombre_variante}`,
-    subtitulo: varias ? (unidades.length === 1 ? unidadVisible(unidades[0]) : "Varias unidades: cada una en su eje o en su panel") : unidadVisible(r.unidad),
+    // El título lleva las variables, y el subtítulo, la variante y la unidad, como la cabecera de la interfaz en Claude
+    // (S6, sonda 5 de la 4e: antes, «Reservas internacionales · Reservas brutas» y «Comparación: …»).
+    titulo: varias ? enumerar([...new Set(docs.map((x) => x.nombre))]) : docs[0].nombre,
+    subtitulo: varias ? (unidades.length === 1 ? unidadVisible(unidades[0]) : "Varias unidades: cada una en su eje o en su panel") : `${docs[0].nombre_variante} · ${unidadVisible(r.unidad)}`,
     // La imagen mide 900 px: cada línea larga se parte en renglones de unos 130 caracteres para que no se corte
     // (revisión visual del PR B). La URL va entera, al final.
     pie: [...pie.flatMap((l) => partirEnRenglones(l, 130)), e.url],

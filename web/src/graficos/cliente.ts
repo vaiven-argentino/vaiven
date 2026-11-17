@@ -10,6 +10,7 @@ import { apa, bibtex, nombreTransformacion, textoCita } from "@vaiven/cita";
 import { desdeInicial, esVariacion, filasTabla, frecuenciaInicial, medidaInicial, numerarQuiebres, picoQueComprime as picoQueComprimeSerie, rangoQuiebre, resumen, transformacionInicial, type QuiebreNumerado } from "../lib/ficha";
 import { NOMBRE_TIPO_QUIEBRE, NOMBRE_TRANSFORMACION, diaDeVersion, fechaCorta, fechaLegible, numero, unidadVisible } from "../lib/formato";
 import { diaLegible, especificacion, type BandaEpisodio, type MarcaEvento } from "./espec";
+import { TEMA_CLARO } from "@vaiven/grafico/tema";
 import {
   ACLARACION_ETAPAS, EPISODIO, enFrase, avisoConfianza, avisoFiltroEventos, bandasDe, columnaPeriodo, columnasDe, contextoDe,
   episodiosEnRango, escribirEv, esSombreado, eventosEnRango, leerEv, periodosEnRango, textoLectura, textoSombreado, tipoDe,
@@ -465,20 +466,34 @@ function iniciar(): void {
       ...(periodos.length && registroPeriodos ? [`Sombreado: ${cSombreado?.selectedOptions[0]?.textContent?.toLowerCase()}${sombreado() === "catedra" ? ` (${ACLARACION_ETAPAS})` : ""}. Cada dato, en el período vigente a mitad de su intervalo (los saldos en nivel, el último día). Fuente: Vaivén, períodos, versión ${diaDeVersion(registroPeriodos.version_datos)}.`] : []),
       ...(episodios.length ? [`Episodios: ${episodios.map((e) => e.nombre).join("; ")}.`] : []),
       ...(eventos.length ? [`Eventos: ${eventos.map((e) => `${e.letra}. ${e.nombre}`).join("; ")}.`] : []),
+      // Las marcas del gráfico, explicadas: la imagen circula sola (S6, sonda 5 de la 4e).
+      ...quiebresImagen(r, otras.map((x) => x.resultado)),
+      ...(r.excluidos.length ? [`×: dato excluido hasta confirmarlo (${[...new Set(r.excluidos.map((x) => fechaCorta(x.fecha)))].join(", ")}).`] : []),
     ];
     const spec = especificacion({
       nombre: pais && cEntidad ? nombrePais(cEntidad.value) : undefined, otras,
-      resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: tema(), esVariacion: esVariacion(o.transformacion ?? "nivel"),
+      // Siempre en claro, aunque la página esté en oscuro (S6, sonda 5 de la 4e).
+      resultado: r, tramos: serie.tramos, empalme: doc.empalme, quiebres, tema: TEMA_CLARO, esVariacion: esVariacion(o.transformacion ?? "nivel"),
       log: cLog.checked && !cLog.disabled, alto: 380, ancho: 900, descripcion: $("resumen-grafico")!.textContent ?? "",
       ...marcasDelGrafico(),
       impreso: {
-        titulo: `${doc.nombre} · ${doc.nombre_variante}`,
-        subtitulo: unidadVisible(r.unidad),
+        // La variable en el título; la variante y la unidad, en el subtítulo (S6, sonda 5 de la 4e).
+        titulo: doc.nombre,
+        subtitulo: `${doc.nombre_variante} · ${unidadVisible(r.unidad)}`,
         pie: [`Fuentes: ${fuentes}.`, ...lineaPaises(), ...lineasMarcas,
           `Elaboración: Vaivén, variante «${doc.variante}», versión de datos ${diaDeVersion(doc.version_datos)}. ${licenciaImagen()}`, location.href],
       },
     });
     await exportarImagen(spec, formato, `${nombreArchivo()}.${formato}`);
+  }
+
+  /** La línea del pie con los quiebres numerados que se ven (los números de la lista «Quiebres» de la ficha). */
+  function quiebresImagen(r: Resultado, otras: Resultado[]): string[] {
+    const ids = new Set([r, ...otras].flatMap((x) => x.advertencias.map((a) => a.id)));
+    const cruzados = quiebres.filter((q) => ids.has(q.advertencia.id) && q.forma !== "general");
+    return cruzados.length
+      ? [`Quiebres (números en círculo): ${cruzados.map((q) => `${q.n}. ${(NOMBRE_TIPO_QUIEBRE[q.advertencia.tipo] ?? q.advertencia.tipo).toLowerCase()} (${rangoQuiebre(q.advertencia)})`).join("; ")}. El detalle, en la ficha.`]
+      : [];
   }
 
   function marcasDelGrafico() {

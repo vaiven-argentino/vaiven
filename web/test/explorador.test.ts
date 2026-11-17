@@ -102,7 +102,8 @@ describe("eventos", () => {
     expect(letrasDe(layer)[0].data.values).toHaveLength(1);
     expect(grupo.etiqueta).toBe("A–C");
     expect(String(grupo.forma)).toMatch(/^M-[\d.]+,-1H[\d.]+V1H-[\d.]+Z$/);
-    expect(grupo.texto).toBe("A: Corralito (1/12/2001) · B: Default (23/12/2001) · C: Ley 25.561 (6/1/2002)");
+    // Un evento por renglón, con la letra y la fecha antes del nombre (S1, sonda 5 de la 4e).
+    expect(grupo.texto).toBe("A · 1/12/2001 · Corralito\nB · 23/12/2001 · Default\nC · 6/1/2002 · Ley 25.561");
     expect(reglas(layer)[0].data.values.find((v) => v.nombre === "Corralito")!.dia).toBe("1/12/2001");
     expect(reglas(layer)[0].data.values.some((v) => v.nombre === "Fuera de rango")).toBe(false);
   });

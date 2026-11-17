@@ -11,7 +11,7 @@ import {
 import {
   AVISO_DOBLE_EJE, armarVista, bandasDe, categoriasEv, enumerar, episodiosEnRango, especificacion, esVariacion, eventosEnRango,
   lecturasGuia, nombreSombreadoEnFrase, numerarQuiebres, partirEnRenglones, opcionesDe, periodosEnRango, resumen, serieVista, seriesDeUrl, contextoDe, tipoDe,
-  vistaDesdeUrl, urlDesdeVista, rotuloQueEntra, marcasLog, EPISODIO, type Documento, type IndiceSerie, type Tema,
+  vistaDesdeUrl, urlDesdeVista, rotuloQueEntra, marcasLog, textoImagen, TEMA_CLARO, TEMA_OSCURO, EPISODIO, type Documento, type DocumentoImagen, type IndiceSerie, type Tema,
 } from "../src/index";
 
 const EXPORT = join(import.meta.dirname, "..", "..", "..", "export");
@@ -401,3 +401,40 @@ function todasLasCapas(spec: Record<string, unknown>): Array<Record<string, unkn
   recorrer(spec);
   return salida;
 }
+
+describe("sonda 5 de la 4e", () => {
+  const imagenDe = (url: string) => {
+    const base = { ...vistaDe(url), periodos: PERIODOS, eventos: EVENTOS, tema: TEMA_OSCURO, alto: 400, ancho: 900 };
+    const vista = armarVista(base);
+    const docs = base.docs as never as DocumentoImagen[];
+    return { vista, texto: textoImagen({ estado: base.estado, docs, vista, transformaciones: base.estado.series.map(() => undefined), url: "https://x/" }), base };
+  };
+
+  it("S6: la imagen lleva la variable en el título, la variante y la unidad en el subtítulo, y explica las marcas en el pie", () => {
+    const { texto } = imagenDe("?s=reservas&desde=1975&hasta=2010");
+    expect(texto.titulo).toBe("Reservas internacionales");
+    expect(texto.subtitulo).toBe("Reservas brutas · millones de US$");
+    expect(texto.pie.join(" ")).toMatch(/×: dato excluido hasta confirmarlo \(mar\. 1979\)/);
+    const varias = imagenDe("?t=var_interanual&desde=2000&hasta=2010&s2=reservas").texto;
+    expect(varias.titulo).toBe("Inflación minorista (IPC) y Reservas internacionales");
+    expect(varias.pie.join(" ")).toMatch(/Quiebres \(números en círculo\): 1\. IPC oficial, /);
+  });
+
+  it("S6: la imagen sale en claro aunque la vista esté en oscuro", () => {
+    const { base } = imagenDe("?t=var_interanual&desde=2000&hasta=2010&s2=reservas");
+    const impreso = armarVista({ ...base, impreso: { titulo: "t", subtitulo: "s", pie: ["p"] } }).especificacion as { background: string };
+    expect(impreso.background).toBe(TEMA_CLARO.fondo);
+  });
+
+  it("S6: labelFlush solo en el eje de fechas (el 0 del eje Y, alineado con su línea)", () => {
+    const config = (armar("?s=reservas").especificacion as { config: { axis: Record<string, unknown>; axisX: Record<string, unknown> } }).config;
+    expect(config.axis.labelFlush).toBeUndefined();
+    expect(config.axisX.labelFlush).toBe(true);
+  });
+
+  it("S2: en los paneles, todos los ejes Y con el mismo ancho mínimo, el del número más largo", () => {
+    const spec = armar("?t=var_interanual&desde=2000&hasta=2010&s2=reservas&ejes=paneles").especificacion as { config: { axisY: { minExtent: number } } };
+    // «57.500» (reservas, con el margen de arriba): unos 6 caracteres.
+    expect(spec.config.axisY.minExtent).toBeGreaterThanOrEqual(6 * 7 + 10);
+  });
+});
