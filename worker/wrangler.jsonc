@@ -4,7 +4,10 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-10-24",
   "workers_dev": true,
-  "preview_urls": false,
+  // Las URL de versión (`wrangler versions upload --preview-alias …`) sirven para probar una rama en Claude antes de
+  // desplegarla (fase 4e). Con `false`, cada despliegue diario las apagaba y la URL de prueba daba «error code: 1042».
+  // Muestran el mismo sitio público. Se revisa al cerrar la 4e.
+  "preview_urls": true,
   // Disparo diario del pipeline (SPEC 5.1): 21:23 UTC = 18:23 en Argentina, después de las publicaciones del INDEC.
   // El token va como secreto: `npx wrangler secret put GITHUB_TOKEN_DISPARO`.
   "triggers": { "crons": ["23 21 * * *"] },
