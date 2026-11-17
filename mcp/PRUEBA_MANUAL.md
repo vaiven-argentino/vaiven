@@ -59,30 +59,31 @@ Para las preguntas 19 a 24, anotá además si eligió bien entre `obtener_serie`
 - Si Claude no encuentra el conector, si da error al conectar o si alguna respuesta tarda más de unos segundos.
 
 ## 4. MCP Apps (4e): el gráfico interactivo en Claude web y en Claude Desktop
-*15/11/2026, actualizada con las correcciones de las sondas 3 y 4 · Interfaz definitiva de `ui://vaiven/grafico` (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). Reemplaza la prueba de la sonda. Primero en la URL de versión (`prueba-4e`) y, después del despliegue de la 4e, en producción.*
+*17/11/2026, actualizada con las correcciones de las sondas 3 a 5 · Interfaz definitiva de `ui://vaiven/grafico` (NOTAS_FASE4, «4e · Gráfico interactivo en Claude»). Reemplaza la prueba de la sonda. Primero en la URL de versión (`prueba-4e`) y, después del despliegue de la 4e, en producción.*
 
 **Preparación**
-- **Conector:** antes del despliegue, `Vaivén prueba` con `https://prueba-4e-vaiven.argentino.workers.dev/mcp` (sección 1, sin inicio de sesión); después, el conector `Vaivén` de siempre. `/salud` tiene que decir «4e» y, en `app`, el script de la interfaz de la última versión de la rama (el nombre de `web/public/mcp-app/` después del armado; por ejemplo, `grafico-032ec42a816e.js`). Si `app` no coincide, la URL de versión sigue con el código anterior: revisá que `git pull` haya traído los commits y repetí el armado y la subida. Si la URL de versión da `error code: 1042`, el despliegue diario apagó las URL de versión: volvé a encenderlas en Cloudflare (**Workers & Pages → vaiven → Domains → Preview**).
+- **Conector:** antes del despliegue, `Vaivén prueba` con `https://prueba-4e-vaiven.argentino.workers.dev/mcp` (sección 1, sin inicio de sesión); después, el conector `Vaivén` de siempre. `/salud` tiene que decir «4e» y, en `app`, el script de la interfaz de la última versión de la rama (el nombre de `web/public/mcp-app/` después del armado; por ejemplo, `grafico-e82125acf19d.js`). Si `app` no coincide, la URL de versión sigue con el código anterior: revisá que `git pull` haya traído los commits y repetí el armado y la subida. Si la URL de versión da `error code: 1042`, el despliegue diario apagó las URL de versión: volvé a encenderlas en Cloudflare (**Workers & Pages → vaiven → Domains → Preview**).
 - **Una conversación nueva fuera de los proyectos**, sin archivos ni memoria, con un solo conector de Vaivén activado. Si Claude lee la memoria del proyecto, sabe que es una prueba y responde distinto. Abrila desde el inicio de claude.ai («Nueva conversación», no desde un proyecto) y comprobá que arriba, junto al título, no aparezca el nombre de un proyecto.
-- **Anotá el modelo y el esfuerzo** de la conversación. Como referencia, **Sonnet 5.5 con esfuerzo medio**, el más probable entre los estudiantes; si se usa otro, decilo en el informe (cambia la fila b y lo que hace Claude con el sombreado y los eventos).
+- **El modelo de la prueba es Haiku 5.5** (decisión del 17/11/2026: si elige bien la herramienta el más chico, la eligen los demás). Anotá el esfuerzo; si se usa otro modelo, decilo en el informe (cambia la fila b y lo que hace Claude con el sombreado y los eventos).
 - En Desktop, **cerrá la app del todo** (Cmd+Q) antes de probar: guarda los recursos en caché. Desde el 17/11/2026 la dirección del recurso lleva la versión (`ui://vaiven/grafico/<hash>`, el mismo hash que `app` en `/salud`), así que una versión nueva no debería mostrar la vieja; si igual aparece otra interfaz (por ejemplo, «Hola: la sonda de Vaivén se cargó»), Cmd+Q y una conversación nueva.
 - **Consola:** abrila **antes** de recargar la conversación. En Desktop: **Help → Troubleshooting → Enable Developer Mode** y `Cmd + Option + I`; en la web, las herramientas de desarrollo del navegador. Guardá el registro con clic derecho → **Save as…**.
 
 **Pedidos** (en Claude web y en Claude Desktop)
-1. «Haceme un gráfico de la inflación interanual y las reservas internacionales entre 2000 y 2010».
-2. «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos».
+1. «Haceme un gráfico de la inflación interanual y las reservas internacionales entre 2000 y 2010». **Anotá si la app apareció en el primer intento** (Claude tiene que usar `especificacion_grafico`); si no, **pegá su respuesta** antes de pedirle el gráfico (S5 de la sonda 5).
+2. «Graficá la inflación interanual, la variación interanual del dólar oficial, la base monetaria y las reservas entre 2000 y septiembre de 2020, con los gobiernos sombreados y los eventos». Sacá **una captura del cartel de un grupo de eventos** (por ejemplo, «B–F»: un evento por renglón, entero) y de la base monetaria (escala logarítmica, con la grilla solo en 10.000, 100.000, 1.000.000…).
 3. «Graficá las reservas internacionales» (toda la serie, unos 100.000 caracteres). Se espera **toda la serie, sin sombreado ni eventos**: la descripción le pide a Claude usar esas capas solo si se piden en ese mensaje y, sin período, toda la serie (H5 y H1 de la sonda 4). Si reutiliza el período o las capas del pedido anterior, **anotalo**.
-4. **Modo oscuro:** con el gráfico del pedido 1 a la vista, pasá Claude a modo oscuro: el gráfico se tiene que volver a pedir y quedar oscuro (fondo, ejes y líneas).
+4. **Modo oscuro:** con el gráfico del pedido 1 a la vista, pasá Claude a modo oscuro: el gráfico se tiene que volver a pedir y quedar oscuro (fondo, ejes y líneas). Bajá el PNG: **sale en claro** igual.
+5. «Graficá la inflación mensual entre 1985 y 1995, con los eventos». El episodio de la hiperinflación va **arriba**, debajo de las letras, con su nombre; la cinta de los gobiernos, si la pedís, pegada a los años.
 
 **En cada gráfico, probá:**
 - **«Cambiar el gráfico»:**
-  - cambiá el período (por ejemplo, «Desde» 1995);
+  - cambiá el período, en el grupo «Período» (por ejemplo, «Desde» 1995);
   - cambiá la transformación de una serie;
   - poné el sombreado de gobiernos;
   - marcá «Eventos» y, con dos unidades, «En paneles»; en un gráfico de un solo eje con varias series, «Leyenda arriba» (en el doble eje la leyenda va siempre y la casilla no aparece).
 
   Cada cambio redibuja el gráfico. En el pedido 2, «Desde» 1990 tiene que dar el **error del límite de 1.000 observaciones**, en naranja, y el gráfico no tiene que cambiar.
-- **«PNG» y «SVG»:** piden confirmación y bajan la imagen de 900 px con título y pie (fuentes, licencia, versión de datos y enlace). El nombre del archivo lleva las series y el período (por ejemplo, `vaiven_ipc_y_reservas_2000_2010.png`).
+- **«PNG» y «SVG»:** piden confirmación y bajan la imagen de 900 px, **siempre en claro**, con la variable en el título, la variante y la unidad en el subtítulo, y un pie con las fuentes, la licencia, la versión de datos, el enlace y **lo que significan las marcas** (los quiebres numerados, la «×», las letras de los eventos y los episodios). El nombre del archivo lleva las series y el período (por ejemplo, `vaiven_ipc_y_reservas_2000_2010.png`).
 - **«Abrir en el explorador»:** pide confirmación y abre la misma vista.
 - **«Pantalla completa»**, si aparece.
 - Los desplegables **«Advertencias»** (los quiebres ①②③ numerados desde 1, las advertencias generales sin número, el aviso del doble eje, los datos excluidos «×» y los episodios), **«Eventos»** (letra, fecha y nombre) y **«Fuentes y cita»**.

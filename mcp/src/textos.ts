@@ -82,8 +82,8 @@ export const DESCRIPCION = {
   comparar_series:
     "Compara de 1 a 4 series de Vaivén en una sola respuesta, cada una con sus propios parámetros (los de obtener_serie: " +
     "variante, transformación, frecuencia, medida, países…). Usala cuando la pregunta relaciona o compara series (por " +
-    "ejemplo, la inflación y el tipo de cambio, o la desocupación y el PIB); para una sola serie, obtener_serie; para un " +
-    "gráfico o un enlace a la web, especificacion_grafico. `desde` y `hasta` valen para todas. Por defecto (`alinear: " +
+    "ejemplo, la inflación y el tipo de cambio, o la desocupación y el PIB); para una sola serie, obtener_serie. No sirve " +
+    "para graficar: para un gráfico o un enlace a la web, especificacion_grafico. `desde` y `hasta` valen para todas. Por defecto (`alinear: " +
     "frecuencia_comun`) lleva todas las series a la frecuencia más baja del conjunto (mensual < trimestral < anual; una " +
     "serie semestral, como la desocupación de la EPH puntual, lleva a anual), con la agregación de cada serie y solo con " +
     "períodos completos: un período incompleto queda en null (por ejemplo, 2003 en la desocupación, que mezcla una onda " +
@@ -95,13 +95,16 @@ export const DESCRIPCION = {
     "avisos de la combinación (`advertencias_combinacion`): mencionalos al usar los datos. Una serie internacional como " +
     "máximo; sus países (hasta 8) cuentan como una sola serie. Límite: 10.000 observaciones, sumando las series y los países.",
   especificacion_grafico:
-    "Hasta 1.000 observaciones por gráfico, sumando las series y los países (por la CPU del servidor): para series " +
-    "largas, pedí `frecuencia: anual` desde el primer intento (por ejemplo, el IPC y las reservas desde 1970), o los " +
-    "datos con comparar_series. " +
-    "Devuelve un gráfico de 1 a 4 series listo para dibujar (una especificación de Vega-Lite con los datos incluidos), " +
-    "el mismo que muestra el explorador de Vaivén, y `url_explorador`, el enlace a esa vista en la web. Usala cuando el " +
-    "usuario pida un gráfico, una figura o un enlace para ver o compartir series; para leer o analizar cifras, " +
-    "obtener_serie (una serie) o comparar_series (varias). Cada serie lleva sus parámetros como en obtener_serie " +
+    // Empieza por el uso: con Haiku, la descripción que empezaba por el límite lo llevaba a comparar_series y el gráfico
+    // no aparecía (S5, sonda 5 de la 4e).
+    "Muestra un gráfico interactivo de 1 a 4 series de Vaivén. Usala siempre que el usuario pida un gráfico, una " +
+    "figura o ver series: en Claude el gráfico aparece solo, interactivo, y no hace falta dibujarlo aparte. Devuelve " +
+    "también el gráfico listo para dibujar (una especificación de Vega-Lite con los datos incluidos), el mismo que " +
+    "muestra el explorador de Vaivén, y `url_explorador`, el enlace a esa vista en la web, para ver o compartir. Para " +
+    "leer o analizar cifras, obtener_serie (una serie) o comparar_series (varias). " +
+    "Límite: 1.000 observaciones por gráfico, sumando las series y los países (por la CPU del servidor); para series " +
+    "largas, pedí `frecuencia: anual` desde el primer intento (por ejemplo, el IPC y las reservas desde 1970). " +
+    "Cada serie lleva sus parámetros como en obtener_serie " +
     "(salvo `base_real`); `desde` y `hasta` valen para todas. Cada serie va en su frecuencia. Con dos unidades " +
     "distintas, el gráfico va en doble eje (o en paneles, con `ejes: paneles`); con tres o cuatro unidades, o con una " +
     "serie internacional junto con otra, en paneles. `sombreado` sombrea períodos y `eventos` marca eventos y episodios: " +
@@ -109,8 +112,8 @@ export const DESCRIPCION = {
     "respuesta). Si el usuario no dice el período, el gráfico va con toda la serie: no reutilices el de un gráfico " +
     "anterior salvo que lo pida. " +
     "Trae también la disposición, las advertencias y la cita de cada serie: mencionalas al mostrar el gráfico. " +
-    "En los clientes que muestran interfaces de MCP Apps (como Claude), el gráfico aparece solo, interactivo, en la " +
-    "conversación: no lo vuelvas a dibujar ni pidas los datos para graficarlo. Si el usuario pide más series de las que " +
+    "Como el gráfico ya aparece en la conversación, no lo vuelvas a dibujar ni pidas los datos para graficarlo. Si el " +
+    "usuario pide más series de las que " +
     "entran (4), usá la variante por defecto de cada una (en el IPC, la oficial), aunque en un gráfico anterior hayas " +
     "usado otra, y decí cuáles quedaron afuera.",
 } as const;

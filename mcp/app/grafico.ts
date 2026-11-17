@@ -151,10 +151,14 @@ function listas(r: Respuesta): void {
   $("avisos").replaceChildren(...avisos);
   $("cantidad-avisos").textContent = String(avisos.length);
   $("caja-avisos").hidden = !avisos.length;
-  // Qué remite a qué: los números en círculo, a «Advertencias»; las letras, a «Eventos» (O3, sonda 3 de la 4e).
-  const remisiones = [...(r.quiebres.length ? ["los números en círculo, a «Advertencias»"] : []), ...(r.eventos?.length ? ["las letras, a «Eventos»"] : [])];
-  $("nota-simbolos").textContent = remisiones.length ? `En el gráfico, ${remisiones.join("; ")}. Pasá el cursor para ver el texto.` : "";
-  $("nota-simbolos").hidden = !remisiones.length;
+  // Qué remite a qué: los números en círculo, a «Advertencias»; las letras, a «Eventos» (O3 de la sonda 3; el texto,
+  // S4 de la sonda 5).
+  const numeros = r.quiebres.length > 0, letras = (r.eventos?.length ?? 0) > 0;
+  $("nota-simbolos").textContent = numeros && letras
+    ? "Los números en círculo remiten a «Advertencias» y las letras, a «Eventos», más abajo. Pasá el cursor por encima para leerlos acá."
+    : numeros ? "Los números en círculo remiten a «Advertencias», más abajo. Pasá el cursor por un número para leerlo acá."
+      : letras ? "Las letras remiten a «Eventos», más abajo. Pasá el cursor por una letra para leerla acá." : "";
+  $("nota-simbolos").hidden = !numeros && !letras;
   const eventos = r.eventos ?? [];
   $("lista-eventos").replaceChildren(...eventos.map((e) => li(`${e.letra}.`, `${e.fecha.split("-").reverse().join("/")} · ${e.nombre}`)));
   $("cantidad-eventos").textContent = String(eventos.length);
@@ -218,7 +222,8 @@ function controles(r: Respuesta): void {
       // eligió otra, la inicial no se conoce acá y la opción conserva su nombre genérico.
       const inicial = actual ? undefined : dibujada;
       select.replaceChildren(
-        new Option(inicial ? `${nombre(inicial)} (la inicial)` : "La inicial de la serie", ""),
+        // Solo el nombre de la transformación (S7, sonda 5: «(valor publicado) (la inicial)» sobraba).
+        new Option(inicial ? nombre(inicial) : "La inicial de la serie", ""),
         ...lista.filter((t) => t !== inicial).map((t) => new Option(nombre(t), t)),
       );
       select.value = actual;

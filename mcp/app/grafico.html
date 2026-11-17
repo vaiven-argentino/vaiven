@@ -42,6 +42,10 @@
   .controles label.casilla { display: flex; gap: 6px; align-items: center; color: var(--texto); min-height: 32px; }
   .controles input[type="checkbox"] { width: 18px; height: 18px; }
   .controles input[type="text"] { width: 7.5em; }
+  .periodo { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: end; border: 1px solid var(--linea); border-radius: 6px; padding: 4px 10px 8px; margin: 0; flex-basis: 100%; }
+  .periodo legend { font-size: 12.5px; color: var(--secundario); padding: 0 4px; }
+  .periodo #ayuda-periodo { align-self: center; font-size: 12.5px; }
+  #nota-simbolos { margin: 16px 0 0; font-size: 12.5px; }
   input, select { font: inherit; font-size: 13px; padding: 3px 6px; border: 1px solid var(--borde); border-radius: 6px; background: var(--fondo); color: var(--texto); }
   .estado { min-height: 1.2em; margin: 6px 0 0; font-size: 13px; color: var(--secundario); }
   .estado[data-tipo="error"] { color: var(--acento); font-weight: 600; }
@@ -55,6 +59,9 @@
     font-family: var(--sans); font-size: 12px; box-shadow: none; padding: 6px 10px;
   }
   #vg-tooltip-element.custom-theme td.key { color: var(--secundario); }
+  /* Un evento por renglón y sin cortar (S1, sonda 5 de la 4e): vega-tooltip limita el valor a 200 px con elipsis. El ancho
+     no pasa del de la ventana: si el cartel no entra, vega-tooltip no lo muestra (en 390 px). */
+  #vg-tooltip-element.custom-theme td.value { white-space: pre-line; max-width: min(420px, calc(100vw - 110px)); overflow: visible; text-overflow: clip; }
 </style>
 </head>
 <body>
@@ -75,14 +82,18 @@
   <details id="caja-controles">
     <summary>Cambiar el gráfico</summary>
     <form class="controles" id="controles">
-      <label>Desde <input type="text" id="desde" inputmode="numeric" placeholder="AAAA o AAAA-MM" aria-describedby="ayuda-periodo"></label>
-      <label>Hasta <input type="text" id="hasta" inputmode="numeric" placeholder="AAAA o AAAA-MM" aria-describedby="ayuda-periodo"></label>
+      <!-- «Desde» y «Hasta» en un grupo «Período», con la ayuda en el mismo renglón (S3, sonda 5 de la 4e). -->
+      <fieldset class="periodo">
+        <legend>Período</legend>
+        <label>Desde <input type="text" id="desde" inputmode="numeric" placeholder="AAAA o AAAA-MM" aria-describedby="ayuda-periodo"></label>
+        <label>Hasta <input type="text" id="hasta" inputmode="numeric" placeholder="AAAA o AAAA-MM" aria-describedby="ayuda-periodo"></label>
+        <span class="secundario" id="ayuda-periodo">Un año (2001) o un mes (2001-12). Vacío: toda la serie.</span>
+      </fieldset>
       <span id="transformaciones" class="controles"></span>
       <label>Sombreado <select id="sombreado"><option value="">Sin sombreado</option></select></label>
       <label class="casilla"><input type="checkbox" id="eventos"> Eventos</label>
       <label class="casilla" id="campo-leyenda" hidden><input type="checkbox" id="leyenda"> Leyenda arriba</label>
       <label class="casilla" id="campo-paneles" hidden><input type="checkbox" id="paneles"> <span id="texto-paneles">En paneles</span></label>
-      <span class="secundario" id="ayuda-periodo">Período: un año (2001) o un mes (2001-12); vacío, toda la serie.</span>
     </form>
   </details>
   <p class="estado" id="estado" role="status" aria-live="polite">Esperando el gráfico…</p>

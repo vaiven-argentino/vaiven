@@ -1842,3 +1842,43 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
   - las pruebas lo controlan, y el manual dice qué hacer si igual aparece una interfaz vieja.
 - **Para la SPEC v1.10** (7.4): la dirección del recurso lleva la versión.
 
+### Sonda 5 en Claude web y sus correcciones (17/11/2026)
+**El informe de Camilo** (`INFORME_PRUEBA_MCP_APPS_4e_sonda5.md`; Claude web, **Haiku 5.5** con esfuerzo alto, modo oscuro):
+- **Anduvo bien:**
+  - los carteles de las letras;
+  - las descargas, «Abrir en el explorador» y «Pantalla completa»;
+  - el pedido 3, con toda la serie y sin capas;
+  - el doble eje, sin leyenda;
+  - «Nivel (valor publicado)».
+- **Falló, con Haiku:** el pedido 1 no abrió la app. Hubo que pedirle el gráfico.
+
+**Decisiones de Camilo:**
+- las descargas, siempre en claro;
+- la prueba manual, toda con Haiku 5.5.
+
+**Qué se hizo:**
+- **S1:** el cartel de un grupo de eventos lleva un evento por renglón («B · 30/7/2001 · Ley de Déficit Cero (25.453)»). El CSS del cartel, en la interfaz, el explorador y la ficha, permite renglones (`pre-line`) y hasta 420 px sin cortar: `vega-tooltip` limitaba el valor a 200 px con elipsis.
+- **S2:** en los paneles, todos los ejes Y tienen el ancho del número más largo (`axisY.minExtent`), así las áreas y los títulos quedan alineados contra el borde.
+- **S3:** «Desde» y «Hasta» van en un grupo «Período», con la ayuda en el mismo renglón.
+- **S4:** la línea de debajo del gráfico tiene texto nuevo según haya números, letras o los dos, y 16 px de aire arriba.
+- **S5:** la descripción de `especificacion_grafico` empieza por el uso: «Muestra un gráfico interactivo… Usala siempre que el usuario pida un gráfico, una figura o ver series…». El límite va después. `comparar_series` dice que no sirve para graficar.
+- **S6:**
+  - la imagen exportada sale siempre en claro (`armarVista` con `impreso` usa `TEMA_CLARO`, y la ficha también);
+  - lleva la variable en el título, y la variante y la unidad en el subtítulo; con varias series, las variables en lugar de «Comparación: …»;
+  - el pie explica las marcas: los quiebres numerados y la «×»;
+  - `labelFlush` va solo en el eje X, así el «0» del eje Y queda alineado con su línea.
+- **S7:** la opción inicial del desplegable dice solo el nombre de la transformación.
+
+**Para la SPEC v1.10** (6.2):
+- el título y el subtítulo de la imagen;
+- la imagen siempre en claro;
+- el pie con las marcas;
+- la alineación de los ejes en los paneles.
+
+**Pendientes:**
+- la prueba con Haiku, en especial el pedido 1 en el primer intento;
+- la ventana angosta y el alto;
+- el error de «Desde» 1990;
+- la consola;
+- Claude Desktop.
+
