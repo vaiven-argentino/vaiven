@@ -89,7 +89,8 @@ async function medirEnProceso(m, nombre, args, { muestras, cacheFria, error = fa
   for (let i = 0; i < muestras; i++) {
     if (cacheFria) repo = new m.Repositorio(m.fuenteCarpeta(EXPORT));
     if (nombre === "@recurso") {
-      const r = await cliente.readResource(args);
+      // La dirección lleva la versión de la interfaz (recurso.ts): se toma la del módulo.
+      const r = await cliente.readResource({ uri: m.URI_GRAFICO ?? args.uri });
       if (!r.contents[0]?.text) throw new Error(`${args.uri}: sin contenido`);
     } else {
       const r = await cliente.callTool({ name: nombre, arguments: args });

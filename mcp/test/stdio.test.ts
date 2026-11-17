@@ -7,6 +7,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { build } from "esbuild";
 import { afterAll, beforeAll, expect, it } from "vitest";
 import { EXPORT } from "./ayuda";
+import { URI_GRAFICO } from "../src/app/recurso";
 
 const dir = mkdtempSync(join(tmpdir(), "vaiven-mcp-"));
 const salida = join(dir, "vaiven-mcp.mjs");
@@ -25,7 +26,9 @@ it.each([["legacy"], [{ pin: "2026-07-28" }]] as const)("responde por stdio con 
   const { tools } = await cliente.listTools();
   expect(tools).toHaveLength(8);
   // El mismo recurso del gráfico que el remoto (SPEC 7.4, variante local).
-  const { contents } = await cliente.readResource({ uri: "ui://vaiven/grafico" });
+  const { resources } = await cliente.listResources();
+  expect(resources.map((r) => r.uri)).toEqual([URI_GRAFICO]);
+  const { contents } = await cliente.readResource({ uri: URI_GRAFICO });
   expect(contents[0]).toMatchObject({ mimeType: "text/html;profile=mcp-app" });
   // La variante local lleva el script adentro (el del dominio de Vaivén puede ser de otra versión), sin cortes.
   const texto = (contents[0] as { text: string }).text;

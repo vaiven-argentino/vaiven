@@ -1833,3 +1833,12 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
   - main pasa a `preview_urls: true`.
 - **Los dos arreglos van en un PR aparte a main** (vaiven-argentino/vaiven#33), y la prueba también en esta rama.
 
+### Claude Desktop mostraba la sonda del Paso 0 (17/11/2026)
+- **Qué pasó:** con la URL de prueba ya andando, Desktop seguía mostrando la sonda del Paso 0 («HTML del recurso 1.454.220 caracteres», `sonda.js` sin cargar). El servidor entregaba el recurso nuevo: 6.771 caracteres, con `grafico-032ec42a816e.js`.
+- **Causa:** Desktop guarda el recurso en caché por su dirección, que era fija (`ui://vaiven/grafico`) desde la sonda. Reconectar el conector actualiza las herramientas, no el recurso.
+- **Qué se hizo:**
+  - la dirección lleva la versión de la interfaz: `ui://vaiven/grafico/<hash>`, el mismo hash del script que informa `/salud` (`URI_GRAFICO`, en `recurso.ts`);
+  - cada versión nueva tiene otra dirección;
+  - las pruebas lo controlan, y el manual dice qué hacer si igual aparece una interfaz vieja.
+- **Para la SPEC v1.10** (7.4): la dirección del recurso lleva la versión.
+

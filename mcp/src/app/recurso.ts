@@ -6,7 +6,12 @@ import { PARTES_HTML_GRAFICO, SCRIPT_GRAFICO } from "./html.generado";
 
 export { SCRIPT_GRAFICO };
 
-export const URI_GRAFICO = "ui://vaiven/grafico";
+/**
+ * La dirección del recurso lleva la versión de la interfaz (el hash del script): Claude Desktop guarda el recurso en
+ * caché por su dirección, y con una fija seguía mostrando la sonda del Paso 0 aunque el servidor ya diera la interfaz
+ * nueva (17/11/2026). Con cada versión cambia la dirección y no queda ninguna vieja en uso.
+ */
+export const URI_GRAFICO = `ui://vaiven/grafico/${SCRIPT_GRAFICO.replace(/^grafico-|\.js$/g, "")}`;
 export const MIME_APP = "text/html;profile=mcp-app";
 /** El identificador de la extensión (ext-apps, SEP-1724). */
 export const EXTENSION_UI = "io.modelcontextprotocol/ui";

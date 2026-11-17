@@ -39,7 +39,7 @@ describe.each([
     expect(tools.filter((t) => t._meta && "ui/resourceUri" in t._meta).map((t) => t.name)).toEqual(["especificacion_grafico"]);
   });
 
-  it("lista y lee ui://vaiven/grafico con su MIME y su CSP", async () => {
+  it("lista y lee ui://vaiven/grafico/<versión> con su MIME y su CSP", async () => {
     const c = await conectar(modo, repo);
     const { resources } = await c.listResources();
     expect(resources.map((r) => r.uri)).toEqual([URI_GRAFICO]);
@@ -77,6 +77,11 @@ describe.each([
     // Que el modelo no rearme el gráfico si el cliente ya lo mostró, y que dé el enlace si no (hallazgo A1).
     expect(texto.especificacion).toMatch(/^Si tu cliente muestra la interfaz de Vaivén .* no lo vuelvas a dibujar .* compartí url_explorador\.$/);
   });
+});
+
+it("la dirección del recurso lleva la versión de la interfaz (el hash del script), para que ningún cliente use una vieja", () => {
+  expect(URI_GRAFICO).toMatch(/^ui:\/\/vaiven\/grafico\/[0-9a-f]{12}$/);
+  expect(SCRIPT_GRAFICO).toBe(`grafico-${URI_GRAFICO.split("/").at(-1)}.js`);
 });
 
 it("SCRIPT_GRAFICO (lo informa /salud) es el script que pide el recurso, y existe en el sitio", async () => {
