@@ -224,10 +224,12 @@ describe("índice desde tasas y dimensión pais", () => {
 });
 
 describe("datos excluidos en los extremos", () => {
-  it("un excluido al final del período queda como null para marcarlo (RIPTE, 2026-08)", () => {
+  it("un excluido al final del período queda como null para marcarlo (RIPTE, el último excluido)", () => {
     const ripte = doc("series/salario-real/ripte.json");
     const ultimo = ripte.excluidos.at(-1)!;
-    const r = transformar(ripte, { desde: "2026" });
+    // El período termina en el mes excluido: así no depende de que sea el último dato publicado (el 16/11/2026 llegó
+    // 2026-09 después del excluido de 2026-08 y la prueba, con el período abierto, falló en la publicación diaria).
+    const r = transformar(ripte, { desde: "2026", hasta: ultimo.fecha });
     expect(r.datos.at(-1)).toEqual([ultimo.fecha, null]);
     expect(r.excluidos.map((e) => e.fecha)).toContain(ultimo.fecha);
     // Pasado a anual ya no es «el» dato excluido: el año incompleto no se muestra al final.

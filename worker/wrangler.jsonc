@@ -7,8 +7,9 @@
   "build": { "command": "node ../mcp/scripts/armar-app.mjs" },
   "compatibility_date": "2026-10-24",
   "workers_dev": true,
-  // TEMPORAL (prueba de la 4e en Claude): las URL de versión sirven la sonda en prueba-4e-vaiven.argentino.workers.dev
-  // sin pasarla a producción. Este commit se descarta antes del merge; en main queda en false.
+  // Las URL de versión (`wrangler versions upload --preview-alias …`) sirven para probar una rama en Claude antes de
+  // desplegarla (fase 4e). Con `false`, cada despliegue diario las apagaba y la URL de prueba daba «error code: 1042».
+  // Muestran el mismo sitio público. Se revisa al cerrar la 4e.
   "preview_urls": true,
   // Disparo diario del pipeline (SPEC 5.1): 21:23 UTC = 18:23 en Argentina, después de las publicaciones del INDEC.
   // El token va como secreto: `npx wrangler secret put GITHUB_TOKEN_DISPARO`.

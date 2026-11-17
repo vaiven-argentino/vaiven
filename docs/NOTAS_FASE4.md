@@ -1619,7 +1619,7 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
 - **`probador-mcp`:** el MCP local de esta sesión corre el código de cuando arrancó, así que no se pudo probar el código nuevo. Va en una sesión nueva, con las preguntas 19 a 24 y una de leyenda.
 - **La franja de los interinos** se ve bastante marcada, sobre todo en oscuro; se puede aclarar.
 - **Antes del merge:**
-  - quitar el commit TEMPORAL de `preview_urls` y el host `prueba-4e`;
+  - quitar el host `prueba-4e` (`HOST_PRUEBA`). `preview_urls: true` ya no se quita: desde el PR #33 también va en main (17/11/2026);
   - traer `main` y regenerar el export sin red (CLAUDE.md), cuidando el `desactualizada_desde` del tipo de cambio real bilateral.
 - **La prueba de Camilo** en Claude web y en Desktop, con la sección 4 nueva de `PRUEBA_MANUAL.md`, en la URL de versión.
 
@@ -1824,3 +1824,12 @@ Revisó el explorador, la ficha y la interfaz en el host local (390 y 1280 px, c
   - las filas f a j, que no se informaron en la sonda 4;
   - las respuestas de Claude de cada pedido.
 - **Claude Desktop.**
+
+### La publicación del 16/11 y la URL de prueba (17/11/2026)
+- **«Publicar» falló el 16/11** porque `medidas.test.ts` daba por hecho que el último dato del RIPTE era el excluido (2026-08), y la actualización trajo 2026-09.
+  - La prueba corta ahora el período en el mes excluido.
+  - Con eso, el despliegue diario vuelve a publicar.
+- **Claude no podía conectarse a «Vaivén prueba»:** la URL de versión daba `error code: 1042`, porque el `wrangler.jsonc` de main decía `preview_urls: false` y cada despliegue diario las apagaba.
+  - main pasa a `preview_urls: true`.
+- **Los dos arreglos van en un PR aparte a main** (vaiven-argentino/vaiven#33), y la prueba también en esta rama.
+
