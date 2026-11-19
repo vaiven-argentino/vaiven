@@ -31,16 +31,21 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonica} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#FAF7F0" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#17140F" media="(prefers-color-scheme: dark)" />
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:locale" content="es_AR" />
     <script is:inline>
-      // Antes de pintar: el modo elegido a mano (si lo hay) gana sobre el del sistema.
+      // Antes de pintar: el modo elegido a mano (si lo hay) gana sobre el del sistema. La meta color-scheme se lo
+      // avisa al navegador antes de que cargue el CSS (fondo inicial, barras de desplazamiento y controles).
       try {
         const tema = localStorage.getItem("vaiven-tema");
-        if (tema === "light" || tema === "dark") document.documentElement.dataset.theme = tema;
+        if (tema === "light" || tema === "dark") {
+          document.documentElement.dataset.theme = tema;
+          document.querySelector('meta[name="color-scheme"]').content = tema;
+        }
       } catch {}
     </script>
   </head>
@@ -80,6 +85,17 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
       const raiz = document.documentElement;
       const oscuroDelSistema = window.matchMedia("(prefers-color-scheme: dark)");
       const esOscuro = () => raiz.dataset.theme === "dark" || (raiz.dataset.theme !== "light" && oscuroDelSistema.matches);
+      const metaEsquema = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
+      const metasBarra = document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]');
+      // Con un modo elegido a mano, el navegador también lo sigue: la meta color-scheme y el color de su barra
+      // (theme-color), que toma el fondo de ese modo desde global.css. Sin modo elegido, las metas siguen al sistema.
+      const sincronizarNavegador = () => {
+        const tema = raiz.dataset.theme;
+        if (tema !== "light" && tema !== "dark") return;
+        if (metaEsquema) metaEsquema.content = tema;
+        const fondo = getComputedStyle(raiz).getPropertyValue("--fondo").trim();
+        if (fondo) metasBarra.forEach((m) => { m.content = fondo; });
+      };
       const pintar = () => {
         const oscuro = esOscuro();
         texto.textContent = oscuro ? "Modo claro" : "Modo oscuro";
@@ -90,10 +106,12 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
         const tema = esOscuro() ? "light" : "dark";
         raiz.dataset.theme = tema;
         try { localStorage.setItem("vaiven-tema", tema); } catch {}
+        sincronizarNavegador();
         pintar();
         document.dispatchEvent(new CustomEvent("vaiven:tema"));
       });
       oscuroDelSistema.addEventListener("change", () => { pintar(); document.dispatchEvent(new CustomEvent("vaiven:tema")); });
+      sincronizarNavegador();
       pintar();
     </script>
   </body>
