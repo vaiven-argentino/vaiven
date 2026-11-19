@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "typescript": "5.9.3",
-    "wrangler": "4.152.0"
+    "wrangler": "4.165.0"
   },
   "dependencies": {
     "@vaiven/mcp": "0.2.0"
