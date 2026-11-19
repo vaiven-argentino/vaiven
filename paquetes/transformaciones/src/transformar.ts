@@ -346,7 +346,7 @@ function aplicarMedida(serie: SerieExportada, puntos: Punto[], opciones: Opcione
       nombre = nombrePeriodo(ib, anual ? "anual" : "mensual");
       if (ipcBase === null) throw new ErrorTransformacion(`No hay IPC (completo) en ${opciones.baseReal} para usar como base.`);
     } else {
-      const ultimo = [...puntos].reverse().find((p) => p.v !== null && valores.get(p.i) != null);
+      const ultimo = puntos.findLast((p) => p.v !== null && valores.get(p.i) != null);
       if (!ultimo) throw new ErrorTransformacion("No hay un período con dato de la serie y del IPC para usar como base.");
       ipcBase = valores.get(ultimo.i)!;
       nombre = nombrePeriodo(ultimo.i, ultimo.f);

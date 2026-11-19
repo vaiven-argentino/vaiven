@@ -5,7 +5,7 @@ import { catalogo, urlFicha } from "../lib/export";
 import { cobertura, diaDeVersion } from "../lib/formato";
 
 const { series, version_datos } = catalogo();
-const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
+const ordenadas = series.toSorted((a, b) => a.codigo.localeCompare(b.codigo));
 ---
 <Base titulo="Inicio" descripcion="Vaivén: base histórica curada de series económicas argentinas desde 1970, con variantes de empalme, quiebres documentados, descargas y cita." seccion="inicio">
   <div class="contenedor inicio">
