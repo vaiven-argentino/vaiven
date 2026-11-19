@@ -42,11 +42,13 @@ mcp.stdout.on("data", (b) => {
   }
 });
 let siguiente = 1;
-const pedir = (method, params) => new Promise((ok) => {
+const pedir = (method, params) => {
   const id = siguiente++;
-  pendientes.set(id, ok);
+  const { promise, resolve } = Promise.withResolvers();
+  pendientes.set(id, resolve);
   mcp.stdin.write(`${JSON.stringify({ jsonrpc: "2.0", id, method, params })}\n`);
-});
+  return promise;
+};
 await pedir("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "igualdad-explorador", version: "1" } });
 mcp.stdin.write(`${JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" })}\n`);
 
