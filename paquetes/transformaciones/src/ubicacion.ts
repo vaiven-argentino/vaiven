@@ -156,7 +156,7 @@ export const textoOtros = (u: Ubicacion): string => u.otros.map((t) => `${t.nomb
 /** El reparto en una línea, para el tooltip y el lector del gráfico: «Menem 77 % · Alfonsín 23 %». Vacío si no cruza. */
 export function textoReparto(u: Ubicacion): string {
   if (u.referencia.clase === "instante" || u.reparto.length < 2) return "";
-  return [...u.reparto].sort((a, b) => b.proporcion - a.proporcion).map((t) => `${t.nombre_corto} ${porcentaje(t.proporcion)}`).join(" · ");
+  return u.reparto.toSorted((a, b) => b.proporcion - a.proporcion).map((t) => `${t.nombre_corto} ${porcentaje(t.proporcion)}`).join(" · ");
 }
 
 /** La regla, en el texto que llevan la hoja de metadatos del XLSX, el aviso del gráfico y la SPEC. */

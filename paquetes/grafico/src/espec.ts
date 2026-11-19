@@ -564,7 +564,7 @@ export function topeY(valores: number[], reserva: number, alto: number, log: boo
 export function ubicarMarcadores(marcas: Array<{ n: number; i: number }>, ini: number, fin: number, ancho: number) {
   const px = (i: number) => ((i - ini) / Math.max(fin - ini, 1)) * ancho;
   const filas: number[] = [];
-  return [...marcas].sort((a, b) => a.i - b.i).map((m) => {
+  return marcas.toSorted((a, b) => a.i - b.i).map((m) => {
     const x = px(m.i);
     let fila = filas.findIndex((ultimo) => x - ultimo >= 20);
     if (fila === -1) fila = filas.length;

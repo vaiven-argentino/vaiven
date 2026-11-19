@@ -90,7 +90,7 @@ async function medirEnProceso(m, nombre, args, { muestras, cacheFria, error = fa
   return { muestras: salida, bytes };
 }
 
-const p = (xs, q) => { const s = [...xs].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
+const p = (xs, q) => { const s = xs.toSorted((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
 const fmt = (x) => x.toFixed(2).replace(".", ",");
 
 if (process.env.VAIVEN_CPU_HIJO) {
