@@ -41,6 +41,19 @@ describe("real", () => {
     expect(r.unidad).toBe("millones de pesos de marzo de 2000");
     expect(r.notas.join(" ")).toContain("ipc.oficial");
   });
+  it("por defecto toma de base el último período con dato de la serie y del IPC", () => {
+    // El IPC termina en marzo: abril no puede ser la base.
+    const sinIpc = transformar(serie([["2000-01", 100], ["2000-02", 110], ["2000-03", 121], ["2000-04", 130]], { insumos: insumoReal }),
+      { medida: "real" }, insumos);
+    // Abril queda sin valor real y, como extremo sin dato, se recorta.
+    expect(sinIpc.unidad).toBe("millones de pesos de marzo de 2000");
+    expect(sinIpc.datos.map((d) => d[1])).toEqual([121, 121, 121]);
+    // La serie no tiene dato en marzo: la base pasa a febrero.
+    const sinDato = transformar(serie([["2000-01", 100], ["2000-02", 110], ["2000-03", null]] as [string, number][], { insumos: insumoReal }),
+      { medida: "real" }, insumos);
+    expect(sinDato.unidad).toBe("millones de pesos de febrero de 2000");
+    expect(sinDato.datos.map((d) => d[1])).toEqual([110, 110]);
+  });
   it("acepta otra base y suma los quiebres del IPC que cruza el rango", () => {
     const r = transformar(s, { medida: "real", baseReal: "2000-01" }, insumos);
     expect(r.datos.map((d) => d[1])).toEqual([100, 100, 100]);

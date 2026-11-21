@@ -12,7 +12,7 @@ const frecuenciasDe = (s: (typeof series)[number]) =>
 const bloques = [...new Set(series.map((s) => s.bloque))].sort((a, b) => a.localeCompare(b, "es"));
 const frecuencias = FRECUENCIAS.filter((f) => series.some((s) => frecuenciasDe(s).includes(f)));
 const normalizar = (t: string) => t.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
-const ordenadas = [...series].sort((a, b) => a.codigo.localeCompare(b.codigo));
+const ordenadas = series.toSorted((a, b) => a.codigo.localeCompare(b.codigo));
 ---
 <Base titulo="Catálogo" descripcion="Catálogo de series económicas argentinas de Vaivén: buscá por nombre, código, bloque o frecuencia." seccion="catalogo">
   <div class="contenedor catalogo">
